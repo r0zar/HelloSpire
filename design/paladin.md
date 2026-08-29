@@ -55,6 +55,44 @@ Two consequences of Ilmater keying off healing, both load-bearing:
   Paladin in a party has more healing targets, so more Faith, with no "in multiplayer..."
   clause anywhere in the card text.
 
+## Deities are flavor, not card types
+
+**A deity does not restrict what a card can do.** All three have attacks, heals and Block.
+Tyr can heal through an attack. Ilmater can smite. Torm can carry thorns. The deity is a
+flavor lens and a Faith source, nothing more.
+
+This is deliberate, and it creates the central deckbuilding axis for free:
+
+- **Single-verb cards** generate one deity's Faith efficiently — they build **tall**.
+- **Hybrid cards** trigger two Oaths at once, at a worse rate per deity — they build **wide**,
+  and wide decks are the ones that want `Heresy`.
+
+```
+Holy Smite        1E  Deal 6 damage. Heal an ally 3.
+                      -> Vengeance AND Redemption
+Holy Shield       1E  Gain 5 Block. Until end of turn, when you are attacked,
+                      deal 3 damage back.
+                      -> Crown; thorns are Tyr flavor on a Torm card
+Guardian's Mercy  1E  Gain 4 Block. Heal an ally 3.
+                      -> Crown AND Redemption
+Vengeful Mending  1E  Deal 8 damage. Heal yourself 4.
+                      -> Vengeance AND Redemption
+Retribution       1E  Deal damage equal to the Block you gained this turn.
+                      -> a Tyr payoff that only pays off in a Torm deck
+```
+
+Balance lever: hybrids are slightly under-rate on each half. You pay for flexibility.
+
+### Two sources of Faith
+
+Hybrids make the distinction matter:
+
+- **Printed** — the card text says `Gain 1 Faith in Tyr`.
+- **Oath-triggered** — a Power fires based on what the card *did*.
+
+`Holy Smite` printed with Tyr Faith, played under Oath of Redemption, yields Tyr 1 from the
+print and Ilmater 1 from the Oath.
+
 ## Generation rules
 
 These are hard constraints, not guidelines. They exist so a Faith number means the same thing
