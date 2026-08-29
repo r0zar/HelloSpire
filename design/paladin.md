@@ -185,6 +185,48 @@ Because Faith resets each combat, falling is a **tactical, per-fight decision**,
 sentence. "I'm ten into Torm but this fight needs damage right now" is exactly the choice
 this is for.
 
+## Starting relic: Holy Symbol
+
+**Holy Symbol** — *While held, your first Faith gain each combat is doubled. When your total
+Faith in one deity across the run reaches N, the Holy Symbol is consumed and you receive that
+deity's relic.*
+
+This follows three base-game patterns at once: **Touch of Orobas** (replaces your starter
+relic with an upgraded one), **Sword of Stone** (transforms after a milestone), and
+**Pael's Wing** (sacrifice to earn a relic). All three ship, so the shape is proven.
+
+Why this and not "name a deity at combat start":
+
+- **You commit by playing, not by picking.** The relic watches what you actually do and
+  rewards it — which is how a paladin's god works. No per-fight choosing.
+- **Devotion is a run-long arc without Faith persisting.** Faith still resets each combat;
+  only the *milestone* accumulates. Every reward screen tempts you off the path before you've
+  earned the relic, which is the pressure we want.
+- **Splitting costs something real.** A wide deck never triggers the transform and keeps the
+  weaker starter relic all run — until `Heresy`, which counts everything as your highest and
+  pops it immediately. That is the wide build's payoff line.
+
+Rules:
+
+- One milestone number, the same for every deity. No god is easier to earn.
+- `Sacrament` counts toward the **destination** deity, so "pulled away, then repented" is a
+  playable story.
+- N is a placeholder until playtesting; it should land somewhere around the end of Act 1 for
+  a focused deck.
+
+### The three deity relics
+
+Placeholders. Each should be a stronger, deity-flavoured version of what the Holy Symbol did,
+not an unrelated effect.
+
+```
+Torm      Gauntlet of the True      Block is not fully removed at the start of your turn;
+                                    keep half.
+Ilmater   Bound Hands               At the start of each combat, all allies heal 4.
+Tyr       Scales of Judgment        At the start of each combat, gain 3 Faith in Tyr.
+                                    Whenever you take damage, gain 1 Faith in Tyr.
+```
+
 ## Supporting card categories
 
 These are card *types*, not mechanics competing with Faith:
@@ -202,8 +244,7 @@ These are card *types*, not mechanics competing with Faith:
   TODO.md Phase 8 before any numbers here are meaningful.
 - **Does Bane suppress the Triad entirely, or scale it down?** Hard lockout is cleaner to
   reason about; scaling is more forgiving.
-- **Is Faith visible per-deity in the UI, and how?** Four tracks is a lot of screen. May
-  need only the highest one or two shown prominently.
+- **Faith UI.** Three tracks plus Bane. Should fit; verify once the counter exists.
 - **Solo viability.** Ilmater and Torm both lean on allies existing. Ally-targeted effects
   need a defined self-target fallback for single-player.
 
