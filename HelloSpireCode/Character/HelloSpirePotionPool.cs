@@ -6,7 +6,7 @@ namespace HelloSpire.HelloSpireCode.Character;
 
 public class HelloSpirePotionPool : CustomPotionPoolModel
 {
-    public override Color LabOutlineColor => HelloSpire.Color;
+    public override Color LabOutlineColor => TheGunslinger.Color;
     
 
     public override string BigEnergyIconPath => "charui/big_energy.png".ImagePath();

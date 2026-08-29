@@ -1,3 +1,16 @@
 {
-  
+  "HELLOSPIRE-LOAD.title": "Load",
+  "HELLOSPIRE-LOAD.description": "Place a Round into the first empty chamber clockwise from the hammer. If every chamber is full, replace from the hammer forwards; the replaced ammunition is discarded. Loading never moves the hammer.",
+  "HELLOSPIRE-FIRE.title": "Fire",
+  "HELLOSPIRE-FIRE.description": "Resolve the chamber under the hammer, then advance the hammer one chamber clockwise. A loaded chamber deals its Round's damage as Attack damage and resolves its effect.",
+  "HELLOSPIRE-CYCLE.title": "Cycle",
+  "HELLOSPIRE-CYCLE.description": "Advance the hammer clockwise without firing.",
+  "HELLOSPIRE-SPIN.title": "Spin",
+  "HELLOSPIRE-SPIN.description": "Move the hammer to a random chamber. The result is revealed once it resolves.",
+  "HELLOSPIRE-CLICK.title": "Click",
+  "HELLOSPIRE-CLICK.description": "A Fire that resolves an empty chamber. No damage and no effect, but the hammer still advances.",
+  "HELLOSPIRE-SELF_FIRE.title": "Self-Fire",
+  "HELLOSPIRE-SELF_FIRE.description": "Resolve the chamber under the hammer at yourself. A loaded chamber costs HP equal to its Round's printed damage, ignoring Strength, Weak, Vulnerable, Deadeye, Block, Armor and Dodge. Its other effects do not trigger.",
+  "HELLOSPIRE-THE_CYLINDER.title": "Cylinder",
+  "HELLOSPIRE-THE_CYLINDER.description": "Your revolver: six chambers and a hammer that advances clockwise. Rounds are Loaded into it and spent by Firing."
 }

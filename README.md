@@ -1,12 +1,115 @@
-# HelloSpire
+# HelloSpire — The Gunslinger
 
-A minimal, working **"hello world" character mod** for [Slay the Spire 2](https://store.steampowered.com/app/2868840/) — the smallest thing that adds a new selectable character to the character select screen and actually starts a run.
+A **playable character mod** for [Slay the Spire 2](https://store.steampowered.com/app/2868840/): a
+weathered shooter built around a visible six-chamber revolver.
 
-Built against **game v0.107.1**. Slay the Spire 2 is in Early Access, so expect this to need a rebuild after breaking updates.
+Built against **game v0.107.1**. Slay the Spire 2 is in Early Access, so expect this to need a
+rebuild after breaking updates.
 
 ## What it adds
 
-**The Greeter** — a playable character with 70 starting HP, the Ironclad's starter deck and Burning Blood, and its own (empty) card / relic / potion pools. It is deliberately boring: the point is that every piece of wiring a real character needs is present and minimal, so you can see the whole skeleton at once.
+**The Gunslinger** — 72 HP, 3 Energy, 5 cards. The gun is the character: ammunition has to be
+Loaded before it can be spent, the order of the chambers is knowable and manipulable, and almost
+every card either fills the cylinder, spends it, or rearranges what is coming next.
+
+| | |
+|---|---|
+| Cards | 84 — 4 starter, 20 Common, 35 Uncommon, 25 Rare |
+| Relics | 9 — starter + Ancient upgrade, 1 Common, 2 Uncommon, 3 Rare, 1 Shop |
+| Potions | 3 |
+| New mechanics | Cylinder (Load / Fire / Cycle / Spin / Click / Self-Fire), Deadeye, Armor, Dodge, 9 Round types |
+
+The full design lives in [`the_gunslinger_sts2_design_plan_v0_1.md`](the_gunslinger_sts2_design_plan_v0_1.md).
+
+### The verbs
+
+- **Load [Round]** — place a Round into the first empty chamber clockwise from the hammer. A full
+  cylinder overwrites from the hammer forwards, so ammo cards are never dead draws.
+- **Fire X** — resolve the chamber under the hammer and advance it, X times. A loaded chamber deals
+  its Round's damage as Attack damage from the card, so Strength / Weak / Vulnerable apply.
+- **Cycle X** — advance the hammer without firing. The deterministic setup tool.
+- **Spin** — hammer to a random chamber. The gamble.
+- **Click** — a Fire that resolves an empty chamber. Usually a failure; a few cards pay for it.
+- **Self-Fire** — point it at yourself for the Round's printed damage as HP loss, ignoring
+  everything. Russian Roulette.
+
+## Where the code lives
+
+```
+HelloSpireCode/Gunslinger/
+  GunContext.cs            who is working the gun — a card, a relic, or a potion
+  GunslingerEffects.cs     the only file that calls the base game's command APIs
+  GunslingerHooks.cs       mod-internal listeners: Fire / Load / Spin / Weak / Dodge / Armor
+  GunslingerIntents.cs     reading enemy intents (see "Needs verifying" below)
+  GunslingerTips.cs        hover tips for Load, Fire, Cycle, Spin, Click, Self-Fire
+  Cylinder/Round.cs        the 9 ammunition types
+  Cylinder/Revolver.cs     the rules of the gun — every operation goes through here
+  Powers/CylinderPower.cs  the six chambers and the hammer; all per-combat state
+  Powers/CorePowers.cs     Deadeye, Armor, Dodge and the small delayed-effect powers
+  Powers/EnginePowers.cs   the 11 powers behind the Power cards
+  Powers/GunslingerDamagePatch.cs   the ONLY place this mod touches the damage pipeline
+  Cards/                   84 cards, grouped by rarity
+  Relics/  Potions/        9 relics, 3 potions
+```
+
+Two rules keep this navigable. **Every base-game command call goes through `GunslingerEffects`**, so
+a signature change in the game breaks one file rather than eighty. **Every cylinder operation goes
+through `Revolver`**, so the six-chamber rules are stated once and cards stay short enough to read
+like their own card text.
+
+## Needs verifying against a real build
+
+The game was not installed on the machine this was written on, so nothing here has been through a
+compiler. Most of it is written against APIs taken from working mods, but four things are inferred
+and are the first places to look if something misbehaves:
+
+1. **`Powers/GunslingerDamagePatch.cs`** — Armor and Dodge reduce incoming damage by patching
+   `Hook.ModifyDamage`. The parameter names are the ones BaseLib itself binds to; the decimal return
+   type is inferred. The patch refuses to apply rather than crash if the shape is wrong, which
+   leaves Armor and Dodge inert but the run playable. It also runs *before* Block is subtracted, so
+   it recomputes the split itself — if Dodge or Armor drains faster than expected, check whether the
+   hook is also being called to render forecasts.
+2. **`GunslingerIntents.cs`** — matched against working intent-reading code from another mod, but
+   the damage total is wrapped anyway: a failed read degrades to "no enemy is attacking", so
+   Showdown and Dive for Cover read weaker rather than throwing.
+3. **Power turn hooks** — `BeforeSideTurnStart(ctx, side, state)` is verified on relics but assumed
+   to have the same shape on powers. If Dodge stops expiring, this is why.
+4. **`PowerCmd.ModifyAmount<T>(target, delta)`** — used only in the damage patch.
+
+## Deliberate deviations from the design doc
+
+Three cards ask the player to pick a chamber or an ammunition type. There is no base-game selection
+screen for either, and a custom cylinder UI is its own project, so each resolves to the choice a
+player would almost always make. All three are marked in the code and in the card text:
+
+- **Called Shot / Sixth Sense** move the highest-damage loaded chamber under the hammer.
+- **Stack the Cylinder** packs every Round into one run from the hammer, heaviest first.
+- **Custom Load / Perfect Reload** read the board: Piercing into Block, Guard into an incoming
+  Attack, Crippling when nothing is Weak, Heavy otherwise.
+
+**Quickdraw Legend** refunds an Energy on the first Fire of the turn rather than discounting the
+card, since the game's cost hooks cannot see that a card is going to Fire before it is played. The
+two differ only when the Energy was not there to spend.
+
+Relics that "start each combat" instead act at the top of the player's first turn, which is
+indistinguishable in play and keeps every relic on hook signatures with working precedent.
+
+## Not built yet
+
+- **The 5 multiplayer-specific cards** the design calls for. The base game's multiplayer card
+  constraints are the one content type with no working example to copy from.
+- **Ascension 2+ HP (58)**. The game applies its own ascension HP reduction; if a per-character
+  override exists, it was not found.
+- **A cylinder UI.** The six chambers and the hammer currently live in the Cylinder power's tooltip
+  (`{Loaded} of 6 chambers loaded, hammer on chamber {Chamber}`) rather than as art beside the hand.
+  This is what forces the three "player picks a chamber" cards into automatic choices above.
+
+## Art
+
+Card portraits, relic icons, power icons and character UI all fall back to placeholders until real
+files land in `HelloSpire/images/`. File names are derived from the class name, lowercased —
+`SnapShot` → `snap_shot.png`. Sizes are in the comments on each base class in
+`HelloSpireCode/Cards/`, `Relics/`, `Powers/`.
 
 ## Prerequisites
 
@@ -46,9 +149,10 @@ export_presets.cfg               the "BasicExport" preset that dotnet publish in
 
 HelloSpireCode/
   MainFile.cs                    [ModInitializer] entry point; creates the Harmony instance
-  Character/HelloSpire.cs        the CharacterModel — HP, starting deck, relics, pools, icons
+  Character/TheGunslinger.cs     the CharacterModel — HP, starting deck, relics, pools, icons
   Character/*Pool.cs             card / relic / potion pools for the character
-  Cards/, Relics/, Potions/, Powers/   one stub of each content type
+  Cards/, Relics/, Potions/, Powers/   abstract bases for each content type
+  Gunslinger/                    the character itself (see above)
 
 HelloSpire/
   images/                        art, referenced by path from the model classes
@@ -63,8 +167,8 @@ Keys are **flat, dotted strings**, namespaced by mod id, and the slug is the cla
 
 ```json
 {
-  "HELLOSPIRE-HELLO_SPIRE.title": "The Greeter",
-  "HELLOSPIRE-HELLO_SPIRE.pronounSubject": "they"
+  "HELLOSPIRE-THE_GUNSLINGER.title": "The Gunslinger",
+  "HELLOSPIRE-SNAP_SHOT.title": "Snap Shot"
 }
 ```
 

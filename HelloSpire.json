@@ -1,14 +1,17 @@
-﻿{
+{
   "id": "HelloSpire",
-  "name": "HelloSpire",
+  "name": "The Gunslinger",
   "author": "Ross Ragsdale",
-  "description": "A minimal 'hello world' character mod: adds The Greeter, a playable character with a borrowed starter kit. Reference implementation for building StS2 character mods.",
-  "version": "v0.0.0",
+  "description": "Adds The Gunslinger: a sequencing character built around a visible six-chamber revolver. Load ammunition, manipulate the cylinder, and choose between reliable defense and a burst turn. 84 cards, 9 relics, 3 potions.",
+  "version": "v0.1.0",
   "min_game_version": "0.107.0",
   "has_pck": true,
   "has_dll": true,
   "dependencies": [
-    {"id": "BaseLib", "min_version": "3.4.5"}
+    {
+      "id": "BaseLib",
+      "min_version": "3.4.5"
+    }
   ],
   "affects_gameplay": true
 }

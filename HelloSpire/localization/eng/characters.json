@@ -1,20 +1,20 @@
 {
-  "HELLOSPIRE-HELLO_SPIRE.title": "The Greeter",
-  "HELLOSPIRE-HELLO_SPIRE.titleObject": "The Greeter",
-  "HELLOSPIRE-HELLO_SPIRE.description": "A wanderer who arrived at the Spire with nothing but a borrowed blade and an open hand. Starts with the Ironclad's kit while their own story is still being written.",
+  "HELLOSPIRE-THE_GUNSLINGER.title": "The Gunslinger",
+  "HELLOSPIRE-THE_GUNSLINGER.titleObject": "The Gunslinger",
+  "HELLOSPIRE-THE_GUNSLINGER.description": "[gold]Six Chambers[/gold]: A weathered shooter off an endless road. Loads the cylinder, counts what is coming, and decides whether this is a turn for cover or for everything at once.",
 
-  "HELLOSPIRE-HELLO_SPIRE.pronounSubject": "they",
-  "HELLOSPIRE-HELLO_SPIRE.pronounObject": "them",
-  "HELLOSPIRE-HELLO_SPIRE.possessiveAdjective": "their",
-  "HELLOSPIRE-HELLO_SPIRE.pronounPossessive": "theirs",
+  "HELLOSPIRE-THE_GUNSLINGER.pronounSubject": "they",
+  "HELLOSPIRE-THE_GUNSLINGER.pronounObject": "them",
+  "HELLOSPIRE-THE_GUNSLINGER.possessiveAdjective": "their",
+  "HELLOSPIRE-THE_GUNSLINGER.pronounPossessive": "theirs",
 
-  "HELLOSPIRE-HELLO_SPIRE.goldMonologue": "Coins are just introductions that jingle.",
-  "HELLOSPIRE-HELLO_SPIRE.eventDeathPrevention": "The Greeter waves once more, and the dark politely waits.",
-  "HELLOSPIRE-HELLO_SPIRE.aromaPrinciple": "Smells like a doorway held open too long.",
+  "HELLOSPIRE-THE_GUNSLINGER.goldMonologue": "[sine]Enough for ammunition. The rest is weight.[/sine]",
+  "HELLOSPIRE-THE_GUNSLINGER.eventDeathPrevention": "One chamber left. There is always one chamber left.",
+  "HELLOSPIRE-THE_GUNSLINGER.aromaPrinciple": "[sine][blue]Powder, and the road after rain.[/blue][/sine]",
 
-  "HELLOSPIRE-HELLO_SPIRE.cardsModifierTitle": "First Impressions",
-  "HELLOSPIRE-HELLO_SPIRE.cardsModifierDescription": "The Greeter's deck is still borrowed. For now.",
+  "HELLOSPIRE-THE_GUNSLINGER.cardsModifierTitle": "Gunslinger",
+  "HELLOSPIRE-THE_GUNSLINGER.cardsModifierDescription": "Gunslinger cards will now appear in rewards and shops.",
 
-  "HELLOSPIRE-HELLO_SPIRE.banter.alive.endTurnPing": "Your move!",
-  "HELLOSPIRE-HELLO_SPIRE.banter.dead.endTurnPing": "...still here. Sort of."
+  "HELLOSPIRE-THE_GUNSLINGER.banter.alive.endTurnPing": "Loaded. Say when.",
+  "HELLOSPIRE-THE_GUNSLINGER.banter.dead.endTurnPing": "...still counting."
 }
