@@ -1,16 +1,31 @@
 # HelloSpire
 
-A minimal, working **"hello world" character mod** for [Slay the Spire 2](https://store.steampowered.com/app/2868840/) — the smallest thing that adds a new selectable character to the character select screen and actually starts a run.
+A three-character pack for [Slay the Spire 2](https://store.steampowered.com/app/2868840/), built to be played together in co-op.
 
-Built against **game v0.107.1**. Slay the Spire 2 is in Early Access, so expect this to need a rebuild after breaking updates.
+Built against **game v0.107.1** and **BaseLib 3.4.5**. Slay the Spire 2 is in Early Access, so expect this to need a rebuild after breaking updates.
 
-## What it adds
+## The characters
 
-**The Greeter** — a playable character with 70 starting HP, the Ironclad's starter deck and Burning Blood, and its own (empty) card / relic / potion pools. It is deliberately boring: the point is that every piece of wiring a real character needs is present and minimal, so you can see the whole skeleton at once.
+| Character | HP | Colour | Status |
+|---|---:|---|---|
+| **The Paladin** | 75 | gold | shell only — borrowed starter kit |
+| **The Alchemist** | 68 | green | shell only — borrowed starter kit |
+| **The Gunslinger** | 70 | rust | shell only — borrowed starter kit |
 
-## Taking this further
+All three currently ship placeholder art and an Ironclad-derived starting deck. That is deliberate: the wiring is done and verified, the content is not. [**TODO.md**](TODO.md) is the roadmap for filling them in, with real base-game baselines to aim at.
 
-[**TODO.md**](TODO.md) is a phased checklist for turning this skeleton into a finished character — stats, starter kit, custom mechanics (BaseLib supports Stars-style resources and Defect-style orbs), card/relic/potion sets, art, and a balance methodology with real base-game baselines.
+## Why one mod instead of three
+
+Because of how the game gates multiplayer. On joining a lobby the game exchanges an `InitialGameInfoMessage` carrying the game version, an `idDatabaseHash` fingerprint of the whole model database, and **two separate mod lists** — `gameplayAffectingMods` and `otherMods`. A mismatch in the first list is a first-class rejection: `ConnectionFailureReason.ModMismatch`.
+
+Which list a mod lands in is decided by one manifest field:
+
+| `affects_gameplay` | Consequence |
+|---|---|
+| `true` | every player must have it, at a matching version |
+| `false` | free to differ — cosmetic and UI mods |
+
+A character mod is necessarily `true`. Shipping three separate character mods would mean three things every player has to install at matching versions; shipping one pack means one. Same reason the version matters as much as the name — a teammate on v0.1 against your v0.2 has a different model set and a different hash.
 
 ## Prerequisites
 
@@ -20,91 +35,74 @@ Built against **game v0.107.1**. Slay the Spire 2 is in Early Access, so expect 
 | [BaseLib](https://github.com/Alchyr/BaseLib-StS2/releases) | v3.4.5, in your `mods/` folder or via Steam Workshop |
 | .NET SDK | 9.0 or higher |
 | MegaDot, or Godot **4.5.1** .NET | Must be 4.5.1 — the game refuses `.pck` files exported by a newer Godot |
-| Alchyr's templates | `dotnet new install Alchyr.Sts2.Templates` |
 
 ## Building
 
-1. Copy `Directory.Build.props.example` to `Directory.Build.props` and point `<GodotPath>` at your
-   MegaDot/Godot 4.5.1 mono executable. If the game isn't at the default Steam location, uncomment and
-   set `<Sts2Path>` too. (`Directory.Build.props` is gitignored — it holds machine-specific paths.)
+1. Copy `Directory.Build.props.example` to `Directory.Build.props` and point `<GodotPath>` at your MegaDot/Godot 4.5.1 mono executable. If the game isn't at the default Steam location, set `<Sts2Path>` too. (`Directory.Build.props` is gitignored — it holds machine-specific paths.)
 
-2. Compile only (fast, code changes only — produces `.dll`):
-   ```
-   dotnet build
+2. ```
+   dotnet build      # code only, ~2s — produces the .dll
+   dotnet publish    # full — produces the .pck and deploys .dll/.pck/.json to mods/
    ```
 
-3. Full publish (produces `.pck` with assets and copies `.dll` + `.pck` + `.json` into your `mods/` folder):
-   ```
-   dotnet publish
-   ```
+   **Close the game first.** A running Slay the Spire 2 holds `HelloSpire.dll` open and the copy step fails.
 
-4. Launch the game with **"Play with Mods"**, accept the untrusted-code warning, restart, enable HelloSpire in the Mods menu, restart again.
+3. Launch with **"Play with Mods"**, accept the untrusted-code warning, restart, enable HelloSpire in the Mods menu, restart again. All three characters then appear on character select.
 
-## How it fits together
+## Layout
 
 ```
-HelloSpire.json                  mod manifest — id, version, BaseLib dependency, min game version
-Directory.Build.props            your machine's Godot / StS2 paths (the only file you must edit)
-project.godot                    Godot project; drives .pck export
-export_presets.cfg               the "BasicExport" preset that dotnet publish invokes
-
 HelloSpireCode/
-  MainFile.cs                    [ModInitializer] entry point; creates the Harmony instance
-  Character/HelloSpire.cs        the CharacterModel — HP, starting deck, relics, pools, icons
-  Character/*Pool.cs             card / relic / potion pools for the character
-  Cards/, Relics/, Potions/, Powers/   one stub of each content type
+  MainFile.cs                     single [ModInitializer] for the whole pack; Harmony instance
+  Extensions/StringExtensions.cs  asset path helpers
+  Powers/HelloSpirePower.cs       shared — powers are mod-wide, not per-character
+  Characters/
+    Paladin/     Paladin.cs, PaladinCardPool/RelicPool/PotionPool.cs,
+                 PaladinCard.cs, PaladinRelic.cs, PaladinPotion.cs
+    Alchemist/   ... same seven files
+    Gunslinger/  ... same seven files
 
 HelloSpire/
-  images/                        art, referenced by path from the model classes
-  localization/eng/*.json        all display text (see below)
+  images/
+    charui/paladin|alchemist|gunslinger/   per-character UI art
+    card_portraits/ relics/ potions/ powers/   shared trees
+  localization/eng/*.json                 all display text
 ```
 
-### Localization is compile-time checked
+### Why only `charui` is namespaced per character
 
-The game ships a Roslyn analyzer (`STS001`) that fails your build if a model references a localization key you haven't written. That's a feature — it catches typos before the game does.
+Card, relic and potion art resolves by **class name** (`Id.Entry`), which is already unique mod-wide — `PaladinStrike` and `GunslingerStrike` cannot collide. So those trees stay shared. Character UI art (icon, select portrait, map marker, energy orb) is the one asset class with fixed filenames per character, so it is the only one split by folder.
 
-Keys are **flat, dotted strings**, namespaced by mod id, and the slug is the class name in `SCREAMING_SNAKE_CASE`:
+### Adding a fourth character
+
+Copy any `Characters/<Name>/` folder, rename the seven classes, then:
+
+1. Give the character class a `CharacterId`, an `AssetFolder`, and a `Color`
+2. Create `images/charui/<assetfolder>/` with the six UI images
+3. Add its localization keys to `characters.json` and `ancients.json`
+
+The `[Pool(typeof(...))]` attribute on the three content base classes does the registration — individual cards and relics never declare a pool.
+
+## Localization
+
+Keys are **flat dotted strings**, namespaced by mod id, with the model slug in `SCREAMING_SNAKE_CASE`:
 
 ```json
-{
-  "HELLOSPIRE-HELLO_SPIRE.title": "The Greeter",
-  "HELLOSPIRE-HELLO_SPIRE.pronounSubject": "they"
-}
+"HELLOSPIRE-PALADIN.title": "The Paladin",
+"HELLOSPIRE-PALADIN.pronounSubject": "they"
 ```
 
-Files must live at `res://<manifest_id>/localization/<lang>/<file>.json`. A file at `res://localization/...` — without the mod id segment — is silently ignored.
+Files must live at `res://HelloSpire/localization/<lang>/`. A file at `res://localization/...` — without the mod id segment — is silently ignored.
 
-### The manifest
-
-```json
-{
-  "id": "HelloSpire",
-  "min_game_version": "0.107.0",
-  "has_pck": true,
-  "has_dll": true,
-  "dependencies": [
-    { "id": "BaseLib", "min_version": "3.3.0" }
-  ],
-  "affects_gameplay": true
-}
-```
-
-Use the **object form** for dependencies with `min_version`. The older bare-string form (`"dependencies": ["BaseLib"]`) still loads but logs an error and is slated for removal. Declaring `min_game_version` also silences a load warning.
+The game ships a Roslyn analyzer (`STS001`) that **fails the build** if a model references a key you haven't written, and lists exactly which ones are missing. Treat its errors as your checklist rather than an obstacle.
 
 ## Where the real documentation is
 
-The game ships its own API docs — `data_sts2_windows_x86_64/sts2.xml`, ~5 MB covering roughly 19,600 members, with real summaries. Alongside it sit `0Harmony.dll` and `MonoMod.*`, so patching is first-class rather than bolted on. Start there before guessing.
-
-Useful entry points:
-
-- `MegaCrit.Sts2.Core.Modding.ModInitializerAttribute` — marks your entry point
-- `MegaCrit.Sts2.Core.Modding.ModHelper.AddModelToPool<,>` — registers content into pools
-- `MegaCrit.Sts2.Core.Models.CharacterModel` — `Title`, `NameColor`, `Gender`, `AssetPaths`, `IsPlayable`
-- `MegaCrit.Sts2.Core.Models.ModelDb.Inject` / `.Remove` — explicitly documented as "should only be used in tests and mods"
+The game ships its own API docs — `data_sts2_windows_x86_64/sts2.xml`, ~5 MB covering roughly 19,600 members with real summaries. Alongside it sit `0Harmony.dll` and `MonoMod.*`, so patching is first-class. Start there before guessing.
 
 ## Credits
 
-- [Alchyr](https://github.com/Alchyr/ModTemplate-StS2) — the mod template this is generated from, and BaseLib
+- [Alchyr](https://github.com/Alchyr/ModTemplate-StS2) — the mod template this began as, and BaseLib
 - [fresh-milkshake](https://fresh-milkshake.github.io/Modding-Tutorial/) — the modding handbook
 - Mega Crit — for shipping `sts2.xml`
 

@@ -82,8 +82,14 @@ public static class StringExtensions
         return Path.Join(MainFile.ResPath, "images", "potions", "outline", "potion.png");
     }
 
-    public static string CharacterUiPath(this string path)
+    /// <summary>
+    /// Per-character UI art: images/charui/&lt;character&gt;/&lt;path&gt;.
+    /// Character UI is the one asset class that genuinely cannot be shared between
+    /// characters, so it is the only tree namespaced by character. Cards, relics and
+    /// potions resolve by class name, which is already unique mod-wide.
+    /// </summary>
+    public static string CharacterUiPath(this string path, string character)
     {
-        return Path.Join(MainFile.ResPath, "images", "charui", path);
+        return Path.Join(MainFile.ResPath, "images", "charui", character, path);
     }
 }

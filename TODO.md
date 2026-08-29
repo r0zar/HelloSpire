@@ -1,6 +1,8 @@
-# From Vanilla Greeter to a Finished Character
+# From Empty Shell to a Finished Character
 
-A working checklist for taking `HelloSpire` from "a tile appears on character select" to a character that feels like it shipped with the game.
+A working checklist for taking a HelloSpire character from "a tile appears on character select" to one that feels like it shipped with the game.
+
+**Run this once per character.** The Paladin, the Alchemist and the Gunslinger each need their own pass through Phases 0–8; Phases 9–11 are pack-wide and done once. Where a phase says "the character", substitute whichever you're working on.
 
 Ordered by dependency, not by effort. Phases 0–3 are load-bearing: everything later assumes they are settled. Phases 4–7 are the bulk of the work. Phase 8 is the one people skip and should not. Phase 9 matters the moment anyone plays co-op.
 
@@ -12,18 +14,19 @@ Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x
 
 Do this before writing code. Every later decision resolves faster when there's a one-sentence answer to "what does this character do that no other one does?"
 
-- [ ] **Write the fantasy in one sentence.** "The Greeter turns enemy attention into resources." Not "a control character with good scaling."
-- [ ] **Name the core tension.** Every good StS character has a cost to its power. Ironclad trades HP. Silent trades tempo for setup. Defect trades slots. What does The Greeter give up?
+- [ ] **Write the fantasy in one sentence.** "The Gunslinger spends ammunition it cannot easily replace." Not "a burst character with good scaling."
+- [ ] **Name the core tension.** Every good StS character has a cost to its power. Ironclad trades HP. Silent trades tempo for setup. Defect trades slots. What does this one give up?
+- [ ] **Check it against the other two.** Three characters in one pack should not overlap. If the Paladin and the Alchemist both want to stall and scale, one of them needs to change.
 - [ ] **Pick the win condition shape.** Scaling powers? Burst combo? Attrition? Deck-thinning? This determines your rare cards.
 - [ ] **Decide whether you need a new mechanic at all.** A character built from existing primitives (damage, block, powers, statuses) is *far* cheaper to build and balance. Add a resource only if the fantasy genuinely can't be expressed without it.
 - [ ] **Write 5 fake card names + effects on paper.** If they're boring, the fantasy is wrong. Iterate here, it's free.
-- [ ] **Pick a color.** It propagates to `NameColor`, `DialogueColor`, `SpeechBubbleColor`, `DeckEntryCardColor`, `MapDrawingColor`, and the card-back HSV in `HelloSpireCardPool`. Choose once, reuse.
+- [ ] **Pick a color.** It propagates to `NameColor`, `DialogueColor`, `SpeechBubbleColor`, `DeckEntryCardColor`, `MapDrawingColor`, and the card-back HSV in the character's `CardPool`. Choose once, reuse.
 
 ---
 
 ## Phase 1 — The character shell
 
-All of this lives in `HelloSpireCode/Character/HelloSpire.cs`.
+All of this lives in `HelloSpireCode/Characters/<Name>/<Name>.cs`.
 
 ### Stats
 
@@ -36,7 +39,9 @@ Base-game values, read directly out of `sts2.dll` for reference:
 | Defect | 75 | 99 | 3 orb slots (`BaseOrbSlotCount`) |
 | Silent | 70 | 99 | lowest of the classic three |
 | Necrobinder | 66 | 99 | lowest HP, summon-based |
-| **HelloSpire** | **70** | *(inherited)* | currently Silent-equivalent |
+| **Paladin** | **75** | *(inherited)* | matches Regent/Defect |
+| **Gunslinger** | **70** | *(inherited)* | matches Silent |
+| **Alchemist** | **68** | *(inherited)* | near Necrobinder's floor |
 
 - [ ] Set `StartingHp`. 66–80 is the shipped range. Go low only if the kit has real defensive or evasive tools; go high only if the kit spends HP.
 - [ ] Set `StartingGold` explicitly (all base characters use 99 — deviating is a real balance lever, not a flavor one).
@@ -152,8 +157,8 @@ Pool membership is declared **by the pool**, not the card — `CardPoolModel.Gen
 
 For every card:
 
-- [ ] Class extends `HelloSpireCard`, constructor passes `(cost, type, rarity, target)`
-- [ ] `[Pool(typeof(HelloSpireCardPool)))]` is inherited from the base — don't re-annotate
+- [ ] Class extends `<Name>Card`, constructor passes `(cost, type, rarity, target)`
+- [ ] `[Pool(typeof(<Name>CardPool))]` is inherited from the base — don't re-annotate
 - [ ] Upgrade defined (what `+` does). Prefer "meaningfully better" over "+2 damage" on at least a third of the set.
 - [ ] Localization entry: `HELLOSPIRE-CARD_NAME.title` and `.description`
 - [ ] Description uses the game's formatting variables (`{Damage:diff()}`, `{Block:diff()}`) so upgrades and Strength show correctly — **hardcoded numbers in descriptions are a bug**, they won't reflect buffs
@@ -208,7 +213,7 @@ Base game ships **298 relics**, but the split is the surprising part:
 Base game ships **64 potions**. `PotionRarity`: `Common`, `Uncommon`, `Rare`, `Event`, `Token`.
 
 - [ ] 3–6 character potions
-- [ ] Extend `HelloSpirePotion`, images + outlines, loc entries
+- [ ] Extend `<Name>Potion`, images + outlines, loc entries
 - [ ] Potions are emergency buttons — they should solve a problem, not add incremental value
 
 ---
@@ -363,7 +368,7 @@ Different content → different entry count → different hash. This is why vers
 - [ ] BaseLib is a **hard requirement** for multiplayer custom content — it handles custom state sync and registers custom message wrappers (your log shows it claiming message IDs 128 and 129)
 - [ ] Custom resources (Phase 3) must serialize — verify a resource's value survives a host/client sync, not just a save/load
 - [ ] Test an actual 2-player run, not just a lobby join. Desyncs surface during card resolution, not at connect.
-- [ ] Test the rejection path: have someone join without HelloSpire and confirm a clean `ModMismatch`, not a hang
+- [ ] Test the rejection path: have someone join without the pack and confirm a clean `ModMismatch`, not a hang
 - [ ] Version your releases properly — a mod ID match with a content mismatch is the nastiest failure mode
 - [ ] `RemoteTargetingLineColor` / `RemoteTargetingLineOutline` on the character are multiplayer-only visuals; set them or your character looks unfinished in co-op
 
