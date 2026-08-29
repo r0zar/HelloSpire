@@ -2,7 +2,7 @@
 
 A working checklist for taking `HelloSpire` from "a tile appears on character select" to a character that feels like it shipped with the game.
 
-Ordered by dependency, not by effort. Phases 0–3 are load-bearing: everything later assumes they're settled. Phases 4–6 are the bulk of the work. Phase 8 is the one people skip and shouldn't.
+Ordered by dependency, not by effort. Phases 0–3 are load-bearing: everything later assumes they are settled. Phases 4–7 are the bulk of the work. Phase 8 is the one people skip and should not. Phase 9 matters the moment anyone plays co-op.
 
 Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x86_64\sts2.xml` and `sts2.dll`) and **BaseLib 3.4.5**. Early Access moves; re-verify after breaking updates.
 
@@ -115,12 +115,31 @@ Note: **Focus is not a special mechanic** — it's a Power. Anything Focus-shape
 
 ## Phase 4 — The card set
 
-Base game ships **578 cards** across all pools. A single character's share is a fraction of that, but the shape matters more than the count.
+### How big is a real character's card set?
+
+Pool membership is declared **by the pool**, not the card — `CardPoolModel.GenerateAllCards()` is where the list lives. Decoding that method for every shipped pool gives the true counts:
+
+| Pool | Cards |
+|---|---:|
+| DefectCardPool | 88 |
+| NecrobinderCardPool | 88 |
+| RegentCardPool | 88 |
+| SilentCardPool | 88 |
+| IroncladCardPool | 87 |
+| ColorlessCardPool | 64 |
+| EventCardPool | 27 |
+| CurseCardPool | 18 |
+| TokenCardPool | 14 |
+| StatusCardPool | 12 |
+| QuestCardPool | 3 |
+
+**Every shipped character has 87–88 cards.** That consistency is a deliberate design target, not an accident — treat it as the real bar.
 
 ### Targets
 
-- [ ] **Minimum viable:** ~35–45 cards. Below this, runs feel repetitive by Act 2 because the pool exhausts.
+- [ ] **Minimum viable:** ~35–45 cards. Below this the pool exhausts and runs feel repetitive by Act 2. This is a *prototype* threshold, not a shipping one.
 - [ ] **Comfortable:** 60–75 cards.
+- [ ] **Parity with base game:** ~88 cards.
 - [ ] **Rarity split.** Base-game convention is roughly Common > Uncommon > Rare. Commons are the backbone — they appear most, so they must be *playable but unexciting*. Rares are allowed to be build-defining.
 - [ ] **Type split.** Attacks / Skills / Powers. Power-heavy characters need more early defense to survive the setup turns.
 
@@ -160,10 +179,22 @@ Make sure the pool answers each of these, or the character has a structural hole
 
 ## Phase 5 — Relics
 
-Base game ships **298 relics**.
+Base game ships **298 relics**, but the split is the surprising part:
+
+| Pool | Relics |
+|---|---:|
+| EventRelicPool | 140 |
+| SharedRelicPool | 118 |
+| IroncladRelicPool | 8 |
+| SilentRelicPool | 8 |
+| DefectRelicPool | 8 |
+| NecrobinderRelicPool | 8 |
+| RegentRelicPool | 8 |
+
+**Every character gets exactly 8 character-specific relics.** The overwhelming majority of relics are shared or event relics that any character can find. This is a much smaller scope than it first appears — don't over-build here.
 
 - [ ] Starting relic *(Phase 2)*
-- [ ] 8–15 character-specific relics
+- [ ] **8 character-specific relics** to match base-game parity
 - [ ] Rarity spread: `RelicRarity` is `Starter`, `Common`, `Uncommon`, `Rare`, `Shop`, `Event`, `Ancient`
 - [ ] At least 2 that interact with your custom mechanic specifically
 - [ ] Each has: `PackedIconPath`, `PackedIconOutlinePath`, `BigIconPath`, and loc entries
@@ -185,6 +216,43 @@ Base game ships **64 potions**. `PotionRarity`: `Common`, `Uncommon`, `Rare`, `E
 ## Phase 7 — Art and audio
 
 The template ships placeholders that will absolutely ship if you let them.
+
+### Getting reference assets out of the game
+
+You cannot match the game's look without seeing how it does things. The game's art lives inside `SlayTheSpire2.pck`.
+
+- [ ] Install [**GDRE Tools**](https://github.com/GDRETools/gdsdecomp/releases) (Godot RE Tools — also available via `winget install GDRETools.gdsdecomp`)
+- [ ] Run it → **Recover Project** → open `Slay the Spire 2\SlayTheSpire2.pck`
+- [ ] Extract the whole thing to a scratch folder for browsing. You get `localization/` (every base-game string, invaluable for matching description phrasing and keyword grammar), the full art tree, and decompiled code under `src/Core`
+- [ ] Study 5–10 base card portraits before drawing anything: palette, value range, how much of the frame the subject fills, how silhouettes read at small size
+
+### Exact dimensions
+
+From the template's own base classes — these are not suggestions, wrong sizes get scaled and look soft:
+
+| Asset | Size |
+|---|---|
+| Card art, normal | 1000×760 (500×380 also works, it scales) |
+| Card art, full-art | 606×852 (2:3) |
+| Card art small variant, normal | 250×190 |
+| Card art small variant, full-art | 250×350 |
+
+Ship both the large and small variants. The small ones are a performance measure, not an optional extra.
+
+### Making the art
+
+There is no single community pipeline; the practical options:
+
+- **Draw or paint it.** Highest ceiling, slowest. The base game's style is painterly with strong silhouettes and a limited palette per character.
+- **Generative tools, then heavy manual cleanup.** Common in practice for card art at 88-cards scale. Raw output rarely matches the game's palette or framing — expect to repaint edges, unify lighting, and crop to the game's composition conventions.
+- **Commission it.** The realistic answer for a character mod you intend people to actually play. 88 card portraits is a genuine art budget.
+- **Ship deliberate placeholder art and iterate.** Legitimate for an early release, as long as you say so on the mod page.
+
+Existing art-replacement mods worth studying for conventions: [Card Art Editor](https://www.nexusmods.com/slaythespire2/mods/293), [Custom Card Texture Loader](https://www.nexusmods.com/slaythespire2/mods/471), and the various full-art packs on Nexus.
+
+- [ ] **Budget the art before designing 88 cards.** Art is almost always the reason character mods stall. Decide the pipeline first, then size the card set to what that pipeline can actually produce.
+
+### Asset checklist
 
 - [ ] `character_icon_char_name.png`
 - [ ] `char_select_char_name.png` and `_locked` variant
@@ -245,7 +313,63 @@ Do not eyeball this. The base game is right there and you have the tooling to re
 
 ---
 
-## Phase 9 — Meta and polish
+## Phase 9 — Multiplayer
+
+**Short answer: everyone needs the same *gameplay-affecting* mods. Cosmetic mods can differ freely.**
+
+The game enforces this at the lobby handshake. `InitialGameInfoMessage` is exchanged on join and carries:
+
+```
+string                          version                 game version
+uint32                          idDatabaseHash          fingerprint of the whole model database
+List<string>                    gameplayAffectingMods   must match
+List<string>                    otherMods               informational
+GameMode                        gameMode
+RunSessionState                 sessionState
+ConnectionFailureReason?        connectionFailureReason
+```
+
+And `ConnectionFailureReason` is exactly:
+
+```
+None · LobbyFull · NotInSaveGame · RunInProgress · VersionMismatch · ModMismatch
+```
+
+So `ModMismatch` is a first-class, designed-for rejection — not a crash or a desync you discover in Act 2.
+
+### What decides which list you land in
+
+The `affects_gameplay` field in your manifest. That's it.
+
+| `affects_gameplay` | Goes into | Consequence |
+|---|---|---|
+| `true` | `gameplayAffectingMods` | **every player must have it**, matching |
+| `false` | `otherMods` | free to differ — cosmetic/UI/art mods |
+
+`HelloSpire.json` sets `"affects_gameplay": true`, which is correct for a character mod — it adds cards and a character to the model database, so any client without it cannot deserialize the run.
+
+The `idDatabaseHash` is the deeper check. You can watch it in your own log:
+
+```
+ModelIdSerializationCache initialized. Categories: 20 Entries: 1622 Epochs: 57 Hash: 3954186980
+```
+
+Different content → different entry count → different hash. This is why version-matched mods matter, not just same-named mods: a teammate running HelloSpire v0.1 against your v0.2 has a different model set.
+
+### Checklist
+
+- [ ] Keep `affects_gameplay: true` (correct for any character mod)
+- [ ] Set `affects_gameplay: false` **only** for genuinely cosmetic mods — mislabeling causes desyncs rather than a clean rejection
+- [ ] BaseLib is a **hard requirement** for multiplayer custom content — it handles custom state sync and registers custom message wrappers (your log shows it claiming message IDs 128 and 129)
+- [ ] Custom resources (Phase 3) must serialize — verify a resource's value survives a host/client sync, not just a save/load
+- [ ] Test an actual 2-player run, not just a lobby join. Desyncs surface during card resolution, not at connect.
+- [ ] Test the rejection path: have someone join without HelloSpire and confirm a clean `ModMismatch`, not a hang
+- [ ] Version your releases properly — a mod ID match with a content mismatch is the nastiest failure mode
+- [ ] `RemoteTargetingLineColor` / `RemoteTargetingLineOutline` on the character are multiplayer-only visuals; set them or your character looks unfinished in co-op
+
+---
+
+## Phase 10 — Meta and polish
 
 - [ ] Unlocks — `UnlocksAfterRunAs` if the character should be gated
 - [ ] `GetUnlockText` — what the locked tile says
@@ -255,11 +379,10 @@ Do not eyeball this. The base game is right there and you have the tooling to re
 - [ ] Character-specific encounters (`CustomEncounterModel`, `CustomMonsterModel`)
 - [ ] Badges (`CustomBadge`) — end-of-run flavor
 - [ ] `ShouldReceiveCombatHooks` — set correctly or passives silently won't fire
-- [ ] Multiplayer: verify custom state syncs; `affects_gameplay: true` is already set in the manifest
 
 ---
 
-## Phase 10 — Release and maintenance
+## Phase 11 — Release and maintenance
 
 - [ ] Bump `version` in `HelloSpire.json` off `v0.0.0`
 - [ ] Pin `Alchyr.Sts2.BaseLib` to an explicit version in `HelloSpire.csproj` — it's `Version="*"` today, so the manifest's `min_version` moves on its own
