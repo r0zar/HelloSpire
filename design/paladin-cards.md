@@ -19,18 +19,22 @@ Notation: `[T]` `[I]` `[Y]` `[B]` = Torm / Ilmater / Tyr / Bane. `[T+Y]` = hybri
 
 ## Basic (4)
 
-Every deck starts with these. The signature basic is the one that teaches the mechanic on
-turn one.
+Every deck starts with these.
 
 ```
-Strike             1E  [Y]  Deal 6 damage. Gain 1 Faith in Tyr.
-Defend             1E  [T]  Gain 5 Block. Gain 1 Faith in Torm.
+Strike             1E  [-]  Deal 6 damage.
+Defend             1E  [-]  Gain 5 Block.
 Mend               1E  [I]  Heal an ally 4. Gain 1 Faith in Ilmater.
 Kneel              0E  [-]  Name a deity. Gain 2 Faith in it. Exhaust.
 ```
 
-Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Kneel. Ten cards, all three verbs present from
-turn one. `Kneel` is the *choose your god* moment.
+**Strike and Defend are stock.** They do not generate Faith. If they did, every deck would
+accumulate Faith just by playing the cards it cannot avoid drawing, and the mechanic would
+stop being something you opt into. Faith comes only from cards you chose. It also keeps their
+upgrade paths identical to the base game's.
+
+Starter deck: 4 Strike, 4 Defend, 2 Mend, 1 Kneel — eleven cards. Two `Mend` rather than one
+so the mechanic is visible in most opening hands. `Kneel` is the *choose your god* moment.
 
 ---
 
@@ -261,11 +265,11 @@ Tyranny                   2E  [B]    Requires 10 Faith in Bane. Your Faith in
 
 | Tier | Torm | Ilmater | Tyr | Cross / Bane | Total |
 |---|---:|---:|---:|---:|---:|
-| Basic | 1 | 1 | 1 | 1 | 4 |
+| Basic | 0 | 1 | 0 | 3 | 4 |
 | Common | 6 | 6 | 6 | 2 | 20 |
 | Uncommon | 10 | 10 | 10 | 6 | 36 |
 | Rare | 7 | 7 | 7 | 8 | 29 |
-| **Total** | **24** | **24** | **24** | **18** | **90** |
+| **Total** | **23** | **24** | **23** | **20** | **90** |
 
 Rare cross/Bane breaks down as 3 Oaths + 5 Bane/cross-deity. Three rares over base-game
 parity (26); candidates to cut after playtesting are `The Scales` (plain scaler) and whichever
