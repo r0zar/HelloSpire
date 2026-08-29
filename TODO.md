@@ -145,7 +145,16 @@ Pool membership is declared **by the pool**, not the card — `CardPoolModel.Gen
 - [ ] **Minimum viable:** ~35–45 cards. Below this the pool exhausts and runs feel repetitive by Act 2. This is a *prototype* threshold, not a shipping one.
 - [ ] **Comfortable:** 60–75 cards.
 - [ ] **Parity with base game:** ~88 cards.
-- [ ] **Rarity split.** Base-game convention is roughly Common > Uncommon > Rare. Commons are the backbone — they appear most, so they must be *playable but unexciting*. Rares are allowed to be build-defining.
+- [ ] **Rarity split.** Measured from every shipped pool, the template is near-identical across all five characters:
+
+| | Basic | Common | Uncommon | Rare | Total |
+|---|---:|---:|---:|---:|---:|
+| per character | 3-4 | 20 | **36** | **26** | 87-88 |
+
+  **Uncommon is the largest tier, and there are more Rares than Commons.** That is the
+  opposite of the usual assumption. Plan the bulk of the work as uncommons. Commons are the
+  backbone you see most, so they must be *playable but unexciting*; rares are allowed to be
+  build-defining, and at 26 apiece they carry a lot of the character's identity.
 - [ ] **Type split.** Attacks / Skills / Powers. Power-heavy characters need more early defense to survive the setup turns.
 
 `CardRarity`: `Basic`, `Common`, `Uncommon`, `Rare`, `Ancient`, `Event`, `Token`, `Status`, `Curse`, `Quest`
