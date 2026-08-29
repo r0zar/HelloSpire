@@ -1,6 +1,6 @@
 # The Paladin — full card set
 
-**90 cards**: 4 basic, 20 common, 36 uncommon, 29 rare. Base-game parity is 4 / 20 / 36 / 26 (87); this draft runs three rares over, which is a fine place to be before playtesting cuts anything.
+**91 cards**: 4 basic, 21 common, 36 uncommon, 29 rare. Base-game parity is 4 / 20 / 36 / 26 (87); this draft runs three rares over, which is a fine place to be before playtesting cuts anything.
 
 Adapted from WoW and D&D 5e paladin kits; sources noted where a card is a direct lift.
 **All numbers are placeholders** until the damage-per-energy benchmark exists.
@@ -22,23 +22,29 @@ Notation: `[T]` `[I]` `[Y]` `[B]` = Torm / Ilmater / Tyr / Bane. `[T+Y]` = hybri
 Every deck starts with these.
 
 ```
-Strike             1E  [-]  Deal 6 damage.
-Defend             1E  [-]  Gain 5 Block.
-Mend               1E  [I]  Heal an ally 4. Gain 1 Faith in Ilmater.
-Kneel              0E  [-]  Name a deity. Gain 2 Faith in it. Exhaust.
+Strike               1E  [-]  Deal 6 damage.
+Defend               1E  [-]  Gain 5 Block.
+Mend                 1E  [-]  Heal 5.
+Aura of Protection   1E  [-]  Power. At the start of your turn, all allies gain 2 Block.
 ```
 
-**Strike and Defend are stock.** They do not generate Faith. If they did, every deck would
-accumulate Faith just by playing the cards it cannot avoid drawing, and the mechanic would
-stop being something you opt into. Faith comes only from cards you chose. It also keeps their
-upgrade paths identical to the base game's.
+**No starter names a deity, and none generates Faith.** The starter must not push a player
+toward any god — the first Faith decision is the first card reward, not turn one. It also
+means Faith comes only from cards the player chose, so the mechanic never accumulates
+passively off cards you cannot avoid drawing. No starter has Exhaust.
 
-Starter deck: 4 Strike, 4 Defend, 2 Mend, 1 Kneel — eleven cards. Two `Mend` rather than one
-so the mechanic is visible in most opening hands. `Kneel` is the *choose your god* moment.
+`Mend` is a true Defend mirror: same cost, same number, HP instead of Block.
+
+`Aura of Protection` is a starter Power — something no shipped character has. It gives
+2 Block to everyone including you, so solo it is a modest self-Power and in a party of three
+it is 6 Block a turn across the group. It scales with the party with no multiplayer-specific
+text, and it says on turn one what this character is for.
+
+Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Aura of Protection — ten cards.
 
 ---
 
-## Common (20)
+## Common (21)
 
 The backbone. Playable, unexciting, seen constantly. **Roughly half carry Faith** — the
 non-Faith commons are the filler that makes concentration cost something: you choose between
@@ -77,11 +83,12 @@ Rebuke             1E  [Y]    Deal 4 damage. Apply 1 Weak.
 Vengeful Mending   1E  [Y+I]  Deal 7 damage. Heal yourself 3.
 ```
 
-### Neutral (2)
+### Neutral (3)
 
 ```
 Prayer             1E  [-]    Draw 2 cards.
 Devotion           0E  [-]    Gain 1 Faith in your highest deity. Exhaust.
+Kneel              0E  [-]    Name a deity. Gain 2 Faith in it. Exhaust.
 ```
 
 ---
@@ -180,7 +187,7 @@ Ardent Defender           2E  [T]    Power. The first time you would die this   
                                      combat, instead heal to a third of max HP.
 Divine Allegiance         1E  [T]    Power. Whenever an ally would take damage, [D&D Crown]
                                      you may take it instead.
-Aura of Protection        2E  [T]    Power. Aura — all allies take 1 less       [D&D core]
+Aura of Devotion          2E  [T]    Power. Aura — all allies take 1 less       [D&D core]
                                      damage from attacks for every 5 Faith
                                      in Torm.
 Avenger's Shield          1E  [T+Y]  Deal 8 damage to up to 3 enemies.          [WoW]
@@ -265,11 +272,11 @@ Tyranny                   2E  [B]    Requires 10 Faith in Bane. Your Faith in
 
 | Tier | Torm | Ilmater | Tyr | Cross / Bane | Total |
 |---|---:|---:|---:|---:|---:|
-| Basic | 0 | 1 | 0 | 3 | 4 |
-| Common | 6 | 6 | 6 | 2 | 20 |
+| Basic | 0 | 0 | 0 | 4 | 4 |
+| Common | 6 | 6 | 6 | 3 | 21 |
 | Uncommon | 10 | 10 | 10 | 6 | 36 |
 | Rare | 7 | 7 | 7 | 8 | 29 |
-| **Total** | **23** | **24** | **23** | **20** | **90** |
+| **Total** | **23** | **23** | **23** | **22** | **91** |
 
 Rare cross/Bane breaks down as 3 Oaths + 5 Bane/cross-deity. Three rares over base-game
 parity (26); candidates to cut after playtesting are `The Scales` (plain scaler) and whichever
