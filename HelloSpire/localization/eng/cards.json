@@ -1,3 +1,16 @@
 {
-  
+  "HELLOSPIRE-SMITE.title": "Smite",
+  "HELLOSPIRE-SMITE.description": "Deal {Damage:diff()} damage.\nGain 1 [gold]Faith[/gold] in [gold]Tyr[/gold].",
+  "HELLOSPIRE-HOLD_THE_LINE.title": "Hold the Line",
+  "HELLOSPIRE-HOLD_THE_LINE.description": "Gain {Block:diff()} [gold]Block[/gold].\nGain 1 [gold]Faith[/gold] in [gold]Torm[/gold].",
+  "HELLOSPIRE-MEND.title": "Mend",
+  "HELLOSPIRE-MEND.description": "Heal {Heal:diff()} HP.",
+  "HELLOSPIRE-THE_SCALES.title": "The Scales",
+  "HELLOSPIRE-THE_SCALES.description": "Deal damage equal to twice your [gold]Faith[/gold] in [gold]Tyr[/gold].",
+  "HELLOSPIRE-OATH_OF_VENGEANCE_CARD.title": "Oath of Vengeance",
+  "HELLOSPIRE-OATH_OF_VENGEANCE_CARD.description": "Whenever you play an Attack, gain 1 [gold]Faith[/gold] in [gold]Tyr[/gold].",
+  "HELLOSPIRE-OATH_OF_THE_CROWN_CARD.title": "Oath of the Crown",
+  "HELLOSPIRE-OATH_OF_THE_CROWN_CARD.description": "Whenever you play a card that gains [gold]Block[/gold], gain 1 [gold]Faith[/gold] in [gold]Torm[/gold].",
+  "HELLOSPIRE-OATH_OF_REDEMPTION_CARD.title": "Oath of Redemption",
+  "HELLOSPIRE-OATH_OF_REDEMPTION_CARD.description": "Whenever you heal, gain 1 [gold]Faith[/gold] in [gold]Ilmater[/gold]."
 }

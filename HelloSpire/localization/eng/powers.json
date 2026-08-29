@@ -1,3 +1,11 @@
 {
-  
+  "HELLOSPIRE-OATH_OF_VENGEANCE.title": "Oath of Vengeance",
+  "HELLOSPIRE-OATH_OF_VENGEANCE.description": "Whenever you play an Attack, gain 1 [gold]Faith[/gold] in [gold]Tyr[/gold].",
+  "HELLOSPIRE-OATH_OF_VENGEANCE.smartDescription": "Whenever you play an Attack, gain 1 [gold]Faith[/gold] in [gold]Tyr[/gold].",
+  "HELLOSPIRE-OATH_OF_THE_CROWN.title": "Oath of the Crown",
+  "HELLOSPIRE-OATH_OF_THE_CROWN.description": "Whenever you play a card that gains [gold]Block[/gold], gain 1 [gold]Faith[/gold] in [gold]Torm[/gold].",
+  "HELLOSPIRE-OATH_OF_THE_CROWN.smartDescription": "Whenever you play a card that gains [gold]Block[/gold], gain 1 [gold]Faith[/gold] in [gold]Torm[/gold].",
+  "HELLOSPIRE-OATH_OF_REDEMPTION.title": "Oath of Redemption",
+  "HELLOSPIRE-OATH_OF_REDEMPTION.description": "Whenever you heal, gain 1 [gold]Faith[/gold] in [gold]Ilmater[/gold].",
+  "HELLOSPIRE-OATH_OF_REDEMPTION.smartDescription": "Whenever you heal, gain 1 [gold]Faith[/gold] in [gold]Ilmater[/gold]."
 }
