@@ -1,6 +1,6 @@
 # The Paladin — full card set
 
-**87 cards**: 4 basic, 20 common, 36 uncommon, 26 rare — the measured base-game template.
+**90 cards**: 4 basic, 20 common, 36 uncommon, 29 rare. Base-game parity is 4 / 20 / 36 / 26 (87); this draft runs three rares over, which is a fine place to be before playtesting cuts anything.
 
 Adapted from WoW and D&D 5e paladin kits; sources noted where a card is a direct lift.
 **All numbers are placeholders** until the damage-per-energy benchmark exists.
@@ -163,7 +163,7 @@ Hallowed Ground        2E  [-]    Power. Whenever you gain Faith in your
 
 ---
 
-## Rare (26)
+## Rare (29)
 
 The tier that carries the character's identity. Adapted per-card; see sources.
 
@@ -264,8 +264,12 @@ Tyranny                   2E  [B]    Requires 10 Faith in Bane. Your Faith in
 | Basic | 1 | 1 | 1 | 1 | 4 |
 | Common | 6 | 6 | 6 | 2 | 20 |
 | Uncommon | 10 | 10 | 10 | 6 | 36 |
-| Rare | 7 | 7 | 7 | 5 (+3 Oaths) | 26 |
-| **Total** | **24** | **24** | **24** | **15** | **87** |
+| Rare | 7 | 7 | 7 | 8 | 29 |
+| **Total** | **24** | **24** | **24** | **18** | **90** |
+
+Rare cross/Bane breaks down as 3 Oaths + 5 Bane/cross-deity. Three rares over base-game
+parity (26); candidates to cut after playtesting are `The Scales` (plain scaler) and whichever
+Oath proves weakest.
 
 Hybrids: 12 across the set, concentrated at uncommon. Faith-threshold cards: 8. Faith-spend
 cards: 3 (`Word of Glory`, `Tithe`, `Time of Troubles`) — the entire fall surface.
