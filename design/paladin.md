@@ -32,60 +32,94 @@ trivialize Act 3. Each fight is its own arc of devotion.
   Silent-style mix-and-match: concentration is the default good play, breadth is the clever
   alternative for a deck built to support it.
 
-## The deities
+## The three verbs
 
-The Triad — three canonically allied lawful good deities of the Forgotten Realms — plus the
-god you fall to.
+Faith generation is deliberately orthogonal. Each deity keys off one action, and every deck
+already does all three to some degree — so any deck generates some Faith without trying.
+Concentration means choosing which verb you do *most*.
 
-### Torm the True — Protection
-God of duty, loyalty, obedience, truth, and **of paladins specifically**.
+| Deity | Trigger | Verb | Archetype |
+|---|---|---|---|
+| **Torm the True** | gain Block | defend | Protection |
+| **Ilmater the Broken God** | heal | mend | Holy |
+| **Tyr the Maimed God** | deal damage | attack | Retribution |
 
-Faith gained by **holding the line**: gaining Block, guarding allies, ending turns unbroken.
-Payoffs are Block retention, damage reduction, and party-wide guarding.
+All three are **actions you take**, not things done to you. An earlier draft had Ilmater key
+off losing HP; that was worse, because it was enemy-driven and it overlapped with Tyr.
 
-```
-Hold the Line     1 energy.  Gain 6 Block. Gain 2 Faith in Torm.
-Bulwark           1 energy.  Gain Block equal to your Faith in Torm.
-Unyielding        2 energy.  Requires 8 Faith in Torm.
-                             Block is not removed at the start of your turn.
-Aegis             1 energy.  Grant an ally Block equal to half your Faith in Torm.
-```
+Two consequences of Ilmater keying off healing, both load-bearing:
 
-### Ilmater the Broken God — Holy
-God of suffering, endurance, and compassion. He bears others' pain.
+- **Heals are never dead cards.** Healing at full HP still generates Faith, so the card always
+  did something. No special overheal rule is needed — the mechanic handles it natively.
+- **Healing an ally generates Faith.** The co-op hook is the engine rather than a bolt-on. A
+  Paladin in a party has more healing targets, so more Faith, with no "in multiplayer..."
+  clause anywhere in the card text.
 
-Faith gained by **suffering**: losing HP, taking hits meant for allies. Payoffs are healing,
-healing-over-time, and damage redirection. Bound and bloodied hands are his symbol.
+## Generation rules
 
-```
-Bear the Weight   1 energy.  Redirect the next attack on an ally to yourself.
-                             Gain 3 Faith in Ilmater.
-Endure            1 energy.  Power — whenever you lose HP, gain 1 Faith in Ilmater.
-Broken Hands      2 energy.  Aura — at the start of your turn, all allies heal
-                             equal to half your Faith in Ilmater.
-Martyr's Grace    1 energy.  Requires 6 Faith in Ilmater.
-                             Heal an ally to full. You take the HP they were missing.
-```
+These are hard constraints, not guidelines. They exist so a Faith number means the same thing
+in every deck.
 
-Note the loop this creates with Torm: **taking damage feeds Ilmater**, so the tank plan and
-the healer plan are the same plan. That is the mix-and-match working as intended, and it is
-why healing is the character's core rather than a footnote. Delayed and over-time healing
-also sidesteps the usual "heals are dead at full HP" problem entirely.
+1. **Generation is always flat.** `Gain 2 Faith.` Never proportional, never scaled off another
+   value. Proportional generation is much harder to balance and compounds with everything.
+2. **Triggers must be countable.** `Whenever you play an Attack`, not `whenever you deal
+   damage` — a multi-hit or AoE card would fire the latter five times off one play. Same for
+   Torm: key off playing a card that gains Block, not off each Block instance.
+3. **Multipliers are Rare only, additive, and capped.** `Gain 1 additional`, never `gain
+   double`. No card multiplies another multiplier. Two or three in the entire set.
 
-### Tyr the Maimed God — Retribution
-God of justice. Blind, and missing the hand Kezef took.
+Scaling belongs on the **payoff** side, where it is visible and bounded by how much Faith you
+actually managed to accumulate.
 
-Faith gained by **being wronged**: taking damage, allies taking damage. Payoffs are
-proportional punishment — damage measured against what was done to you.
+## Cards
+
+### Core generation — flat, countable, boring on purpose
 
 ```
-Blind Justice     1 energy.  Deal damage equal to the damage you took last turn.
-                             Gain 2 Faith in Tyr.
-Equal Measure     1 energy.  Deal damage to a random enemy equal to your Faith in Tyr.
-The Scales        2 energy.  Requires 8 Faith in Tyr.
-                             Deal damage equal to twice your Faith in Tyr.
-Maimed            0 energy.  Lose 3 HP. Gain 4 Faith in Tyr.
+Hold the Line   1E  Gain 6 Block.    Gain 1 Faith in Torm.
+Mend            1E  Heal an ally 4.  Gain 1 Faith in Ilmater.
+Smite           1E  Deal 7 damage.   Gain 1 Faith in Tyr.
+Kneel           0E  Name a deity. Gain 2 Faith in it.
 ```
+
+### Oaths — make a verb passive. Rare.
+
+```
+Oath of the Crown     2E  Power. Whenever you play a card that gains Block,
+                          gain 1 Faith in Torm.
+Oath of Redemption    1E  Power. Whenever you play a card that heals,
+                          gain 1 Faith in Ilmater.
+Oath of Vengeance     2E  Power. Whenever you play an Attack,
+                          gain 1 Faith in Tyr.
+```
+
+The 5e oath names — Devotion, Vengeance, the Crown, Redemption, Glory, the Ancients, the
+Watchers, Conquest — are the naming pool for these.
+
+### Payoffs — scale off Faith, never touch generation
+
+```
+Immovable       2E  Power. At the start of your turn, gain Block
+                    equal to half your Faith in Torm.
+The Broken God  2E  Power. At the start of your turn, all allies heal
+                    equal to half your Faith in Ilmater.
+The Scales      2E  Deal damage equal to twice your Faith in Tyr.
+```
+
+### Supporting — the whole quarantine, and it is short
+
+```
+Heresy          3E  Power. Your Faith in every deity counts as your highest.
+Zealotry        3E  Power. Whenever you gain Faith, gain 1 additional.   <- the multiplier
+Tithe           1E  Spend 3 Faith. Gain 2 Energy.
+Sacrament       1E  Convert all Faith in one deity to another.
+```
+
+`Heresy` is the most important card in the set: it turns "splitting is a mistake" into
+"splitting is a deck", delivering archetype-mixing through one card rather than a subsystem.
+It is a rule-change, not a multiplier, which is why it can be strong without compounding.
+
+`Zealotry` is the only multiplier in the set.
 
 ### Bane — the fall
 Torm's arch-enemy. During the Time of Troubles they killed each other; Ao resurrected Torm
@@ -95,15 +129,14 @@ and Tyr raised him to greater power.
 deity. Falling is the only way in.
 
 ```
-Falter            0 energy.  Spend 5 Faith in any deity. Gain 3 Faith in Bane.
-                             Draw 2 cards. Gain 1 energy.
-The Black Hand    2 energy.  Requires 6 Faith in Bane.
-                             Deal heavy damage to ALL enemies.
-Time of Troubles  3 energy.  Spend ALL your Faith in Torm.
-                             Deal double that as damage to a single enemy.
-                             Gain that much Faith in Bane.
-Tyranny           1 energy.  Requires 10 Faith in Bane.
-                             Your Faith in Bane counts as Faith in every deity.
+Falter            0E  Spend 5 Faith in any deity. Gain 3 Faith in Bane.
+                      Draw 2 cards. Gain 1 Energy.
+The Black Hand    2E  Requires 6 Faith in Bane.
+                      Deal heavy damage to ALL enemies.
+Time of Troubles  3E  Spend ALL Faith in Torm. Deal double that damage
+                      to one enemy. Gain that much Faith in Bane.
+Tyranny           2E  Requires 10 Faith in Bane.
+                      Your Faith in Bane counts as Faith in every deity.
 ```
 
 Bane Faith should **suppress the Triad** while held — the Triad turns away from you — so
