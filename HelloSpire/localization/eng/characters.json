@@ -1,0 +1,20 @@
+{
+  "HELLOSPIRE-HELLO_SPIRE.title": "The Greeter",
+  "HELLOSPIRE-HELLO_SPIRE.titleObject": "The Greeter",
+  "HELLOSPIRE-HELLO_SPIRE.description": "A wanderer who arrived at the Spire with nothing but a borrowed blade and an open hand. Starts with the Ironclad's kit while their own story is still being written.",
+
+  "HELLOSPIRE-HELLO_SPIRE.pronounSubject": "they",
+  "HELLOSPIRE-HELLO_SPIRE.pronounObject": "them",
+  "HELLOSPIRE-HELLO_SPIRE.possessiveAdjective": "their",
+  "HELLOSPIRE-HELLO_SPIRE.pronounPossessive": "theirs",
+
+  "HELLOSPIRE-HELLO_SPIRE.goldMonologue": "Coins are just introductions that jingle.",
+  "HELLOSPIRE-HELLO_SPIRE.eventDeathPrevention": "The Greeter waves once more, and the dark politely waits.",
+  "HELLOSPIRE-HELLO_SPIRE.aromaPrinciple": "Smells like a doorway held open too long.",
+
+  "HELLOSPIRE-HELLO_SPIRE.cardsModifierTitle": "First Impressions",
+  "HELLOSPIRE-HELLO_SPIRE.cardsModifierDescription": "The Greeter's deck is still borrowed. For now.",
+
+  "HELLOSPIRE-HELLO_SPIRE.banter.alive.endTurnPing": "Your move!",
+  "HELLOSPIRE-HELLO_SPIRE.banter.dead.endTurnPing": "...still here. Sort of."
+}

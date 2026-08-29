@@ -1,0 +1,14 @@
+﻿{
+  "id": "HelloSpire",
+  "name": "HelloSpire",
+  "author": "Ross Ragsdale",
+  "description": "A minimal 'hello world' character mod: adds The Greeter, a playable character with a borrowed starter kit. Reference implementation for building StS2 character mods.",
+  "version": "v0.0.0",
+  "min_game_version": "0.107.0",
+  "has_pck": true,
+  "has_dll": true,
+  "dependencies": [
+    {"id": "BaseLib", "min_version": "3.4.5"}
+  ],
+  "affects_gameplay": true
+}

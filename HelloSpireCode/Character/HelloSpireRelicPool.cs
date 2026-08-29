@@ -1,0 +1,13 @@
+﻿using BaseLib.Abstracts;
+using HelloSpire.HelloSpireCode.Extensions;
+using Godot;
+
+namespace HelloSpire.HelloSpireCode.Character;
+
+public class HelloSpireRelicPool : CustomRelicPoolModel
+{
+    public override Color LabOutlineColor => HelloSpire.Color;
+
+    public override string BigEnergyIconPath => "charui/big_energy.png".ImagePath();
+    public override string TextEnergyIconPath => "charui/text_energy.png".ImagePath();
+}
