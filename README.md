@@ -8,6 +8,10 @@ Built against **game v0.107.1**. Slay the Spire 2 is in Early Access, so expect 
 
 **The Greeter** — a playable character with 70 starting HP, the Ironclad's starter deck and Burning Blood, and its own (empty) card / relic / potion pools. It is deliberately boring: the point is that every piece of wiring a real character needs is present and minimal, so you can see the whole skeleton at once.
 
+## Taking this further
+
+[**TODO.md**](TODO.md) is a phased checklist for turning this skeleton into a finished character — stats, starter kit, custom mechanics (BaseLib supports Stars-style resources and Defect-style orbs), card/relic/potion sets, art, and a balance methodology with real base-game baselines.
+
 ## Prerequisites
 
 | Requirement | Notes |
