@@ -12,7 +12,10 @@ Built against **game v0.107.1** and **BaseLib 3.4.5**. Slay the Spire 2 is in Ea
 | **The Alchemist** | 68 | green | shell only — borrowed starter kit |
 | **The Gunslinger** | 70 | rust | shell only — borrowed starter kit |
 
-All three currently ship placeholder art and an Ironclad-derived starting deck. That is deliberate: the wiring is done and verified, the content is not. [**TODO.md**](TODO.md) is the roadmap for filling them in, with real base-game baselines to aim at.
+All three currently ship an Ironclad-derived starting deck. The Paladin has its own placeholder art; the other two still share the generic template placeholder. That is deliberate: the wiring is done and verified, the content is not.
+
+- [**TODO.md**](TODO.md) — phased roadmap for building each character out, with real base-game baselines
+- [**ART.md**](ART.md) — the art pipeline: where assets live, required sizes, and how to extract the base game's art for reference
 
 ## Why one mod instead of three
 
