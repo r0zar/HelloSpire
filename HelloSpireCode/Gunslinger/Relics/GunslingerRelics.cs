@@ -43,7 +43,7 @@ public abstract class GunslingerRelic : Characters.GunslingerRelic
     }
 
     /// <summary>Runs once, at the top of the player's first turn of a combat.</summary>
-    protected virtual Task OnCombatOpening(PlayerChoiceContext ctx, CombatState state) => Task.CompletedTask;
+    protected virtual Task OnCombatOpening(PlayerChoiceContext ctx, ICombatState state) => Task.CompletedTask;
 
     public override Task AfterCombatEnd(CombatRoom room)
     {
@@ -64,7 +64,7 @@ public sealed class OldIron : GunslingerRelic
 
     public override RelicModel? GetUpgradeReplacement() => ModelDb.Relic<TrueIron>();
 
-    protected override async Task OnCombatOpening(PlayerChoiceContext ctx, CombatState state)
+    protected override async Task OnCombatOpening(PlayerChoiceContext ctx, ICombatState state)
     {
         Flash();
         await Revolver.Load(ctx, Gun, Rounds.Lead, 3);
@@ -80,7 +80,7 @@ public sealed class TrueIron : GunslingerRelic, IRoundDamageModifier
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
 
-    protected override async Task OnCombatOpening(PlayerChoiceContext ctx, CombatState state)
+    protected override async Task OnCombatOpening(PlayerChoiceContext ctx, ICombatState state)
     {
         Flash();
         await Revolver.FillEmpty(ctx, Gun, Rounds.Lead);
@@ -139,7 +139,7 @@ public sealed class LongcoatPlates : GunslingerRelic
 {
     public override RelicRarity Rarity => RelicRarity.Rare;
 
-    protected override async Task OnCombatOpening(PlayerChoiceContext ctx, CombatState state)
+    protected override async Task OnCombatOpening(PlayerChoiceContext ctx, ICombatState state)
     {
         Flash();
         await GunslingerEffects.GainArmor(ctx, Gun, 3);

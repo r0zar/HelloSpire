@@ -182,7 +182,7 @@ public sealed class StackedChamber() : GunslingerCard(1, CardType.Skill, CardRar
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await PowerCmd.Apply<StackedChamberPower>(Owner.Creature, 1m, Owner.Creature, this, false);
+        await PowerCmd.Apply<StackedChamberPower>(ctx, Owner.Creature, 1m, Owner.Creature, this);
         await GunslingerEffects.GainDeadeye(ctx, Gun, DynamicVars["DeadeyePower"].BaseValue);
     }
 

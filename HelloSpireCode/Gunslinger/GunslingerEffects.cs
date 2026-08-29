@@ -35,26 +35,26 @@ public static class GunslingerEffects
     public static async Task ApplyWeak(PlayerChoiceContext ctx, GunContext gun, Creature target, decimal amount)
     {
         if (amount <= 0) return;
-        await PowerCmd.Apply<WeakPower>(target, amount, gun.Self, gun.Card, false);
+        await PowerCmd.Apply<WeakPower>(ctx, target, amount, gun.Self, gun.Card);
         await GunslingerHooks.NotifyWeakApplied(ctx, gun, target, (int)amount);
     }
 
     public static async Task ApplyDebilitate(PlayerChoiceContext ctx, GunContext gun, Creature target, decimal amount)
     {
         if (amount <= 0) return;
-        await PowerCmd.Apply<DebilitatePower>(target, amount, gun.Self, gun.Card, false);
+        await PowerCmd.Apply<DebilitatePower>(ctx, target, amount, gun.Self, gun.Card);
     }
 
     public static async Task GainDeadeye(PlayerChoiceContext ctx, GunContext gun, decimal amount)
     {
         if (amount <= 0) return;
-        await PowerCmd.Apply<DeadeyePower>(gun.Self, amount, gun.Self, gun.Card, false);
+        await PowerCmd.Apply<DeadeyePower>(ctx, gun.Self, amount, gun.Self, gun.Card);
     }
 
     public static async Task GainArmor(PlayerChoiceContext ctx, GunContext gun, decimal amount)
     {
         if (amount <= 0) return;
-        await PowerCmd.Apply<ArmorPower>(gun.Self, amount, gun.Self, gun.Card, false);
+        await PowerCmd.Apply<ArmorPower>(ctx, gun.Self, amount, gun.Self, gun.Card);
 
         // Reversal asks whether Armor was gained this turn, and the cylinder is where per-turn
         // Gunslinger state lives.
@@ -65,7 +65,7 @@ public static class GunslingerEffects
     public static async Task GainDodge(PlayerChoiceContext ctx, GunContext gun, decimal amount)
     {
         if (amount <= 0) return;
-        await PowerCmd.Apply<DodgePower>(gun.Self, amount, gun.Self, gun.Card, false);
+        await PowerCmd.Apply<DodgePower>(ctx, gun.Self, amount, gun.Self, gun.Card);
         await GunslingerHooks.NotifyDodgeGained(ctx, gun, (int)amount);
     }
 
@@ -86,7 +86,7 @@ public static class GunslingerEffects
     /// the combat manager, since they have no card to route through.
     /// </summary>
     public static CombatState? State(GunContext gun) =>
-        gun.Card?.CombatState ?? CombatManager.Instance?.CombatState;
+        (gun.Card?.CombatState ?? gun.Player.Creature.CombatState) as CombatState;
 
     /// <summary>Enemies that can still be hit, in combat order. Empty when there is no combat.</summary>
     public static IReadOnlyList<Creature> Enemies(GunContext gun)
@@ -126,7 +126,7 @@ public static class GunslingerEffects
     /// <summary>The Player that owns this creature, when only the creature is in hand (power hooks).</summary>
     public static Player? PlayerFor(Creature creature)
     {
-        return CombatManager.Instance?.CombatState?.Players
+        return creature.CombatState?.Players
             .FirstOrDefault(player => player.Creature == creature);
     }
 }

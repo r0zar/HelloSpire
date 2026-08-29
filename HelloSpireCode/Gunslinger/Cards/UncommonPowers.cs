@@ -21,8 +21,7 @@ public sealed class GunfightersRhythm() : GunslingerCard(1, CardType.Power, Card
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<GunfightersRhythmPower>(Owner.Creature,
-            DynamicVars["GunfightersRhythmPower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<GunfightersRhythmPower>(ctx, Owner.Creature, DynamicVars["GunfightersRhythmPower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["GunfightersRhythmPower"].UpgradeValueBy(1m);
@@ -39,8 +38,7 @@ public sealed class HardLeather() : GunslingerCard(1, CardType.Power, CardRarity
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<HardLeatherPower>(Owner.Creature,
-            DynamicVars["HardLeatherPower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<HardLeatherPower>(ctx, Owner.Creature, DynamicVars["HardLeatherPower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["HardLeatherPower"].UpgradeValueBy(2m);
@@ -57,8 +55,7 @@ public sealed class SmokeAndLead() : GunslingerCard(1, CardType.Power, CardRarit
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<SmokeAndLeadPower>(Owner.Creature,
-            DynamicVars["SmokeAndLeadPower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<SmokeAndLeadPower>(ctx, Owner.Creature, DynamicVars["SmokeAndLeadPower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["SmokeAndLeadPower"].UpgradeValueBy(1m);
@@ -79,8 +76,7 @@ public sealed class SureHand() : GunslingerCard(1, CardType.Power, CardRarity.Un
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<SureHandPower>(Owner.Creature,
-            DynamicVars["SureHandPower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<SureHandPower>(ctx, Owner.Creature, DynamicVars["SureHandPower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["SureHandPower"].UpgradeValueBy(2m);

@@ -21,8 +21,7 @@ public sealed class QuickdrawLegend() : GunslingerCard(2, CardType.Power, CardRa
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<QuickdrawLegendPower>(Owner.Creature,
-            DynamicVars["QuickdrawLegendPower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<QuickdrawLegendPower>(ctx, Owner.Creature, DynamicVars["QuickdrawLegendPower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -41,8 +40,7 @@ public sealed class BottomlessBandolier() : GunslingerCard(2, CardType.Power, Ca
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        var power = await PowerCmd.Apply<BottomlessBandolierPower>(Owner.Creature,
-            DynamicVars["BottomlessBandolierPower"].BaseValue, Owner.Creature, this, false);
+        var power = await PowerCmd.Apply<BottomlessBandolierPower>(ctx, Owner.Creature, DynamicVars["BottomlessBandolierPower"].BaseValue, Owner.Creature, this);
 
         if (power != null) power.DeadeyeBonus = DynamicVars["Deadeye"].IntValue;
     }
@@ -61,8 +59,7 @@ public sealed class LoadedDice() : GunslingerCard(1, CardType.Power, CardRarity.
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<LoadedDicePower>(Owner.Creature,
-            DynamicVars["LoadedDicePower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<LoadedDicePower>(ctx, Owner.Creature, DynamicVars["LoadedDicePower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["LoadedDicePower"].UpgradeValueBy(1m);
@@ -79,8 +76,7 @@ public sealed class IronWill() : GunslingerCard(2, CardType.Power, CardRarity.Ra
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<IronWillPower>(Owner.Creature,
-            DynamicVars["IronWillPower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<IronWillPower>(ctx, Owner.Creature, DynamicVars["IronWillPower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -97,8 +93,7 @@ public sealed class Untouchable() : GunslingerCard(2, CardType.Power, CardRarity
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<UntouchablePower>(Owner.Creature,
-            DynamicVars["UntouchablePower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<UntouchablePower>(ctx, Owner.Creature, DynamicVars["UntouchablePower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["UntouchablePower"].UpgradeValueBy(2m);
@@ -119,8 +114,7 @@ public sealed class DebilitatingPresence() : GunslingerCard(2, CardType.Power, C
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<DebilitatingPresencePower>(Owner.Creature,
-            DynamicVars["DebilitatingPresencePower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<DebilitatingPresencePower>(ctx, Owner.Creature, DynamicVars["DebilitatingPresencePower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -137,8 +131,7 @@ public sealed class SixthShot() : GunslingerCard(3, CardType.Power, CardRarity.R
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<SixthShotPower>(Owner.Creature,
-            DynamicVars["SixthShotPower"].BaseValue, Owner.Creature, this, false);
+        await PowerCmd.Apply<SixthShotPower>(ctx, Owner.Creature, DynamicVars["SixthShotPower"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["SixthShotPower"].UpgradeValueBy(5m);

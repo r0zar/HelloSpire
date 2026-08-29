@@ -37,7 +37,7 @@ public abstract class GunslingerEnginePower : HelloSpirePower
         return OnOwnerTurnStart(ctx, side, state);
     }
 
-    protected virtual Task OnOwnerTurnStart(PlayerChoiceContext ctx, CombatSide side, CombatState state) =>
+    protected virtual Task OnOwnerTurnStart(PlayerChoiceContext ctx, CombatSide side, ICombatState state) =>
         Task.CompletedTask;
 }
 
@@ -71,7 +71,7 @@ public sealed class HardLeatherPower : GunslingerEnginePower, IArmorListener
 
         // Fired from inside the damage pipeline patch, which cannot await. The Block lands on the
         // BlockNextTurnPower and is collected at the start of the next turn either way.
-        _ = PowerCmd.Apply<BlockNextTurnPower>(Owner, Amount, Owner, null, false);
+        _ = PowerCmd.Apply<BlockNextTurnPower>(null!, Owner, Amount, Owner, null);
     }
 }
 
@@ -126,7 +126,7 @@ public sealed class BottomlessBandolierPower : GunslingerEnginePower
     /// <summary>Deadeye granted alongside the Round. Zero until the card is upgraded.</summary>
     public int DeadeyeBonus { get; set; }
 
-    protected override async Task OnOwnerTurnStart(PlayerChoiceContext ctx, CombatSide side, CombatState state)
+    protected override async Task OnOwnerTurnStart(PlayerChoiceContext ctx, CombatSide side, ICombatState state)
     {
         if (side != Owner.Side) return;
         if (Gun is not { } gun) return;
@@ -136,7 +136,7 @@ public sealed class BottomlessBandolierPower : GunslingerEnginePower
 
         Flash();
 
-        var rng = gun.Player.RunState.Rng.Chaotic;
+        var rng = gun.Player.RunState.Rng.CombatTargets;
         var pick = Math.Clamp(rng.NextInt(0, Rounds.Special.Length - 1), 0, Rounds.Special.Length - 1);
         await Revolver.Load(ctx, gun, Rounds.Special[pick]);
 
@@ -172,7 +172,7 @@ public sealed class LoadedDicePower : GunslingerEnginePower, ISpinListener
 /// <summary>The first time each turn Armor would erode, it holds.</summary>
 public sealed class IronWillPower : GunslingerEnginePower
 {
-    protected override Task OnOwnerTurnStart(PlayerChoiceContext ctx, CombatSide side, CombatState state)
+    protected override Task OnOwnerTurnStart(PlayerChoiceContext ctx, CombatSide side, ICombatState state)
     {
         if (side != Owner.Side) return Task.CompletedTask;
 

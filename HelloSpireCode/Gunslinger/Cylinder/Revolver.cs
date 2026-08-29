@@ -82,7 +82,7 @@ public static class Revolver
         var existing = creature.GetPower<CylinderPower>();
         if (existing != null) return existing;
 
-        return await PowerCmd.Apply<CylinderPower>(creature, 1m, creature, gun.Card, true);
+        return await PowerCmd.Apply<CylinderPower>(ctx, creature, 1m, creature, gun.Card);
     }
 
     // ---------------------------------------------------------------- Load
@@ -173,7 +173,7 @@ public static class Revolver
             return;
         }
 
-        var pick = empty[Math.Clamp(gun.Player.RunState.Rng.Chaotic.NextInt(0, empty.Count - 1), 0, empty.Count - 1)];
+        var pick = empty[Math.Clamp(gun.Player.RunState.Rng.CombatTargets.NextInt(0, empty.Count - 1), 0, empty.Count - 1)];
         cylinder.Chambers[pick] = round;
         cylinder.SyncDisplay();
         await GunslingerHooks.NotifyLoaded(ctx, gun, round);
@@ -225,13 +225,12 @@ public static class Revolver
         {
             var attack = await DamageCmd.Attack(damage)
                 .WithHitCount(hits)
-                .WithValueProp(props)
                 .FromCard(gun.Card)
                 .Targeting(target)
                 .WithHitFx("vfx/vfx_attack_blunt", null, "blunt_attack.mp3")
                 .Execute(ctx);
 
-            dealt = attack.Results.Sum(result => result.TotalDamage);
+            dealt = attack.Results.SelectMany(hit => hit).Sum(result => result.TotalDamage);
         }
 
         cylinder.RoundsFiredThisCombat++;
@@ -283,13 +282,15 @@ public static class Revolver
 
         if (enemies.Count > 0 && damage > 0 && gun.Card != null)
         {
-            var attack = await DamageCmd.Attack(damage)
-                .WithValueProp(options.IgnoreBlock ? ValueProp.Unblockable : round.Props)
-                .FromCard(gun.Card)
-                .TargetingFiltered(enemies)
-                .Execute(ctx);
-
-            dealt = attack.Results.Sum(result => result.TotalDamage);
+            var props = options.IgnoreBlock ? ValueProp.Unblockable : round.Props;
+            foreach (var enemy in enemies)
+            {
+                var attack = await DamageCmd.Attack(damage)
+                    .FromCard(gun.Card)
+                    .Targeting(enemy)
+                    .Execute(ctx);
+                dealt += attack.Results.SelectMany(hit => hit).Sum(result => result.TotalDamage);
+            }
         }
 
         cylinder.RoundsFiredThisCombat++;
@@ -370,7 +371,7 @@ public static class Revolver
         var cylinder = await Get(ctx, gun);
         if (cylinder == null) return;
 
-        var rng = gun.Player.RunState.Rng.Chaotic;
+        var rng = gun.Player.RunState.Rng.CombatTargets;
         cylinder.Hammer = Math.Clamp(rng.NextInt(0, CylinderPower.ChamberCount - 1),
             0, CylinderPower.ChamberCount - 1);
         cylinder.SyncDisplay();

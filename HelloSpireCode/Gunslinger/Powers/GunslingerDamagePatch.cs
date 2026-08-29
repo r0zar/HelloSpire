@@ -64,15 +64,15 @@ internal static class GunslingerDamagePatch
         if (target == null || __result <= 0m) return;
 
         var dodge = target.GetPower<DodgePower>();
-        if (dodge is { Amount: > 0m })
+        if (dodge is { Amount: > 0 })
         {
             __result = 0m;
-            _ = PowerCmd.ModifyAmount<DodgePower>(target, -1m);
+            _ = PowerCmd.ModifyAmount(null!, dodge, -1m, null, null, false);
             return;
         }
 
         var armor = target.GetPower<ArmorPower>();
-        if (armor is not { Amount: > 0m }) return;
+        if (armor is not { Amount: > 0 }) return;
 
         // Unblockable damage skips Block entirely, so the whole instance is "unblocked".
         var block = props.HasFlag(ValueProp.Unblockable) ? 0m : target.Block;
@@ -90,6 +90,6 @@ internal static class GunslingerDamagePatch
             return;
         }
 
-        _ = PowerCmd.ModifyAmount<ArmorPower>(target, -1m);
+        _ = PowerCmd.ModifyAmount(null!, armor, -1m, null, null, false);
     }
 }

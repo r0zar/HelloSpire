@@ -129,8 +129,7 @@ public sealed class NeverStill() : GunslingerCard(1, CardType.Skill, CardRarity.
     {
         await GunslingerEffects.GainDodge(ctx, Gun, DynamicVars["DodgePower"].BaseValue);
 
-        var power = await PowerCmd.Apply<NeverStillPower>(Owner.Creature,
-            DynamicVars.Energy.BaseValue, Owner.Creature, this, false);
+        var power = await PowerCmd.Apply<NeverStillPower>(ctx, Owner.Creature, DynamicVars.Energy.BaseValue, Owner.Creature, this);
 
         if (power != null) power.CardsToDraw = DynamicVars.Cards.IntValue;
     }

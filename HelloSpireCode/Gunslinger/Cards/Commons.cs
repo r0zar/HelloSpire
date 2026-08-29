@@ -110,8 +110,8 @@ public sealed class Ricochet() : GunslingerCard(1, CardType.Attack, CardRarity.C
         var others = GunslingerEffects.OtherEnemies(Gun, play.Target);
         if (others.Count == 0) return;
 
-        await DamageCmd.Attack(DynamicVars["Splash"].BaseValue)
-            .FromCard(this).TargetingFiltered(others).Execute(ctx);
+        foreach (var other in others)
+            await DamageCmd.Attack(DynamicVars["Splash"].BaseValue).FromCard(this).Targeting(other).Execute(ctx);
     }
 
     protected override void OnUpgrade() => DynamicVars["Splash"].UpgradeValueBy(2m);
