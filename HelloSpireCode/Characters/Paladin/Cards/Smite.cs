@@ -20,7 +20,7 @@ public sealed class Smite() : PaladinCard(1, CardType.Attack, CardRarity.Common,
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
-        Faith.Gain(Owner, 1);
+        await Faith.Gain(choiceContext, Owner, 1, this);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);

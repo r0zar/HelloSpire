@@ -34,28 +34,34 @@ heals cost Faith, it pays you for spending it.
 ```
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
-1x Mend               1E  Costs 1 Faith. Heal 6 HP.
-1x Hammer of Justice  3E  Deal damage equal to your Faith. Stun the enemy.
+1x Mend               1E  Heal 5 HP plus your Faith. Exhaust.
+1x Hammer of Justice  3E  Deal 4 damage. Stun the enemy.
 ```
 
 The deck reads as *durable but slow to kill*, which is the D&D and WoW read of the class. Mend
-is a Defend mirror in HP. Hammer of Justice is a bought turn that pays for banked Faith: every point not spent on Mend is
-damage here, so heal-or-hit lives on one number. It is the card that says what the Paladin is.
+is a Defend mirror in HP. Hammer of Justice is a bought turn with a token hit; the upgrade buys the discount, not a number.
 
 No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
 must be understood on sight.
 
-### Faith (holy only, for now)
+### Faith, the third stat
 
-One number on the side panel, next to energy, where the Regent's Stars live. The **Holy Symbol**
-(starter relic) grants 3 at the start of each combat. **Mend costs 1 Faith** and is unplayable at
-zero; **Smite earns 1**. That is the heal economy: roughly three heals a fight unless the deck
-earns more, and earning means playing proactive cards -- so stalling to heal does not work. No
-Exhaust needed.
+Strength raises attacks, Dexterity raises Block, **Faith raises healing** -- one icon in the
+power bar next to Strength, reset per combat like the others. The **Holy Symbol** (starter
+relic) grants 3 at the start of each combat; **Smite** earns 1 more per play.
 
-The full signed design -- unholy Faith as negative, sign-gated costs, the Fallen relic, six
-polarity-by-role archetypes -- is agreed and parked until holy is proven in play. It extends
-this without rework: unholy is just the other side of the same number.
+**Mend Exhausts.** That is the anti-stall guarantee now -- one heal per copy per fight, no
+economy to police. Faith is why the one heal is worth building toward: Mend heals 5 + Faith
+(8 on turn one; upgraded 7 + Faith).
+
+Engine note: the game has no combat-heal modify hook (rest-site heals have one, combat heals do
+not), so Faith cannot intercept heals centrally the way Strength intercepts damage. Paladin heal
+cards add it at heal time through one helper (`Faith.Heal`), which behaves identically for
+everything we ship.
+
+The earlier spend-economy Faith (pool of points, Mend costs 1) and the signed holy/unholy
+extension are archived thinking; the stat model replaces the pool. Unholy, if it returns, would
+be negative Faith on the same icon.
 
 ### Card pool
 

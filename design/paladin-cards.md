@@ -11,8 +11,8 @@ The archived 91-card Faith set is in [`paladin-faith-cards-archive.md`](paladin-
 |---|---|---|---|---|
 | Strike | 1 | Attack | Deal 6 damage. | +3 damage |
 | Defend | 1 | Skill | Gain 5 Block. | +3 Block |
-| Mend | 1 | Skill | Costs 1 Faith. Heal 6 HP. | +3 HP |
-| Hammer of Justice | 3 | Attack | Deal damage equal to your Faith. Stun the enemy. | costs 2 |
+| Mend | 1 | Skill | Heal 5 HP plus your Faith. Exhaust. | Heal 7 |
+| Hammer of Justice | 3 | Attack | Deal 4 damage. Stun the enemy. | costs 2 |
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice.
 
@@ -25,6 +25,12 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice.
 ## Uncommon (0)
 
 ## Rare (0)
+
+## Powers
+
+| Power | Effect |
+|---|---|
+| Faith | Increases the healing of your cards. The Paladin's Strength-for-heals; granted by Holy Symbol (3/combat) and Smite. |
 
 ## Relics
 

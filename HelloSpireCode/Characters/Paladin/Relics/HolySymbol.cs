@@ -29,7 +29,6 @@ public sealed class HolySymbol : PaladinRelic
     {
         if (!participants.Contains(Owner.Creature) || Owner.PlayerCombatState.TurnNumber > 1) return;
         Flash();
-        Faith.Gain(Owner, (int)DynamicVars["Faith"].BaseValue);
-        await Task.CompletedTask;
+        await Faith.Gain(choiceContext, Owner, (int)DynamicVars["Faith"].BaseValue);
     }
 }

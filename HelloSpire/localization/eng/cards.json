@@ -1,6 +1,6 @@
 {
   "HELLOSPIRE-MEND.title": "Mend",
-  "HELLOSPIRE-MEND.description": "Costs 1 [gold]Faith[/gold].\nHeal {Heal:diff()} HP.",
+  "HELLOSPIRE-MEND.description": "Heal {Heal:diff()} HP plus your [gold]Faith[/gold].\n[gold]Exhaust[/gold].",
   "HELLOSPIRE-STRIKE_GUNSLINGER.title": "Strike",
   "HELLOSPIRE-STRIKE_GUNSLINGER.description": "Deal {Damage:diff()} damage.",
   "HELLOSPIRE-DEFEND_GUNSLINGER.title": "Defend",
@@ -192,7 +192,7 @@
   "HELLOSPIRE-DEFEND_PALADIN.title": "Defend",
   "HELLOSPIRE-DEFEND_PALADIN.description": "Gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-HAMMER_OF_JUSTICE.title": "Hammer of Justice",
-  "HELLOSPIRE-HAMMER_OF_JUSTICE.description": "Deal damage equal to your [gold]Faith[/gold].\n[gold]Stun[/gold] the enemy.",
+  "HELLOSPIRE-HAMMER_OF_JUSTICE.description": "Deal {Damage:diff()} damage.\n[gold]Stun[/gold] the enemy.",
   "HELLOSPIRE-HAND_ME_THAT.title": "Hand Me That",
   "HELLOSPIRE-HAND_ME_THAT.description": "Another player draws {Cards:diff()} cards.\n[gold]Load[/gold] {Load} [gold]Rounds[/gold] of the kind their class carries.",
   "HELLOSPIRE-SOFTENED_UP.title": "Softened Up",
