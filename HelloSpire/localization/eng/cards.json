@@ -208,7 +208,7 @@
   "HELLOSPIRE-JUDGMENT.title": "Judgment",
   "HELLOSPIRE-JUDGMENT.description": "Deal {Damage:diff()} damage.\nTrigger the effects of all your [gold]Seals[/gold].",
   "HELLOSPIRE-CRUSADER_STRIKE.title": "Crusader Strike",
-  "HELLOSPIRE-CRUSADER_STRIKE.description": "Deal {Damage:diff()} damage.",
+  "HELLOSPIRE-CRUSADER_STRIKE.description": "Deal {Damage:diff()} damage.\nApply {Vulnerable:diff()} [gold]Vulnerable[/gold].",
   "HELLOSPIRE-HAMMER_OF_WRATH.title": "Hammer of Wrath",
   "HELLOSPIRE-HAMMER_OF_WRATH.description": "Deal {Damage:diff()} damage.\nDeals double damage to enemies at or below half HP.",
   "HELLOSPIRE-AVENGERS_SHIELD.title": "Avenger's Shield",

@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>Hallow the ground: 3 damage to ALL enemies at the start of each turn.</summary>
-public sealed class Consecration() : PaladinCard(2, CardType.Power, CardRarity.Common, TargetType.Self)
+public sealed class Consecration() : PaladinCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(3m, ValueProp.Unpowered)];
 
