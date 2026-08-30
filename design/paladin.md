@@ -74,12 +74,15 @@ built toward. Replaying a Seal stacks its Amount.
 
 | Seal | Rarity | Passive | Judgment |
 |---|---|---|---|
-| Light (starter) | -- | Attacks heal 1 | heal 3 + Spirit |
+| Light (starter) | -- | first Attack/turn: heal 1 | deal 3 |
 | Righteousness | Uncommon | Attacks +2 | deal 5 |
 | Command | Uncommon | first Attack/turn: 1 Vulnerable | 2 Vulnerable |
 | Justice | Uncommon | first Attack/turn: 1 Weak | 2 Weak |
-| Wisdom | Uncommon | first Attack/turn: draw 1 | draw 1 |
+| Wisdom | Uncommon | first Attack/turn: draw 1 | deal 2, draw 1 |
 | Martyr | Rare | enemies that hit you take 3 | 3 to ALL enemies |
+
+The rule: **every Judgment effect is offensive** -- Judgment judges the target, so it always
+wants an enemy; self-benefit (healing, draw) lives in passives or rides alongside a hit.
 
 Triggers: Judgment (1E, unplayable without a Seal; upgrade 0E), Exorcism (attack), Divine
 Purpose (cantrip), Shield of the Righteous (block). Avenging Wrath (Rare power) makes every

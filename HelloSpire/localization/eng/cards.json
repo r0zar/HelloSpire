@@ -230,7 +230,7 @@
   "HELLOSPIRE-SEAL_OF_JUSTICE.title": "Seal of Justice",
   "HELLOSPIRE-SEAL_OF_JUSTICE.description": "Gain [gold]Seal of Justice[/gold]: your first Attack each turn applies 1 [gold]Weak[/gold]. [gold]Judgment[/gold]: apply {Amount:diff()} [gold]Weak[/gold].",
   "HELLOSPIRE-SEAL_OF_WISDOM.title": "Seal of Wisdom",
-  "HELLOSPIRE-SEAL_OF_WISDOM.description": "Gain [gold]Seal of Wisdom[/gold]: your first Attack each turn draws a card. [gold]Judgment[/gold]: draw {Amount:diff()}.",
+  "HELLOSPIRE-SEAL_OF_WISDOM.description": "Gain [gold]Seal of Wisdom[/gold]: your first Attack each turn draws a card. [gold]Judgment[/gold]: deal 2 damage and draw {Amount:diff()}.",
   "HELLOSPIRE-SEAL_OF_THE_MARTYR.title": "Seal of the Martyr",
   "HELLOSPIRE-SEAL_OF_THE_MARTYR.description": "Gain [gold]Seal of the Martyr[/gold]: enemies that hit you take {Amount:diff()} damage. [gold]Judgment[/gold]: deal {Amount:diff()} damage to ALL enemies.",
   "HELLOSPIRE-DIVINE_SMITE.title": "Divine Smite",

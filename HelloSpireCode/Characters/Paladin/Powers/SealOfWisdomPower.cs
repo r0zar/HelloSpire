@@ -4,11 +4,13 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The cycle Seal: first Attack each turn draws a card; Judged, draw Amount.
+/// The cycle Seal: first Attack each turn draws a card; Judged, deal 2 and draw Amount --
+/// every judgment lands on the target.
 /// </summary>
 public sealed class SealOfWisdomPower : SealPower
 {
@@ -32,6 +34,7 @@ public sealed class SealOfWisdomPower : SealPower
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
         if (Owner.Player is not { } player) return;
+        await CreatureCmd.Damage(ctx, [target], 2m, ValueProp.Unpowered, Owner);
         await CardPileCmd.Draw(ctx, (int)Amount, player, false);
     }
 }
