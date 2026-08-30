@@ -4,19 +4,17 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.ValueProps;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
 /// The starter Seal: your first Attack each turn heals Amount (Burning Blood weight -- the
-/// per-attack version out-healed it badly and rewarded stalling). Judged: deal 3 damage --
-/// judgments always punish the target; the healing lives in the passive.
+/// per-attack version out-healed it badly and rewarded stalling). Judged: apply 1 Weak --
+/// blinding radiance; the healing lives in the passive, judgments always aim at the target.
 /// </summary>
 public sealed class SealOfLightPower : SealPower
 {
-    public const decimal JudgeDamage = 3m;
-
     private bool _usedThisTurn;
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -35,5 +33,5 @@ public sealed class SealOfLightPower : SealPower
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
-        await CreatureCmd.Damage(ctx, [target], JudgeDamage, ValueProp.Unpowered, Owner);
+        await PowerCmd.Apply<WeakPower>(ctx, target, 1m, Owner, null);
 }
