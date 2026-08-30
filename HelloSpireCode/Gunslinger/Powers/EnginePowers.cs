@@ -1,7 +1,9 @@
 using HelloSpire.HelloSpireCode.Gunslinger.Cylinder;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
@@ -232,5 +234,47 @@ public sealed class SixthShotPower : GunslingerEnginePower, IRoundDamageModifier
 
         Flash();
         await GunslingerEffects.GainEnergy(gun, 1);
+    }
+}
+
+/// <summary>
+/// Every other player's first Attack each turn loads a Lead Round.
+///
+/// The Gunslinger's structural cost is that ammunition is paid for in cards. In a party the
+/// other players are already attacking every turn, so this converts their turn into the load
+/// turn the Gunslinger would otherwise have had to spend.
+///
+/// Latched per ally rather than by <see cref="GunslingerEnginePower.UsedThisTurn"/>: a
+/// four-player lobby should pay out four times a turn, not once, and an Ironclad playing six
+/// Attacks should still only pay out once. The set is cleared at the owner's turn start, which
+/// is also where the base class clears its own latch.
+/// </summary>
+public sealed class RideTogetherPower : GunslingerEnginePower
+{
+    private readonly HashSet<Player> _loadedFor = [];
+
+    /// <summary>Deadeye granted alongside the Round. Zero until the card is upgraded.</summary>
+    public int DeadeyeBonus { get; set; }
+
+    protected override Task OnOwnerTurnStart(PlayerChoiceContext ctx, CombatSide side, ICombatState state)
+    {
+        if (side == Owner.Side) _loadedFor.Clear();
+        return Task.CompletedTask;
+    }
+
+    public override async Task AfterCardPlayed(PlayerChoiceContext ctx, CardPlay cardPlay)
+    {
+        if (cardPlay.Card.Type != CardType.Attack) return;
+
+        var player = cardPlay.Card.Owner;
+        if (player == null || player == GunslingerEffects.PlayerFor(Owner)) return;
+        if (!_loadedFor.Add(player)) return;
+
+        if (Gun is not { } gun) return;
+
+        Flash();
+        await Revolver.Load(ctx, gun, Rounds.Lead, (int)Amount);
+
+        if (DeadeyeBonus > 0) await GunslingerEffects.GainDeadeye(ctx, gun, DeadeyeBonus);
     }
 }
