@@ -29,7 +29,7 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 | Blade of Justice | 2 | Attack | Deal 12 damage. | +4 damage |
 | Holy Light | 1 | Skill | Heal a player 5 HP plus your Spirit. Draw 1 card. Exhaust. **MP only** | Heal 8 |
 | Flash of Light | 0 | Skill | Heal a player 2 HP plus your Spirit. Exhaust. **MP only** | Heal 4 |
-| Seal of Light | 1 | Skill | Gain Seal of Light: Attacks heal 1 HP. Judgment: heal 4 plus Spirit. | Attacks heal 2 |
+| Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: Attacks deal +2. Judgment: deal 10. | Attacks +3 |
 | Devotion | 1 | Skill | Gain 2 Spirit. | 3 Spirit |
 | Consecration | 2 | Power | At the start of your turn, deal 3 damage to ALL enemies. | 5 damage |
 | Divine Smite | 1 | Attack | Deal 6 damage. Apply 1 Vulnerable. | +3 / +1 |
@@ -76,7 +76,7 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 
 | Relic | Rarity | Effect |
 |---|---|---|
-| Holy Book | Starter | At the start of each combat, gain Seal of Righteousness. |
+| Holy Book | Starter | At the start of each combat, gain Seal of Light. |
 | Holy Fervor | Common | Whenever you play a card that heals, gain 1 Strength. Once per turn. |
 | Holy Symbol | Common | At the start of each combat, gain 1 Spirit. |
 

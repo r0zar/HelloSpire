@@ -24,7 +24,7 @@ at the speed of play, not the speed of writing.
 |---|---|
 | Starting HP | 75 — matches Regent and Defect; the kit is inherently sturdy, so no more than that |
 | Colour | gold `#e8c46a`, on the card frame via `ShaderColor` |
-| Starter relic | **Holy Book** — *At the start of each combat, gain Seal of Righteousness.* |
+| Starter relic | **Holy Book** — *At the start of each combat, gain Seal of Light.* |
 
 Holy Fervor (heal a card, gain 1 Strength, once per turn) moves to the relic pool: now that
 heals cost Spirit, it pays you for spending it.
@@ -75,8 +75,8 @@ rarities so the first one you're offered tempts you into a lane:
 
 | Seal | Rarity | Lane |
 |---|---|---|
-| Righteousness (starter) | -- | damage: Attacks +2; Judge 10 |
-| Light | Common | sustain: Attacks heal; Judge heals |
+| Light (starter) | -- | sustain: Attacks heal 1; Judge heals 4+Spirit |
+| Righteousness | Common | damage: Attacks +2; Judge 10 |
 | Command | Common | aggro: Vulnerable on attack; Judge Vulnerable |
 | Justice | Common | control: Weak on attack; Judge Weak |
 | Wisdom | Uncommon | cycle: attack draws; Judge energy+draw |

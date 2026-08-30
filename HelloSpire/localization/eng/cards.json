@@ -217,8 +217,6 @@
   "HELLOSPIRE-HOLY_LIGHT.description": "Heal a player {Heal:diff()} HP plus your [gold]Spirit[/gold].\nDraw 1 card.\n[gold]Exhaust[/gold].",
   "HELLOSPIRE-FLASH_OF_LIGHT.title": "Flash of Light",
   "HELLOSPIRE-FLASH_OF_LIGHT.description": "Heal a player {Heal:diff()} HP plus your [gold]Spirit[/gold].\n[gold]Exhaust[/gold].",
-  "HELLOSPIRE-SEAL_OF_LIGHT.title": "Seal of Light",
-  "HELLOSPIRE-SEAL_OF_LIGHT.description": "Gain [gold]Seal of Light[/gold]: whenever you play an Attack, heal {Amount:diff()} HP. [gold]Judgment[/gold]: heal 4 plus your [gold]Spirit[/gold].",
   "HELLOSPIRE-CONSECRATION.title": "Consecration",
   "HELLOSPIRE-CONSECRATION.description": "At the start of your turn, deal {Damage:diff()} damage to ALL enemies.",
   "HELLOSPIRE-DEVOTION.title": "Devotion",
@@ -250,5 +248,7 @@
   "HELLOSPIRE-DIVINE_FAVOR.title": "Divine Favor",
   "HELLOSPIRE-DIVINE_FAVOR.description": "Gain [energy:{Energy:diff()}].\n[gold]Exhaust[/gold].",
   "HELLOSPIRE-AVENGING_WRATH.title": "Avenging Wrath",
-  "HELLOSPIRE-AVENGING_WRATH.description": "Whenever you trigger your [gold]Seal[/gold]'s effect, it triggers twice."
+  "HELLOSPIRE-AVENGING_WRATH.description": "Whenever you trigger your [gold]Seal[/gold]'s effect, it triggers twice.",
+  "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS.title": "Seal of Righteousness",
+  "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS.description": "Gain [gold]Seal of Righteousness[/gold]: your Attacks deal {Amount:diff()} additional damage. [gold]Judgment[/gold]: deal 10 damage."
 }
