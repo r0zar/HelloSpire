@@ -60,6 +60,9 @@ public class Alchemist : PlaceholderCharacterModel
 
     // In-combat body: the inherited Ironclad rig, repainted by the CharacterSkins shader patch.
 
+    /// <summary>The character-select backsplash: same shape as the Paladin's scene.</summary>
+    public override string CustomCharacterSelectBg => "res://HelloSpire/scenes/char_select_bg_alchemist.tscn";
+
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
     public override string CustomIconOutlineTexturePath => "character_icon_outline.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);
