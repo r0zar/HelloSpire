@@ -148,3 +148,24 @@ Not a plan. A shortlist to pick one from, each chosen to test one thing:
 
 The art for all of these already exists in the repo — Dan painted the full set before the
 reset — so adding one is a class, a localization entry and a build.
+
+## Combat visuals
+
+The Paladin no longer borrows the Ironclad's body: `Paladin.CustomVisualPath` points at
+`HelloSpire/scenes/creature_visuals_paladin.tscn`, our own `NCreatureVisuals` scene. Scene
+contract (unique names): `%Visuals` (Node2D body), `%Bounds` (Control hitbox), `%IntentPos`,
+`%CenterPos`, optional `%OrbPos`/`%TalkPos` markers. The body is a static Sprite2D -- the game
+is null-safe about missing spine rigs (animation triggers no-op, SFX still plays), so a static
+image is a legitimate creature.
+
+**Art request (Dan): the combat body.** Replaces
+`HelloSpire/images/creature/paladin_body.png` (current file is a generated placeholder).
+
+- Full-body Paladin, standing idle, **facing right** (players stand on the left side).
+- Transparent PNG, roughly **512x832** (any similar ratio works; the scene scales it 0.8x, so
+  it stands about 666px tall in-scene -- Ironclad-ish height).
+- Feet at bottom-center of the canvas; the scene treats bottom-center as the floor.
+- Same character as the card art: heavy plate, white tabard, gold cross, warhammer + shield.
+
+Later upgrade path: a spine rig would restore attack/hurt/idle animations, but that is a
+separate art project; a great static body ships first.

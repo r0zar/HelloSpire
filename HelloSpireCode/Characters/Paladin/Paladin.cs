@@ -63,6 +63,15 @@ public class Paladin : PlaceholderCharacterModel
     /// </summary>
     public override string CustomCharacterSelectBg => "res://HelloSpire/scenes/char_select_bg_paladin.tscn";
 
+    /// <summary>
+    /// The in-combat body. Our own NCreatureVisuals scene (BaseLib converts the plain root and
+    /// Harmony-routes CharacterModel.VisualsPath here), replacing the inherited Ironclad rig.
+    /// A static Sprite2D body: the game is null-safe about spine (SetAnimationTrigger no-ops,
+    /// attack/cast SFX still play), so no animations are required. Placeholder art; the spec
+    /// for real art is in design/paladin.md under Combat visuals.
+    /// </summary>
+    public override string CustomVisualPath => "res://HelloSpire/scenes/creature_visuals_paladin.tscn";
+
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectLockedIconPath => "char_select_locked.png".CharacterUiPath(AssetFolder);
