@@ -8,14 +8,13 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// While active: your Attacks deal +Amount damage (applied at 2, the Strength pattern). Judged:
-/// deal 10 damage -- clearly above a Seal-boosted Strike (8), since the judge is Judgment's
-/// entire payload. The starter Seal, granted by the Holy Book --
+/// While active: your Attacks deal +Amount damage. Judged: deal 5 -- small, because Judgment
+/// now fires every Seal you have and each one is priced for the stack. The starter Seal, granted by the Holy Book --
 /// the Defect's Cracked Core shape: passive trickle, real evoke.
 /// </summary>
 public sealed class SealOfRighteousnessPower : SealPower
 {
-    public const decimal JudgeDamage = 10m;
+    public const decimal JudgeDamage = 5m;
 
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props,
         Creature? dealer, CardModel? cardSource)

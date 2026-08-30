@@ -11,47 +11,43 @@ using MegaCrit.Sts2.Core.Models;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// A Seal: the Paladin's answer to the Defect's orbs, with a one-slot rule. A Seal is a passive
-/// buff while it is active (each subclass hooks whatever it modifies), and Judgment triggers its
-/// <see cref="OnJudged"/> effect. Seals persist -- Judging does not consume them.
-///
-/// One at a time is the whole tension: a new Seal replaces the old, so which Seal is up decides
-/// both your passive and what every Judgment does.
+/// A Seal is an ordinary buff power with one extra face: a Judgment effect, fired when the
+/// player Judges (Judgment, Exorcism, Divine Purpose, Shield of the Righteous). Stack as many
+/// Seals as you draft -- each is deliberately small, and Judgment triggers them ALL, so seal
+/// count is the scaling axis and Judgment is the payoff. Replaying a Seal stacks its Amount.
 /// </summary>
 public abstract class SealPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Single;
+    public override PowerStackType StackType => PowerStackType.Counter;
 
-    /// <summary>What happens when this Seal is Judged. The Seal persists.</summary>
+    /// <summary>This Seal's Judgment effect. The Seal persists.</summary>
     public abstract Task OnJudged(PlayerChoiceContext ctx, Creature target);
 }
 
-/// <summary>Grant, find, and Judge Seals. All Seal logic funnels through here.</summary>
+/// <summary>Grant and Judge Seals. All Seal logic funnels through here.</summary>
 public static class Seals
 {
     public static SealPower? Active(Creature creature) =>
         creature.GetPowerInstances<SealPower>().FirstOrDefault();
 
-    /// <summary>Grant a Seal, replacing whatever Seal is already up (one-slot rule).</summary>
-    public static async Task Grant<T>(PlayerChoiceContext ctx, Player p, decimal amount, CardModel? source = null)
-        where T : SealPower
-    {
-        foreach (var old in p.Creature.GetPowerInstances<SealPower>().Where(s => s is not T).ToList())
-            await PowerCmd.Remove(old);
-        await PowerCmd.Apply<T>(ctx, p.Creature, amount, p.Creature, source);
-    }
+    public static Task Grant<T>(PlayerChoiceContext ctx, Player p, decimal amount, CardModel? source = null)
+        where T : SealPower =>
+        PowerCmd.Apply<T>(ctx, p.Creature, amount, p.Creature, source);
 
-    /// <summary>Judge: trigger the active Seal's effect. The Seal stays. No Seal, no effect.
-    /// Avenging Wrath makes every Judge trigger twice; this funnel is where that lives.</summary>
+    /// <summary>
+    /// Judge: trigger every active Seal's effect (twice with Avenging Wrath). Seals persist.
+    /// </summary>
     public static async Task Judge(PlayerChoiceContext ctx, Player p, Creature target)
     {
-        if (Active(p.Creature) is not { } seal) return;
+        var seals = p.Creature.GetPowerInstances<SealPower>().ToList();
+        if (seals.Count == 0) return;
         var triggers = p.Creature.HasPower<AvengingWrathPower>() ? 2 : 1;
         for (var i = 0; i < triggers; i++)
-        {
-            seal.Flash();
-            await seal.OnJudged(ctx, target);
-        }
+            foreach (var seal in seals)
+            {
+                seal.Flash();
+                await seal.OnJudged(ctx, target);
+            }
     }
 }

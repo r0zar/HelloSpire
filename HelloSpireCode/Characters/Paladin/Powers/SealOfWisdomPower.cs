@@ -8,7 +8,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The cycle Seal: first Attack each turn draws a card; Judged, gain 1 Energy and draw Amount.
+/// The cycle Seal: first Attack each turn draws a card; Judged, draw Amount.
 /// </summary>
 public sealed class SealOfWisdomPower : SealPower
 {
@@ -32,7 +32,6 @@ public sealed class SealOfWisdomPower : SealPower
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
         if (Owner.Player is not { } player) return;
-        await PlayerCmd.GainEnergy(1m, player);
         await CardPileCmd.Draw(ctx, (int)Amount, player, false);
     }
 }

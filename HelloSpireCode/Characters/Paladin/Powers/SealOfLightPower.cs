@@ -7,12 +7,12 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// While active: whenever you play an Attack, heal Amount. Judged: heal 4 plus Spirit.
-/// The healing Seal -- turns Judgment into a Spirit-scaled heal button.
+/// While active: whenever you play an Attack, heal Amount. Judged: heal 3 plus Spirit.
+/// The starter Seal; small on both faces, priced for the stack.
 /// </summary>
 public sealed class SealOfLightPower : SealPower
 {
-    public const decimal JudgeHeal = 4m;
+    public const decimal JudgeHeal = 3m;
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

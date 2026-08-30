@@ -64,31 +64,27 @@ The category rules:
 
 ### Seals and Judgment
 
-The Defect's orbs, with a one-slot rule and no evoke cost. A **Seal** is a passive buff while
-active. **Judgment** is nothing but the trigger: unplayable without a Seal, and its effect is
-entirely whatever the active Seal's judge effect is. Seals persist through Judgment; you only
-ever have one, so which Seal is up decides both your passive and what Judgment does.
+Seals are ordinary buff powers with one extra face: a **Judgment effect**. Stack as many as you
+draft -- there is no slot limit and no consumption -- and **Judgment triggers the effects of
+ALL your Seals**. Seal count is the scaling axis; Judgment is the payoff button.
 
-A Seal is always up (the Holy Book guarantees one from turn one), so cards never ask "if a
-Seal is active" -- they ask *which*. Seals are the archetype signposts, spread across
-rarities -- Uncommon and up only, so they stay special in rewards -- and the first one
-offered tempts you into a lane:
+The balance rule: **each Seal is deliberately small**, priced so that having several is normal
+rather than degenerate. A one-seal Judgment is weak; a four-seal Judgment is a strong turn you
+built toward. Replaying a Seal stacks its Amount.
 
-| Seal | Rarity | Lane |
-|---|---|---|
-| Light (starter) | -- | sustain: Attacks heal 1; Judge heals 4+Spirit |
-| Righteousness | Uncommon | damage: Attacks +2; Judge 10 |
-| Command | Uncommon | aggro: Vulnerable on attack; Judge Vulnerable |
-| Justice | Uncommon | control: Weak on attack; Judge Weak |
-| Wisdom | Uncommon | cycle: attack draws; Judge energy+draw |
-| Martyr | Rare | tank: thorns; Judge AoE |
+| Seal | Rarity | Passive | Judgment |
+|---|---|---|---|
+| Light (starter) | -- | Attacks heal 1 | heal 3 + Spirit |
+| Righteousness | Uncommon | Attacks +2 | deal 5 |
+| Command | Uncommon | first Attack/turn: 1 Vulnerable | 2 Vulnerable |
+| Justice | Uncommon | first Attack/turn: 1 Weak | 2 Weak |
+| Wisdom | Uncommon | first Attack/turn: draw 1 | draw 1 |
+| Martyr | Rare | enemies that hit you take 3 | 3 to ALL enemies |
 
-Spirit stays a clean heal-boost stat -- like Strength and Dexterity, it does one thing. Cards
-never convert Spirit into Block or damage; they grant it (Devotion, Comfort) or heal with it.
-
-Implementation: a Seal is a `Single`-stack power (`SealPower`); `Seals.Grant` enforces the
-one-slot rule, `Seals.Judge` fires `OnJudged` (no removal). New Seals are one subclass, one
-loc entry, one icon each -- and each new Seal is also a new Judgment.
+Triggers: Judgment (1E, unplayable without a Seal; upgrade 0E), Exorcism (attack), Divine
+Purpose (cantrip), Shield of the Righteous (block). Avenging Wrath (Rare power) makes every
+trigger fire twice. All of it funnels through `Seals.Judge`, so new Seals and new trigger
+cards compose automatically.
 
 ### Spirit, the third stat (was: Faith)
 
