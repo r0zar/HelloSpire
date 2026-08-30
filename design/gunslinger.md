@@ -76,6 +76,22 @@ One chamber is always under the **hammer**.
 
 The Cylinder state is fully visible to the player unless a card is resolving an immediate gamble such as Russian Roulette.
 
+### The cylinder on screen
+A brass ring with six chambers in it sits beside the Energy orb: a big circle with six small ones
+around the inside, a fixed hammer mark at twelve o'clock, and the loaded count in the middle.
+
+- Each chamber is coloured by what is in it — one colour per kind of ammunition, near-black when
+  empty — so the next three chambers can be read at a glance rather than counted in a tooltip.
+- The ring turns one sixth of a revolution each time the hammer moves, in the direction a real
+  cylinder would turn, so a Fire and a Cycle look like what they are.
+- A Spin adds a whole extra revolution on top of wherever it landed. Without that, a Spin that
+  happened to land on the chamber it started from would not read as having spun at all.
+
+Implemented as `CylinderDisplay`, built from stock Godot nodes and driven by a change event on
+`CylinderPower` — no per-frame polling, one Tween per change. It hangs off whatever node in the
+combat UI names itself for Energy; if the game renames that node the search fails and the widget
+falls back to the bottom-left corner, which looks wrong but never crashes and is never invisible.
+
 ### Load
 **Load [Round]** places the Round into the first empty chamber clockwise, beginning at the hammer.
 
@@ -204,13 +220,13 @@ This creates a clean Russian Roulette ruleset.
 
 | Round | Printed effect when Fired at an enemy | Intended niche |
 |---|---|---|
-| **Lead Round** | Deal 6 damage. | Baseline ammunition. |
-| **Heavy Round** | Deal 10 damage. | Pure damage / Deadeye target. |
-| **Crippling Round** | Deal 4 damage. Apply 1 Weak. | Control. |
-| **Piercing Round** | Deal 7 damage. This Round ignores Block. | Anti-Block. |
-| **Guard Round** | Deal 4 damage. Gain 4 Block. | Hybrid defense. |
-| **Smoke Round** | Deal 2 damage. Gain 1 Dodge. | Premium tactical defense. |
-| **Rending Round** | Deal 5 damage. Apply 1 Debilitate. | Rare debuff ammunition. |
+| **Lead Round** | Deal 7 damage. | Baseline ammunition. |
+| **Heavy Round** | Deal 12 damage. | Pure damage / Deadeye target. |
+| **Crippling Round** | Deal 5 damage. Apply 1 Weak. | Control. |
+| **Piercing Round** | Deal 8 damage. This Round ignores Block. | Anti-Block. |
+| **Guard Round** | Deal 5 damage. Gain 5 Block. | Hybrid defense. |
+| **Smoke Round** | Deal 3 damage. Gain 1 Dodge. | Premium tactical defense. |
+| **Rending Round** | Deal 6 damage. Apply 1 Debilitate. | Rare debuff ammunition. |
 | **Black Powder Round** | Deal 16 damage. After firing it at an enemy, lose 3 HP. | Rare risk damage. |
 | **Dead Man's Round** | Deal 24 damage. | Russian Roulette payload. |
 
@@ -220,6 +236,40 @@ Piercing, Guard, and Smoke appear primarily at Uncommon.
 Rending, Black Powder, and Dead Man's Rounds are Rare/special.
 
 This keeps Act 1 readable and stops the Cylinder UI from presenting nine mechanics immediately.
+
+### Why these numbers moved (balance pass, 2026-08-29)
+The first draft priced a Lead Round at 6. In play that is the wrong number, because a Round is
+never free: it costs a card to Load *and* a card to Fire. Two cards and two Energy to put 12
+damage on a target is worse than two Strikes, which is exactly the "the Gunslinger feels weak"
+complaint. Lead moved to 7 and every specialist Round moved with it, so the gap that makes
+special ammunition worth drafting is preserved rather than squeezed.
+
+The other half of that fix is on the Fire side rather than the ammunition side — see the starter
+deck below.
+
+### Randomness
+The character leans slightly random about *what* is in the gun and *how much* of it, and never
+about what happens when you pull the trigger. Firing, Cycling and the chamber order are fully
+deterministic and fully visible; Loading is where the dice are.
+
+| Effect | What is rolled |
+|---|---|
+| **Reload** | 2-4 Lead Rounds (3-5 upgraded) |
+| **Quick Load** | 1-2 more of the last Round type you Loaded (2-3 upgraded) |
+| **Fresh Cartridges** | 1 Round from the seven ordinary kinds (2 upgraded) |
+| **Old Iron** | the fourth opening Round, from Heavy / Crippling / Piercing / Guard |
+| **Oiled Rag** | the spare Round, from the seven ordinary kinds |
+| **Spare Speedloader** | 3-5 Lead Rounds |
+| **Speedloader Flask** | the fourth Round, from Heavy / Crippling / Piercing / Guard |
+| **Bottomless Bandolier** | the per-turn Round, from Heavy / Crippling / Piercing / Guard |
+
+Two rules hold this together. Every roll has a floor at least as good as the fixed value it
+replaced, so a bad roll is never worse than the old card was. And Black Powder and Dead Man's
+Rounds are never in a random pool: both carry a drawback the card that chambers them is priced
+around, and neither should ever arrive unannounced.
+
+All of it runs through `Revolver.Roll`, on the seeded combat RNG stream, so a run stays
+reproducible.
 
 ---
 
@@ -233,41 +283,51 @@ This keeps Act 1 readable and stops the Cylinder UI from presenting nine mechani
 
 ### Reload
 **1 Energy — Skill**  
-Load 2 Lead Rounds.
+Load 2-4 Lead Rounds.
 
 **Reload+**  
-Load 3 Lead Rounds.
+Load 3-5 Lead Rounds.
 
 ### Quick Draw
 **0 Energy — Attack**  
-Fire 1.
+Fire 2.
 
 **Quick Draw+**  
-Gain 2 Deadeye. Fire 1.
+Gain 2 Deadeye. Fire 2.
 
 The starter deck teaches:
-1. Ammo exists.
+1. Ammo exists, and how much of it you get is the gun's business.
 2. Firing consumes it.
 3. A zero-cost Fire card is only good if you prepared ammunition.
 4. Ordinary Strikes remain available when the gun is empty.
+
+**Why Quick Draw fires twice.** One Round per free card is the rate that made the character feel
+weak, and no amount of raising Round damage fixes it — a card that spends one chamber is priced
+against a Strike, and the Gunslinger already paid a card to put that chamber there. Two chambers
+per Fire card is the rate the rest of the set is written against, and the starter is where the
+player learns to expect it. It also makes the empty gun hurt more, which is the correct tension:
+Quick Draw into a dry cylinder is now two Clicks, not one.
 
 ---
 
 # 6. Starter Relic and Ancient Upgrade
 
 ## Old Iron — Starter Relic
-At the start of each combat, **Load 3 Lead Rounds**.
+At the start of each combat, **Load 3 Lead Rounds and 1 random special Round**
+(Heavy, Crippling, Piercing or Guard).
 
 Purpose:
-- Guarantees Quick Draw is functional in the opening hand.
-- Lets the player experience the gun immediately.
+- Guarantees Quick Draw is functional in the opening hand — four chambers now covers both its shots.
+- Lets the player experience the gun, and the ammunition menu, immediately.
 - Does not remove the need to draft or play Loading cards.
+- Makes the first turn of every fight a slightly different puzzle, which is the temperament the
+  rest of the set is written for.
 
 ## True Iron — Ancient Starter Upgrade
 Replaces Old Iron.
 
 At the start of each combat, **fill all 6 chambers with Lead Rounds**.  
-**Lead Rounds deal 1 additional damage.**
+**Lead Rounds deal 2 additional damage.**
 
 Balance rationale:
 - Comparable in spirit to current STS2 starter upgrades that significantly amplify the character's native resource engine.
@@ -291,8 +351,8 @@ Balance rationale:
 | 8 | **Gut Shot** | Attack | 1 | Deal 8 damage. If the enemy is Weak, deal 4 additional damage. | Deal 10 damage; bonus becomes 6. | Weak payoff |
 | 9 | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. | Deal 5 damage. | Cheap Weak |
 | 10 | **Point Blank** | Attack | 1 | Deal 10 damage. If all 6 chambers are loaded, deal 4 additional damage. | Deal 13 damage; bonus becomes 5. | Full-cylinder |
-| 11 | **Fresh Cartridges** | Skill | 1 | Load 2 Lead Rounds. | Load 3 Lead Rounds. | Ammo |
-| 12 | **Quick Load** | Skill | 0 | Load 1 Lead Round. Exhaust. | Load 2 Lead Rounds. Exhaust. | Ammo tempo |
+| 11 | **Fresh Cartridges** | Skill | 1 | Load 2 Lead Rounds and 1 random Round. | Load 2 random Rounds. | Ammo / wildcard |
+| 12 | **Quick Load** | Skill | 0 | Load 1-2 more of the last Round you Loaded. Exhaust. | Load 2-3. Exhaust. | Ammo tempo |
 | 13 | **Heavy Cartridge** | Skill | 1 | Load 1 Heavy Round. Gain 3 Block. | Gain 5 Block. | Heavy ammo |
 | 14 | **Crippling Cartridge** | Skill | 1 | Load 1 Crippling Round. Gain 3 Block. | Gain 5 Block. | Weak ammo |
 | 15 | **Take Cover** | Skill | 1 | Gain 7 Block. | Gain 10 Block. | Block |
@@ -300,7 +360,7 @@ Balance rationale:
 | 17 | **Roll Aside** | Skill | 1 | Gain 5 Block. Cycle 1. If the new chamber is empty, gain 3 more Block. | Gain 7 Block; conditional Block becomes 4. | Cycle / Block |
 | 18 | **Steady Hand** | Skill | 1 | Gain 5 Deadeye. | Gain 8 Deadeye. | Shot empowerment |
 | 19 | **Spin Cylinder** | Skill | 0 | Spin. Draw 1 card. Exhaust. | After Spinning, gain 3 Deadeye. Draw 1 card. Exhaust. | Spin |
-| 20 | **Pocket Sand** | Skill | 1 | Apply 2 Weak. | Apply 3 Weak. | Weak |
+| 20 | **Pocket Sand** | Skill | 1 | Apply 2 Weak. | Costs 0. | Weak |
 
 ## Uncommons — 35
 | # | Card | Type | Cost | Base | Upgrade | Role |
@@ -378,13 +438,16 @@ The normal STS2 class template uses 7 non-starter class relics.
 
 | Rarity | Relic | Effect | Purpose |
 |---|---|---|---|
-| Common | **Oiled Rag** | The first time each combat you play a card that Loads, also Load 1 Lead Round. | Early ammo smoothing. |
+| Common | **Oiled Rag** | The first time each combat you play a card that Loads, also Load 1 random Round. | Early ammo smoothing, and an early taste of the ammunition menu. |
 | Uncommon | **Tin Badge** | The first time each turn you apply Weak, gain 3 Block. | Weak/defense bridge. |
-| Uncommon | **Spare Speedloader** | The first time each combat the Cylinder becomes completely empty, Load 3 Lead Rounds. | Prevents ammo collapse. |
+| Uncommon | **Spare Speedloader** | The first time each combat the Cylinder becomes completely empty, Load 3-5 Lead Rounds. | Prevents ammo collapse. |
 | Rare | **Longcoat Plates** | Start each combat with 3 Armor. | Durable defensive identity. |
 | Rare | **Lucky Coin** | The first time each turn you Spin: if the current chamber is loaded, draw 1 card; if empty, gain 4 Block. | Makes Spin productive without removing randomness. |
 | Rare | **Engraved Hammer** | The first successful Round you Fire each turn deals +4 damage. | Consistent precision scaling. |
 | Shop | **Ivory Handle** | Non-Lead Rounds deal +3 damage. | Premium special-ammo payoff. |
+
+Old Iron, Oiled Rag and Spare Speedloader all roll what they hand you. See **Randomness** in
+section 4 for the full list and the two rules that keep it fair.
 
 ---
 
@@ -614,6 +677,19 @@ Watch for:
 - Armor exceeding 6–8 too easily without Rare cards.
 
 If Armor is too strong, adjust card values before changing the keyword.
+
+**Implementation note — why Armor used to evaporate.** Both Armor and Dodge reduce damage from a
+Harmony postfix on `Hook.ModifyDamage`, which is the only hook that sees an incoming hit before it
+lands. That hook answers the question "how big would this hit be", and the game asks it more than
+once per hit — the intent forecast above each enemy asks it too. The first implementation spent a
+stack of Armor every time it was asked, so a stack drained to nothing before anything had swung,
+which read in play as "Armor wears off immediately".
+
+The reduction and the spend are now separate. The patch only ever reduces, which makes it
+idempotent — the property the hook actually requires — and raises a pending flag on the power.
+`ArmorPower.BeforeDamageReceived` and `DodgePower.BeforeDamageReceived` spend that flag; those
+hooks run once, for damage that is really being dealt. `Hard Leather` is announced from the same
+place, so it can no longer be triggered by a forecast redraw either.
 
 ## 13.4 Dodge
 Dodge is intentionally premium.

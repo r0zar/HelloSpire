@@ -47,31 +47,48 @@ public sealed class DefendGunslinger() : GunslingerCard(1, CardType.Skill, CardR
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Load 2 Lead Rounds. Half the starting deck's job is putting bullets in the gun.</summary>
+/// <summary>
+/// Load 2-4 Lead Rounds. Half the starting deck's job is putting bullets in the gun.
+///
+/// The count is rolled rather than fixed, which is the character's whole temperament in the very
+/// first card you play: a handful of shells goes in, and how many is the gun's business. The floor
+/// is what the card used to be worth, so a bad roll is never worse than the old card.
+/// </summary>
 public sealed class Reload() : GunslingerCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Load", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("LoadMin", 2m), new DynamicVar("LoadMax", 4m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load), Tip(GunslingerTips.TheCylinder)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
+        await Revolver.LoadBetween(ctx, Gun, Rounds.Lead,
+            DynamicVars["LoadMin"].IntValue, DynamicVars["LoadMax"].IntValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Load"].UpgradeValueBy(1m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars["LoadMin"].UpgradeValueBy(1m);
+        DynamicVars["LoadMax"].UpgradeValueBy(1m);
+    }
 }
 
 /// <summary>
-/// Fire 1, for free.
+/// Fire 2, for free.
 ///
 /// Not to be confused with the uncommon <see cref="Quickdraw"/>, which pays off a Click. This is
-/// the starter, and it is a blank trigger pull until you have loaded something.
+/// the starter, and it is two blank trigger pulls until you have loaded something.
+///
+/// It fires twice rather than once because one Round per free card was the arithmetic that made
+/// the character feel weak: two cards and an Energy to put six damage on a target is worse than a
+/// Strike. Two chambers a card is the rate the rest of the deck is priced against.
 /// </summary>
 public sealed class QuickDraw() : GunslingerCard(0, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Deadeye", 0m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Fire", 2m), new DynamicVar("Deadeye", 0m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(GunslingerTips.Fire), Tip(GunslingerTips.Click)];
@@ -81,7 +98,7 @@ public sealed class QuickDraw() : GunslingerCard(0, CardType.Attack, CardRarity.
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await GunslingerEffects.GainDeadeye(ctx, Gun, DynamicVars["Deadeye"].BaseValue);
-        await Revolver.Fire(ctx, Gun, play.Target);
+        await Revolver.FireTimes(ctx, Gun, play.Target, DynamicVars["Fire"].IntValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["Deadeye"].UpgradeValueBy(2m);

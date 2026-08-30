@@ -18,7 +18,10 @@ public abstract class GunslingerPotion : Characters.GunslingerPotion
     protected GunContext Gun => GunContext.From(Owner);
 }
 
-/// <summary>Load three Lead Rounds. The answer to drawing a hand with no ammunition in it.</summary>
+/// <summary>
+/// Load three Lead Rounds and one random special Round. The answer to drawing a hand with no
+/// ammunition in it, and — like the rest of the character's ammunition — not entirely up to you.
+/// </summary>
 public sealed class SpeedloaderFlask : GunslingerPotion
 {
     public override PotionRarity Rarity => PotionRarity.Common;
@@ -26,6 +29,7 @@ public sealed class SpeedloaderFlask : GunslingerPotion
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
         await Revolver.Load(ctx, Gun, Rounds.Lead, 3);
+        await Revolver.Load(ctx, Gun, Rounds.RandomSpecial(Gun), 1);
     }
 }
 

@@ -57,6 +57,20 @@ public static class Rounds
 
     /// <summary>Bottomless Bandolier's pool: the four special Rounds that are not situational.</summary>
     public static readonly Func<Round>[] Special = [Heavy, Crippling, Piercing, Guard];
+
+    /// <summary>
+    /// Every Round the character can be handed at random — the seven ordinary kinds.
+    ///
+    /// Black Powder and Dead Man's are deliberately absent: both carry a drawback the card that
+    /// chambers them is priced around, and neither should ever arrive unannounced.
+    /// </summary>
+    public static readonly Func<Round>[] Ordinary = [Lead, Heavy, Crippling, Piercing, Guard, Smoke, Rending];
+
+    /// <summary>One of the seven ordinary Rounds, uniformly.</summary>
+    public static Func<Round> RandomOrdinary(GunContext gun) => Revolver.Pick(gun, Ordinary);
+
+    /// <summary>One of the four special Rounds — random, but never a plain Lead Round.</summary>
+    public static Func<Round> RandomSpecial(GunContext gun) => Revolver.Pick(gun, Special);
 }
 
 /// <summary>
@@ -69,6 +83,23 @@ public static class Revolver
 {
     /// <summary>The cylinder if combat has already created it, without creating one.</summary>
     public static CylinderPower? Peek(GunContext gun) => gun.Player.Creature?.GetPower<CylinderPower>();
+
+    // ----------------------------------------------------------------- Chance
+
+    /// <summary>
+    /// An inclusive roll on the combat RNG stream.
+    ///
+    /// Everything the Gunslinger leaves to chance goes through here so there is one seeded stream
+    /// to reason about, and so a run stays reproducible.
+    /// </summary>
+    public static int Roll(GunContext gun, int min, int max)
+    {
+        if (max <= min) return min;
+        return Math.Clamp(gun.Player.RunState.Rng.CombatTargets.NextInt(min, max), min, max);
+    }
+
+    /// <summary>A uniformly chosen entry from <paramref name="options"/>.</summary>
+    public static T Pick<T>(GunContext gun, IReadOnlyList<T> options) => options[Roll(gun, 0, options.Count - 1)];
 
     /// <summary>
     /// The cylinder, creating it if this is the first Gunslinger effect of the combat.
@@ -105,15 +136,46 @@ public static class Revolver
         {
             var round = factory();
             var slot = NextLoadSlot(cylinder, gun, ref overwriteOffset);
-            cylinder.Chambers[slot] = round;
-            cylinder.SyncDisplay();
-            await GunslingerHooks.NotifyLoaded(ctx, gun, round);
+            await Chamber(ctx, gun, cylinder, slot, round);
         }
     }
 
     /// <summary>Loads a single, already-built Round.</summary>
     public static Task Load(PlayerChoiceContext ctx, GunContext gun, Round round) =>
         Load(ctx, gun, () => round, 1);
+
+    /// <summary>
+    /// Loads a random number of Rounds, between <paramref name="min"/> and <paramref name="max"/>
+    /// inclusive. Reload and Quick Load are both written this way: the gun gives you roughly what
+    /// you asked for, and occasionally rather more.
+    /// </summary>
+    public static Task LoadBetween(PlayerChoiceContext ctx, GunContext gun, Func<Round> factory, int min, int max) =>
+        Load(ctx, gun, factory, Roll(gun, min, max));
+
+    /// <summary>
+    /// The last kind of Round that went into the gun this combat, as a factory for more of it.
+    /// Falls back to Lead when nothing has been Loaded yet, so Quick Load is never a dead card.
+    /// </summary>
+    public static Func<Round> LastLoaded(GunContext gun)
+    {
+        var round = Peek(gun)?.LastLoaded;
+        return round == null ? Rounds.Lead : round.Duplicate;
+    }
+
+    /// <summary>
+    /// Puts one Round into one chamber: the single place a chamber is filled.
+    ///
+    /// Everything that Loads funnels through here so that the display, the "last Round Loaded"
+    /// memory and the Load hook can never drift apart from each other.
+    /// </summary>
+    private static async Task Chamber(PlayerChoiceContext ctx, GunContext gun, CylinderPower cylinder,
+        int index, Round round)
+    {
+        cylinder.Chambers[index] = round;
+        cylinder.LastLoaded = round;
+        cylinder.SyncDisplay();
+        await GunslingerHooks.NotifyLoaded(ctx, gun, round);
+    }
 
     /// <summary>
     /// Where the next Round goes. Stacked Chamber redirects a single Load under the hammer; failing
@@ -150,10 +212,7 @@ public static class Revolver
             var index = cylinder.Offset(step);
             if (cylinder.Chambers[index] != null) continue;
 
-            var round = factory();
-            cylinder.Chambers[index] = round;
-            cylinder.SyncDisplay();
-            await GunslingerHooks.NotifyLoaded(ctx, gun, round);
+            await Chamber(ctx, gun, cylinder, index, factory());
         }
     }
 
@@ -173,10 +232,7 @@ public static class Revolver
             return;
         }
 
-        var pick = empty[Math.Clamp(gun.Player.RunState.Rng.CombatTargets.NextInt(0, empty.Count - 1), 0, empty.Count - 1)];
-        cylinder.Chambers[pick] = round;
-        cylinder.SyncDisplay();
-        await GunslingerHooks.NotifyLoaded(ctx, gun, round);
+        await Chamber(ctx, gun, cylinder, Pick(gun, empty), round);
     }
 
     // ---------------------------------------------------------------- Fire
@@ -217,20 +273,27 @@ public static class Revolver
         if (options.Multiplier != 1m) damage = (int)Math.Floor(damage * options.Multiplier);
         if (damage < 0) damage = 0;
 
-        var props = options.IgnoreBlock ? ValueProp.Unblockable : round.Props;
         var hits = 1 + Math.Max(0, options.ExtraDamageRepeats);
+        var throughBlock = options.IgnoreBlock || round.Props.HasFlag(ValueProp.Unblockable);
 
         var dealt = 0;
         if (target != null && damage > 0 && gun.Card != null)
         {
-            var attack = await DamageCmd.Attack(damage)
-                .WithHitCount(hits)
-                .FromCard(gun.Card)
-                .Targeting(target)
-                .WithHitFx("vfx/vfx_attack_blunt", null, "blunt_attack.mp3")
-                .Execute(ctx);
+            if (throughBlock)
+            {
+                dealt = await Pierce(ctx, gun, target, damage, hits);
+            }
+            else
+            {
+                var attack = await DamageCmd.Attack(damage)
+                    .WithHitCount(hits)
+                    .FromCard(gun.Card)
+                    .Targeting(target)
+                    .WithHitFx("vfx/vfx_attack_blunt", null, "blunt_attack.mp3")
+                    .Execute(ctx);
 
-            dealt = attack.Results.SelectMany(hit => hit).Sum(result => result.TotalDamage);
+                dealt = attack.Results.SelectMany(hit => hit).Sum(result => result.TotalDamage);
+            }
         }
 
         cylinder.RoundsFiredThisCombat++;
@@ -282,9 +345,15 @@ public static class Revolver
 
         if (enemies.Count > 0 && damage > 0 && gun.Card != null)
         {
-            var props = options.IgnoreBlock ? ValueProp.Unblockable : round.Props;
+            var throughBlock = options.IgnoreBlock || round.Props.HasFlag(ValueProp.Unblockable);
             foreach (var enemy in enemies)
             {
+                if (throughBlock)
+                {
+                    dealt += await Pierce(ctx, gun, enemy, damage, 1);
+                    continue;
+                }
+
                 var attack = await DamageCmd.Attack(damage)
                     .FromCard(gun.Card)
                     .Targeting(enemy)
@@ -335,6 +404,25 @@ public static class Revolver
     }
 
     /// <summary>
+    /// Damage that goes straight past Block: a Piercing Round, or any Round fired by Through the Coat.
+    ///
+    /// The Attack builder has no Unblockable option, so this drops to the raw damage command with
+    /// <see cref="ValueProp.Unblockable"/> instead. Powers are deliberately left on — Strength, Weak
+    /// and Vulnerable still apply, which is what makes it a shot rather than a special effect — but
+    /// the command reports no per-hit results, so the caller is told what was asked for rather than
+    /// what landed. Only <see cref="FireResult.DamageDealt"/> is approximate, and nothing branches
+    /// on it today.
+    /// </summary>
+    private static async Task<int> Pierce(PlayerChoiceContext ctx, GunContext gun, Creature target,
+        int damage, int hits)
+    {
+        for (var i = 0; i < hits; i++)
+            await CreatureCmd.Damage(ctx, target, damage, ValueProp.Unblockable, gun.Self, gun.Card);
+
+        return damage * hits;
+    }
+
+    /// <summary>
     /// Deadeye is all-or-nothing: the first successful Round takes the whole stack and the rest of a
     /// salvo gets nothing. That is what stops Fire 6 from multiplying it six times over.
     /// </summary>
@@ -371,9 +459,8 @@ public static class Revolver
         var cylinder = await Get(ctx, gun);
         if (cylinder == null) return;
 
-        var rng = gun.Player.RunState.Rng.CombatTargets;
-        cylinder.Hammer = Math.Clamp(rng.NextInt(0, CylinderPower.ChamberCount - 1),
-            0, CylinderPower.ChamberCount - 1);
+        cylinder.Hammer = Roll(gun, 0, CylinderPower.ChamberCount - 1);
+        cylinder.SpinCount++;
         cylinder.SyncDisplay();
 
         await GunslingerHooks.NotifySpun(ctx, gun);
@@ -470,8 +557,6 @@ public static class Revolver
         var cylinder = await Get(ctx, gun);
         if (cylinder == null) return;
 
-        cylinder.Chambers[cylinder.Hammer] = round;
-        cylinder.SyncDisplay();
-        await GunslingerHooks.NotifyLoaded(ctx, gun, round);
+        await Chamber(ctx, gun, cylinder, cylinder.Hammer, round);
     }
 }

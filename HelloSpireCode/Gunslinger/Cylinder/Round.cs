@@ -30,25 +30,35 @@ public abstract class Round
     /// <paramref name="target"/> is null when the Round was fired without a specific enemy.
     /// </summary>
     public virtual Task Resolve(PlayerChoiceContext ctx, GunContext gun, Creature? target) => Task.CompletedTask;
+
+    /// <summary>
+    /// Another Round of exactly this kind, including any per-instance payload.
+    ///
+    /// Quick Load reloads "the last Round type you Loaded", which needs a way to make a second
+    /// one from an example. Rounds are immutable data — the only mutable-looking members are
+    /// init-only ints — so a shallow copy is a faithful duplicate and no subclass has to
+    /// implement anything.
+    /// </summary>
+    public Round Duplicate() => (Round)MemberwiseClone();
 }
 
 public sealed class LeadRound : Round
 {
     public override string Key => "LEAD_ROUND";
-    public override int Damage => 6;
+    public override int Damage => 7;
     public override bool IsLead => true;
 }
 
 public sealed class HeavyRound : Round
 {
     public override string Key => "HEAVY_ROUND";
-    public override int Damage => 10;
+    public override int Damage => 12;
 }
 
 public sealed class CripplingRound : Round
 {
     public override string Key => "CRIPPLING_ROUND";
-    public override int Damage => 4;
+    public override int Damage => 5;
 
     public override async Task Resolve(PlayerChoiceContext ctx, GunContext gun, Creature? target)
     {
@@ -60,25 +70,25 @@ public sealed class CripplingRound : Round
 public sealed class PiercingRound : Round
 {
     public override string Key => "PIERCING_ROUND";
-    public override int Damage => 7;
+    public override int Damage => 8;
     public override ValueProp Props => ValueProp.Unblockable;
 }
 
 public sealed class GuardRound : Round
 {
     public override string Key => "GUARD_ROUND";
-    public override int Damage => 4;
+    public override int Damage => 5;
 
     public override async Task Resolve(PlayerChoiceContext ctx, GunContext gun, Creature? target)
     {
-        await GunslingerEffects.GainBlock(gun, 4);
+        await GunslingerEffects.GainBlock(gun, 5);
     }
 }
 
 public sealed class SmokeRound : Round
 {
     public override string Key => "SMOKE_ROUND";
-    public override int Damage => 2;
+    public override int Damage => 3;
 
     public override async Task Resolve(PlayerChoiceContext ctx, GunContext gun, Creature? target)
     {
@@ -89,7 +99,7 @@ public sealed class SmokeRound : Round
 public sealed class RendingRound : Round
 {
     public override string Key => "RENDING_ROUND";
-    public override int Damage => 5;
+    public override int Damage => 6;
 
     public override async Task Resolve(PlayerChoiceContext ctx, GunContext gun, Creature? target)
     {

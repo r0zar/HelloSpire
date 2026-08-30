@@ -142,7 +142,7 @@ Vulnerable deliberately is not. See `design/gunslinger.md`.
 
 | # | Card | Type | Cost | Effect | Upgrade |
 |---:|---|---|---:|---|---|
-| 1 | **Hand Me That** | Skill | 1 | Another player draws 2 cards. Load 2 Lead Rounds. | They draw 3 cards. |
+| 1 | **Hand Me That** | Skill | 1 | Another player draws 2 cards. Load 2 Rounds of the kind their class carries. | They draw 3 cards. |
 | 2 | **Softened Up** | Skill | 1 | Apply 1 Debilitate to ALL enemies. Exhaust. | Apply 2 Debilitate. |
 | 3 | **Covering Partner** | Skill | 1 | ALL players gain 5 Block. Cycle 1. If the new chamber is loaded, ALL players gain 3 more Block. | Gain 7 Block; the bonus becomes 4. |
 | 4 | **Suppressive Volley** | Attack | 2 | Fire 2. Apply 1 Weak to ALL enemies. | Apply 2 Weak. |
@@ -161,8 +161,24 @@ Alchemist's Vulnerable Potion, it doubles a debuff the Gunslinger could not have
 a card whose ceiling is set by *who else is at the table*, which is the whole brief.
 
 `Hand Me That` is the two-for-one that defines the character's role in a party: the Gunslinger's
-worst turn is a load turn, and this makes a load turn also a teammate's good turn. Two Lead into
+worst turn is a load turn, and this makes a load turn also a teammate's good turn. Two Rounds into
 the gun and two cards to someone who can spend them.
+
+What comes back depends on who you asked. Borrowing from an Ironclad gets you something heavy;
+borrowing from a Defect gets you something that goes through plating. The table is deliberately
+lossy — there are more classes than there is interesting ammunition, so overlaps are fine:
+
+| Class | Lends | Class | Lends |
+|---|---|---|---|
+| Ironclad | Heavy Round | Necrobinder | Rending Round |
+| Silent | Crippling Round | Paladin | Guard Round |
+| Defect | Piercing Round | Alchemist | Smoke Round |
+| Regent | Guard Round | anyone else, and yourself | Lead Round |
+
+The mapping lives in `AmmoAffinity`, matched on the character class name rather than on its type,
+so a modded fourth party member still gets an answer instead of an exception. This makes the card
+read differently in every lobby, which is the point of a multiplayer card, and it makes Rending
+Rounds — otherwise Rare-only ammunition — reachable at Uncommon if you brought the right friend.
 
 `Covering Partner` was originally a flat party-Block card, which any character could have printed.
 Tying the bonus to a Cycle makes it a *Gunslinger* card — it advances the hammer, which is

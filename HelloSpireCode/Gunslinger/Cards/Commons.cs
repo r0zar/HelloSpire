@@ -230,10 +230,17 @@ public sealed class PointBlank() : GunslingerCard(1, CardType.Attack, CardRarity
     }
 }
 
-/// <summary>Load 2 Lead Rounds. The workhorse reload.</summary>
+/// <summary>
+/// Load 2 Lead Rounds and 1 random Round. The workhorse reload, with something odd in the box.
+///
+/// The wildcard is the common that teaches the whole ammunition menu: over a run you will fire
+/// every kind of Round out of this card without ever having drafted for it, which is both how the
+/// character learns and where its best turns come from.
+/// </summary>
 public sealed class FreshCartridges() : GunslingerCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Load", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Load", 2m), new DynamicVar("Wild", 1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
 
@@ -241,15 +248,26 @@ public sealed class FreshCartridges() : GunslingerCard(1, CardType.Skill, CardRa
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
+
+        // Rolled once per Round, so an upgraded copy is two different surprises rather than a pair.
+        for (var i = 0; i < DynamicVars["Wild"].IntValue; i++)
+            await Revolver.Load(ctx, Gun, Rounds.RandomOrdinary(Gun), 1);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Load"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars["Wild"].UpgradeValueBy(1m);
 }
 
-/// <summary>Load 1 Lead Round for free, once.</summary>
+/// <summary>
+/// Load 1-2 more of whatever you Loaded last, for free, once.
+///
+/// It reaches into the same box the last card reached into, which is what makes it premium after a
+/// Cartridge and merely fine after a Reload. It is never dead: the starter relic has already
+/// Loaded before the first turn, and with nothing Loaded at all it falls back to Lead.
+/// </summary>
 public sealed class QuickLoad() : GunslingerCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Load", 1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("LoadMin", 1m), new DynamicVar("LoadMax", 2m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -257,10 +275,15 @@ public sealed class QuickLoad() : GunslingerCard(0, CardType.Skill, CardRarity.C
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
+        await Revolver.LoadBetween(ctx, Gun, Revolver.LastLoaded(Gun),
+            DynamicVars["LoadMin"].IntValue, DynamicVars["LoadMax"].IntValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Load"].UpgradeValueBy(1m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars["LoadMin"].UpgradeValueBy(1m);
+        DynamicVars["LoadMax"].UpgradeValueBy(1m);
+    }
 }
 
 /// <summary>Load 1 Heavy Round. Gain Block.</summary>
@@ -396,7 +419,13 @@ public sealed class SpinCylinder() : GunslingerCard(0, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars["Deadeye"].UpgradeValueBy(3m);
 }
 
-/// <summary>Apply Weak. No gun required.</summary>
+/// <summary>
+/// Apply 2 Weak. No gun required.
+///
+/// Upgrading makes it free rather than making it 3 Weak. The Gunslinger's problem is that setting
+/// the gun up and using it compete for the same Energy every turn, so a debuff that costs nothing
+/// to slot in is worth more to the deck than a third stack of Weak on one enemy.
+/// </summary>
 public sealed class PocketSand() : GunslingerCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<WeakPower>(2m)];
@@ -409,5 +438,5 @@ public sealed class PocketSand() : GunslingerCard(1, CardType.Skill, CardRarity.
         await GunslingerEffects.ApplyWeak(ctx, Gun, play.Target, DynamicVars["WeakPower"].BaseValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars["WeakPower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
