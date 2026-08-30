@@ -1,292 +1,89 @@
 # The Paladin — design
 
-Status: **design agreed, not implemented.** No cards exist yet.
+Status: **rebuilding from the starter deck, one card at a time.** Reset on 2026-08-30.
 
-## Core mechanic: Faith
+This is the live design. The earlier full build — Faith across the Triad, Bane, Judged /
+Warded / Blessed, 91 cards — is archived in [`paladin-faith-archive.md`](paladin-faith-archive.md)
+and [`paladin-faith-cards-archive.md`](paladin-faith-cards-archive.md), with its code at git
+`aaec1e4`. It was built end to end and compiled, and none of it was ever played. That is the
+lesson this document is organised around.
 
-Faith is a **standing value, not a currency**. It is gained, checked, and scaled off. It is
-normally never spent — but it *can* be, and that is the whole oathbreaker theme.
+## The rule
 
-Faith is held **per deity**, not in one pool. This is the part nothing else in the game does:
+**One card at a time. Each one is a deliberate decision. Playtest before the next.**
 
-| | Shape |
+Nothing enters the pool because a design doc listed it. A card is added because a run made
+its absence felt, or because a specific idea is worth testing in isolation. The card set grows
+at the speed of play, not the speed of writing.
+
+## What exists
+
+### Character
+
+| | |
 |---|---|
-| Regent's Stars | one pool, spent as a cost |
-| Defect's Orbs | an ordered queue of objects |
-| Necrobinder's Osty | a second body |
-| **Paladin's Faith** | **a portfolio split across deities** |
+| Starting HP | 75 — matches Regent and Defect; the kit is inherently sturdy, so no more than that |
+| Colour | gold `#e8c46a`, on the card frame via `ShaderColor` |
+| Starter relic | **Holy Fervor** — *Whenever you play a card that heals, gain 1 Strength. Once per turn.* |
 
-Thresholds are **per deity**, so spreading your investment reaches nothing. The pressure to
-concentrate is structural, before any explicit penalty exists.
+Holy Fervor is the one piece of the old build that survived, because it does not depend on
+anything else. It turns the character's least-valued verb (healing) into its most-valued stat
+(Strength), which makes every heal card a scaling decision. The once-per-turn cap is what keeps
+Mend + a second heal from being a turn-one Demon Form.
 
-**Faith resets every combat.** A run-long accumulating number would get out of hand and
-trivialize Act 3. Each fight is its own arc of devotion.
-
-### Why this shape works
-
-- **The ramp is the fight's arc.** Cheap low-threshold cards early, an 8-Faith payoff late.
-  Tension curve for free.
-- **Card rewards get hard.** Twelve Faith into Torm and you're offered a great Tyr card.
-  Taking it costs something real.
-- **Splitting is a build, not just a mistake.** Wide decks pay a tax for breadth. That's the
-  Silent-style mix-and-match: concentration is the default good play, breadth is the clever
-  alternative for a deck built to support it.
-
-## The three verbs
-
-Faith generation is deliberately orthogonal. Each deity keys off one action, and every deck
-already does all three to some degree — so any deck generates some Faith without trying.
-Concentration means choosing which verb you do *most*.
-
-| Deity | Trigger | Verb | Archetype |
-|---|---|---|---|
-| **Torm the True** | gain Block | defend | Protection |
-| **Ilmater the Broken God** | heal | mend | Holy |
-| **Tyr the Maimed God** | deal damage | attack | Retribution |
-
-All three are **actions you take**, not things done to you. An earlier draft had Ilmater key
-off losing HP; that was worse, because it was enemy-driven and it overlapped with Tyr.
-
-Two consequences of Ilmater keying off healing, both load-bearing:
-
-- **Heals are never dead cards.** Healing at full HP still generates Faith, so the card always
-  did something. No special overheal rule is needed — the mechanic handles it natively.
-- **Healing an ally generates Faith.** The co-op hook is the engine rather than a bolt-on. A
-  Paladin in a party has more healing targets, so more Faith, with no "in multiplayer..."
-  clause anywhere in the card text.
-
-## Deities are flavor, not card types
-
-**A deity does not restrict what a card can do.** All three have attacks, heals and Block.
-Tyr can heal through an attack. Ilmater can smite. Torm can carry thorns. The deity is a
-flavor lens and a Faith source, nothing more.
-
-This is deliberate, and it creates the central deckbuilding axis for free:
-
-- **Single-verb cards** generate one deity's Faith efficiently — they build **tall**.
-- **Hybrid cards** trigger two Oaths at once, at a worse rate per deity — they build **wide**,
-  and wide decks are the ones that want `Heresy`.
+### Starter deck — ten cards
 
 ```
-Holy Smite        1E  Deal 6 damage. Heal an ally 3.
-                      -> Vengeance AND Redemption
-Holy Shield       1E  Gain 5 Block. Until end of turn, when you are attacked,
-                      deal 3 damage back.
-                      -> Crown; thorns are Tyr flavor on a Torm card
-Guardian's Mercy  1E  Gain 4 Block. Heal an ally 3.
-                      -> Crown AND Redemption
-Vengeful Mending  1E  Deal 8 damage. Heal yourself 4.
-                      -> Vengeance AND Redemption
-Retribution       1E  Deal damage equal to the Block you gained this turn.
-                      -> a Tyr payoff that only pays off in a Torm deck
+4x Strike             1E  Deal 6 damage.
+4x Defend             1E  Gain 5 Block.
+1x Mend               1E  Heal 6 HP.
+1x Hammer of Justice  2E  Deal 10 damage. Stun the enemy.
 ```
 
-Balance lever: hybrids are slightly under-rate on each half. You pay for flexibility.
+The deck reads as *durable but slow to kill*, which is the D&D and WoW read of the class. Mend
+is a Defend mirror in HP. Hammer of Justice is a tempo tool — buying a turn is how a defensive
+character survives Act 1 — and it is the card that says on turn one what the Paladin is.
 
-### Two sources of Faith
+No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
+must be understood on sight.
 
-Hybrids make the distinction matter:
+### Card pool
 
-- **Printed** — the card text says `Gain 1 Faith in Tyr`.
-- **Oath-triggered** — a Power fires based on what the card *did*.
+Empty. Every reward the Paladin sees today is colorless or shop.
 
-`Holy Smite` printed with Tyr Faith, played under Oath of Redemption, yields Tyr 1 from the
-print and Ilmater 1 from the Oath.
+## What is settled
 
-## Generation rules
+These survived the reset because they are conclusions from evidence, not design preferences:
 
-These are hard constraints, not guidelines. They exist so a Faith number means the same thing
-in every deck.
+- **Ally-targeting is co-op content.** The game's `AnyAlly` excludes the owner and every shipped
+  `AnyAlly` card is `MultiplayerOnly`. `AnyPlayer` includes the owner and works solo. Write
+  "a player", not "an ally", unless the card is meaningless alone.
+- **Healing is not a dead verb.** Healing over time and delayed heals sidestep the full-HP
+  problem, and Holy Fervor makes every heal a Strength gain regardless.
+- **Base-game shape** is 87–88 cards per character at roughly 4 / 20 / 36 / 26 by rarity, and
+  8 character relics. That is the eventual target, not the plan.
+- **The build pipeline is proven**: cards resolve art by class name in snake_case, localization
+  keys are `HELLOSPIRE-<CLASS>` and the STS001 analyzer fails the build on any missing one, and
+  `dotnet publish` puts the result in the game.
 
-1. **Generation is always flat.** `Gain 1 Faith.` Never proportional, never scaled off another
-   value. Proportional generation is much harder to balance and compounds with everything.
-1a. **Generation is scarce.** No common generates Faith. A few uncommons grant 1. The Oaths and
-   rares are the engines. Thresholds are tuned to that scarcity: 3 is a real bar, 5 is a
-   late-fight ceiling. An earlier draft had half the commons carrying Faith, which made the
-   mechanic passive -- you accumulated it by playing the deck rather than by building for it.
-2. **Triggers must be countable.** `Whenever you play an Attack`, not `whenever you deal
-   damage` — a multi-hit or AoE card would fire the latter five times off one play. Same for
-   Torm: key off playing a card that gains Block, not off each Block instance.
-3. **Multipliers are Rare only, additive, and capped.** `Gain 1 additional`, never `gain
-   double`. No card multiplies another multiplier. Two or three in the entire set.
+## What is open
 
-Scaling belongs on the **payoff** side, where it is visible and bounded by how much Faith you
-actually managed to accumulate.
+Everything else. In particular, the identity question — *what does the Paladin do that no
+other character does?* — is open again. The Faith answer is archived, not rejected; it may come
+back in part. The next few cards should be chosen to find out what feels good in play before
+committing to any system.
 
-## Raw vs effective Faith
+## Candidate next cards
 
-Two readings exist and every card picks one:
+Not a plan. A shortlist to pick one from, each chosen to test one thing:
 
-- **Raw** is what the counter says. Gaining, spending and the display use it.
-- **Effective** is raw plus the rule-changers: Heresy makes every deity count as your highest;
-  Tyranny makes every deity count as at least your Bane. Thresholds ("Requires 3 Faith in
-  Torm") and payoffs ("damage equal to your Faith in Tyr") use it.
-
-Keeping the rules in one function (`FaithTracks.Effective`) rather than in the powers is what
-makes every threshold card agree on what Faith means.
-
-## Cards
-
-### Core generation — flat, countable, boring on purpose
-
-```
-Hold the Line   1E  Gain 6 Block.    Gain 1 Faith in Torm.
-Mend            1E  Heal an ally 4.  Gain 1 Faith in Ilmater.
-Smite           1E  Deal 7 damage.   Gain 1 Faith in Tyr.
-Kneel           0E  Name a deity. Gain 2 Faith in it.
-```
-
-### Oaths — make a verb passive. Rare.
-
-```
-Oath of the Crown     2E  Power. Whenever you play a card that gains Block,
-                          gain 1 Faith in Torm.
-Oath of Redemption    1E  Power. Whenever you play a card that heals,
-                          gain 1 Faith in Ilmater.
-Oath of Vengeance     2E  Power. Whenever you play an Attack,
-                          gain 1 Faith in Tyr.
-```
-
-The 5e oath names — Devotion, Vengeance, the Crown, Redemption, Glory, the Ancients, the
-Watchers, Conquest — are the naming pool for these.
-
-### Payoffs — scale off Faith, never touch generation
-
-```
-Immovable       2E  Power. At the start of your turn, gain Block
-                    equal to half your Faith in Torm.
-The Broken God  2E  Power. At the start of your turn, all allies heal
-                    equal to half your Faith in Ilmater.
-The Scales      2E  Deal damage equal to twice your Faith in Tyr.
-```
-
-### Supporting — the whole quarantine, and it is short
-
-```
-Heresy          3E  Power. Your Faith in every deity counts as your highest.
-Zealotry        3E  Power. Whenever you gain Faith, gain 1 additional.   <- the multiplier
-Tithe           1E  Spend 3 Faith. Gain 2 Energy.
-Sacrament       1E  Convert all Faith in one deity to another.
-```
-
-`Heresy` is the most important card in the set: it turns "splitting is a mistake" into
-"splitting is a deck", delivering archetype-mixing through one card rather than a subsystem.
-It is a rule-change, not a multiplier, which is why it can be strong without compounding.
-
-`Zealotry` is the only multiplier in the set.
-
-### Bane — the fall
-Torm's arch-enemy. During the Time of Troubles they killed each other; Ao resurrected Torm
-and Tyr raised him to greater power.
-
-**Bane Faith cannot be gained directly.** It only accrues when you *spend* Faith in a Triad
-deity. Falling is the only way in. In code, a spend of N gives Bane ceil(N/2); Time of Troubles
-is the exception and converts one-for-one.
-
-```
-Falter            0E  Spend 5 Faith in any deity. Gain 3 Faith in Bane.
-                      Draw 2 cards. Gain 1 Energy.
-The Black Hand    2E  Requires 3 Faith in Bane.
-                      Deal heavy damage to ALL enemies.
-Time of Troubles  3E  Spend ALL Faith in Torm. Deal double that damage
-                      to one enemy. Gain that much Faith in Bane.
-Tyranny           2E  Requires 10 Faith in Bane.
-                      Your Faith in Bane counts as Faith in every deity.
-```
-
-Bane Faith should **suppress the Triad** while held — the Triad turns away from you — so
-falling is a genuine commitment within the fight, not free value. `Tyranny` is the payoff
-for going all the way: at the bottom, everything unlocks again.
-
-Because Faith resets each combat, falling is a **tactical, per-fight decision**, not a run
-sentence. "I'm ten into Torm but this fight needs damage right now" is exactly the choice
-this is for.
-
-## Starting relic: Holy Fervor
-
-**Holy Fervor** — *Whenever you play a card that heals, gain 1 Strength. Once per turn.*
-
-Turns the character's least-valued verb into its most-valued stat. Healing is weak in Slay the
-Spire; Strength is the strongest scaling there is. A heal-heavy deck becomes a scaling deck,
-which makes Ilmater cards attractive to a Tyr build -- cross-deity blending -- without touching
-Faith, which stays scarce.
-
-Two constraints keep it starter-scale:
-
-- **The trigger is a heal card played, not HP restored.** Countable, credits ally heals to the
-  Paladin, and ignores potions, Regen and end-of-combat heals.
-- **Once per turn.** Without it, Mend + Salve is +2 Strength every turn and the relic is a
-  turn-one Demon Form.
-
-Superseded: *Holy Symbol* (doubled your first Faith gain, then +1 Faith in your highest deity
-per combat). Both were stats rather than decisions, and the second locked in a god on fight one.
-The run-milestone transform -- consumed for a deity relic once devotion is proven -- is still a
-good idea and is not tied to any particular starter relic; it can return as its own mechanic.
-
-### The three deity relics
-
-Placeholders. Each should be a stronger, deity-flavoured version of what the Holy Symbol did,
-not an unrelated effect.
-
-```
-Torm      Gauntlet of the True      Block is not fully removed at the start of your turn;
-                                    keep half.
-Ilmater   Bound Hands               At the start of each combat, all allies heal 4.
-Tyr       Scales of Judgment        At the start of each combat, gain 3 Faith in Tyr.
-                                    Whenever you take damage, gain 1 Faith in Tyr.
-```
-
-## The second layer: Judged, Warded, Blessed
-
-Faith alone left the Paladin as stock verbs plus a counter. Every shipped character has two or
-three systems that *interact*; this is the Paladin's second. One status per verb, and Faith is
-what upgrades each of them.
-
-| | Deity | What it is | How Faith deepens it |
-|---|---|---|---|
-| **Judged** | Tyr | A stacking debuff: the enemy takes +1 damage from every player Attack, per stack. Flat, per hit, never decays. | At 3 Tyr Faith every application is one deeper. |
-| **Warded** | Torm | Block that survives the start of your turn, up to the Warded amount, then erodes by 3 a turn. Real Block, not a regrant. | Torm Faith slows the erosion: 3, then 2 at 5 Faith, then 1 at 10. |
-| **Blessed** | Ilmater | A card keyword. Playing a Blessed card makes every Aura you have pulse again. | The Auras themselves scale off Faith (Devotion, The Broken God). |
-
-Why these three clear the "is it a mechanic" bar where overheal did not:
-
-- **Judged is a per-hit multiplier** the whole party benefits from -- multi-hit cards and focus
-  fire scale with it, so it creates decisions about *which* enemy and *which* cards, not just
-  bigger numbers. Nothing in the base game is a flat stacking per-hit debuff.
-- **Warded makes "hold the line" literal.** You build a wall and watch it erode; whether to
-  top it up or let it fall is a turn-by-turn call. Nothing in the base game is decaying
-  persistent Block.
-- **Blessed is the Paladin's Sly.** A Blessed card is worth playing *because* of what else is
-  out. Auras become the engine and Blessed cards the fuel, which makes Powers matter mid-fight
-  rather than only at setup.
-
-In code: `JudgedPower` and `WardedPower` are generated powers; `IAura.Pulse` is implemented by
-all seven Auras; `PaladinCard.PulseAuras` is what a Blessed card calls; the keyword tooltip is
-a BaseLib `[CustomEnum] StaticHoverTip` in `PaladinTips`.
-
-## Supporting card categories
-
-These are card *types*, not mechanics competing with Faith:
-
-| Category | Behaviour |
+| Card | Tests |
 |---|---|
-| **Auras** | Powers, party-wide, usually scaling off Faith |
-| **Seals** | self-buffs that expire after N turns; high thresholds gate the strong ones |
-| **Blessings** | ally-targeted buffs, usually Ilmater or Torm |
-| **Oaths** | rare, high-threshold payoffs. The 5e oath names (Devotion, Vengeance, the Crown, Redemption, Glory, the Ancients, the Watchers, Conquest) are the natural naming pool. |
+| **Smite** — 1E, deal 9 | does a plain better Strike make Act 1 feel right, or is it just filler? |
+| **Hold the Line** — 1E, gain 8 Block | same question for defence |
+| **Vengeful Mending** — 1E, deal 7, heal 3 | the heal-on-attack pattern, and Holy Fervor firing off an Attack |
+| **Renew** — 1E Power, heal 2 at turn start | healing over time as a Power; whether a Power belongs this early |
+| **Brace** — 1E, Block that survives the turn | whether persistent Block is worth a mechanic at all |
 
-## Open questions
-
-- **Faith gain rate and threshold values.** Needs the damage-per-energy benchmark from
-  TODO.md Phase 8 before any numbers here are meaningful.
-- **Does Bane suppress the Triad entirely, or scale it down?** Hard lockout is cleaner to
-  reason about; scaling is more forgiving.
-- **Faith UI.** Three tracks plus Bane. Should fit; verify once the counter exists.
-- **Solo viability.** Ilmater and Torm both lean on allies existing. Ally-targeted effects
-  need a defined self-target fallback for single-player.
-
-## Multiplayer note
-
-Faith is custom state and must sync across clients. `Bear the Weight`-style redirection and
-party-wide Auras are the highest-risk pieces. Test with two players early, per TODO.md
-Phase 9 — a desync here is much harder to debug once there are 80 cards.
+The art for all of these already exists in the repo — Dan painted the full set before the
+reset — so adding one is a class, a localization entry and a build.
