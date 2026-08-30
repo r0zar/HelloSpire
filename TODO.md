@@ -18,8 +18,8 @@ Still open, roughly in order:
 
 - **Numbers.** Every value is a placeholder. The damage-per-energy benchmark (Phase 8) has not
   been built; that is the next thing that makes playtesting meaningful.
-- **The second-mechanic layer.** Judged / Warded / Blessed were proposed to fix "the Paladin
-  feels vanilla" and never decided. The card set is built on stock verbs plus Faith.
+- ~~The second-mechanic layer~~ **Built.** Judged, Warded and Blessed are in; see design/paladin.md.
+  Untested in play, like everything else.
 - **Art.** Six real pieces (backsplash, select tile, Strike, Defend, Mend, Hammer of Justice).
   Everything else is a labelled placeholder tile.
 - **Faith UI** is plain tiles at the orb position; orb-styled art deferred.

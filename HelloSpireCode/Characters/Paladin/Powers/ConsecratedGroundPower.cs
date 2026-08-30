@@ -12,19 +12,25 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 
-/// <summary>Whenever you play a card that gains Block, all allies gain 1 Block.</summary>
-public sealed class ConsecratedGroundPower : PaladinPower
+/// <summary>Aura. Whenever you play a card that gains Block, all allies gain 1 Block.</summary>
+public sealed class ConsecratedGroundPower : PaladinPower, IAura
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (cardPlay.Card.Owner?.Creature != Owner || !cardPlay.Card.GainsBlock) return;
+        if (cardPlay.Card.Owner?.Creature == Owner && cardPlay.Card.GainsBlock) await Pulse(choiceContext);
+    }
+
+    /// <summary>The Aura's repeatable effect. Blessed cards call this.</summary>
+    public async Task Pulse(PlayerChoiceContext choiceContext)
+    {
         Flash();
         foreach (var ally in CombatState.PlayerCreatures.OfType<Creature>().Where(c => c.IsAlive)) await CreatureCmd.GainBlock(ally, Amount, ValueProp.Unpowered, null);
     }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,16 +19,18 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Heal a player {Heal} HP. Draw {Cards} {Cards}.</summary>
+/// <summary>Heal a player {Heal} HP. Draw {Cards} {Cards}. Blessed.</summary>
 public sealed class Comfort() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyPlayer)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(4m), new CardsVar(1)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(PaladinTips.Blessed)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await CreatureCmd.Heal(cardPlay.Target!, DynamicVars.Heal.BaseValue);
         await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, Owner, false);
+        await PulseAuras(choiceContext);
     }
 
     protected override void OnUpgrade() { DynamicVars["Heal"].UpgradeValueBy(2m); }

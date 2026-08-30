@@ -12,12 +12,13 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 
-/// <summary>All allies take 1 less damage from attacks for every 5 Faith in Torm.</summary>
-public sealed class AuraOfDevotionPower : PaladinPower
+/// <summary>Aura. All allies take 1 less damage from attacks for every 5 Faith in Torm.</summary>
+public sealed class AuraOfDevotionPower : PaladinPower, IAura
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
@@ -27,5 +28,12 @@ public sealed class AuraOfDevotionPower : PaladinPower
         if (!target.IsPlayer || dealer == null || dealer.IsPlayer || Owner.Player == null) return amount;
         var reduce = Amount * (FaithTracks.Effective(Owner.Player, Deity.Torm) / 5);
         return Math.Max(0m, amount - reduce);
+    }
+
+    /// <summary>The Aura's repeatable effect. Blessed cards call this.</summary>
+    public async Task Pulse(PlayerChoiceContext choiceContext)
+    {
+        Flash();
+        foreach (var ally in CombatState.PlayerCreatures.OfType<Creature>().Where(c => c.IsAlive)) await CreatureCmd.GainBlock(ally, 2m, ValueProp.Unpowered, null);
     }
 }

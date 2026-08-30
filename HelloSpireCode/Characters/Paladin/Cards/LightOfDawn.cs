@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,15 +19,17 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Heal all allies HP equal to half your Faith in Ilmater.</summary>
+/// <summary>Heal all allies HP equal to half your Faith in Ilmater. Blessed.</summary>
 public sealed class LightOfDawn() : PaladinCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(PaladinTips.Blessed)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         foreach (var ally in Allies()) await CreatureCmd.Heal(ally, FaithTracks.Effective(Owner, Deity.Ilmater) / 2);
+        await PulseAuras(choiceContext);
     }
 
     protected override void OnUpgrade() { EnergyCost.UpgradeBy(-1); }

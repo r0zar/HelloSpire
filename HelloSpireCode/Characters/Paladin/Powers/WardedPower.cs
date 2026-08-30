@@ -12,19 +12,29 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 
-/// <summary>Block is not removed at the start of your next turn.</summary>
-public sealed class BastionPower : PaladinPower
+/// <summary>Block up to this amount is not removed at the start of your turn. Each turn, lose 3 of it.</summary>
+public sealed class WardedPower : PaladinPower
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Single;
+    public override PowerStackType StackType => PowerStackType.Counter;
 
+    // True persistent Block, not a regrant: ShouldClearBlock keeps it, then the turn-start hook trims
+    // anything above the warded amount and erodes the wall. Torm Faith slows the erosion.
     public override bool ShouldClearBlock(Creature creature) => creature != Owner;
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
-        if (player.Creature == Owner) await PowerCmd.Remove(this);
+        if (player.Creature != Owner) return;
+        var excess = Owner.Block - Amount;
+        if (excess > 0) await CreatureCmd.LoseBlock(Owner, excess);
+        var decay = Math.Max(1, 3 - FaithTracks.Effective(player, Deity.Torm) / 5);
+        Flash();
+        await CreatureCmd.LoseBlock(Owner, Math.Min(Owner.Block, decay));
+        await PowerCmd.ModifyAmount(choiceContext, this, -decay, Owner, null, true);
+        if (Amount <= 0) await PowerCmd.Remove(this);
     }
 }

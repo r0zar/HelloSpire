@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,17 +19,19 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Heal a player {Heal} HP. They gain {Block} Block.</summary>
+/// <summary>Heal a player {Heal} HP. They gain {Block} Block. Blessed.</summary>
 public sealed class Sanctuary() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
 {
     public override bool GainsBlock => true;
     protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(3m), new BlockVar(5m, ValueProp.Move)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(PaladinTips.Blessed)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await CreatureCmd.Heal(cardPlay.Target!, DynamicVars.Heal.BaseValue);
         await CreatureCmd.GainBlock(cardPlay.Target!, DynamicVars.Block, cardPlay);
+        await PulseAuras(choiceContext);
     }
 
     protected override void OnUpgrade() { DynamicVars["Heal"].UpgradeValueBy(2m); DynamicVars["Block"].UpgradeValueBy(3m); }

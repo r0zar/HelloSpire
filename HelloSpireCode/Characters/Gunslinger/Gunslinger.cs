@@ -68,6 +68,12 @@ public class Gunslinger : PlaceholderCharacterModel
         }
     }
 
+    /// <summary>
+    /// The character-select backsplash: a Control scene the select screen instantiates. Same shape
+    /// as the Paladin's -- a TextureRect over the base game's 2560x1200 canvas.
+    /// </summary>
+    public override string CustomCharacterSelectBg => "res://HelloSpire/scenes/char_select_bg_gunslinger.tscn";
+
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectLockedIconPath => "char_select_locked.png".CharacterUiPath(AssetFolder);

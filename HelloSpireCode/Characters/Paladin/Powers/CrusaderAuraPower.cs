@@ -12,16 +12,24 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 
-/// <summary>All allies' Attacks deal 1 additional damage.</summary>
-public sealed class CrusaderAuraPower : PaladinPower
+/// <summary>Aura. All allies' Attacks deal 1 additional damage.</summary>
+public sealed class CrusaderAuraPower : PaladinPower, IAura
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override decimal ModifyDamageAdditive(Creature target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
         => dealer != null && dealer.IsPlayer && cardSource != null && !target.IsPlayer ? amount + Amount : amount;
+
+    /// <summary>The Aura's repeatable effect. Blessed cards call this.</summary>
+    public async Task Pulse(PlayerChoiceContext choiceContext)
+    {
+        Flash();
+        foreach (var ally in CombatState.PlayerCreatures.OfType<Creature>().Where(c => c.IsAlive)) await PowerCmd.Apply<VigorPower>(choiceContext, ally, Amount * 2, Owner, null);
+    }
 }
