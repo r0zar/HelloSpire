@@ -154,13 +154,13 @@ reset — so adding one is a class, a localization entry and a build.
 
 ## Combat visuals
 
-The Paladin wears the Ironclad's spine rig, repainted: `PaladinSkin` (Harmony postfix on
-`Creature.CreateVisuals`) swaps the atlas texture pages for our gold-and-white repaint on the
-Paladin's instance only, so all six base animations (idle/attack/cast/hurt/die/relaxed) come
-free. The repaint lives at `images/creature/paladin_atlas.png` (+`_2`), generated from the
-extracted Ironclad atlas by `tools` recolor (reds -> cream tabard, leather -> pale gold, rage
-glow -> holy gold). The game runs Spine 4.2.36; a from-scratch Paladin rig stays the long-term
-path (spec below), but the repaint ships today.
+The Paladin wears the Ironclad's spine rig, repainted at render time: `PaladinSkin` (Harmony
+postfix on `Creature.CreateVisuals`) hands the Paladin's SpineSprite a palette-remap shader
+(`shaders/paladin_repaint.gdshader`) via spine-godot's own set_normal_material slot -- reds to
+cream tabard, leather to pale gold, rage glow to holy gold, per pixel. All six base animations
+come free, no spine resources are touched (swapping atlas textures breaks the resource's
+internal rebuild -- learned the hard way). The game runs Spine 4.2.36; a from-scratch Paladin
+rig stays the long-term path (spec below), but the repaint ships today.
 
 The Gunslinger and Alchemist still use the static-scene pipeline: our own `NCreatureVisuals`
 scene with a Sprite2D body -- scene contract (unique names): `%Visuals`, `%Bounds`,
