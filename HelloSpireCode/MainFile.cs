@@ -21,6 +21,10 @@ public partial class MainFile : Node
         //If you want to use scripts defined in your mod for Godot scenes, uncomment the following line.
         //Godot.Bridge.ScriptManagerBridge.LookupScriptsInAssembly(assembly);
      
+        // The Alchemist's bench talks to the game through this bridge; without it the potion,
+        // Gold, Max HP and choice systems all no-op (see LabBridge).
+        HelloSpireCode.Alchemist.LabBridge.Current = new HelloSpireCode.Alchemist.WiredLabBridge();
+
         Harmony harmony = new(ModId);
 
         harmony.PatchAll(assembly);
