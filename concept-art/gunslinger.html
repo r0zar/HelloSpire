@@ -1,0 +1,466 @@
+<title>The Gunslinger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Vollkorn:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ash:        #1a1310;
+    --ash-2:      #221a15;
+    --ash-3:      #2b2119;
+    --hairline:   #4a382a;
+    --bone:       #ece2c8;
+    --bone-dim:   #ad9d84;
+    --dust:       #c9a876;
+    --dust-dark:  #8f7148;
+    --rust:       #9c4a2e;
+    --gunmetal:   #6a7080;
+    --horizon:    #d9793a;
+    --blood:      #7a2d24;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+
+  body{
+    background:var(--ash);
+    color:var(--bone);
+    font-family:'Vollkorn', Georgia, 'Iowan Old Style', serif;
+    font-size:1.05rem;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--horizon); color:var(--ash); }
+  a{ color:var(--horizon); }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:clamp(20px,4vw,56px) clamp(18px,4vw,40px) 80px;
+  }
+
+  h1,h2,h3{
+    font-family:'Rye', Georgia, serif;
+    font-weight:400;
+    letter-spacing:0.01em;
+    text-wrap:balance;
+    color:var(--bone);
+    margin:0;
+  }
+
+  .kicker{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:0.72rem;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--rust);
+    margin:0 0 10px;
+  }
+
+  .tag-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:2px;
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--bone-dim);
+  }
+  .tag-row span{
+    background:var(--ash-2);
+    border:1px solid var(--hairline);
+    padding:6px 12px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    display:grid;
+    grid-template-columns:minmax(280px,420px) 1fr;
+    gap:clamp(24px,5vw,64px);
+    align-items:center;
+    padding-top:clamp(10px,3vw,30px);
+  }
+  @media (max-width:820px){ .hero{ grid-template-columns:1fr; } }
+
+  .portrait-frame{
+    position:relative;
+    border:1px solid var(--hairline);
+    background:
+      radial-gradient(120% 100% at 50% 82%, rgba(217,121,58,0.22), transparent 62%),
+      linear-gradient(180deg, var(--ash-2), var(--ash));
+    padding:18px;
+  }
+  .portrait-frame::before{
+    content:"";
+    position:absolute; inset:6px;
+    border:1px solid var(--hairline);
+    pointer-events:none;
+  }
+  .portrait-frame svg{ display:block; width:100%; height:auto; }
+
+  .hero-text h1{
+    font-size:clamp(2.5rem,5.8vw,4rem);
+    line-height:1.05;
+  }
+  .hero-text .role{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    color:var(--horizon);
+    font-size:0.88rem;
+    letter-spacing:0.06em;
+    margin:10px 0 22px;
+  }
+  .pitch{
+    font-style:italic;
+    font-size:1.2rem;
+    color:var(--bone-dim);
+    max-width:44ch;
+    border-left:2px solid var(--blood);
+    padding-left:16px;
+    margin:0 0 24px;
+  }
+
+  /* ---------- section shell ---------- */
+  section{ margin-top:clamp(56px,9vw,96px); }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:28px;
+    border-bottom:1px solid var(--hairline);
+    padding-bottom:14px;
+  }
+  .section-head h2{ font-size:clamp(1.4rem,2.8vw,1.9rem); }
+  .section-head .tag{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:0.75rem;
+    color:var(--rust);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+  }
+
+  /* ---------- single-source feature ---------- */
+  .source-feature{
+    border:1px solid var(--hairline);
+    background:var(--ash-2);
+    padding:clamp(24px,4vw,40px);
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:clamp(20px,4vw,40px);
+  }
+  @media (max-width:680px){ .source-feature{ grid-template-columns:1fr; } }
+  .source-feature .src{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--bone-dim);
+  }
+  .source-feature h3{
+    font-size:1.6rem;
+    color:var(--horizon);
+    margin:6px 0 0;
+  }
+  .source-feature p{
+    color:var(--bone-dim);
+    font-size:1rem;
+    max-width:58ch;
+    margin:0;
+  }
+
+  /* ---------- rig grid ---------- */
+  .gear-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:1px;
+    background:var(--hairline);
+    border:1px solid var(--hairline);
+  }
+  .gear-item{ background:var(--ash-2); padding:22px 20px; transition:background 0.2s ease; }
+  .gear-item:hover{ background:var(--ash-3); }
+  .gear-item .num{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:0.7rem;
+    color:var(--blood);
+    letter-spacing:0.08em;
+  }
+  .gear-item h3{ font-family:'Vollkorn', serif; font-weight:600; font-size:1.05rem; color:var(--bone); margin:6px 0 10px; }
+  .gear-item p{ font-size:0.94rem; color:var(--bone-dim); margin:0; }
+
+  /* ---------- palette ---------- */
+  .materials{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;
+  }
+  .swatch{ border:1px solid var(--hairline); background:var(--ash-2); }
+  .swatch .chip{ height:52px; }
+  .swatch .label{
+    padding:10px 12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  .swatch .name{ font-size:0.8rem; color:var(--bone); }
+  .swatch .hex{ font-size:0.7rem; color:var(--bone-dim); }
+
+  /* ---------- footer ---------- */
+  footer{ margin-top:clamp(64px,10vw,110px); padding-top:26px; border-top:1px solid var(--hairline); }
+  .thesis{
+    font-family:'Rye', Georgia, serif;
+    font-size:clamp(1.15rem,2.2vw,1.5rem);
+    color:var(--horizon);
+    max-width:36ch;
+    text-wrap:balance;
+  }
+  .thesis-src{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:0.72rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--bone-dim);
+    margin-top:10px;
+  }
+  .note{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:0.75rem;
+    color:var(--bone-dim);
+    margin-top:6px;
+  }
+
+  .glow-pulse{ animation:pulse 4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:0.7; } 50%{ opacity:1; } }
+  @media (prefers-reduced-motion:reduce){ .glow-pulse{ animation:none !important; } }
+</style>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="portrait-frame">
+      <svg viewBox="0 0 520 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stylized concept illustration of The Gunslinger: a weathered figure in a long duster and wide hat, twin holstered revolvers at a low belt, standing before a dust-orange horizon over a faint compass-rose etched in cracked earth.">
+        <defs>
+          <radialGradient id="bgGlow" cx="50%" cy="70%" r="70%">
+            <stop offset="0%" stop-color="#d9793a" stop-opacity="0.32"/>
+            <stop offset="45%" stop-color="#2b2119" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#1a1310" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="coatGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c9a876"/>
+            <stop offset="100%" stop-color="#8f7148"/>
+          </linearGradient>
+          <linearGradient id="coatDark" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a98d5e"/>
+            <stop offset="100%" stop-color="#71592f"/>
+          </linearGradient>
+          <linearGradient id="leatherGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#b0562f"/>
+            <stop offset="100%" stop-color="#6f3319"/>
+          </linearGradient>
+          <linearGradient id="steelGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8b93a3"/>
+            <stop offset="100%" stop-color="#565d6c"/>
+          </linearGradient>
+          <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <rect x="0" y="0" width="520" height="720" fill="url(#bgGlow)"/>
+
+        <!-- low sun -->
+        <circle cx="260" cy="470" r="90" fill="#d9793a" opacity="0.18"/>
+
+        <!-- compass rose underfoot -->
+        <g opacity="0.4">
+          <circle cx="260" cy="574" r="140" fill="none" stroke="#d9793a" stroke-width="1"/>
+          <circle cx="260" cy="574" r="104" fill="none" stroke="#6a7080" stroke-width="1"/>
+          <g stroke="#d9793a" stroke-width="1.2">
+            <line x1="260" y1="434" x2="260" y2="454"/>
+            <line x1="260" y1="694" x2="260" y2="714"/>
+            <line x1="120" y1="574" x2="140" y2="574"/>
+            <line x1="380" y1="574" x2="400" y2="574"/>
+          </g>
+          <path d="M260,540 L268,574 L260,608 L252,574 Z" fill="none" stroke="#d9793a" stroke-width="1.2"/>
+        </g>
+
+        <!-- cracked earth cues -->
+        <g stroke="#4a382a" stroke-width="1" opacity="0.5">
+          <path d="M170,660 L200,672 L184,690"/>
+          <path d="M340,660 L316,674 L332,692"/>
+        </g>
+
+        <ellipse cx="262" cy="676" rx="118" ry="16" fill="#000" opacity="0.4"/>
+
+        <!-- boots -->
+        <path d="M212,606 L212,660 L188,670 L188,680 L246,680 L246,606 Z" fill="#4a2f1c" stroke="#241708" stroke-width="1.5"/>
+        <path d="M298,606 L298,660 L322,670 L322,680 L264,680 L264,606 Z" fill="#4a2f1c" stroke="#241708" stroke-width="1.5"/>
+        <circle cx="196" cy="672" r="3" fill="#8b93a3"/>
+        <circle cx="338" cy="672" r="3" fill="#8b93a3"/>
+
+        <!-- legs -->
+        <path d="M206,470 L248,470 L246,606 L210,606 Z" fill="#7d6640" stroke="#3a2c17" stroke-width="1.5"/>
+        <path d="M272,470 L314,470 L310,606 L276,606 Z" fill="#7d6640" stroke="#3a2c17" stroke-width="1.5"/>
+
+        <!-- duster, long open coat -->
+        <path d="M196,300 L324,300 L358,660 L296,636 L260,660 L224,636 L162,660 Z" fill="url(#coatGrad)" stroke="#5c481f" stroke-width="2"/>
+        <path d="M196,300 L162,660" stroke="#5c481f" stroke-width="1.5" opacity="0.7"/>
+        <path d="M324,300 L358,660" stroke="#5c481f" stroke-width="1.5" opacity="0.7"/>
+        <!-- coat inner open edges revealing shirt/vest -->
+        <path d="M232,300 L288,300 L278,470 L242,470 Z" fill="#dcd0b4"/>
+        <path d="M232,300 L242,470" stroke="url(#coatDark)" stroke-width="10"/>
+        <path d="M288,300 L278,470" stroke="url(#coatDark)" stroke-width="10"/>
+
+        <!-- shoulders / collar up -->
+        <path d="M196,300 L214,262 L306,262 L324,300 Z" fill="url(#coatDark)" stroke="#5c481f" stroke-width="2"/>
+        <path d="M214,262 L226,296" fill="none" stroke="url(#coatGrad)" stroke-width="14" stroke-linecap="round"/>
+        <path d="M306,262 L294,296" fill="none" stroke="url(#coatGrad)" stroke-width="14" stroke-linecap="round"/>
+
+        <!-- neck cloth -->
+        <path d="M240,256 Q260,272 280,256 L276,238 Q260,228 244,238 Z" fill="#8f2e22"/>
+
+        <!-- head, shadowed under hat -->
+        <ellipse cx="260" cy="222" rx="22" ry="24" fill="#3a2c1c"/>
+        <path d="M240,220 Q260,238 280,220" fill="none" stroke="#1a1310" stroke-width="2" opacity="0.6"/>
+
+        <!-- hat -->
+        <path d="M228,208 Q260,180 292,208 Q288,190 260,182 Q232,190 228,208 Z" fill="#3a2c17" stroke="#1a1208" stroke-width="1.5"/>
+        <ellipse cx="260" cy="210" rx="58" ry="12" fill="#4a381f" stroke="#1a1208" stroke-width="1.5"/>
+        <ellipse cx="260" cy="208" rx="58" ry="10" fill="#3a2c17"/>
+
+        <!-- gun belt -->
+        <path d="M186,462 Q260,478 334,462 L334,486 Q260,502 186,486 Z" fill="url(#leatherGrad)" stroke="#3a1a0c" stroke-width="1.5"/>
+        <g fill="#c9a86a">
+          <circle cx="206" cy="470" r="3"/>
+          <circle cx="222" cy="474" r="3"/>
+          <circle cx="238" cy="477" r="3"/>
+          <circle cx="282" cy="477" r="3"/>
+          <circle cx="298" cy="474" r="3"/>
+          <circle cx="314" cy="470" r="3"/>
+        </g>
+        <rect x="248" y="470" width="24" height="16" fill="url(#steelGrad)" stroke="#2a2e38" stroke-width="1"/>
+
+        <!-- holsters + revolvers -->
+        <path d="M198,486 L228,486 L224,540 L202,540 Z" fill="url(#leatherGrad)" stroke="#3a1a0c" stroke-width="1.5"/>
+        <path d="M292,486 L322,486 L318,540 L296,540 Z" fill="url(#leatherGrad)" stroke="#3a1a0c" stroke-width="1.5"/>
+        <path d="M203,486 L207,522 L219,524 L223,486 Z" fill="#a9773f" stroke="#3a1a0c" stroke-width="1"/>
+        <path d="M297,486 L301,522 L313,524 L317,486 Z" fill="#a9773f" stroke="#3a1a0c" stroke-width="1"/>
+        <rect x="204" y="474" width="18" height="14" rx="2" fill="url(#steelGrad)" stroke="#2a2e38" stroke-width="1"/>
+        <rect x="298" y="474" width="18" height="14" rx="2" fill="url(#steelGrad)" stroke="#2a2e38" stroke-width="1"/>
+
+        <!-- horn at hip -->
+        <path d="M330,494 Q352,500 350,522 Q348,530 336,528 Q344,514 330,504 Z" fill="#c9a86a" stroke="#7d5a2c" stroke-width="1.2"/>
+
+        <!-- arms, hands resting near guns -->
+        <path d="M196,304 Q172,360 198,480" fill="none" stroke="url(#coatGrad)" stroke-width="24" stroke-linecap="round"/>
+        <path d="M324,304 Q348,360 322,480" fill="none" stroke="url(#coatGrad)" stroke-width="24" stroke-linecap="round"/>
+        <ellipse cx="203" cy="486" rx="10" ry="9" fill="#5c4326" stroke="#241708" stroke-width="1.2"/>
+        <ellipse cx="317" cy="486" rx="10" ry="9" fill="#5c4326" stroke="#241708" stroke-width="1.2"/>
+
+      </svg>
+    </div>
+
+    <div class="hero-text">
+      <p class="kicker">Concept Direction · v0.1</p>
+      <h1>THE GUNSLINGER</h1>
+      <p class="role">Last of a Dying Line — Wanderer — Keeper of an Old Code</p>
+      <p class="pitch">&ldquo;He stopped counting the miles somewhere past the last of the towns that still had a name.&rdquo;</p>
+      <div class="tag-row">
+        <span>Long Coat</span>
+        <span>Twin Iron</span>
+        <span>Old Code</span>
+        <span>Fixed Horizon</span>
+      </div>
+      <p class="note">Mechanics not yet defined — this is visual direction only.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-head">
+      <h2>One Reference, One Long Road</h2>
+      <span class="tag">Mood Source</span>
+    </div>
+    <div class="source-feature">
+      <div>
+        <span class="src">Stephen King — The Dark Tower</span>
+        <h3>The Wanderer</h3>
+      </div>
+      <p>The series' gunslinger reads less like a quick-draw archetype and more like the last practitioner of a nearly extinct discipline — gun-work treated with the same ritual weight as knighthood, carried by a man who has already outlived almost everyone he swore that discipline to. He's defined by a world that has run down around him and a horizon he hasn't stopped walking toward. Source of the sun-bleached duster, the twin low-slung holsters with warm wood grips, the wide hat shadowing the face, and the sense that the walk itself is the point — not whatever's waiting at the end of it.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>The Rig</h2>
+      <span class="tag">Gear Breakdown</span>
+    </div>
+    <div class="gear-grid">
+      <div class="gear-item">
+        <span class="num">01</span>
+        <h3>Sun-Bled Duster</h3>
+        <p>Not for warmth. For a place to put everything else he can't carry in his hands.</p>
+      </div>
+      <div class="gear-item">
+        <span class="num">02</span>
+        <h3>Twin Iron</h3>
+        <p>Two guns isn't twice the firepower to this character. It's never being caught mid-reload.</p>
+      </div>
+      <div class="gear-item">
+        <span class="num">03</span>
+        <h3>Loop Belt</h3>
+        <p>Every loop on this belt used to hold a round. Some still do.</p>
+      </div>
+      <div class="gear-item">
+        <span class="num">04</span>
+        <h3>Low Hat</h3>
+        <p>Pulled down far enough that you notice the guns before you notice the face.</p>
+      </div>
+      <div class="gear-item">
+        <span class="num">05</span>
+        <h3>Old Horn</h3>
+        <p>Carried, not used. Some things are kept because putting them down would mean something's finished.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Materials</h2>
+      <span class="tag">Palette</span>
+    </div>
+    <div class="materials">
+      <div class="swatch">
+        <div class="chip" style="background:#c9a876"></div>
+        <div class="label"><span class="name">Sun-Bled Dust</span><span class="hex">#C9A876</span></div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#9c4a2e"></div>
+        <div class="label"><span class="name">Rust Leather</span><span class="hex">#9C4A2E</span></div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#6a7080"></div>
+        <div class="label"><span class="name">Gunmetal</span><span class="hex">#6A7080</span></div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#d9793a"></div>
+        <div class="label"><span class="name">Horizon Ember</span><span class="hex">#D9793A</span></div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#ece2c8"></div>
+        <div class="label"><span class="name">Bone</span><span class="hex">#ECE2C8</span></div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#1a1310"></div>
+        <div class="label"><span class="name">Scorched Ash</span><span class="hex">#1A1310</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="thesis glow-pulse">&ldquo;A code doesn't need witnesses to still be a code. It just needs someone left who remembers it.&rdquo;</p>
+    <p class="thesis-src">— Working thesis, concept direction v0.1</p>
+  </footer>
+
+</div>
