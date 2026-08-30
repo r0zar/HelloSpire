@@ -35,7 +35,7 @@ heals cost Spirit, it pays you for spending it.
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
 1x Mend               1E  Heal 5 HP plus your Spirit. Exhaust.
-1x Judgment           1E  Deal 10 damage. Trigger all your Seals. Unplayable without a Seal.
+1x Judgment           1E  Deal 10 damage. Trigger all your Seals.
 ```
 
 The deck reads as *durable but slow to kill*, which is the D&D and WoW read of the class. Mend
@@ -84,7 +84,7 @@ built toward. Replaying a Seal stacks its Amount.
 The rule: **every Judgment effect is offensive** -- Judgment judges the target, so it always
 wants an enemy; self-benefit (healing, draw) lives in passives or rides alongside a hit.
 
-Triggers: Judgment (1E, unplayable without a Seal; upgrade 0E), Exorcism (attack), Divine
+Triggers: Judgment (1E, deal 10; upgrade 0E), Exorcism (attack), Divine
 Purpose (cantrip), Shield of the Righteous (block). Avenging Wrath (Rare power) makes every
 trigger fire twice. All of it funnels through `Seals.Judge`, so new Seals and new trigger
 cards compose automatically.

@@ -10,16 +10,12 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 10, then trigger the effects of all your Seals. Unplayable without a Seal. The class
-/// signature: a real hit whose rider scales with every Seal you have collected. Upgrade: 0E.
+/// Deal 10, then trigger the effects of all your Seals. Always playable -- with no Seals it
+/// is simply a clean 10. The class signature; the rider scales with the collection. Upgrade: 0E.
 /// </summary>
 public sealed class Judgment() : PaladinCard(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10m, ValueProp.Move)];
-
-    // Outside combat the card reads as playable, like the base class.
-    protected override bool IsPlayable =>
-        Owner?.PlayerCombatState == null || Seals.Active(Owner.Creature) != null;
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

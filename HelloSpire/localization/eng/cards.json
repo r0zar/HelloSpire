@@ -206,7 +206,7 @@
   "HELLOSPIRE-RIDE_TOGETHER.upgrade.description": "The first time each turn each other player plays an Attack, [gold]Load[/gold] 1 [gold]Lead Round[/gold] and gain {Deadeye} [gold]Deadeye[/gold].",
   "HELLOSPIRE-COLD_READ.upgrade.description": "apply 2 weak and 2 debilitate",
   "HELLOSPIRE-JUDGMENT.title": "Judgment",
-  "HELLOSPIRE-JUDGMENT.description": "Deal {Damage:diff()} damage.\nTrigger the effects of all your [gold]Seals[/gold].\nUnplayable without a [gold]Seal[/gold].",
+  "HELLOSPIRE-JUDGMENT.description": "Deal {Damage:diff()} damage.\nTrigger the effects of all your [gold]Seals[/gold].",
   "HELLOSPIRE-CRUSADER_STRIKE.title": "Crusader Strike",
   "HELLOSPIRE-CRUSADER_STRIKE.description": "Deal {Damage:diff()} damage.",
   "HELLOSPIRE-HAMMER_OF_WRATH.title": "Hammer of Wrath",
