@@ -45,7 +45,7 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 | Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: Attacks deal +2. Judgment: deal 5. | Attacks +3 |
 | Seal of Command | 1 | Skill | Gain Seal of Command: first Attack/turn applies 1 Vulnerable. Judgment: 2 Vulnerable. | Judgment: 3 |
 | Seal of Justice | 1 | Skill | Gain Seal of Justice: first Attack/turn applies 1 Weak. Judgment: 2 Weak. | Judgment: 3 |
-| Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: first Attack/turn draws. Judgment: deal 2, draw 1. | draw 2 |
+| Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: first Attack/turn draws. Judgment: hand-size damage, draw 1. | draw 2 |
 | Divine Purpose | 1 | Skill | Trigger the effects of all your Seals. Draw 1 card. | costs 0 |
 | Shield of the Righteous | 1 | Skill | Gain 5 Block. Trigger the effects of all your Seals. | +3 Block |
 | Divine Favor | 0 | Skill | Gain 2 Energy. Exhaust. | 3 Energy |
@@ -67,7 +67,7 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 | Seal of Light | First Attack/turn heals Amount HP. Judged: 1 Weak. |
 | Seal of Command | First Attack/turn: 1 Vulnerable. Judged: Amount Vulnerable. |
 | Seal of Justice | First Attack/turn: 1 Weak. Judged: Amount Weak. |
-| Seal of Wisdom | First Attack/turn: draw 1. Judged: deal 2, draw Amount. |
+| Seal of Wisdom | First Attack/turn: draw 1. Judged: deal damage equal to hand size, draw Amount. |
 | Seal of the Martyr | Enemies that hit you take Amount. Judged: Amount to ALL. |
 | Avenging Wrath | Judgments trigger all Seals twice. |
 | Consecration | Start of turn: Amount damage to ALL enemies. |

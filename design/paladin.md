@@ -78,7 +78,7 @@ built toward. Replaying a Seal stacks its Amount.
 | Righteousness | Uncommon | Attacks +2 | deal 5 |
 | Command | Uncommon | first Attack/turn: 1 Vulnerable | 2 Vulnerable |
 | Justice | Uncommon | first Attack/turn: 1 Weak | 2 Weak |
-| Wisdom | Uncommon | first Attack/turn: draw 1 | deal 2, draw 1 |
+| Wisdom | Uncommon | first Attack/turn: draw 1 | hand-size damage, draw 1 |
 | Martyr | Rare | enemies that hit you take 3 | 3 to ALL enemies |
 
 The rule: **every Judgment effect is offensive** -- Judgment judges the target, so it always
