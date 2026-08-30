@@ -11,11 +11,11 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Apply 4 Regen. Exhaust -- the anti-stall rule covers heals over time too.</summary>
+/// <summary>Apply 3 Regen. Exhaust -- the anti-stall rule covers heals over time too.</summary>
 public sealed class Renew() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Regen", 4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Regen", 3m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

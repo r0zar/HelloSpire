@@ -84,7 +84,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Wake of Ashes | 2 | Attack | Deal {Damage} damage to ALL enemies. Apply 1 Weak to ALL enemies. |
 | Zealotry | 1 | Power | Whenever you trigger your Seals, gain {Strength} Strength. |
 
-## Rare (28)
+## Rare (29)
 
 | Card | Cost | Type | Effect |
 |---|---|---|---|
@@ -108,6 +108,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Holy Wrath | X | Attack | Trigger the effects of all your Seals X times. Retain. |
 | Lay on Hands | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
 | Retribution Aura | 2 | Power | Whenever ANY player is attacked, the attacker takes {Thorns} damage. **MP** |
+| Sanctified Wrath | 2 | Power | At the start of your turn, gain 1 Energy and lose 2 HP. |
 | Sacred Oath | 1 | Skill | Gain {Amount} Strength and {Amount} Spirit. Shuffle a Geas into your draw pile. |
 | Seal of the Crusader | 1 | Power | Gain Seal of the Crusader: your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |
 | Seal of the Martyr | 1 | Power | Gain Seal of the Martyr: enemies that hit you take {Amount} damage. Judgment: deal {Amount} damage to ALL enemies. |
@@ -150,6 +151,8 @@ Total: 90 cards (25 multiplayer-only). Upgrades live in code; see each card clas
 | Holy Book | Starter | At the start of each combat, gain Seal of Light. |
 | Holy Fervor | Common | Whenever you play a card that heals, gain 1 Strength. Once per turn. |
 | Holy Symbol | Common | At the start of each combat, gain 1 Spirit. |
+| Libram of Wrath | Rare | +1 Energy per turn. You can no longer gain Spirit. |
+| Chained Gauntlet | Rare | +1 Energy per turn. Your Seals no longer trigger passively. |
 
 ## Adding a card
 

@@ -376,5 +376,7 @@
   "HELLOSPIRE-HOLY_WRATH.title": "Holy Wrath",
   "HELLOSPIRE-HOLY_WRATH.description": "Trigger the effects of all your [gold]Seals[/gold] X times.",
   "HELLOSPIRE-SHIELD_OF_FAITH.title": "Shield of Faith",
-  "HELLOSPIRE-SHIELD_OF_FAITH.description": "Gain {Plating:diff()} [gold]Plating[/gold]."
+  "HELLOSPIRE-SHIELD_OF_FAITH.description": "Gain {Plating:diff()} [gold]Plating[/gold].",
+  "HELLOSPIRE-SANCTIFIED_WRATH.title": "Sanctified Wrath",
+  "HELLOSPIRE-SANCTIFIED_WRATH.description": "At the start of your turn, gain {Energy:diff()} [gold]Energy[/gold] and lose 2 HP."
 }

@@ -154,5 +154,8 @@
   "HELLOSPIRE-AVENGING_CRUSADER_POWER.smartDescription": "Whenever you play an Attack, heal the lowest-HP player [blue]{Amount}[/blue] HP.",
   "HELLOSPIRE-PRAYER_OF_MENDING_POWER.title": "Prayer of Mending",
   "HELLOSPIRE-PRAYER_OF_MENDING_POWER.description": "Next unblocked damage: heal.",
-  "HELLOSPIRE-PRAYER_OF_MENDING_POWER.smartDescription": "The next time this player takes unblocked damage, they heal [blue]{Amount}[/blue] HP."
+  "HELLOSPIRE-PRAYER_OF_MENDING_POWER.smartDescription": "The next time this player takes unblocked damage, they heal [blue]{Amount}[/blue] HP.",
+  "HELLOSPIRE-SANCTIFIED_WRATH_POWER.title": "Sanctified Wrath",
+  "HELLOSPIRE-SANCTIFIED_WRATH_POWER.description": "At the start of your turn, gain [gold]Energy[/gold] and lose 2 HP.",
+  "HELLOSPIRE-SANCTIFIED_WRATH_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Energy[/gold] and lose [blue]2[/blue] HP."
 }

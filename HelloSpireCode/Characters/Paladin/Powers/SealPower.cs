@@ -24,6 +24,10 @@ public abstract class SealPower : HelloSpirePower
 
     /// <summary>This Seal's Judgment effect. The Seal persists.</summary>
     public abstract Task OnJudged(PlayerChoiceContext ctx, Creature target);
+
+    /// <summary>Chained Gauntlet: passives off, Judgment effects untouched.</summary>
+    protected bool PassivesDisabled =>
+        Owner.Player != null && Owner.Player.Relics.OfType<Relics.ChainedGauntlet>().Any();
 }
 
 /// <summary>Grant and Judge Seals. All Seal logic funnels through here.</summary>

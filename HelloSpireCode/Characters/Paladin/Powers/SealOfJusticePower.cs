@@ -23,7 +23,7 @@ public sealed class SealOfJusticePower : SealPower
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (_usedThisTurn || cardPlay.Card.Owner?.Creature != Owner ||
+        if (PassivesDisabled || _usedThisTurn || cardPlay.Card.Owner?.Creature != Owner ||
             cardPlay.Card.Type != CardType.Attack || cardPlay.Target is not { } target || target.IsDead) return;
         _usedThisTurn = true;
         Flash();

@@ -24,7 +24,7 @@ public sealed class SealOfWisdomPower : SealPower
 
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (_usedThisTurn || cardPlay.Card.Owner?.Creature != Owner ||
+        if (PassivesDisabled || _usedThisTurn || cardPlay.Card.Owner?.Creature != Owner ||
             cardPlay.Card.Type != CardType.Attack || Owner.Player is not { } player) return;
         _usedThisTurn = true;
         Flash();

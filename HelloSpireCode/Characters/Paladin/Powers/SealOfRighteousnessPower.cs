@@ -19,7 +19,7 @@ public sealed class SealOfRighteousnessPower : SealPower
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props,
         Creature? dealer, CardModel? cardSource)
     {
-        if (Owner != dealer || !props.IsPoweredAttack()) return 0m;
+        if (PassivesDisabled || Owner != dealer || !props.IsPoweredAttack()) return 0m;
         return Amount;
     }
 

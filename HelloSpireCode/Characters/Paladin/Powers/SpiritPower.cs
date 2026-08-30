@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -28,8 +29,12 @@ public static class Spirit
 {
     public static int Of(Player p) => p.Creature.GetPowerAmount<SpiritPower>();
 
-    public static Task Gain(PlayerChoiceContext ctx, Player p, int n, CardModel? source = null) =>
-        PowerCmd.Apply<SpiritPower>(ctx, p.Creature, n, p.Creature, source);
+    public static Task Gain(PlayerChoiceContext ctx, Player p, int n, CardModel? source = null)
+    {
+        // Libram of Wrath: fuel bought with the heal identity -- no Spirit while held.
+        if (p.Relics.OfType<Relics.LibramOfWrath>().Any()) return Task.CompletedTask;
+        return PowerCmd.Apply<SpiritPower>(ctx, p.Creature, n, p.Creature, source);
+    }
 
     /// <summary>A heal boosted by the healer's Spirit. All Paladin heal cards route through this.</summary>
     public static Task Heal(Player healer, decimal baseAmount) =>

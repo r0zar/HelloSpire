@@ -15,7 +15,7 @@ public sealed class SealOfTheMartyrPower : SealPower
     public override async Task BeforeDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
-        if (target != Owner || dealer == null || dealer.IsDead || !props.IsPoweredAttack()) return;
+        if (PassivesDisabled || target != Owner || dealer == null || dealer.IsDead || !props.IsPoweredAttack()) return;
         Flash();
         await CreatureCmd.Damage(choiceContext, dealer, Amount,
             ValueProp.Unpowered | ValueProp.SkipHurtAnim, Owner, null);
