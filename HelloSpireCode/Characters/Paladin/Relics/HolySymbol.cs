@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 
 /// <summary>
-/// Paladin pool relic: at the start of each combat, gain 3 Spirit. Currently the stat's only
+/// Paladin pool relic: at the start of each combat, gain 1 Spirit. Currently the stat's only
 /// source -- drafting this is what turns Mend from a flat heal into a scaling one. Was the
 /// starter relic before the Holy Book took that slot.
 ///
@@ -19,7 +19,7 @@ public sealed class HolySymbol : PaladinRelic
 {
     public override RelicRarity Rarity => RelicRarity.Common;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Spirit", 3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Spirit", 1m)];
 
     public override async Task BeforeSideTurnStart(PlayerChoiceContext choiceContext, CombatSide side,
         IReadOnlyList<Creature> participants, ICombatState combatState)

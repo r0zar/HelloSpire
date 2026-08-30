@@ -206,5 +206,21 @@
   "HELLOSPIRE-RIDE_TOGETHER.upgrade.description": "The first time each turn each other player plays an Attack, [gold]Load[/gold] 1 [gold]Lead Round[/gold] and gain {Deadeye} [gold]Deadeye[/gold].",
   "HELLOSPIRE-COLD_READ.upgrade.description": "apply 2 weak and 2 debilitate",
   "HELLOSPIRE-JUDGMENT.title": "Judgment",
-  "HELLOSPIRE-JUDGMENT.description": "Trigger your [gold]Seal[/gold]'s effect.\nUnplayable without a [gold]Seal[/gold]."
+  "HELLOSPIRE-JUDGMENT.description": "Trigger your [gold]Seal[/gold]'s effect.\nUnplayable without a [gold]Seal[/gold].",
+  "HELLOSPIRE-CRUSADER_STRIKE.title": "Crusader Strike",
+  "HELLOSPIRE-CRUSADER_STRIKE.description": "Deal {Damage:diff()} damage.",
+  "HELLOSPIRE-HAMMER_OF_WRATH.title": "Hammer of Wrath",
+  "HELLOSPIRE-HAMMER_OF_WRATH.description": "Deal {Damage:diff()} damage.\nDeals double damage to enemies at or below half HP.",
+  "HELLOSPIRE-AVENGERS_SHIELD.title": "Avenger's Shield",
+  "HELLOSPIRE-AVENGERS_SHIELD.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].",
+  "HELLOSPIRE-HOLY_LIGHT.title": "Holy Light",
+  "HELLOSPIRE-HOLY_LIGHT.description": "Heal {Heal:diff()} HP plus your [gold]Spirit[/gold].\nDraw 1 card.\n[gold]Exhaust[/gold].",
+  "HELLOSPIRE-FLASH_OF_LIGHT.title": "Flash of Light",
+  "HELLOSPIRE-FLASH_OF_LIGHT.description": "Heal {Heal:diff()} HP plus your [gold]Spirit[/gold].\n[gold]Exhaust[/gold].",
+  "HELLOSPIRE-SEAL_OF_LIGHT.title": "Seal of Light",
+  "HELLOSPIRE-SEAL_OF_LIGHT.description": "Gain [gold]Seal of Light[/gold]: whenever you play an Attack, heal {Amount:diff()} HP. [gold]Judgment[/gold]: heal 4 plus your [gold]Spirit[/gold].",
+  "HELLOSPIRE-CONSECRATION.title": "Consecration",
+  "HELLOSPIRE-CONSECRATION.description": "At the start of your turn, deal {Damage:diff()} damage to ALL enemies.",
+  "HELLOSPIRE-DEVOTION.title": "Devotion",
+  "HELLOSPIRE-DEVOTION.description": "At the start of your turn, gain {Spirit:diff()} [gold]Spirit[/gold]."
 }

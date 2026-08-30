@@ -16,7 +16,18 @@ The archived 91-card Spirit set is in [`paladin-faith-cards-archive.md`](paladin
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 
-## Common (0)
+## Common (8)
+
+| Card | Cost | Type | Effect | Upgrade |
+|---|---|---|---|---|
+| Crusader Strike | 1 | Attack | Deal 8 damage. | +3 damage |
+| Hammer of Wrath | 2 | Attack | Deal 9 damage. Double vs enemies at or below half HP. | +3 damage |
+| Avenger's Shield | 2 | Attack | Deal 8 damage. Gain 8 Block. | +3/+3 |
+| Holy Light | 1 | Skill | Heal 5 HP plus your Spirit. Draw 1 card. Exhaust. | Heal 8 |
+| Flash of Light | 0 | Skill | Heal 2 HP plus your Spirit. Exhaust. | Heal 4 |
+| Seal of Light | 1 | Skill | Gain Seal of Light: Attacks heal 1 HP. Judgment: heal 4 plus Spirit. | Attacks heal 2 |
+| Consecration | 2 | Power | At the start of your turn, deal 3 damage to ALL enemies. | 5 damage |
+| Devotion | 1 | Power | At the start of your turn, gain 1 Spirit. | 2 Spirit |
 
 ## Uncommon (0)
 
@@ -32,6 +43,9 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 |---|---|
 | Spirit | Increases the healing of your cards. The Paladin's Strength-for-heals; granted by Holy Symbol. |
 | Seal of Righteousness | Attacks deal +2 damage. Judged: deal 8 damage. One Seal at a time; Judging does not consume it. |
+| Seal of Light | Attacks heal Amount HP. Judged: heal 4 plus Spirit. |
+| Consecration | Start of turn: Amount damage to ALL enemies. |
+| Devotion | Start of turn: gain Amount Spirit. |
 
 ## Relics
 
@@ -39,7 +53,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 |---|---|---|
 | Holy Book | Starter | At the start of each combat, gain Seal of Righteousness. |
 | Holy Fervor | Common | Whenever you play a card that heals, gain 1 Strength. Once per turn. |
-| Holy Symbol | Common | At the start of each combat, gain 3 Spirit. |
+| Holy Symbol | Common | At the start of each combat, gain 1 Spirit. |
 
 ## Adding a card
 

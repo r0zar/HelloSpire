@@ -73,5 +73,14 @@
   "HELLOSPIRE-SPIRIT_POWER.smartDescription": "Your healing cards heal [blue]{Amount}[/blue] additional HP.",
   "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.title": "Seal of Righteousness",
   "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.description": "Your Attacks deal additional damage. [gold]Judgment[/gold]: deal 8 damage.",
-  "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.smartDescription": "Your Attacks deal [blue]{Amount}[/blue] additional damage. [gold]Judgment[/gold]: deal [blue]8[/blue] damage."
+  "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.smartDescription": "Your Attacks deal [blue]{Amount}[/blue] additional damage. [gold]Judgment[/gold]: deal [blue]8[/blue] damage.",
+  "HELLOSPIRE-SEAL_OF_LIGHT_POWER.title": "Seal of Light",
+  "HELLOSPIRE-SEAL_OF_LIGHT_POWER.description": "Whenever you play an Attack, heal HP. [gold]Judgment[/gold]: heal 4 plus your [gold]Spirit[/gold].",
+  "HELLOSPIRE-SEAL_OF_LIGHT_POWER.smartDescription": "Whenever you play an Attack, heal [blue]{Amount}[/blue] HP. [gold]Judgment[/gold]: heal [blue]4[/blue] plus your [gold]Spirit[/gold].",
+  "HELLOSPIRE-CONSECRATION_POWER.title": "Consecration",
+  "HELLOSPIRE-CONSECRATION_POWER.description": "At the start of your turn, deal damage to ALL enemies.",
+  "HELLOSPIRE-CONSECRATION_POWER.smartDescription": "At the start of your turn, deal [blue]{Amount}[/blue] damage to ALL enemies.",
+  "HELLOSPIRE-DEVOTION_POWER.title": "Devotion",
+  "HELLOSPIRE-DEVOTION_POWER.description": "At the start of your turn, gain [gold]Spirit[/gold].",
+  "HELLOSPIRE-DEVOTION_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Spirit[/gold]."
 }
