@@ -11,10 +11,14 @@ The archived 91-card Spirit set is in [`paladin-faith-cards-archive.md`](paladin
 |---|---|---|---|---|
 | Strike | 1 | Attack | Deal 6 damage. | +3 damage |
 | Defend | 1 | Skill | Gain 5 Block. | +3 Block |
-| Mend | 1 | Skill | Heal 5 HP plus your Spirit. Exhaust. | Heal 7 |
+| Mend | 1 | Skill | Heal a player 5 HP plus your Spirit. Exhaust. | Heal 7 |
 | Judgment | 1 | Attack | Trigger your Seal's effect. Unplayable without a Seal. | costs 0 |
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
+
+**MP only** = `MultiplayerOnly`: never appears in solo rewards/shops. Heals target `AnyPlayer`
+(the caster's Spirit boosts the heal, whoever receives it). Rules in `paladin.md` under
+Multiplayer identity: heals are MP cards, auras are MP Powers, blessings are MP Skills.
 
 ## Common (8)
 
@@ -23,8 +27,8 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 | Crusader Strike | 1 | Attack | Deal 8 damage. | +3 damage |
 | Divine Storm | 1 | Attack | Deal 5 damage to ALL enemies. | +3 damage |
 | Blade of Justice | 2 | Attack | Deal 12 damage. | +4 damage |
-| Holy Light | 1 | Skill | Heal 5 HP plus your Spirit. Draw 1 card. Exhaust. | Heal 8 |
-| Flash of Light | 0 | Skill | Heal 2 HP plus your Spirit. Exhaust. | Heal 4 |
+| Holy Light | 1 | Skill | Heal a player 5 HP plus your Spirit. Draw 1 card. Exhaust. **MP only** | Heal 8 |
+| Flash of Light | 0 | Skill | Heal a player 2 HP plus your Spirit. Exhaust. **MP only** | Heal 4 |
 | Seal of Light | 1 | Skill | Gain Seal of Light: Attacks heal 1 HP. Judgment: heal 4 plus Spirit. | Attacks heal 2 |
 | Devotion | 1 | Skill | Gain 2 Spirit. | 3 Spirit |
 | Consecration | 2 | Power | At the start of your turn, deal 3 damage to ALL enemies. | 5 damage |

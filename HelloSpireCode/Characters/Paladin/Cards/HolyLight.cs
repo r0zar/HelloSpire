@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -8,18 +9,20 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Heal 5 plus Spirit, draw a card. Exhaust. The big-slow-heal of WoW, but the draw keeps the
-/// turn moving. Every repeatable heal Exhausts -- the anti-stall rule.
+/// Heal a player 5 plus Spirit, draw a card. Exhaust. Multiplayer only: heals are the Paladin's
+/// co-op identity, so the pool heals live where allies exist to receive them.
 /// </summary>
-public sealed class HolyLight() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+public sealed class HolyLight() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyPlayer)
 {
+    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(5m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        ArgumentNullException.ThrowIfNull(cardPlay.Target);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await Spirit.Heal(Owner, DynamicVars.Heal.BaseValue);
+        await Spirit.Heal(Owner, cardPlay.Target, DynamicVars.Heal.BaseValue);
         await CardPileCmd.Draw(choiceContext, 1, Owner, false);
     }
 

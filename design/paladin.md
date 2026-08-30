@@ -45,6 +45,25 @@ one. Hammer of Justice moved to the Rare pool: a bought turn is too strong to se
 No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
 must be understood on sight.
 
+### Multiplayer identity
+
+The Paladin is the co-op class: the target is **as many MultiplayerOnly cards as solo cards**,
+so in team games roughly half of every reward roll is party support (rewards pick uniformly
+within the rolled rarity, so pool share IS reward share; solo runs filter MP cards out
+entirely and never see a dead card).
+
+The category rules:
+
+- **Heals target `AnyPlayer` and are MultiplayerOnly.** Solo, `AnyPlayer` still works (you are
+  the only target) -- but pool heals only appear in co-op, where healing allies is worth a
+  card. Exception: **Mend**, the starter heal, stays solo-legal so the starter deck functions
+  everywhere. Seal of Light also stays solo-legal: it heals the owner as an engine, not as a
+  targeted heal.
+- **Auras are MultiplayerOnly Powers** -- ongoing party-wide effects (none built yet).
+- **Blessings are MultiplayerOnly Skills** -- single-shot ally buffs (none built yet).
+- All heals route through `Spirit.Heal(healer, target, amount)`: the *caster's* Spirit boosts
+  the heal regardless of who receives it, so the party healer scales the whole party.
+
 ### Seals and Judgment
 
 The Defect's orbs, with a one-slot rule and no evoke cost. A **Seal** is a passive buff while

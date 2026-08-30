@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -32,5 +33,9 @@ public static class Spirit
 
     /// <summary>A heal boosted by the healer's Spirit. All Paladin heal cards route through this.</summary>
     public static Task Heal(Player healer, decimal baseAmount) =>
-        CreatureCmd.Heal(healer.Creature, baseAmount + Of(healer));
+        Heal(healer, healer.Creature, baseAmount);
+
+    /// <summary>Heal any target with the caster's Spirit added -- the ally-heal form.</summary>
+    public static Task Heal(Player healer, Creature target, decimal baseAmount) =>
+        CreatureCmd.Heal(target, baseAmount + Of(healer));
 }
