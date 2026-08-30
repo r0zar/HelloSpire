@@ -75,7 +75,7 @@ rarities so the first one you're offered tempts you into a lane:
 
 | Seal | Rarity | Lane |
 |---|---|---|
-| Righteousness (starter) | -- | damage: Attacks +2; Judge 8 |
+| Righteousness (starter) | -- | damage: Attacks +2; Judge 10 |
 | Light | Common | sustain: Attacks heal; Judge heals |
 | Command | Common | aggro: Vulnerable on attack; Judge Vulnerable |
 | Justice | Common | control: Weak on attack; Judge Weak |

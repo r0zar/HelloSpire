@@ -63,7 +63,7 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 | Power | Effect |
 |---|---|
 | Spirit | Increases the healing of your cards. The Paladin's Strength-for-heals; granted by Holy Symbol. |
-| Seal of Righteousness | Attacks deal +2 damage. Judged: deal 8 damage. One Seal at a time; Judging does not consume it. |
+| Seal of Righteousness | Attacks deal +2 damage. Judged: deal 10 damage. One Seal at a time; Judging does not consume it. |
 | Seal of Light | Attacks heal Amount HP. Judged: heal 4 plus Spirit. |
 | Seal of Command | First Attack/turn: 1 Vulnerable. Judged: Amount Vulnerable. |
 | Seal of Justice | First Attack/turn: 1 Weak. Judged: Amount Weak. |
