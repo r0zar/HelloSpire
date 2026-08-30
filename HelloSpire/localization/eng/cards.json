@@ -192,7 +192,7 @@
   "HELLOSPIRE-DEFEND_PALADIN.title": "Defend",
   "HELLOSPIRE-DEFEND_PALADIN.description": "Gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-HAMMER_OF_JUSTICE.title": "Hammer of Justice",
-  "HELLOSPIRE-HAMMER_OF_JUSTICE.description": "Deal {Damage:diff()} damage.\n[gold]Stun[/gold] the enemy.",
+  "HELLOSPIRE-HAMMER_OF_JUSTICE.description": "[gold]Stun[/gold] the enemy.",
   "HELLOSPIRE-HAND_ME_THAT.title": "Hand Me That",
   "HELLOSPIRE-HAND_ME_THAT.description": "Another player draws {Cards:diff()} cards.\n[gold]Load[/gold] {Load} [gold]Rounds[/gold] of the kind their class carries.",
   "HELLOSPIRE-SOFTENED_UP.title": "Softened Up",
