@@ -1,4 +1,5 @@
 using BaseLib.Abstracts;
+using BaseLib.Patches.UI;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 
@@ -17,6 +18,9 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 public abstract class FaithResource(Deity deity) : BasicCustomResource($"HelloSpire.Faith.{deity}")
 {
     public Deity Deity { get; } = deity;
+
+    // BasicCustomResource's default handler draws nothing; FaithDisplay is what puts Faith on screen.
+    public override ICustomResourceVisualsHandler ResourceVisualsHandler() => new FaithDisplay(this);
 }
 
 public sealed class TormFaith()    : FaithResource(Deity.Torm);

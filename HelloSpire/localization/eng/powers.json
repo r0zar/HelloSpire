@@ -61,5 +61,8 @@
   "HELLOSPIRE-DEBILITATING_PRESENCE_POWER.smartDescription": "The first time each turn you apply [gold]Weak[/gold], also apply [blue]{Amount}[/blue] [gold]Debilitate[/gold].",
   "HELLOSPIRE-SIXTH_SHOT_POWER.title": "Sixth Shot",
   "HELLOSPIRE-SIXTH_SHOT_POWER.description": "Every 6th Round you [gold]Fire[/gold] deals more damage and grants Energy.",
-  "HELLOSPIRE-SIXTH_SHOT_POWER.smartDescription": "Every 6th Round you [gold]Fire[/gold] deals [blue]{Amount}[/blue] more damage and grants [energy:1]."
+  "HELLOSPIRE-SIXTH_SHOT_POWER.smartDescription": "Every 6th Round you [gold]Fire[/gold] deals [blue]{Amount}[/blue] more damage and grants [energy:1].",
+  "HELLOSPIRE-AURA_OF_PROTECTION_POWER.title": "Aura of Protection",
+  "HELLOSPIRE-AURA_OF_PROTECTION_POWER.description": "At the start of your turn, all allies gain [blue]2[/blue] [gold]Block[/gold].",
+  "HELLOSPIRE-AURA_OF_PROTECTION_POWER.smartDescription": "At the start of your turn, all allies gain [blue]{Amount}[/blue] [gold]Block[/gold]."
 }

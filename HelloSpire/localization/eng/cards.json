@@ -192,5 +192,11 @@
   "HELLOSPIRE-DEBILITATING_PRESENCE.title": "Debilitating Presence",
   "HELLOSPIRE-DEBILITATING_PRESENCE.description": "The first time each turn you apply [gold]Weak[/gold], also apply {DebilitatingPresencePower} [gold]Debilitate[/gold].",
   "HELLOSPIRE-SIXTH_SHOT.title": "Sixth Shot",
-  "HELLOSPIRE-SIXTH_SHOT.description": "Every 6th Round you [gold]Fire[/gold] deals {SixthShotPower:diff()} more damage and grants [energy:1]."
+  "HELLOSPIRE-SIXTH_SHOT.description": "Every 6th Round you [gold]Fire[/gold] deals {SixthShotPower:diff()} more damage and grants [energy:1].",
+  "HELLOSPIRE-STRIKE_PALADIN.title": "Strike",
+  "HELLOSPIRE-STRIKE_PALADIN.description": "Deal {Damage:diff()} damage.",
+  "HELLOSPIRE-DEFEND_PALADIN.title": "Defend",
+  "HELLOSPIRE-DEFEND_PALADIN.description": "Gain {Block:diff()} [gold]Block[/gold].",
+  "HELLOSPIRE-AURA_OF_PROTECTION.title": "Aura of Protection",
+  "HELLOSPIRE-AURA_OF_PROTECTION.description": "At the start of your turn, all allies gain {AuraOfProtectionPower:diff()} [gold]Block[/gold]."
 }
