@@ -74,7 +74,7 @@ built toward. Replaying a Seal stacks its Amount.
 
 | Seal | Rarity | Passive | Judgment |
 |---|---|---|---|
-| Light (starter) | -- | first Attack/turn: heal 1 | 1 Weak |
+| Light (starter) | -- | first Attack/turn: heal 1 | gain 1 Spirit |
 | Righteousness | Uncommon | Attacks +2 | deal 5 |
 | Command | Uncommon | first Attack/turn: 1 Vulnerable | 2 Vulnerable |
 | Justice | Uncommon | first Attack/turn: 1 Weak | 2 Weak |
