@@ -189,39 +189,26 @@ Because Faith resets each combat, falling is a **tactical, per-fight decision**,
 sentence. "I'm ten into Torm but this fight needs damage right now" is exactly the choice
 this is for.
 
-## Starting relic: Holy Symbol
+## Starting relic: Holy Fervor
 
-**Holy Symbol** — *At the start of each combat, gain 1 Faith in your highest deity. When your
-total Faith in one deity across the run reaches N, the Holy Symbol is consumed and you receive
-that deity's relic.*
+**Holy Fervor** — *Whenever you play a card that heals, gain 1 Strength. Once per turn.*
 
-With Faith scarce, the relic is the one guaranteed source in the game: the mechanic is always
-faintly alive, and devotion snowballs slowly through the relic rather than through commons. On
-a fresh combat with no Faith anywhere it defaults to Torm. (An earlier version doubled your
-first gain -- dead weight when the first gain might be two fights away.)
+Turns the character's least-valued verb into its most-valued stat. Healing is weak in Slay the
+Spire; Strength is the strongest scaling there is. A heal-heavy deck becomes a scaling deck,
+which makes Ilmater cards attractive to a Tyr build -- cross-deity blending -- without touching
+Faith, which stays scarce.
 
-This follows three base-game patterns at once: **Touch of Orobas** (replaces your starter
-relic with an upgraded one), **Sword of Stone** (transforms after a milestone), and
-**Pael's Wing** (sacrifice to earn a relic). All three ship, so the shape is proven.
+Two constraints keep it starter-scale:
 
-Why this and not "name a deity at combat start":
+- **The trigger is a heal card played, not HP restored.** Countable, credits ally heals to the
+  Paladin, and ignores potions, Regen and end-of-combat heals.
+- **Once per turn.** Without it, Mend + Salve is +2 Strength every turn and the relic is a
+  turn-one Demon Form.
 
-- **You commit by playing, not by picking.** The relic watches what you actually do and
-  rewards it — which is how a paladin's god works. No per-fight choosing.
-- **Devotion is a run-long arc without Faith persisting.** Faith still resets each combat;
-  only the *milestone* accumulates. Every reward screen tempts you off the path before you've
-  earned the relic, which is the pressure we want.
-- **Splitting costs something real.** A wide deck never triggers the transform and keeps the
-  weaker starter relic all run — until `Heresy`, which counts everything as your highest and
-  pops it immediately. That is the wide build's payoff line.
-
-Rules:
-
-- One milestone number, the same for every deity. No god is easier to earn.
-- `Sacrament` counts toward the **destination** deity, so "pulled away, then repented" is a
-  playable story.
-- N is a placeholder until playtesting; it should land somewhere around the end of Act 1 for
-  a focused deck.
+Superseded: *Holy Symbol* (doubled your first Faith gain, then +1 Faith in your highest deity
+per combat). Both were stats rather than decisions, and the second locked in a god on fight one.
+The run-milestone transform -- consumed for a deity relic once devotion is proven -- is still a
+good idea and is not tied to any particular starter relic; it can return as its own mechanic.
 
 ### The three deity relics
 

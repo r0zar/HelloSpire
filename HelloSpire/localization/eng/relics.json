@@ -26,10 +26,10 @@
   "HELLOSPIRE-IVORY_HANDLE.title": "Ivory Handle",
   "HELLOSPIRE-IVORY_HANDLE.description": "Rounds other than [gold]Lead Rounds[/gold] deal 3 additional damage.",
   "HELLOSPIRE-IVORY_HANDLE.flavor": "Expensive, impractical, and it sits in the hand like it was grown there.",
-  "HELLOSPIRE-HOLY_SYMBOL.title": "Holy Symbol",
-  "HELLOSPIRE-HOLY_SYMBOL.description": "At the start of each combat, gain [blue]{Faith}[/blue] [gold]Faith[/gold] in your highest deity.",
-  "HELLOSPIRE-HOLY_SYMBOL.flavor": "Worn smooth by a thumb that has never once let go of it.",
   "HELLOSPIRE-PORTABLE_ALEMBIC.title": "Portable Alembic",
   "HELLOSPIRE-PORTABLE_ALEMBIC.description": "[red]Placeholder.[/red] The Alchemist's starter relic has no effect yet.",
-  "HELLOSPIRE-PORTABLE_ALEMBIC.flavor": "Still warm from the last batch."
+  "HELLOSPIRE-PORTABLE_ALEMBIC.flavor": "Still warm from the last batch.",
+  "HELLOSPIRE-HOLY_FERVOR.title": "Holy Fervor",
+  "HELLOSPIRE-HOLY_FERVOR.description": "Whenever you play a card that heals, gain [blue]1[/blue] [gold]Strength[/gold]. Once per turn.",
+  "HELLOSPIRE-HOLY_FERVOR.flavor": "Every wound closed is a promise kept, and promises are heavy things to swing."
 }
