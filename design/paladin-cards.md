@@ -57,7 +57,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Blessing of Wisdom | 1 | Skill | A player gains {Energy} Energy at the start of their next turn. **MP** |
 | Bulwark | 2 | Skill | Gain {Block} Block. |
 | Circle of Healing | 2 | Skill | Heal ALL players {Heal} HP plus your Spirit. Exhaust. **MP** |
-| Consecrated Ground | 1 | Power | Enemies that attack you take {Thorns} damage. |
+| Consecrated Ground | 1 | Power | Gain {Thorns} Thorns. |
 | Consecration | 1 | Power | At the start of your turn, deal {Damage} damage to ALL enemies. |
 | Crusader Aura | 2 | Power | At the start of your turn, ALL players gain {Strength} Strength. **MP** |
 | Divine Favor | 0 | Skill | Gain {Energy}. Exhaust. |

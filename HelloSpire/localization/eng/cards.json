@@ -300,7 +300,7 @@
   "HELLOSPIRE-HOLY_SHIELD.title": "Holy Shield",
   "HELLOSPIRE-HOLY_SHIELD.description": "Whenever a card gains you [gold]Block[/gold], gain {Block:diff()} more.",
   "HELLOSPIRE-CONSECRATED_GROUND.title": "Consecrated Ground",
-  "HELLOSPIRE-CONSECRATED_GROUND.description": "Enemies that attack you take {Thorns:diff()} damage.",
+  "HELLOSPIRE-CONSECRATED_GROUND.description": "Gain {Thorns:diff()} [gold]Thorns[/gold].",
   "HELLOSPIRE-WAKE_OF_ASHES.title": "Wake of Ashes",
   "HELLOSPIRE-WAKE_OF_ASHES.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Weak[/gold] to ALL enemies.",
   "HELLOSPIRE-ZEALOTRY.title": "Zealotry",
