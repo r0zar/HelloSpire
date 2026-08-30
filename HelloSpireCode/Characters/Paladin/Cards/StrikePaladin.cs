@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 6. Stock Strike, no Faith. Faith comes only from cards the player chose.</summary>
+/// <summary>Deal 6. Stock Strike.</summary>
 public sealed class StrikePaladin() : PaladinCard(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Strike];

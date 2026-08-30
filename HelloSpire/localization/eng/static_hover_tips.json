@@ -14,9 +14,5 @@
   "HELLOSPIRE-THE_CYLINDER.title": "Cylinder",
   "HELLOSPIRE-THE_CYLINDER.description": "Your revolver: six chambers and a hammer that advances clockwise. Rounds are Loaded into it and spent by Firing.",
   "HELLOSPIRE-MATCHED_AMMO.title": "Matched Ammunition",
-  "HELLOSPIRE-MATCHED_AMMO.description": "Rounds borrowed from another player come out of their kit: Ironclad lends Heavy, Silent lends Crippling, Defect lends Piercing, Regent lends Guard, Necrobinder lends Rending, Paladin lends Guard, Alchemist lends Smoke. Anyone else, including yourself, lends Lead.",
-  "HELLOSPIRE-BLESSED.title": "Blessed",
-  "HELLOSPIRE-BLESSED.description": "When a Blessed card is played, every Aura you have pulses again.",
-  "HELLOSPIRE-AURA.title": "Aura",
-  "HELLOSPIRE-AURA.description": "A Power that affects the whole party. Blessed cards make your Auras pulse again."
+  "HELLOSPIRE-MATCHED_AMMO.description": "Rounds borrowed from another player come out of their kit: Ironclad lends Heavy, Silent lends Crippling, Defect lends Piercing, Regent lends Guard, Necrobinder lends Rending, Paladin lends Guard, Alchemist lends Smoke. Anyone else, including yourself, lends Lead."
 }

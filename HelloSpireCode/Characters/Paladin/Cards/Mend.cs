@@ -7,8 +7,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Heal 6. A Defend-scale heal. Deity-neutral by design: no printed Faith.
-/// Under Oath of Redemption it generates Ilmater Faith through the heal hook.</summary>
+/// <summary>Heal 6. A Defend-scale heal, and the card Holy Fervor keys off.</summary>
 public sealed class Mend() : PaladinCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(6m)];

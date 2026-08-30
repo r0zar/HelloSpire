@@ -8,55 +8,14 @@ Ordered by dependency, not by effort. Phases 0–3 are load-bearing: everything 
 
 Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x86_64\sts2.xml` and `sts2.dll`) and **BaseLib 3.4.5**. Early Access moves; re-verify after breaking updates.
 
-## Status (2026-08-29)
+## Status (2026-08-30)
 
-The Paladin is **fully in code**: 4 basics, 83 generated cards, 25 generated powers, 3 Oaths,
-Holy Fervor, and the Faith system with all four tracks (Torm, Ilmater, Tyr, Bane). The set is
-emitted by `tools/gen_paladin.py` from one spec; edit the spec, not the files.
+**Reset.** The Paladin is back to Strike, Defend, Mend (heal 6) and Hammer of Justice (2-cost,
+10 damage, Stun), plus Holy Fervor. The Faith system, Judged / Warded / Blessed, the generated
+card set and the generator are removed from the tree; the full build is at `aaec1e4`. The card
+art Dan made for the full set is kept in the repo, ready for each card as it is re-added.
 
-Still open, roughly in order:
-
-- **Numbers.** Every value is a placeholder. The damage-per-energy benchmark (Phase 8) has not
-  been built; that is the next thing that makes playtesting meaningful.
-- ~~The second-mechanic layer~~ **Built.** Judged, Warded and Blessed are in; see design/paladin.md.
-  Untested in play, like everything else.
-- **Art.** Six real pieces (backsplash, select tile, Strike, Defend, Mend, Hammer of Justice).
-  Everything else is a labelled placeholder tile.
-- **Faith UI** is plain tiles at the orb position; orb-styled art deferred.
-- **Multiplayer sync** of Faith has never been tested with two clients.
-- **Relics.** Only the starter exists; the eight character relics are unwritten.
-- **Run-milestone relic transform** (the old Holy Symbol idea) is recorded, not built.
-
-The Gunslinger is **fully in code**: 4 basics, 82 cards, 5 multiplayer cards, 8 relics, 3 potions,
-the Cylinder and its on-screen widget. Unlike the Paladin it is hand-written, not generated.
-
-It has had **one balance pass** (2026-08-29), aimed at "the character feels weaker than the other
-two". See `design/gunslinger.md` for the reasoning; the short version:
-
-- Lead Rounds 6 -> 7, and every specialist Round moved with it.
-- Quick Draw Fires 2, not 1 — one chamber per free card was the rate that made the deck feel bad.
-- Loading is where the character's randomness lives now: Reload, Quick Load, Fresh Cartridges,
-  Old Iron, Oiled Rag, Spare Speedloader and the Speedloader Flask all roll. Every roll has a floor
-  at least as good as the fixed value it replaced.
-- Hand Me That loads ammunition matched to the class you borrowed from (`AmmoAffinity`).
-- Pocket Sand+ costs 0 rather than applying a third Weak.
-
-Two bugs fixed in the same pass, both of which were making the character weaker than its numbers:
-
-- **Armor and Dodge evaporated.** They were spent from `Hook.ModifyDamage`, which the game also
-  calls to draw intent forecasts. Reduction and spend are now separate.
-- **Piercing Rounds did not ignore Block.** `Revolver.Fire` computed the value props and then never
-  passed them to the damage command, which made Piercing ammunition and Through the Coat inert.
-
-Still open for the Gunslinger:
-
-- **Nothing has been played.** The whole pass is reasoned from the card list, not from a run. The
-  damage-per-energy benchmark (Phase 8) is still unbuilt for this character too.
-- **Multiplayer-only card gating** is unsolved — the five multiplayer cards are in the solo pool.
-- **Card art** is placeholder tiles except the character UI set.
-- **The cylinder widget's anchor** is found by searching the combat UI for a node named for Energy.
-  Verify its position in game; the fallback corner placement means a miss is silent.
-
+From here: one card at a time, each a deliberate decision, playtested before the next.
 
 ---
 

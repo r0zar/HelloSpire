@@ -8,7 +8,7 @@ Built against **game v0.107.1** and **BaseLib 3.4.5**. Slay the Spire 2 is in Ea
 
 | Character | HP | Colour | Status |
 |---|---:|---|---|
-| **The Paladin** | 75 | gold | full card set in code; placeholder numbers and art |
+| **The Paladin** | 75 | gold | starter deck only, being rebuilt one card at a time |
 | **The Alchemist** | 68 | green | shell only — borrowed starter kit |
 | **The Gunslinger** | 72 | rust | full card set, relics, potions and cylinder UI in code; first balance pass done |
 

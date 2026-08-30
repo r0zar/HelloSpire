@@ -8,7 +8,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Gain 5 Block. Stock Defend, no Faith.</summary>
+/// <summary>Gain 5 Block. Stock Defend.</summary>
 public sealed class DefendPaladin() : PaladinCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
     public override bool GainsBlock => true;

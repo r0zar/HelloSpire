@@ -13,7 +13,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
 /// Deal 10 damage. Stun the enemy. The Paladin's signature starter: a 2-cost tempo tool that
-/// buys a turn, which is how a defensive character with no Faith yet survives Act 1. Mirrors
+/// buys a turn, which is how a defensive character survives Act 1. Mirrors
 /// the shipped Whistle: attack, then CreatureCmd.Stun on the same target.
 /// </summary>
 public sealed class HammerOfJustice() : PaladinCard(2, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
