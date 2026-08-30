@@ -192,5 +192,16 @@
   "HELLOSPIRE-DEBILITATING_PRESENCE.title": "Debilitating Presence",
   "HELLOSPIRE-DEBILITATING_PRESENCE.description": "The first time each turn you apply [gold]Weak[/gold], also apply {DebilitatingPresencePower} [gold]Debilitate[/gold].",
   "HELLOSPIRE-SIXTH_SHOT.title": "Sixth Shot",
-  "HELLOSPIRE-SIXTH_SHOT.description": "Every 6th Round you [gold]Fire[/gold] deals {SixthShotPower:diff()} more damage and grants [energy:1]."
+  "HELLOSPIRE-SIXTH_SHOT.description": "Every 6th Round you [gold]Fire[/gold] deals {SixthShotPower:diff()} more damage and grants [energy:1].",
+  "HELLOSPIRE-HAND_ME_THAT.title": "Hand Me That",
+  "HELLOSPIRE-HAND_ME_THAT.description": "Another player draws {Cards:diff()} cards.\n[gold]Load[/gold] {Load} [gold]Lead Rounds[/gold].",
+  "HELLOSPIRE-SOFTENED_UP.title": "Softened Up",
+  "HELLOSPIRE-SOFTENED_UP.description": "Apply {DebilitatePower:diff()} [gold]Debilitate[/gold] to ALL enemies.",
+  "HELLOSPIRE-COVERING_PARTNER.title": "Covering Partner",
+  "HELLOSPIRE-COVERING_PARTNER.description": "ALL players gain {Block:diff()} [gold]Block[/gold].\n[gold]Cycle[/gold] 1. If the new chamber is loaded, ALL players gain {Bonus:diff()} more [gold]Block[/gold].",
+  "HELLOSPIRE-SUPPRESSIVE_VOLLEY.title": "Suppressive Volley",
+  "HELLOSPIRE-SUPPRESSIVE_VOLLEY.description": "[gold]Fire[/gold] {Fire}.\nApply {WeakPower:diff()} [gold]Weak[/gold] to ALL enemies.",
+  "HELLOSPIRE-RIDE_TOGETHER.title": "Ride Together",
+  "HELLOSPIRE-RIDE_TOGETHER.description": "The first time each turn each other player plays an Attack, [gold]Load[/gold] 1 [gold]Lead Round[/gold].",
+  "HELLOSPIRE-RIDE_TOGETHER.upgrade.description": "The first time each turn each other player plays an Attack, [gold]Load[/gold] 1 [gold]Lead Round[/gold] and gain {Deadeye} [gold]Deadeye[/gold]."
 }
