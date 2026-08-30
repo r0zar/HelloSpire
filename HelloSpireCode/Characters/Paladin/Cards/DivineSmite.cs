@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -10,26 +11,25 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 6, apply 1 Vulnerable. The Paladin's Bash.</summary>
+/// <summary>
+/// Deal 3, plus 3 for each of your Seals. The D&D smite: divinity channelled into the blow.
+/// Replaces the old Bash-copy (Crusader Strike owns that slot now) with a new paladin shape --
+/// seal-count as a damage axis.
+/// </summary>
 public sealed class DivineSmite() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(6m, ValueProp.Move), new DynamicVar("Vulnerable", 1m)];
+    public const decimal PerSeal = 3m;
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(3m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
+        var seals = Owner.Creature.GetPowerInstances<SealPower>().Count();
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + PerSeal * seals).FromCard(this)
+            .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(choiceContext);
-        if (!cardPlay.Target.IsDead)
-            await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target,
-                DynamicVars["Vulnerable"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars["Vulnerable"].UpgradeValueBy(1m);
-    }
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }

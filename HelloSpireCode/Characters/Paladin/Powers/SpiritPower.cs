@@ -35,7 +35,20 @@ public static class Spirit
     public static Task Heal(Player healer, decimal baseAmount) =>
         Heal(healer, healer.Creature, baseAmount);
 
-    /// <summary>Heal any target with the caster's Spirit added -- the ally-heal form.</summary>
-    public static Task Heal(Player healer, Creature target, decimal baseAmount) =>
-        CreatureCmd.Heal(target, baseAmount + Of(healer));
+    /// <summary>
+    /// Heal any target with the caster's Spirit added -- the ally-heal form. Also the funnel
+    /// where Beacon of Light rides: any other player bearing the Beacon heals its Amount too.
+    /// </summary>
+    public static async Task Heal(Player healer, Creature target, decimal baseAmount)
+    {
+        await CreatureCmd.Heal(target, baseAmount + Of(healer));
+        if (target.CombatState is not { } state) return;
+        foreach (var bearer in state.PlayerCreatures)
+        {
+            if (bearer == target || bearer.IsDead) continue;
+            if (bearer.GetPower<BeaconOfLightPower>() is not { } beacon) continue;
+            beacon.Flash();
+            await CreatureCmd.Heal(bearer, beacon.Amount);
+        }
+    }
 }
