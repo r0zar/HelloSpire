@@ -7,6 +7,8 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Relics;
 
+using Alchemist_ = HelloSpire.HelloSpireCode.Alchemist;
+
 namespace HelloSpire.HelloSpireCode.Characters;
 
 public class Alchemist : PlaceholderCharacterModel
@@ -22,23 +24,24 @@ public class Alchemist : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 68;
 
-    // TODO(Phase 2): replace with Alchemist-specific Strike/Defend and a signature starter card.
+    // The teaching ten: Strikes, Defends, and the two Formulas -- one system at a time
+    // (design/alchemist.md, Starting kit). Gold deliberately absent from turn one.
     public override IEnumerable<CardModel> StartingDeck =>
     [
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>()
+        ModelDb.Card<Alchemist_.Cards.StrikeAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.StrikeAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.StrikeAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.StrikeAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
+        ModelDb.Card<Alchemist_.Cards.PyricFormula>(),
+        ModelDb.Card<Alchemist_.Cards.AegisFormula>()
     ];
 
-    // TODO(Phase 2): replace with a starting relic that encodes this character's fantasy.
-    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<BurningBlood>()];
+    public override IReadOnlyList<RelicModel> StartingRelics =>
+        [ModelDb.Relic<Alchemist_.Relics.PortableAlembic>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<AlchemistCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<AlchemistRelicPool>();

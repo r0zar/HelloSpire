@@ -47,7 +47,6 @@
         <!-- The Alchemist (HelloSpireCode/Alchemist) is mid-authoring: its code compiles but ~90 cards
              have no localization yet, and STS001 fails the build on any missing key. Excluded until
              its author lands the text. Characters/Alchemist/Alchemist.cs stays the placeholder shell. -->
-        <Compile Remove="HelloSpireCode/Alchemist/**" />
         <Compile Remove="materials/**" />
         <Compile Remove="shaders/**" />
         <Compile Remove="images/**" />
