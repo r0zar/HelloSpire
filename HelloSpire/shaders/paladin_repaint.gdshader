@@ -3,6 +3,8 @@
 // maroon cloth -> cream tabard, leather/bronze -> pale gold, everything else untouched.
 shader_type canvas_item;
 
+uniform sampler2D weapon_page : filter_linear;
+
 vec3 rgb2hsv(vec3 c) {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
@@ -20,6 +22,13 @@ vec3 hsv2rgb(vec3 c) {
 
 void fragment() {
     vec4 tex = texture(TEXTURE, UV);
+    vec2 ts = vec2(textureSize(TEXTURE, 0));
+    if (abs(ts.x - 1000.0) < 0.5 && abs(ts.y - 269.0) < 0.5) {
+        vec2 px = UV * ts;
+        if (px.x >= 2.0 && px.x < 198.0 && px.y >= 59.0 && px.y < 161.0) {
+            tex = texture(weapon_page, UV);   // the sword rect becomes the warhammer
+        }
+    }
     vec3 hsv = rgb2hsv(tex.rgb);
     float hd = hsv.x * 360.0;
     bool red = hd < 25.0 || hd > 335.0;
