@@ -21,15 +21,20 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 | Card | Cost | Type | Effect | Upgrade |
 |---|---|---|---|---|
 | Crusader Strike | 1 | Attack | Deal 8 damage. | +3 damage |
-| Hammer of Wrath | 2 | Attack | Deal 9 damage. Double vs enemies at or below half HP. | +3 damage |
-| Avenger's Shield | 2 | Attack | Deal 8 damage. Gain 8 Block. | +3/+3 |
+| Divine Storm | 1 | Attack | Deal 5 damage to ALL enemies. | +3 damage |
+| Blade of Justice | 2 | Attack | Deal 12 damage. | +4 damage |
 | Holy Light | 1 | Skill | Heal 5 HP plus your Spirit. Draw 1 card. Exhaust. | Heal 8 |
 | Flash of Light | 0 | Skill | Heal 2 HP plus your Spirit. Exhaust. | Heal 4 |
 | Seal of Light | 1 | Skill | Gain Seal of Light: Attacks heal 1 HP. Judgment: heal 4 plus Spirit. | Attacks heal 2 |
+| Devotion | 1 | Skill | Gain 2 Spirit. | 3 Spirit |
 | Consecration | 2 | Power | At the start of your turn, deal 3 damage to ALL enemies. | 5 damage |
-| Devotion | 1 | Power | At the start of your turn, gain 1 Spirit. | 2 Spirit |
 
-## Uncommon (0)
+## Uncommon (2)
+
+| Card | Cost | Type | Effect | Upgrade |
+|---|---|---|---|---|
+| Hammer of Wrath | 2 | Attack | Deal 9 damage. Double vs enemies at or below half HP. | +3 damage |
+| Avenger's Shield | 2 | Attack | Deal 8 damage. Gain 8 Block. | +3/+3 |
 
 ## Rare (1)
 
@@ -45,7 +50,6 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 | Seal of Righteousness | Attacks deal +2 damage. Judged: deal 8 damage. One Seal at a time; Judging does not consume it. |
 | Seal of Light | Attacks heal Amount HP. Judged: heal 4 plus Spirit. |
 | Consecration | Start of turn: Amount damage to ALL enemies. |
-| Devotion | Start of turn: gain Amount Spirit. |
 
 ## Relics
 

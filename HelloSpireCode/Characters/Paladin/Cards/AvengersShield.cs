@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>Deal 8, gain 8 Block. The protection Paladin in one card: offense and wall together.</summary>
-public sealed class AvengersShield() : PaladinCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class AvengersShield() : PaladinCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     public override bool GainsBlock => true;
     protected override IEnumerable<DynamicVar> CanonicalVars =>

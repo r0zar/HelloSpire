@@ -63,8 +63,8 @@ loc entry, one icon each -- and each new Seal is also a new Judgment.
 
 Strength raises attacks, Dexterity raises Block, **Spirit raises healing** -- one icon in the
 power bar next to Strength, reset per combat like the others. The **Holy Symbol** (starter
-Fed by **Holy Symbol** (Common relic, 1 Spirit per combat) and **Devotion** (Common power,
-1 Spirit per turn). Draft into it and every heal scales; skip it and heals stay flat.
+Fed by **Holy Symbol** (Common relic, 1 Spirit per combat) and **Devotion** (Common skill,
+flat 2 Spirit -- a per-turn engine version compounded too hard). Draft in and heals scale.
 
 **Mend Exhausts.** That is the anti-stall guarantee now -- one heal per copy per fight, no
 economy to police. Spirit is why the one heal is worth building toward: Mend heals 5 + Spirit
@@ -81,7 +81,7 @@ be negative Spirit on the same icon.
 
 ### Card pool
 
-Eight Commons and a Rare, added as a playtest batch (2026-08-30): enough of a pool that Act 1
+Eight Commons, two Uncommons and a Rare, added as a playtest batch (2026-08-30): enough of a pool that Act 1
 drafts are real. See `paladin-cards.md` for the live table. Uncommons and further Rares wait on
 how these play.
 

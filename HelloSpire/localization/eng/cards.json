@@ -222,5 +222,9 @@
   "HELLOSPIRE-CONSECRATION.title": "Consecration",
   "HELLOSPIRE-CONSECRATION.description": "At the start of your turn, deal {Damage:diff()} damage to ALL enemies.",
   "HELLOSPIRE-DEVOTION.title": "Devotion",
-  "HELLOSPIRE-DEVOTION.description": "At the start of your turn, gain {Spirit:diff()} [gold]Spirit[/gold]."
+  "HELLOSPIRE-DEVOTION.description": "Gain {Spirit:diff()} [gold]Spirit[/gold].",
+  "HELLOSPIRE-DIVINE_STORM.title": "Divine Storm",
+  "HELLOSPIRE-DIVINE_STORM.description": "Deal {Damage:diff()} damage to ALL enemies.",
+  "HELLOSPIRE-BLADE_OF_JUSTICE.title": "Blade of Justice",
+  "HELLOSPIRE-BLADE_OF_JUSTICE.description": "Deal {Damage:diff()} damage."
 }

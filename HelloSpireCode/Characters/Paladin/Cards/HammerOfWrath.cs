@@ -10,10 +10,10 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 9; double against enemies at or below half HP. The WoW execute, priced as a common:
+/// Deal 9; double against enemies at or below half HP. The WoW execute, an uncommon:
 /// fine early, and the finisher the class otherwise lacks.
 /// </summary>
-public sealed class HammerOfWrath() : PaladinCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class HammerOfWrath() : PaladinCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
 

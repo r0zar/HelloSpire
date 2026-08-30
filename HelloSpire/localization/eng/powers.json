@@ -79,8 +79,5 @@
   "HELLOSPIRE-SEAL_OF_LIGHT_POWER.smartDescription": "Whenever you play an Attack, heal [blue]{Amount}[/blue] HP. [gold]Judgment[/gold]: heal [blue]4[/blue] plus your [gold]Spirit[/gold].",
   "HELLOSPIRE-CONSECRATION_POWER.title": "Consecration",
   "HELLOSPIRE-CONSECRATION_POWER.description": "At the start of your turn, deal damage to ALL enemies.",
-  "HELLOSPIRE-CONSECRATION_POWER.smartDescription": "At the start of your turn, deal [blue]{Amount}[/blue] damage to ALL enemies.",
-  "HELLOSPIRE-DEVOTION_POWER.title": "Devotion",
-  "HELLOSPIRE-DEVOTION_POWER.description": "At the start of your turn, gain [gold]Spirit[/gold].",
-  "HELLOSPIRE-DEVOTION_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Spirit[/gold]."
+  "HELLOSPIRE-CONSECRATION_POWER.smartDescription": "At the start of your turn, deal [blue]{Amount}[/blue] damage to ALL enemies."
 }
