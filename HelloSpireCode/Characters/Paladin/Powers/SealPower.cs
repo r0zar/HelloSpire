@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
@@ -49,5 +50,10 @@ public static class Seals
                 seal.Flash();
                 await seal.OnJudged(ctx, target);
             }
+        if (p.Creature.GetPower<ZealotryPower>() is { } zealotry)
+        {
+            zealotry.Flash();
+            await PowerCmd.Apply<StrengthPower>(ctx, p.Creature, zealotry.Amount, p.Creature, null);
+        }
     }
 }

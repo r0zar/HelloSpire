@@ -111,7 +111,8 @@ be negative Spirit on the same icon.
 
 ### Card pool
 
-Eight Commons, two Uncommons and a Rare, added as a playtest batch (2026-08-30): enough of a pool that Act 1
+A full pool (86 cards at the base game's 4/20/36/26 shape, 25 of them MultiplayerOnly),
+built out 2026-08-30 across three archetype spines -- Tank, Healer, DPS: enough of a pool that Act 1
 drafts are real. See `paladin-cards.md` for the live table. Uncommons and further Rares wait on
 how these play.
 
@@ -179,3 +180,23 @@ placeholders): `paladin_body.png`, `gunslinger_body.png`, `alchemist_body.png`.
 
 Later upgrade path: a spine rig would restore attack/hurt/idle animations, but that is a
 separate art project; a great static body ships first.
+
+## Archetypes
+
+Three spines, deliberately cross-pollinating (every lane has attacks, block and sustain):
+
+- **Tank (Protection)**: Block engines and payback. Sentinel / Bulwark / Bastion / Holy Shield /
+  Eye for an Eye / Consecrated Ground / Retribution -> Hammer of the Righteous (Block as damage),
+  Seal of the Martyr, Ardent Defender, Guardian of Ancient Kings, Divine Shield, Aegis of Light.
+- **Healer (Holy)**: Spirit ramp and its payoffs. Comfort / Devotion / Renew / Blessed Recovery /
+  Redemption / Vigil -> Holy Avenger (double Spirit), Divine Intervention; in co-op the whole MP
+  suite (Word of Glory, Circle of Healing, Beacon of Light, Divine Hymn, auras) makes this the
+  party-healer class.
+- **DPS (Retribution)**: Seals + Judgment density and Strength. Divine Smite / Exorcism /
+  Templar's Verdict / Blade of Wrath / Zealotry / Righteous Fury -> Wake of Ashes, Reckoning,
+  Greater Judgment, Wrathful Smite, Seal of the Crusader, Crusade, Avenging Wrath, Final Reckoning.
+
+Multiplayer identity on top: 25 MP-only cards -- heals (AnyPlayer + Exhaust), blessings
+(single-shot ally buffs incl. Kings/Wisdom/Protection), auras (party-wide per-turn powers incl.
+Crusader/Vitality/Retribution/Tyr's), and the co-op build-arounds Beacon of Light, Judgment of
+Light and Avenging Crusader.
