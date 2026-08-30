@@ -74,12 +74,7 @@ public class Gunslinger : PlaceholderCharacterModel
     /// </summary>
     public override string CustomCharacterSelectBg => "res://HelloSpire/scenes/char_select_bg_gunslinger.tscn";
 
-    /// <summary>
-    /// The in-combat body: our own NCreatureVisuals scene with a static Sprite2D, replacing the
-    /// inherited Ironclad rig. Same pipeline as the Paladin's; placeholder art, spec for real
-    /// art in design/paladin.md under Combat visuals.
-    /// </summary>
-    public override string CustomVisualPath => "res://HelloSpire/scenes/creature_visuals_gunslinger.tscn";
+    // In-combat body: the inherited Ironclad rig, repainted by the CharacterSkins shader patch.
 
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);

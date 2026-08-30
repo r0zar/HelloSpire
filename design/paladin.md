@@ -155,7 +155,7 @@ reset — so adding one is a class, a localization entry and a build.
 
 ## Combat visuals
 
-The Paladin wears the Ironclad's spine rig, repainted at render time: `PaladinSkin` (Harmony
+The Paladin wears the Ironclad's spine rig, repainted at render time: `CharacterSkins` (Harmony
 postfix on `Creature.CreateVisuals`) hands the Paladin's SpineSprite a palette-remap shader
 (`shaders/paladin_repaint.gdshader`) via spine-godot's own set_normal_material slot -- reds to
 cream tabard, leather to pale gold, rage glow to holy gold, per pixel. All six base animations
@@ -163,10 +163,10 @@ come free, no spine resources are touched (swapping atlas textures breaks the re
 internal rebuild -- learned the hard way). The game runs Spine 4.2.36; a from-scratch Paladin
 rig stays the long-term path (spec below), but the repaint ships today.
 
-The Gunslinger and Alchemist still use the static-scene pipeline: our own `NCreatureVisuals`
-scene with a Sprite2D body -- scene contract (unique names): `%Visuals`, `%Bounds`,
-`%IntentPos`, `%CenterPos`, optional `%OrbPos`/`%TalkPos`. The game is null-safe about missing
-spine rigs, so a static image is a legitimate creature.
+All three characters now ride the same pipeline (`CharacterSkins`, one shader each):
+Paladin gold-and-white, Gunslinger black-and-tan with ember glow, Alchemist greens with toxic
+glow. The retired static-scene approach (own NCreatureVisuals scene, Sprite2D body) remains
+valid if a character ever needs a truly custom silhouette.
 
 **Art request (Dan): the combat bodies.** All three characters use this pipeline now; each
 replaces one file under `HelloSpire/images/creature/` (current files are generated
