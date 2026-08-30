@@ -67,6 +67,7 @@ public class Paladin : PlaceholderCharacterModel
     // PaladinSkin patch at runtime. See design/paladin.md under Combat visuals.
 
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
+    public override string CustomIconOutlineTexturePath => "character_icon_outline.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectLockedIconPath => "char_select_locked.png".CharacterUiPath(AssetFolder);
     public override string CustomMapMarkerPath => "map_marker.png".CharacterUiPath(AssetFolder);
