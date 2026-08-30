@@ -9,8 +9,8 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The cycle Seal: first Attack each turn draws a card; Judged, deal 2 and draw Amount --
-/// every judgment lands on the target.
+/// The cycle Seal: first Attack each turn draws a card. Judged: deal damage equal to your hand
+/// size, then draw Amount -- knowledge is power, and the passive feeds the judge.
 /// </summary>
 public sealed class SealOfWisdomPower : SealPower
 {
@@ -34,7 +34,9 @@ public sealed class SealOfWisdomPower : SealPower
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
         if (Owner.Player is not { } player) return;
-        await CreatureCmd.Damage(ctx, [target], 2m, ValueProp.Unpowered, Owner);
+        var handSize = PileType.Hand.GetPile(player).Cards.Count;
+        if (handSize > 0)
+            await CreatureCmd.Damage(ctx, [target], handSize, ValueProp.Unpowered, Owner);
         await CardPileCmd.Draw(ctx, (int)Amount, player, false);
     }
 }

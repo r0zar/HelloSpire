@@ -35,7 +35,7 @@ heals cost Spirit, it pays you for spending it.
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
 1x Mend               1E  Heal 5 HP plus your Spirit. Exhaust.
-1x Judgment           1E  Trigger your Seal's effect. Unplayable without a Seal.
+1x Judgment           1E  Deal 10 damage. Trigger all your Seals. Unplayable without a Seal.
 ```
 
 The deck reads as *durable but slow to kill*, which is the D&D and WoW read of the class. Mend

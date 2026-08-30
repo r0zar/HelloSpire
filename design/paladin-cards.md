@@ -12,7 +12,7 @@ The archived 91-card Spirit set is in [`paladin-faith-cards-archive.md`](paladin
 | Strike | 1 | Attack | Deal 6 damage. | +3 damage |
 | Defend | 1 | Skill | Gain 5 Block. | +3 Block |
 | Mend | 1 | Skill | Heal 5 HP plus your Spirit. Exhaust. | Heal 7 |
-| Judgment | 1 | Attack | Trigger the effects of all your Seals. Unplayable without a Seal. | costs 0 |
+| Judgment | 1 | Attack | Deal 10 damage. Trigger the effects of all your Seals. Unplayable without a Seal. | costs 0 |
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 
