@@ -9,7 +9,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
 /// While active: your Attacks deal +Amount damage (applied at 2, the Strength pattern). Judged:
-/// deal 10 damage to the target. The starter Seal, granted by the Libram of Righteousness --
+/// deal 10 damage to the target. The starter Seal, granted by the Holy Book --
 /// the Defect's Cracked Core shape: passive trickle, real evoke.
 /// </summary>
 public sealed class SealOfRighteousnessPower : SealPower
