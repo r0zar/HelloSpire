@@ -12,7 +12,7 @@ The archived 91-card Faith set is in [`paladin-faith-cards-archive.md`](paladin-
 | Strike | 1 | Attack | Deal 6 damage. | +3 damage |
 | Defend | 1 | Skill | Gain 5 Block. | +3 Block |
 | Mend | 1 | Skill | Costs 1 Faith. Heal 6 HP. | +3 HP |
-| Hammer of Justice | 3 | Skill | Stun the enemy. | costs 2 |
+| Hammer of Justice | 3 | Attack | Deal damage equal to your Faith. Stun the enemy. | costs 2 |
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice.
 

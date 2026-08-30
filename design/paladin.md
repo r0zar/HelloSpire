@@ -35,12 +35,12 @@ heals cost Faith, it pays you for spending it.
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
 1x Mend               1E  Costs 1 Faith. Heal 6 HP.
-1x Hammer of Justice  3E  Stun the enemy.
+1x Hammer of Justice  3E  Deal damage equal to your Faith. Stun the enemy.
 ```
 
 The deck reads as *durable but slow to kill*, which is the D&D and WoW read of the class. Mend
-is a Defend mirror in HP. Hammer of Justice is pure tempo — a bought turn, priced at 3 — and it is the card that says on
-turn one what the Paladin is.
+is a Defend mirror in HP. Hammer of Justice is a bought turn that pays for banked Faith: every point not spent on Mend is
+damage here, so heal-or-hit lives on one number. It is the card that says what the Paladin is.
 
 No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
 must be understood on sight.
