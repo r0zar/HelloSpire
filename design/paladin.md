@@ -2,7 +2,7 @@
 
 Status: **rebuilding from the starter deck, one card at a time.** Reset on 2026-08-30.
 
-This is the live design. The earlier full build — Faith across the Triad, Bane, Judged /
+This is the live design. The earlier full build — Spirit across the Triad, Bane, Judged /
 Warded / Blessed, 91 cards — is archived in [`paladin-faith-archive.md`](paladin-faith-archive.md)
 and [`paladin-faith-cards-archive.md`](paladin-faith-cards-archive.md), with its code at git
 `aaec1e4`. It was built end to end and compiled, and none of it was ever played. That is the
@@ -24,17 +24,17 @@ at the speed of play, not the speed of writing.
 |---|---|
 | Starting HP | 75 — matches Regent and Defect; the kit is inherently sturdy, so no more than that |
 | Colour | gold `#e8c46a`, on the card frame via `ShaderColor` |
-| Starter relic | **Holy Symbol** — *At the start of each combat, gain 3 Faith.* |
+| Starter relic | **Holy Symbol** — *At the start of each combat, gain 3 Spirit.* |
 
 Holy Fervor (heal a card, gain 1 Strength, once per turn) moves to the relic pool: now that
-heals cost Faith, it pays you for spending it.
+heals cost Spirit, it pays you for spending it.
 
 ### Starter deck — ten cards
 
 ```
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
-1x Mend               1E  Heal 5 HP plus your Faith. Exhaust.
+1x Mend               1E  Heal 5 HP plus your Spirit. Exhaust.
 1x Hammer of Justice  3E  Deal 4 damage. Stun the enemy.
 ```
 
@@ -44,28 +44,28 @@ is a Defend mirror in HP. Hammer of Justice is a bought turn with a token hit; t
 No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
 must be understood on sight.
 
-### Faith, the third stat
+### Spirit, the third stat (was: Faith)
 
-Strength raises attacks, Dexterity raises Block, **Faith raises healing** -- one icon in the
+Strength raises attacks, Dexterity raises Block, **Spirit raises healing** -- one icon in the
 power bar next to Strength, reset per combat like the others. The **Holy Symbol** (starter
 relic) grants 3 at the start of each combat; **Smite** earns 1 more per play.
 
 **Mend Exhausts.** That is the anti-stall guarantee now -- one heal per copy per fight, no
-economy to police. Faith is why the one heal is worth building toward: Mend heals 5 + Faith
-(8 on turn one; upgraded 7 + Faith).
+economy to police. Spirit is why the one heal is worth building toward: Mend heals 5 + Spirit
+(8 on turn one; upgraded 7 + Spirit).
 
 Engine note: the game has no combat-heal modify hook (rest-site heals have one, combat heals do
-not), so Faith cannot intercept heals centrally the way Strength intercepts damage. Paladin heal
-cards add it at heal time through one helper (`Faith.Heal`), which behaves identically for
+not), so Spirit cannot intercept heals centrally the way Strength intercepts damage. Paladin heal
+cards add it at heal time through one helper (`Spirit.Heal`), which behaves identically for
 everything we ship.
 
-The earlier spend-economy Faith (pool of points, Mend costs 1) and the signed holy/unholy
+The earlier spend-economy design (a Faith pool; Mend cost 1) and the signed holy/unholy
 extension are archived thinking; the stat model replaces the pool. Unholy, if it returns, would
-be negative Faith on the same icon.
+be negative Spirit on the same icon.
 
 ### Card pool
 
-One card: **Smite** (1E, deal 9, gain 1 Faith). Everything else the Paladin sees today is
+One card: **Smite** (1E, deal 9, gain 1 Spirit). Everything else the Paladin sees today is
 colorless or shop.
 
 ## What is settled
@@ -86,7 +86,7 @@ These survived the reset because they are conclusions from evidence, not design 
 ## What is open
 
 Everything else. In particular, the identity question — *what does the Paladin do that no
-other character does?* — is open again. The Faith answer is archived, not rejected; it may come
+other character does?* — is open again. The Spirit answer is archived, not rejected; it may come
 back in part. The next few cards should be chosen to find out what feels good in play before
 committing to any system.
 

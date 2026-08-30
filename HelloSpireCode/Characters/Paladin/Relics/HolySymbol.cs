@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 
 /// <summary>
-/// The Paladin's starter relic: at the start of each combat, gain 3 holy Faith.
+/// The Paladin's starter relic: at the start of each combat, gain 3 holy Spirit.
 ///
 /// This is the whole holy "home polarity": everyone starts holy because everyone holds this
 /// relic, not because of a rule. A draftable Fallen counterpart that replaces it -- starting
@@ -22,13 +22,13 @@ public sealed class HolySymbol : PaladinRelic
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Faith", 3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Spirit", 3m)];
 
     public override async Task BeforeSideTurnStart(PlayerChoiceContext choiceContext, CombatSide side,
         IReadOnlyList<Creature> participants, ICombatState combatState)
     {
         if (!participants.Contains(Owner.Creature) || Owner.PlayerCombatState.TurnNumber > 1) return;
         Flash();
-        await Faith.Gain(choiceContext, Owner, (int)DynamicVars["Faith"].BaseValue);
+        await Spirit.Gain(choiceContext, Owner, (int)DynamicVars["Spirit"].BaseValue);
     }
 }

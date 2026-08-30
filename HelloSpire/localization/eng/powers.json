@@ -68,7 +68,7 @@
   "HELLOSPIRE-BANE_TYRANNY_POWER.title": "Tyranny",
   "HELLOSPIRE-BANE_TYRANNY_POWER.description": "Your [gold]Faith[/gold] in [gold]Bane[/gold] counts as [gold]Faith[/gold] in every deity.",
   "HELLOSPIRE-BANE_TYRANNY_POWER.smartDescription": "Your [gold]Faith[/gold] in [gold]Bane[/gold] counts as [gold]Faith[/gold] in every deity.",
-  "HELLOSPIRE-FAITH_POWER.title": "Faith",
-  "HELLOSPIRE-FAITH_POWER.description": "Increases the healing of your cards.",
-  "HELLOSPIRE-FAITH_POWER.smartDescription": "Your healing cards heal [blue]{Amount}[/blue] additional HP."
+  "HELLOSPIRE-SPIRIT_POWER.title": "Spirit",
+  "HELLOSPIRE-SPIRIT_POWER.description": "Increases the healing of your cards.",
+  "HELLOSPIRE-SPIRIT_POWER.smartDescription": "Your healing cards heal [blue]{Amount}[/blue] additional HP."
 }

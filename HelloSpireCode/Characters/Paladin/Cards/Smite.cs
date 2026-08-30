@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 9 damage. Gain 1 holy Faith. The earner: smiting is devotion.</summary>
+/// <summary>Deal 9 damage. Gain 1 holy Spirit. The earner: smiting is devotion.</summary>
 public sealed class Smite() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
@@ -20,7 +20,7 @@ public sealed class Smite() : PaladinCard(1, CardType.Attack, CardRarity.Common,
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
-        await Faith.Gain(choiceContext, Owner, 1, this);
+        await Spirit.Gain(choiceContext, Owner, 1, this);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
