@@ -42,11 +42,16 @@ public static class Seals
         await PowerCmd.Apply<T>(ctx, p.Creature, amount, p.Creature, source);
     }
 
-    /// <summary>Judge: trigger the active Seal's effect. The Seal stays. No Seal, no effect.</summary>
+    /// <summary>Judge: trigger the active Seal's effect. The Seal stays. No Seal, no effect.
+    /// Avenging Wrath makes every Judge trigger twice; this funnel is where that lives.</summary>
     public static async Task Judge(PlayerChoiceContext ctx, Player p, Creature target)
     {
         if (Active(p.Creature) is not { } seal) return;
-        seal.Flash();
-        await seal.OnJudged(ctx, target);
+        var triggers = p.Creature.HasPower<AvengingWrathPower>() ? 2 : 1;
+        for (var i = 0; i < triggers; i++)
+        {
+            seal.Flash();
+            await seal.OnJudged(ctx, target);
+        }
     }
 }

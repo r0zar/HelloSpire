@@ -69,8 +69,21 @@ active. **Judgment** is nothing but the trigger: unplayable without a Seal, and 
 entirely whatever the active Seal's judge effect is. Seals persist through Judgment; you only
 ever have one, so which Seal is up decides both your passive and what Judgment does.
 
-**Seal of Righteousness** (starter, from the Holy Book): Attacks deal +2 damage; Judged, deal
-8 damage -- a full card's worth, since the judge is Judgment's whole payload.
+A Seal is always up (the Holy Book guarantees one from turn one), so cards never ask "if a
+Seal is active" -- they ask *which*. Seals are the archetype signposts, spread across
+rarities so the first one you're offered tempts you into a lane:
+
+| Seal | Rarity | Lane |
+|---|---|---|
+| Righteousness (starter) | -- | damage: Attacks +2; Judge 8 |
+| Light | Common | sustain: Attacks heal; Judge heals |
+| Command | Common | aggro: Vulnerable on attack; Judge Vulnerable |
+| Justice | Common | control: Weak on attack; Judge Weak |
+| Wisdom | Uncommon | cycle: attack draws; Judge energy+draw |
+| Martyr | Rare | tank: thorns; Judge AoE |
+
+Spirit stays a clean heal-boost stat -- like Strength and Dexterity, it does one thing. Cards
+never convert Spirit into Block or damage; they grant it (Devotion, Comfort) or heal with it.
 
 Implementation: a Seal is a `Single`-stack power (`SealPower`); `Seals.Grant` enforces the
 one-slot rule, `Seals.Judge` fires `OnJudged` (no removal). New Seals are one subclass, one
