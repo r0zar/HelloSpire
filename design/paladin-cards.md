@@ -37,7 +37,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 
 | Relic | Rarity | Effect |
 |---|---|---|
-| Libram of Righteousness | Starter | At the start of each combat, gain Seal of Righteousness. |
+| Holy Book | Starter | At the start of each combat, gain Seal of Righteousness. |
 | Holy Fervor | Common | Whenever you play a card that heals, gain 1 Strength. Once per turn. |
 
 ## Adding a card

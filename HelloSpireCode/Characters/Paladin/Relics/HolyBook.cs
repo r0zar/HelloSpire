@@ -10,9 +10,9 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 /// <summary>
 /// The Paladin's starter relic: at the start of each combat, gain Seal of Righteousness.
 /// The Defect's Cracked Core, translated: you start every fight with your engine primed and the
-/// starter Judgment has something to consume. (Librams are WoW's paladin relic slot.)
+/// starter Judgment has something to consume.
 /// </summary>
-public sealed class LibramOfRighteousness : PaladinRelic
+public sealed class HolyBook : PaladinRelic
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
 

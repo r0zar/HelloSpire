@@ -24,7 +24,7 @@ at the speed of play, not the speed of writing.
 |---|---|
 | Starting HP | 75 — matches Regent and Defect; the kit is inherently sturdy, so no more than that |
 | Colour | gold `#e8c46a`, on the card frame via `ShaderColor` |
-| Starter relic | **Libram of Righteousness** — *At the start of each combat, gain Seal of Righteousness.* |
+| Starter relic | **Holy Book** — *At the start of each combat, gain Seal of Righteousness.* |
 
 Holy Fervor (heal a card, gain 1 Strength, once per turn) moves to the relic pool: now that
 heals cost Spirit, it pays you for spending it.
@@ -52,7 +52,7 @@ The Defect's orbs, with a one-slot rule. A **Seal** is a passive buff while acti
 consumes it and triggers its effect -- channel and evoke, except you only ever have one, so a
 new Seal replaces the old. Which Seal is up, and whether to cash it in, is the decision.
 
-**Seal of Righteousness** (starter, from the Libram): Attacks deal +2 damage; Judged, it deals
+**Seal of Righteousness** (starter, from the Holy Book): Attacks deal +2 damage; Judged, it deals
 10 damage. Cracked Core translated: passive trickle, real evoke.
 
 Implementation: a Seal is a `Single`-stack power (`SealPower`); `Seals.Grant` enforces the
@@ -63,7 +63,7 @@ loc entry, one icon each.
 
 Strength raises attacks, Dexterity raises Block, **Spirit raises healing** -- one icon in the
 power bar next to Strength, reset per combat like the others. The **Holy Symbol** (starter
-**Currently sourceless**: the Holy Symbol (its granter) was replaced by the Libram, so Mend
+**Currently sourceless**: the Holy Symbol (its granter) was replaced by the Holy Book, so Mend
 reads +0 until a Spirit-granting card or relic lands. The stat stays; deliberately unfed.
 
 **Mend Exhausts.** That is the anti-stall guarantee now -- one heal per copy per fight, no
