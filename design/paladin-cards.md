@@ -36,7 +36,7 @@ Every deck starts with these.
 ```
 Strike               1E  [-]  Deal 6 damage.
 Defend               1E  [-]  Gain 5 Block.
-Mend                 1E  [-]  Heal 5.
+Mend                 1E  [-]  Heal 6.
 Hammer of Justice    2E  [-]  Deal 10 damage. Stun the enemy.
 ```
 
