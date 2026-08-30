@@ -25,5 +25,8 @@
   "HELLOSPIRE-ENGRAVED_HAMMER.flavor": "Six names down the side. Room for more.",
   "HELLOSPIRE-IVORY_HANDLE.title": "Ivory Handle",
   "HELLOSPIRE-IVORY_HANDLE.description": "Rounds other than [gold]Lead Rounds[/gold] deal 3 additional damage.",
-  "HELLOSPIRE-IVORY_HANDLE.flavor": "Expensive, impractical, and it sits in the hand like it was grown there."
+  "HELLOSPIRE-IVORY_HANDLE.flavor": "Expensive, impractical, and it sits in the hand like it was grown there.",
+  "HELLOSPIRE-HOLY_SYMBOL.title": "Holy Symbol",
+  "HELLOSPIRE-HOLY_SYMBOL.description": "Your first [gold]Faith[/gold] gain each combat is multiplied by [blue]{Bonus}[/blue].",
+  "HELLOSPIRE-HOLY_SYMBOL.flavor": "Worn smooth by a thumb that has never once let go of it."
 }

@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Relics;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 
 namespace HelloSpire.HelloSpireCode.Characters;
 
@@ -45,8 +46,7 @@ public class Paladin : PlaceholderCharacterModel
         ModelDb.Card<TheScales>(),
     ];
 
-    // TODO(Phase 2): replace with a starting relic that encodes this character's fantasy.
-    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<BurningBlood>()];
+    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<HolySymbol>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<PaladinCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<PaladinRelicPool>();
