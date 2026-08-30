@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,16 +19,18 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal {Damage} damage. If you have 3 or more Faith in any deity, deal {Bonus} additional damage.</summary>
+/// <summary>Deal {Damage} damage. If you have 3 or more Faith in any deity, deal {Bonus} additional damage. Apply {JudgedPower} Judged.</summary>
 public sealed class DivineSmite() : PaladinCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move), new DynamicVar("Bonus", 8m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move), new DynamicVar("Bonus", 8m), new PowerVar<JudgedPower>(2m)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<JudgedPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var bonus = FaithTracks.HasAny(Owner, 3) ? DynamicVars["Bonus"].BaseValue : 0m;
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus).FromCard(this).Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
+        await PowerCmd.Apply<JudgedPower>(choiceContext, cardPlay.Target!, 2m + (FaithTracks.Has(Owner, Deity.Tyr, 3) ? 1m : 0m), Owner.Creature, this);
     }
 
     protected override void OnUpgrade() { DynamicVars["Damage"].UpgradeValueBy(3m); DynamicVars["Bonus"].UpgradeValueBy(3m); }

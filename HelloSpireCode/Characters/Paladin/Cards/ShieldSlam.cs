@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;

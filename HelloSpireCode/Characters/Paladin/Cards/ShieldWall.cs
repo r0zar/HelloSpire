@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,18 +19,20 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Gain {Block} Block.</summary>
+/// <summary>Gain {Warded} Warded.</summary>
 public sealed class ShieldWall() : PaladinCard(2, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(12m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Warded", 11m)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WardedPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars["Warded"].BaseValue, ValueProp.Move, cardPlay);
+        await PowerCmd.Apply<WardedPower>(choiceContext, Owner.Creature, DynamicVars["Warded"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() { DynamicVars["Block"].UpgradeValueBy(4m); }
+    protected override void OnUpgrade() { DynamicVars["Warded"].UpgradeValueBy(4m); }
 
     private IEnumerable<Creature> Allies()  => Owner.Creature.CombatState.PlayerCreatures.OfType<Creature>().Where(c => c.IsAlive);
     private IEnumerable<Creature> Enemies() => Owner.Creature.CombatState.Creatures.OfType<Creature>().Where(c => !c.IsPlayer && c.IsHittable);

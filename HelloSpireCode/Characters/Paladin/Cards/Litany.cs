@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,16 +19,18 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Draw 1 card for every 4 Faith in your highest deity.</summary>
+/// <summary>Draw 1 card for every 4 Faith in your highest deity. Blessed.</summary>
 public sealed class Litany() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(PaladinTips.Blessed)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         var n = FaithTracks.Highest(Owner).amount / 4;
         if (n > 0) await CardPileCmd.Draw(choiceContext, n, Owner, false);
+        await PulseAuras(choiceContext);
     }
 
     protected override void OnUpgrade() { EnergyCost.UpgradeBy(-1); }

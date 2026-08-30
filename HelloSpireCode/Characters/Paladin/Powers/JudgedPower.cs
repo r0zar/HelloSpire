@@ -12,20 +12,19 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 
-/// <summary>Takes 4 additional damage from all sources this turn.</summary>
+/// <summary>Takes 1 additional damage from every Attack, per stack.</summary>
 public sealed class JudgedPower : PaladinPower
 {
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
+    // Flat, per hit, and it stacks: multi-hit cards and party focus-fire scale with it, which is the
+    // point. Does not decay -- it is the reward for building Tyr.
     public override decimal ModifyDamageAdditive(Creature target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
-        => target == Owner && amount > 0m ? amount + Amount : amount;
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
-    {
-        if (side != Owner.Side) await PowerCmd.Remove(this);
-    }
+        => target == Owner && dealer != null && dealer.IsPlayer && amount > 0m ? amount + Amount : amount;
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Faith;
 using HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,10 +19,11 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal {Damage} damage. Heal {Heal} HP.</summary>
+/// <summary>Deal {Damage} damage. Heal {Heal} HP. Blessed.</summary>
 public sealed class HolySmite() : PaladinCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move), new HealVar(3m)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(PaladinTips.Blessed)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -29,6 +31,7 @@ public sealed class HolySmite() : PaladinCard(1, CardType.Attack, CardRarity.Unc
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await CreatureCmd.Heal(Owner.Creature, DynamicVars.Heal.BaseValue);
+        await PulseAuras(choiceContext);
     }
 
     protected override void OnUpgrade() { DynamicVars["Damage"].UpgradeValueBy(3m); DynamicVars["Heal"].UpgradeValueBy(2m); }

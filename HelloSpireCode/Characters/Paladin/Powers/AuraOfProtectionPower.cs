@@ -12,19 +12,25 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Powers;
 
-/// <summary>At the start of your turn, all allies gain 2 Block.</summary>
-public sealed class AuraOfProtectionPower : PaladinPower
+/// <summary>Aura. At the start of your turn, all allies gain 2 Block.</summary>
+public sealed class AuraOfProtectionPower : PaladinPower, IAura
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
     {
-        if (!participants.Contains(Owner)) return;
+        if (participants.Contains(Owner)) await Pulse(new ThrowingPlayerChoiceContext());
+    }
+
+    /// <summary>The Aura's repeatable effect. Blessed cards call this.</summary>
+    public async Task Pulse(PlayerChoiceContext choiceContext)
+    {
         Flash();
         foreach (var ally in CombatState.PlayerCreatures.OfType<Creature>().Where(c => c.IsAlive)) await CreatureCmd.GainBlock(ally, Amount, ValueProp.Unpowered, null);
     }
