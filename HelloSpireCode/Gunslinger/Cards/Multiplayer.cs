@@ -33,17 +33,21 @@ public abstract class GunslingerMultiplayerCard(int cost, CardType type, CardRar
     : GunslingerCard(cost, type, rarity, target);
 
 /// <summary>
-/// Another player draws 2 cards. Load 2 Lead Rounds.
+/// Another player draws 2 cards, and hands you 2 Rounds of whatever their class carries.
 ///
 /// The character's worst turn is the one spent loading instead of shooting. This makes that turn
 /// somebody else's good turn, which is the whole argument for having a Gunslinger in the party.
-/// Solo it draws for you — a 1-Energy "draw 2, Load 2" is a fair rate, just a duller card.
+///
+/// What comes back depends on who you asked — see <see cref="AmmoAffinity"/> — so the card is a
+/// different card in every lobby, and reading the party is part of playing it. Solo it draws for
+/// you and hands you Lead, which is the old card exactly.
 /// </summary>
 public sealed class HandMeThat() : GunslingerMultiplayerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyAlly)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2), new DynamicVar("Load", 2m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(GunslingerTips.Load), Tip(GunslingerTips.MatchedAmmo)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -52,7 +56,7 @@ public sealed class HandMeThat() : GunslingerMultiplayerCard(1, CardType.Skill, 
         var ally = GunslingerEffects.ResolveAlly(Gun, play.Target);
         await GunslingerEffects.DrawFor(ctx, ally, DynamicVars.Cards.IntValue);
 
-        await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
+        await Revolver.Load(ctx, Gun, AmmoAffinity.For(ally), DynamicVars["Load"].IntValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);

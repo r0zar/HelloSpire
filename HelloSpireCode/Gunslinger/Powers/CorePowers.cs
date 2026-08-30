@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 
 using HelloSpire.HelloSpireCode.Powers;
@@ -28,6 +29,12 @@ public sealed class DeadeyePower : HelloSpirePower
 /// Stronger than Block across future turns, weaker against a long multi-hit intent, and distinct
 /// from Plating (which pays out as Block at end of turn). The reduction itself happens in
 /// <see cref="GunslingerDamagePatch"/>, which is the only place the damage pipeline is touched.
+///
+/// Reducing and spending are split across those two places on purpose. The damage hook is asked
+/// "how big is this hit" more than once per hit — the intent forecast asks it too — so spending
+/// there emptied a stack of Armor before anything had actually swung. The hook raises
+/// <see cref="AbsorbedPending"/> instead, and this power spends it below, from a hook that only
+/// runs for damage that is really being dealt.
 /// </summary>
 public sealed class ArmorPower : HelloSpirePower
 {
@@ -36,6 +43,36 @@ public sealed class ArmorPower : HelloSpirePower
 
     /// <summary>Iron Will lets the first decrease each turn be skipped.</summary>
     public bool SkipNextDecrease { get; set; }
+
+    /// <summary>Raised by the damage patch when this Armor really did reduce an incoming hit.</summary>
+    public bool AbsorbedPending { get; set; }
+
+    public override async Task BeforeDamageReceived(PlayerChoiceContext choiceContext, Creature target,
+        decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
+    {
+        if (target != Owner || cardSource != null || !AbsorbedPending) return;
+        AbsorbedPending = false;
+
+        // Hard Leather waits on this. It is announced here rather than from the patch so that it
+        // fires once per absorbed hit rather than once per forecast redraw.
+        GunslingerHooks.NotifyArmorPrevented(Owner);
+
+        if (SkipNextDecrease)
+        {
+            SkipNextDecrease = false;
+            return;
+        }
+
+        await PowerCmd.ModifyAmount(choiceContext, this, -1m, null, null, false);
+    }
+
+    public override Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)
+    {
+        // A forecast can raise the flag for a hit that never lands. Clearing it each turn keeps a
+        // stale one from eating the first real hit of the next.
+        AbsorbedPending = false;
+        return Task.CompletedTask;
+    }
 }
 
 /// <summary>
@@ -49,8 +86,21 @@ public sealed class DodgePower : HelloSpirePower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
+    /// <summary>Raised by the damage patch when this Dodge really did eat a hit. See <see cref="ArmorPower"/>.</summary>
+    public bool PreventedPending { get; set; }
+
+    public override async Task BeforeDamageReceived(PlayerChoiceContext choiceContext, Creature target,
+        decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
+    {
+        if (target != Owner || cardSource != null || !PreventedPending) return;
+        PreventedPending = false;
+
+        await PowerCmd.ModifyAmount(choiceContext, this, -1m, null, null, false);
+    }
+
     public override async Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)
     {
+        PreventedPending = false;
         if (side != Owner.Side) return;
         await PowerCmd.Remove(this);
     }

@@ -44,6 +44,18 @@ public sealed class CylinderPower : HelloSpirePower
     /// <summary>Reset each turn; Reversal fires twice off the back of a defensive turn.</summary>
     public bool ArmorGainedThisTurn { get; set; }
 
+    /// <summary>
+    /// The last Round put into a chamber this combat. Quick Load reloads more of it, and it is the
+    /// only piece of cylinder state that outlives the chamber it was in.
+    /// </summary>
+    public Round? LastLoaded { get; set; }
+
+    /// <summary>
+    /// Spins this combat. Nothing in the rules reads it — the cylinder widget does, so that a Spin
+    /// that happens to land on the chamber it started from still visibly spins the gun.
+    /// </summary>
+    public int SpinCount { get; set; }
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DynamicVar("Loaded", 0m),
@@ -63,6 +75,17 @@ public sealed class CylinderPower : HelloSpirePower
     public void Advance(int steps = 1) => Hammer = Offset(steps);
 
     /// <summary>
+    /// Raised after any cylinder anywhere changes.
+    ///
+    /// The on-screen cylinder listens to this instead of polling. It is static because the widget
+    /// is built when the combat UI activates, which is before the first Gunslinger effect has
+    /// created a <see cref="CylinderPower"/> for it to subscribe to; listeners filter on
+    /// <see cref="MegaCrit.Sts2.Core.Entities.Powers.PowerModel.Owner"/>. Every subscriber must
+    /// unsubscribe when it leaves the tree.
+    /// </summary>
+    public static event Action<CylinderPower>? AnyChanged;
+
+    /// <summary>
     /// Pushes the chamber state into the power's display vars. Called after every mutation so the
     /// power's tooltip never lies about what is in the gun.
     /// </summary>
@@ -70,6 +93,7 @@ public sealed class CylinderPower : HelloSpirePower
     {
         SetVar("Loaded", LoadedCount);
         SetVar("Chamber", Hammer + 1);
+        AnyChanged?.Invoke(this);
     }
 
     public override Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)

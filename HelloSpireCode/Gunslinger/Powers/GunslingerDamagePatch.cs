@@ -1,6 +1,5 @@
 using System.Reflection;
 using HarmonyLib;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
@@ -22,9 +21,14 @@ namespace HelloSpire.HelloSpireCode.Gunslinger.Powers;
 /// crash if the shape is different, which leaves Armor and Dodge inert but the run playable.
 ///
 /// Known caveat: <c>Hook.ModifyDamage</c> runs before Block is subtracted, so this recomputes the
-/// split itself — a hit that Block fully absorbs must not erode Armor. If the game ever calls this
-/// hook to render a forecast rather than to deal damage, Dodge and Armor will over-consume; that is
-/// the first thing to check if they drain faster than expected in play.
+/// split itself — a hit that Block fully absorbs must not erode Armor.
+///
+/// This patch only ever *reduces*; it never spends. The hook is called to answer "how much would
+/// this hit be for", which the game also asks while drawing intent forecasts, so consuming a stack
+/// here drained Armor and Dodge to nothing before an enemy had swung. Instead it raises a pending
+/// flag, and the power spends itself from <c>BeforeDamageReceived</c> — a hook that fires once, for
+/// damage that is really being dealt. That keeps this function idempotent, which is the property
+/// the hook actually requires.
 /// </summary>
 [HarmonyPatch]
 internal static class GunslingerDamagePatch
@@ -67,7 +71,7 @@ internal static class GunslingerDamagePatch
         if (dodge is { Amount: > 0 })
         {
             __result = 0m;
-            _ = PowerCmd.ModifyAmount(null!, dodge, -1m, null, null, false);
+            dodge.PreventedPending = true;
             return;
         }
 
@@ -82,14 +86,6 @@ internal static class GunslingerDamagePatch
         var reduced = Math.Max(0m, unblocked - armor.Amount);
         __result = block + reduced;
 
-        GunslingerHooks.NotifyArmorPrevented(target);
-
-        if (armor.SkipNextDecrease)
-        {
-            armor.SkipNextDecrease = false;
-            return;
-        }
-
-        _ = PowerCmd.ModifyAmount(null!, armor, -1m, null, null, false);
+        armor.AbsorbedPending = true;
     }
 }

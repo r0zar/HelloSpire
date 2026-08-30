@@ -55,8 +55,13 @@ public abstract class GunslingerRelic : Characters.GunslingerRelic
 }
 
 /// <summary>
-/// Starter relic. Loads three Lead Rounds at the top of each combat, so Quick Draw in the opening
-/// hand is a real card rather than a dead one — without removing the need to draft Loading cards.
+/// Starter relic. Loads three Lead Rounds and one Round of whatever else was in the coat, at the
+/// top of each combat — so Quick Draw in the opening hand is a real card rather than a dead one,
+/// without removing the need to draft Loading cards.
+///
+/// The fourth Round is rolled. It is worth more than a fourth Lead on average, but the reason it
+/// is there is that it makes the first turn of every fight a slightly different puzzle, which is
+/// the character the rest of the set is written for.
 /// </summary>
 public sealed class OldIron : GunslingerRelic
 {
@@ -68,6 +73,7 @@ public sealed class OldIron : GunslingerRelic
     {
         Flash();
         await Revolver.Load(ctx, Gun, Rounds.Lead, 3);
+        await Revolver.Load(ctx, Gun, Rounds.RandomSpecial(Gun), 1);
     }
 }
 
@@ -86,10 +92,15 @@ public sealed class TrueIron : GunslingerRelic, IRoundDamageModifier
         await Revolver.FillEmpty(ctx, Gun, Rounds.Lead);
     }
 
-    public int ModifyRoundDamage(Round round, GunContext gun) => round.IsLead ? 1 : 0;
+    public int ModifyRoundDamage(Round round, GunContext gun) => round.IsLead ? 2 : 0;
 }
 
-/// <summary>The first Load each combat brings a spare Round with it.</summary>
+/// <summary>
+/// The first Load each combat brings a spare Round with it — and never the one you asked for.
+///
+/// A common relic that reads "and one more Lead" is a rounding error. Rolling it instead makes the
+/// same slot occasionally hand you a Heavy or a Piercing Round in Act 1, which is a real turn.
+/// </summary>
 public sealed class OiledRag : GunslingerRelic, ILoadListener
 {
     public override RelicRarity Rarity => RelicRarity.Common;
@@ -100,7 +111,7 @@ public sealed class OiledRag : GunslingerRelic, ILoadListener
         UsedThisCombat = true;
 
         Flash();
-        await Revolver.Load(ctx, gun, Rounds.Lead);
+        await Revolver.Load(ctx, gun, Rounds.RandomOrdinary(gun));
     }
 }
 
@@ -130,7 +141,7 @@ public sealed class SpareSpeedloader : GunslingerRelic, ICylinderEmptiedListener
         UsedThisCombat = true;
 
         Flash();
-        await Revolver.Load(ctx, gun, Rounds.Lead, 3);
+        await Revolver.LoadBetween(ctx, gun, Rounds.Lead, 3, 5);
     }
 }
 

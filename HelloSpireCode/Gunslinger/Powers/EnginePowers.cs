@@ -71,8 +71,8 @@ public sealed class HardLeatherPower : GunslingerEnginePower, IArmorListener
 
         Flash();
 
-        // Fired from inside the damage pipeline patch, which cannot await. The Block lands on the
-        // BlockNextTurnPower and is collected at the start of the next turn either way.
+        // Announced from a synchronous notification, so there is nothing to await into. The Block
+        // lands on the BlockNextTurnPower and is collected at the start of the next turn either way.
         _ = PowerCmd.Apply<BlockNextTurnPower>(null!, Owner, Amount, Owner, null);
     }
 }

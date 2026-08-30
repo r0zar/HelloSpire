@@ -27,6 +27,36 @@ Still open, roughly in order:
 - **Relics.** Only the starter exists; the eight character relics are unwritten.
 - **Run-milestone relic transform** (the old Holy Symbol idea) is recorded, not built.
 
+The Gunslinger is **fully in code**: 4 basics, 80 cards, 5 multiplayer cards, 8 relics, 3 potions,
+the Cylinder and its on-screen widget. Unlike the Paladin it is hand-written, not generated.
+
+It has had **one balance pass** (2026-08-29), aimed at "the character feels weaker than the other
+two". See `design/gunslinger.md` for the reasoning; the short version:
+
+- Lead Rounds 6 -> 7, and every specialist Round moved with it.
+- Quick Draw Fires 2, not 1 — one chamber per free card was the rate that made the deck feel bad.
+- Loading is where the character's randomness lives now: Reload, Quick Load, Fresh Cartridges,
+  Old Iron, Oiled Rag, Spare Speedloader and the Speedloader Flask all roll. Every roll has a floor
+  at least as good as the fixed value it replaced.
+- Hand Me That loads ammunition matched to the class you borrowed from (`AmmoAffinity`).
+- Pocket Sand+ costs 0 rather than applying a third Weak.
+
+Two bugs fixed in the same pass, both of which were making the character weaker than its numbers:
+
+- **Armor and Dodge evaporated.** They were spent from `Hook.ModifyDamage`, which the game also
+  calls to draw intent forecasts. Reduction and spend are now separate.
+- **Piercing Rounds did not ignore Block.** `Revolver.Fire` computed the value props and then never
+  passed them to the damage command, which made Piercing ammunition and Through the Coat inert.
+
+Still open for the Gunslinger:
+
+- **Nothing has been played.** The whole pass is reasoned from the card list, not from a run. The
+  damage-per-energy benchmark (Phase 8) is still unbuilt for this character too.
+- **Multiplayer-only card gating** is unsolved — the five multiplayer cards are in the solo pool.
+- **Card art** is placeholder tiles except the character UI set.
+- **The cylinder widget's anchor** is found by searching the combat UI for a node named for Energy.
+  Verify its position in game; the fallback corner placement means a miss is silent.
+
 
 ---
 

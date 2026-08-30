@@ -32,4 +32,7 @@ public static class GunslingerTips
 
     /// <summary>The revolver itself: six chambers and a hammer.</summary>
     [CustomEnum] public static StaticHoverTip TheCylinder;
+
+    /// <summary>Which Round each class hands the Gunslinger. See <see cref="Cylinder.AmmoAffinity"/>.</summary>
+    [CustomEnum] public static StaticHoverTip MatchedAmmo;
 }
