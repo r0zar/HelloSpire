@@ -63,8 +63,8 @@ loc entry, one icon each -- and each new Seal is also a new Judgment.
 
 Strength raises attacks, Dexterity raises Block, **Spirit raises healing** -- one icon in the
 power bar next to Strength, reset per combat like the others. The **Holy Symbol** (starter
-**Currently sourceless**: the Holy Symbol (its granter) was replaced by the Holy Book, so Mend
-reads +0 until a Spirit-granting card or relic lands. The stat stays; deliberately unfed.
+Fed by **Holy Symbol**, now a Common pool relic: 3 Spirit at the start of each combat. Draft
+it and Mend scales; skip it and Mend is a flat 5. No card grants Spirit yet.
 
 **Mend Exhausts.** That is the anti-stall guarantee now -- one heal per copy per fight, no
 economy to police. Spirit is why the one heal is worth building toward: Mend heals 5 + Spirit

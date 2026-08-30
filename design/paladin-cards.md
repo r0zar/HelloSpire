@@ -30,7 +30,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 
 | Power | Effect |
 |---|---|
-| Spirit | Increases the healing of your cards. The Paladin's Strength-for-heals. Currently sourceless. |
+| Spirit | Increases the healing of your cards. The Paladin's Strength-for-heals; granted by Holy Symbol. |
 | Seal of Righteousness | Attacks deal +2 damage. Judged: deal 8 damage. One Seal at a time; Judging does not consume it. |
 
 ## Relics
@@ -39,6 +39,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 |---|---|---|
 | Holy Book | Starter | At the start of each combat, gain Seal of Righteousness. |
 | Holy Fervor | Common | Whenever you play a card that heals, gain 1 Strength. Once per turn. |
+| Holy Symbol | Common | At the start of each combat, gain 3 Spirit. |
 
 ## Adding a card
 

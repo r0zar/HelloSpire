@@ -34,5 +34,8 @@
   "HELLOSPIRE-HOLY_FERVOR.flavor": "Every wound closed is a promise kept, and promises are heavy things to swing.",
   "HELLOSPIRE-HOLY_BOOK.title": "Holy Book",
   "HELLOSPIRE-HOLY_BOOK.description": "At the start of each combat, gain [gold]Seal of Righteousness[/gold].",
-  "HELLOSPIRE-HOLY_BOOK.flavor": "Every page says the same thing. It has never once been wrong."
+  "HELLOSPIRE-HOLY_BOOK.flavor": "Every page says the same thing. It has never once been wrong.",
+  "HELLOSPIRE-HOLY_SYMBOL.title": "Holy Symbol",
+  "HELLOSPIRE-HOLY_SYMBOL.description": "At the start of each combat, gain [blue]{Spirit}[/blue] [gold]Spirit[/gold].",
+  "HELLOSPIRE-HOLY_SYMBOL.flavor": "Worn smooth by a thumb that has never once let go of it."
 }
