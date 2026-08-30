@@ -61,6 +61,7 @@ public class Alchemist : PlaceholderCharacterModel
     // In-combat body: the inherited Ironclad rig, repainted by the CharacterSkins shader patch.
 
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
+    public override string CustomIconOutlineTexturePath => "character_icon_outline.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectLockedIconPath => "char_select_locked.png".CharacterUiPath(AssetFolder);
     public override string CustomMapMarkerPath => "map_marker.png".CharacterUiPath(AssetFolder);
