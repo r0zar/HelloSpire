@@ -107,7 +107,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Holy Wrath | X | Attack | Trigger the effects of all your Seals X times. Retain. |
 | Lay on Hands | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
 | Retribution Aura | 2 | Power | Whenever ANY player is attacked, the attacker takes {Thorns} damage. **MP** |
-| Sacred Oath | 1 | Skill | Gain {Amount} Strength and {Amount} Spirit. Shuffle a Geas into your draw pile. Eternal. |
+| Sacred Oath | 1 | Skill | Gain {Amount} Strength and {Amount} Spirit. Shuffle a Geas into your draw pile. |
 | Seal of the Crusader | 1 | Skill | Gain Seal of the Crusader: your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |
 | Seal of the Martyr | 1 | Skill | Gain Seal of the Martyr: enemies that hit you take {Amount} damage. Judgment: deal {Amount} damage to ALL enemies. |
 | Thunderous Smite | 2 | Attack | Deal {Damage} damage to ALL enemies. |
@@ -116,11 +116,11 @@ Effects show base values; this table is regenerated from code + localization.
 | Wrathful Smite | 1 | Attack | Deal {Damage} damage. Apply 2 Weak. Trigger the effects of all your Seals. |
 | Zeal | 0 | Skill | Gain {Energy} Energy for each of your Seals. Exhaust. Ethereal. |
 
-## Token (1)
+## Status (1)
 
 | Card | Cost | Type | Effect |
 |---|---|---|---|
-| Geas | 0 | Skill | The oath weighs what it weighs. Ethereal. Unplayable. |
+| Geas | -- | Status | The oath weighs what it weighs. Ethereal. Unplayable. |
 
 Total: 89 cards (25 multiplayer-only). Upgrades live in code; see each card class.
 

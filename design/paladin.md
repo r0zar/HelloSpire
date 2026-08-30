@@ -211,7 +211,7 @@ Every game keyword appears where the lore earns it:
 | Ethereal | Zeal (fervor fades), Geas (the burden lifts) |
 | Innate | Vigil+ (the vigil was kept overnight; you start holding it) |
 | Retain | Divine Shield (hold the bubble), Holy Wrath+ |
-| Unplayable | Geas (Sacred Oath's token burden) |
-| Eternal | Sacred Oath (an oath cannot be unsworn -- unremovable from the deck) |
+| Unplayable | Geas (Sacred Oath's Status burden, Wound-family) |
+| Eternal | unused by choice: tried on Sacred Oath, pulled -- deck permanence felt bad |
 | X-cost | Holy Wrath (trigger all Seals X times) |
 | Sly | deliberately absent: it is the Silent's discard identity, not paladin lore |
