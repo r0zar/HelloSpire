@@ -20,7 +20,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 heals that target any player are MP cards (self-heals are unrestricted), auras are MP Powers,
 blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives it.
 
-## Common (9)
+## Common (10)
 
 | Card | Cost | Type | Effect | Upgrade |
 |---|---|---|---|---|
@@ -34,8 +34,9 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 | Absolve | 1 | Attack | Deal 5 damage. Apply 1 Weak. | +2 / +1 |
 | Exorcism | 2 | Attack | Deal 8 damage. Trigger the effects of all your Seals. | +4 damage |
 | Comfort | 1 | Skill | Gain 1 Spirit. Heal 3 HP plus your Spirit. Exhaust. | Heal 6 |
+| Penance | 0 | Skill | Lose 4 HP. Gain 2 Energy. | 3 Energy |
 
-## Uncommon (10)
+## Uncommon (11)
 
 | Card | Cost | Type | Effect | Upgrade |
 |---|---|---|---|---|
@@ -49,14 +50,16 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 | Divine Purpose | 1 | Skill | Trigger the effects of all your Seals. Draw 1 card. | costs 0 |
 | Shield of the Righteous | 1 | Skill | Gain 5 Block. Trigger the effects of all your Seals. | +3 Block |
 | Divine Favor | 0 | Skill | Gain 2 Energy. Exhaust. | 3 Energy |
+| Vigil | 1 | Skill | Gain 1 Spirit. Next turn: gain 2 Energy. | 3 Energy |
 
-## Rare (3)
+## Rare (4)
 
 | Card | Cost | Type | Effect | Upgrade |
 |---|---|---|---|---|
 | Hammer of Justice | 3 | Attack | Deal 4 damage. Stun the enemy. | costs 2 |
 | Seal of the Martyr | 1 | Skill | Gain Seal of the Martyr: enemies that hit you take 3. Judgment: 3 to ALL. | 4 / 4 |
 | Avenging Wrath | 2 | Power | Whenever you trigger your Seals, they trigger twice. | costs 1 |
+| Zeal | 0 | Skill | Gain 1 Energy for each of your Seals. Exhaust. | 2 per Seal |
 
 ## Powers
 
