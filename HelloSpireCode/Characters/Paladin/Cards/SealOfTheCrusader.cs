@@ -15,7 +15,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// Grants Seal of the Crusader: Attacks deal +1; Judged, gain 1 permanent Strength. The rare
 /// Seal that turns trigger density into scaling.
 /// </summary>
-public sealed class SealOfTheCrusader() : PaladinCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class SealOfTheCrusader() : PaladinCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 1m)];
 

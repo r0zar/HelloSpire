@@ -11,7 +11,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>Grants Seal OfJustice.</summary>
-public sealed class SealOfJustice() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class SealOfJustice() : PaladinCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 2m)];
 

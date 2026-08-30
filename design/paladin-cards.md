@@ -74,10 +74,10 @@ Effects show base values; this table is regenerated from code + localization.
 | Retribution | 2 | Power | The first time each turn an enemy attacks you, gain {Strength} Strength. |
 | Righteous Fury | 2 | Power | At the start of your turn, gain {Strength} Strength. |
 | Sanctuary | 1 | Skill | ALL players gain {Block} Block. Exhaust. **MP** |
-| Seal of Command | 1 | Skill | Gain Seal of Command: your first Attack each turn applies 1 Vulnerable. Judgment: apply {Amount} Vulnerable. |
-| Seal of Justice | 1 | Skill | Gain Seal of Justice: your first Attack each turn applies 1 Weak. Judgment: apply {Amount} Weak. |
-| Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: your Attacks deal {Amount} additional damage. Judgment: deal 5 damage. |
-| Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: your first Attack each turn draws a card. Judgment: deal damage equal to your hand size, then draw {Amount}. |
+| Seal of Command | 1 | Power | Gain Seal of Command: your first Attack each turn applies 1 Vulnerable. Judgment: apply {Amount} Vulnerable. |
+| Seal of Justice | 1 | Power | Gain Seal of Justice: your first Attack each turn applies 1 Weak. Judgment: apply {Amount} Weak. |
+| Seal of Righteousness | 1 | Power | Gain Seal of Righteousness: your Attacks deal {Amount} additional damage. Judgment: deal 5 damage. |
+| Seal of Wisdom | 1 | Power | Gain Seal of Wisdom: your first Attack each turn draws a card. Judgment: deal damage equal to your hand size, then draw {Amount}. |
 | Shield of Faith | 1 | Skill | Gain {Plating} Plating. |
 | Shield of the Righteous | 1 | Skill | Gain {Block} Block. Trigger the effects of all your Seals. |
 | Vigil | 1 | Skill | Gain 1 Spirit. At the start of your next turn, gain {Energy} Energy. Innate. |
@@ -109,8 +109,8 @@ Effects show base values; this table is regenerated from code + localization.
 | Lay on Hands | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
 | Retribution Aura | 2 | Power | Whenever ANY player is attacked, the attacker takes {Thorns} damage. **MP** |
 | Sacred Oath | 1 | Skill | Gain {Amount} Strength and {Amount} Spirit. Shuffle a Geas into your draw pile. |
-| Seal of the Crusader | 1 | Skill | Gain Seal of the Crusader: your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |
-| Seal of the Martyr | 1 | Skill | Gain Seal of the Martyr: enemies that hit you take {Amount} damage. Judgment: deal {Amount} damage to ALL enemies. |
+| Seal of the Crusader | 1 | Power | Gain Seal of the Crusader: your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |
+| Seal of the Martyr | 1 | Power | Gain Seal of the Martyr: enemies that hit you take {Amount} damage. Judgment: deal {Amount} damage to ALL enemies. |
 | Thunderous Smite | 2 | Attack | Deal {Damage} damage to ALL enemies. |
 | Tyr's Deliverance | 2 | Power | At the start of your turn, heal ALL players {Amount} HP and they gain {Amount} Block. **MP** |
 | Vow of Enmity | 1 | Power | Mark an enemy: your Attacks against it deal {Bonus} additional damage. |

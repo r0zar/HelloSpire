@@ -11,7 +11,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>Grants Seal OfTheMartyr.</summary>
-public sealed class SealOfTheMartyr() : PaladinCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class SealOfTheMartyr() : PaladinCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 3m)];
 
