@@ -9,6 +9,15 @@
     --bone:#ece2c8; --bone-dim:#ad9d84;
     --dust:#c9a876; --rust:#9c4a2e; --gunmetal:#8b93a3; --horizon:#d9793a; --blood:#7a2d24;
     --common:#8f7148; --uncommon:#8b93a3; --rare:#d9793a; --basic:#6b5c46;
+    --frame-common-a:#a9895c; --frame-common-b:#5c4a2c;
+    --frame-uncommon-a:#a3aabb; --frame-uncommon-b:#5c6070;
+    --frame-rare-a:#e89a52; --frame-rare-b:#a3521f;
+    --frame-basic-a:#6b5c46; --frame-basic-b:#3f3527;
+    --type-attack-a:#b8402f; --type-attack-b:#7e2419;
+    --type-skill-a:#2e7d5b; --type-skill-b:#1a4c37;
+    --type-power-a:#5850a8; --type-power-b:#332a70;
+    --type-neutral-a:#8a7550; --type-neutral-b:#5c4a2c;
+    --parch-bg:#e7ddc4; --parch-ink:#382f20; --parch-ink-dim:#6b5f47;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -23,33 +32,59 @@
   .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:1px solid var(--hairline);padding-bottom:12px;}
   .section-head h2{font-size:1.4rem;}
   .section-head .count{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--bone-dim);}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px 16px;}
   .card{
-    background:linear-gradient(180deg,var(--ash-2),var(--ash-3));
-    border:1px solid var(--hairline); border-radius:6px;
-    display:flex;flex-direction:column; overflow:hidden; position:relative;
-    aspect-ratio:5/7.2; transition:transform .15s ease, box-shadow .15s ease;
+    position:relative; aspect-ratio:5/7.4; border-radius:10px; padding:5px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,.55));
   }
-  .card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.5); }
-  .card[data-rarity="Common"]{ box-shadow:inset 0 0 0 2px var(--common); }
-  .card[data-rarity="Uncommon"]{ box-shadow:inset 0 0 0 2px var(--uncommon); }
-  .card[data-rarity="Rare"]{ box-shadow:inset 0 0 0 2px var(--rare); }
-  .card[data-rarity="Basic"]{ box-shadow:inset 0 0 0 2px var(--basic); }
-  .cost{
-    position:absolute; top:6px; left:6px; width:22px; height:22px; border-radius:50%;
-    background:var(--ash); border:1.5px solid var(--horizon);
-    color:var(--horizon); font-family:'IBM Plex Mono',monospace; font-weight:600;
-    font-size:.72rem; display:flex; align-items:center; justify-content:center; z-index:2;
+  .card:hover{ transform:translateY(-4px) scale(1.02); }
+  .card[data-rarity="Common"]{ background:linear-gradient(155deg,var(--frame-common-a),var(--frame-common-b)); }
+  .card[data-rarity="Uncommon"]{ background:linear-gradient(155deg,var(--frame-uncommon-a),var(--frame-uncommon-b)); }
+  .card[data-rarity="Rare"]{ background:linear-gradient(155deg,var(--frame-rare-a),var(--frame-rare-b)); }
+  .card[data-rarity="Basic"],.card[data-rarity="Starter"],.card[data-rarity="Shop"],.card[data-rarity="Multiplayer"]{ background:linear-gradient(155deg,var(--frame-basic-a),var(--frame-basic-b)); }
+  .card-inner{
+    background:var(--ash); height:100%; border-radius:7px;
+    display:flex; flex-direction:column; overflow:hidden; position:relative;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.4);
   }
+  .corner{ position:absolute; width:7px; height:7px; background:inherit; transform:rotate(45deg); border-radius:1px; box-shadow:0 0 0 1px rgba(0,0,0,.35); z-index:3; }
+  .card[data-rarity="Common"] .corner{ background:linear-gradient(135deg,var(--frame-common-a),var(--frame-common-b)); }
+  .card[data-rarity="Uncommon"] .corner{ background:linear-gradient(135deg,var(--frame-uncommon-a),var(--frame-uncommon-b)); }
+  .card[data-rarity="Rare"] .corner{ background:linear-gradient(135deg,var(--frame-rare-a),var(--frame-rare-b)); }
+  .card[data-rarity="Basic"] .corner,.card[data-rarity="Starter"] .corner,.card[data-rarity="Shop"] .corner,.card[data-rarity="Multiplayer"] .corner{ background:linear-gradient(135deg,var(--frame-basic-a),var(--frame-basic-b)); }
+  .corner.tl{ top:-3px; left:-3px; } .corner.tr{ top:-3px; right:-3px; }
+  .corner.bl{ bottom:-3px; left:-3px; } .corner.br{ bottom:-3px; right:-3px; }
+  .gem{
+    position:absolute; top:-9px; left:-9px; width:26px; height:26px; z-index:4;
+    transform:rotate(45deg); border-radius:4px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 5px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.25);
+  }
+  .card[data-rarity="Common"] .gem{ background:linear-gradient(135deg,var(--frame-common-a),var(--frame-common-b)); }
+  .card[data-rarity="Uncommon"] .gem{ background:linear-gradient(135deg,var(--frame-uncommon-a),var(--frame-uncommon-b)); }
+  .card[data-rarity="Rare"] .gem{ background:linear-gradient(135deg,var(--frame-rare-a),var(--frame-rare-b)); }
+  .card[data-rarity="Basic"] .gem,.card[data-rarity="Starter"] .gem,.card[data-rarity="Shop"] .gem,.card[data-rarity="Multiplayer"] .gem{ background:linear-gradient(135deg,var(--frame-basic-a),var(--frame-basic-b)); }
+  .gem span{ transform:rotate(-45deg); font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.72rem; color:#1c1712; text-shadow:0 1px 0 rgba(255,255,255,.3); }
   .rarity-tag{
-    position:absolute; top:6px; right:6px; font-family:'IBM Plex Mono',monospace;
-    font-size:.55rem; letter-spacing:.04em; text-transform:uppercase; opacity:.75; z-index:2;
+    position:absolute; top:5px; right:7px; font-family:'IBM Plex Mono',monospace;
+    font-size:.48rem; letter-spacing:.04em; text-transform:uppercase; color:rgba(255,255,255,.55); z-index:2;
   }
-  .art{ flex:0 0 50%; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
-  .art svg{ width:50%; height:50%; }
-  .name{ font-family:'Vollkorn',serif; font-weight:600; font-size:.74rem; text-align:center; padding:5px 6px 2px; color:var(--bone); line-height:1.15; text-wrap:balance; }
-  .type{ text-align:center; font-family:'IBM Plex Mono',monospace; font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; color:var(--bone-dim); margin-bottom:3px; }
-  .text{ flex:1; font-size:.6rem; padding:2px 8px 8px; color:var(--bone-dim); line-height:1.3; overflow:hidden; }
+  .art{ flex:0 0 42%; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+    background:radial-gradient(80% 100% at 50% 30%, var(--ash-3), var(--ash) 75%); }
+  .art svg{ width:46%; height:46%; }
+  .banner{
+    position:relative; margin:-8px 4px 0; padding:5px 10px 4px;
+    clip-path:polygon(3% 0,97% 0,100% 50%,97% 100%,3% 100%,0% 50%);
+    display:flex; align-items:center; justify-content:center; z-index:2;
+    box-shadow:0 2px 4px rgba(0,0,0,.4);
+  }
+  .banner[data-type="Attack"]{ background:linear-gradient(180deg,var(--type-attack-a),var(--type-attack-b)); }
+  .banner[data-type="Skill"]{ background:linear-gradient(180deg,var(--type-skill-a),var(--type-skill-b)); }
+  .banner[data-type="Power"]{ background:linear-gradient(180deg,var(--type-power-a),var(--type-power-b)); }
+  .banner[data-type="Relic"],.banner[data-type="Potion"]{ background:linear-gradient(180deg,var(--type-neutral-a),var(--type-neutral-b)); }
+  .name{ font-family:'Vollkorn',serif; font-weight:600; font-size:.7rem; text-align:center; color:#f7f0dc; line-height:1.1; text-wrap:balance; text-shadow:0 1px 1px rgba(0,0,0,.5); }
+  .type{ text-align:center; font-family:'IBM Plex Mono',monospace; font-size:.5rem; letter-spacing:.1em; text-transform:uppercase; color:var(--bone-dim); margin:3px 0 0; }
+  .text{ flex:1; font-size:.6rem; padding:6px 9px 8px; color:var(--parch-ink); line-height:1.3; overflow:hidden; background:var(--parch-bg); margin-top:6px; font-family:'Vollkorn',serif; }
   footer{margin-top:70px;padding-top:20px;border-top:1px solid var(--hairline);font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--bone-dim);}
 </style>
 
@@ -223,12 +258,14 @@ function renderSection(title, cards){
     const icon = pickIcon(c);
     const tint = {Common:"var(--common)",Uncommon:"var(--uncommon)",Rare:"var(--rare)",Basic:"var(--basic)",Starter:"var(--horizon)",Shop:"var(--horizon)",Multiplayer:"var(--gunmetal)"}[rarity]||"var(--bone-dim)";
     return `<div class="card" data-rarity="${rarity}">
-      ${cost!=="-"?`<div class="cost">${cost}</div>`:""}
-      <div class="rarity-tag" style="color:${tint}">${rarity}</div>
-      <div class="art" style="color:${tint}"><svg><use href="#${icon}"/></svg></div>
-      <div class="name">${n}</div>
-      <div class="type">${type}</div>
-      <div class="text">${text}</div>
+      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+      <div class="card-inner">
+        ${cost!=="-"?`<div class="gem"><span>${cost}</span></div>`:""}
+        <div class="rarity-tag">${rarity}</div>
+        <div class="art" style="color:${tint}"><svg><use href="#${icon}"/></svg></div>
+        <div class="banner" data-type="${type}"><div><div class="name">${n}</div><div class="type">${type}</div></div></div>
+        <div class="text">${text}</div>
+      </div>
     </div>`;
   }).join("");
   return `<section><div class="section-head"><h2>${title}</h2><span class="count">${cards.length} ${cards.length===1?"card":"cards"}</span></div><div class="grid">${grid}</div></section>`;
