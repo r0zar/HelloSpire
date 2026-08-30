@@ -10,7 +10,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// Grants Seal of Righteousness: the damage-lane tempter, now drafted rather than given.
 /// Amount is the attack bonus (+2, +3 upgraded); the judge is a flat 10.
 /// </summary>
-public sealed class SealOfRighteousness() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+public sealed class SealOfRighteousness() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 2m)];
 

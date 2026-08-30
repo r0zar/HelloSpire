@@ -20,7 +20,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 heals that target any player are MP cards (self-heals are unrestricted), auras are MP Powers,
 blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives it.
 
-## Common (13)
+## Common (10)
 
 | Card | Cost | Type | Effect | Upgrade |
 |---|---|---|---|---|
@@ -29,22 +29,22 @@ blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives
 | Blade of Justice | 2 | Attack | Deal 12 damage. | +4 damage |
 | Holy Light | 1 | Skill | Heal a player 5 HP plus your Spirit. Draw 1 card. Exhaust. **MP only** | Heal 8 |
 | Flash of Light | 0 | Skill | Heal a player 2 HP plus your Spirit. Exhaust. **MP only** | Heal 4 |
-| Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: Attacks deal +2. Judgment: deal 10. | Attacks +3 |
 | Devotion | 1 | Skill | Gain 2 Spirit. | 3 Spirit |
 | Consecration | 2 | Power | At the start of your turn, deal 3 damage to ALL enemies. | 5 damage |
 | Divine Smite | 1 | Attack | Deal 6 damage. Apply 1 Vulnerable. | +3 / +1 |
 | Absolve | 1 | Attack | Deal 5 damage. Apply 1 Weak. | +2 / +1 |
 | Exorcism | 2 | Attack | Deal 8 damage. Trigger your Seal's effect. | +4 damage |
 | Comfort | 1 | Skill | Gain 1 Spirit. Heal 3 HP plus your Spirit. Exhaust. | Heal 6 |
-| Seal of Command | 1 | Skill | Gain Seal of Command: first Attack/turn applies 1 Vulnerable. Judgment: 2 Vulnerable. | Judgment: 3 |
-| Seal of Justice | 1 | Skill | Gain Seal of Justice: first Attack/turn applies 1 Weak. Judgment: 2 Weak. | Judgment: 3 |
 
-## Uncommon (6)
+## Uncommon (9)
 
 | Card | Cost | Type | Effect | Upgrade |
 |---|---|---|---|---|
 | Hammer of Wrath | 2 | Attack | Deal 9 damage. Double vs enemies at or below half HP. | +3 damage |
 | Avenger's Shield | 2 | Attack | Deal 8 damage. Gain 8 Block. | +3/+3 |
+| Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: Attacks deal +2. Judgment: deal 10. | Attacks +3 |
+| Seal of Command | 1 | Skill | Gain Seal of Command: first Attack/turn applies 1 Vulnerable. Judgment: 2 Vulnerable. | Judgment: 3 |
+| Seal of Justice | 1 | Skill | Gain Seal of Justice: first Attack/turn applies 1 Weak. Judgment: 2 Weak. | Judgment: 3 |
 | Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: first Attack/turn draws. Judgment: +1 Energy, draw 1. | draw 2 |
 | Divine Purpose | 1 | Skill | Trigger your Seal's effect. Draw 1 card. | costs 0 |
 | Shield of the Righteous | 1 | Skill | Gain 5 Block. Trigger your Seal's effect. | +3 Block |

@@ -71,14 +71,15 @@ ever have one, so which Seal is up decides both your passive and what Judgment d
 
 A Seal is always up (the Holy Book guarantees one from turn one), so cards never ask "if a
 Seal is active" -- they ask *which*. Seals are the archetype signposts, spread across
-rarities so the first one you're offered tempts you into a lane:
+rarities -- Uncommon and up only, so they stay special in rewards -- and the first one
+offered tempts you into a lane:
 
 | Seal | Rarity | Lane |
 |---|---|---|
 | Light (starter) | -- | sustain: Attacks heal 1; Judge heals 4+Spirit |
-| Righteousness | Common | damage: Attacks +2; Judge 10 |
-| Command | Common | aggro: Vulnerable on attack; Judge Vulnerable |
-| Justice | Common | control: Weak on attack; Judge Weak |
+| Righteousness | Uncommon | damage: Attacks +2; Judge 10 |
+| Command | Uncommon | aggro: Vulnerable on attack; Judge Vulnerable |
+| Justice | Uncommon | control: Weak on attack; Judge Weak |
 | Wisdom | Uncommon | cycle: attack draws; Judge energy+draw |
 | Martyr | Rare | tank: thorns; Judge AoE |
 
