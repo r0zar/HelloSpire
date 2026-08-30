@@ -91,7 +91,7 @@
   "HELLOSPIRE-REVERSAL.description": "If you gained [gold]Armor[/gold] this turn, [gold]Fire[/gold] 2. Otherwise, [gold]Fire[/gold] 1.",
   "HELLOSPIRE-REVERSAL.upgrade.description": "Gain {Deadeye} [gold]Deadeye[/gold].\nIf you gained [gold]Armor[/gold] this turn, [gold]Fire[/gold] 2. Otherwise, [gold]Fire[/gold] 1.",
   "HELLOSPIRE-BANDOLIER.title": "Bandolier",
-  "HELLOSPIRE-BANDOLIER.description": "Gain {Slots} extra Potion Slots this combat. [gold]Volatile[/gold] Potions only.",
+  "HELLOSPIRE-BANDOLIER.description": "[gold]Load[/gold] {Lead:diff()} [gold]Lead Round[/gold] and 1 [gold]Crippling Round[/gold].\nGain {Block} [gold]Block[/gold].",
   "HELLOSPIRE-SPEEDLOADER.title": "Speedloader",
   "HELLOSPIRE-SPEEDLOADER.description": "Fill all empty chambers with [gold]Lead Rounds[/gold].\nGain {Block} [gold]Block[/gold].",
   "HELLOSPIRE-CUSTOM_LOAD.title": "Custom Load",
@@ -544,5 +544,7 @@
   "HELLOSPIRE-CONSERVATION_OF_MATTER.title": "Conservation of Matter",
   "HELLOSPIRE-CONSERVATION_OF_MATTER.description": "The first card you Exhaust each turn: draw {ConservationOfMatterPower} card.",
   "HELLOSPIRE-DISTILLATION_MASTERY.title": "Distillation Mastery",
-  "HELLOSPIRE-DISTILLATION_MASTERY.description": "Whenever you [gold]Distill[/gold], gain {DistillationMasteryPower:diff()} [gold]Potency[/gold]."
+  "HELLOSPIRE-DISTILLATION_MASTERY.description": "Whenever you [gold]Distill[/gold], gain {DistillationMasteryPower:diff()} [gold]Potency[/gold].",
+  "HELLOSPIRE-VIAL_BANDOLIER.title": "Vial Bandolier",
+  "HELLOSPIRE-VIAL_BANDOLIER.description": "Gain {Slots} extra Potion Slots this combat. [gold]Volatile[/gold] Potions only."
 }

@@ -362,7 +362,7 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
 }
 
 /// <summary>Two more slots for this combat. Volatile-only, so it can never bank a found Potion.</summary>
-public sealed class Bandolier() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class VialBandolier() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Slots", 2m)];
 
