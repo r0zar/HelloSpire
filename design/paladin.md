@@ -113,6 +113,18 @@ in every deck.
 Scaling belongs on the **payoff** side, where it is visible and bounded by how much Faith you
 actually managed to accumulate.
 
+## Raw vs effective Faith
+
+Two readings exist and every card picks one:
+
+- **Raw** is what the counter says. Gaining, spending and the display use it.
+- **Effective** is raw plus the rule-changers: Heresy makes every deity count as your highest;
+  Tyranny makes every deity count as at least your Bane. Thresholds ("Requires 3 Faith in
+  Torm") and payoffs ("damage equal to your Faith in Tyr") use it.
+
+Keeping the rules in one function (`FaithTracks.Effective`) rather than in the powers is what
+makes every threshold card agree on what Faith means.
+
 ## Cards
 
 ### Core generation — flat, countable, boring on purpose
@@ -168,7 +180,8 @@ Torm's arch-enemy. During the Time of Troubles they killed each other; Ao resurr
 and Tyr raised him to greater power.
 
 **Bane Faith cannot be gained directly.** It only accrues when you *spend* Faith in a Triad
-deity. Falling is the only way in.
+deity. Falling is the only way in. In code, a spend of N gives Bane ceil(N/2); Time of Troubles
+is the exception and converts one-for-one.
 
 ```
 Falter            0E  Spend 5 Faith in any deity. Gain 3 Faith in Bane.

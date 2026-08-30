@@ -8,6 +8,26 @@ Ordered by dependency, not by effort. Phases 0–3 are load-bearing: everything 
 
 Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x86_64\sts2.xml` and `sts2.dll`) and **BaseLib 3.4.5**. Early Access moves; re-verify after breaking updates.
 
+## Status (2026-08-29)
+
+The Paladin is **fully in code**: 4 basics, 83 generated cards, 25 generated powers, 3 Oaths,
+Holy Fervor, and the Faith system with all four tracks (Torm, Ilmater, Tyr, Bane). The set is
+emitted by `tools/gen_paladin.py` from one spec; edit the spec, not the files.
+
+Still open, roughly in order:
+
+- **Numbers.** Every value is a placeholder. The damage-per-energy benchmark (Phase 8) has not
+  been built; that is the next thing that makes playtesting meaningful.
+- **The second-mechanic layer.** Judged / Warded / Blessed were proposed to fix "the Paladin
+  feels vanilla" and never decided. The card set is built on stock verbs plus Faith.
+- **Art.** Six real pieces (backsplash, select tile, Strike, Defend, Mend, Hammer of Justice).
+  Everything else is a labelled placeholder tile.
+- **Faith UI** is plain tiles at the orb position; orb-styled art deferred.
+- **Multiplayer sync** of Faith has never been tested with two clients.
+- **Relics.** Only the starter exists; the eight character relics are unwritten.
+- **Run-milestone relic transform** (the old Holy Symbol idea) is recorded, not built.
+
+
 ---
 
 ## Phase 0 — Decide what the character *is*
