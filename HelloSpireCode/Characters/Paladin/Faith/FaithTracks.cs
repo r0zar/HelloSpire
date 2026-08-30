@@ -65,7 +65,7 @@ public static class FaithTracks
         var v = Raw(p, d);
         var c = p.Creature;
         if (d.IsTriad() && c.GetPower<HeresyPower>() != null)  v = Math.Max(v, Highest(p).amount);
-        if (d.IsTriad() && c.GetPower<TyrannyPower>() != null) v = Math.Max(v, Raw(p, Deity.Bane));
+        if (d.IsTriad() && c.GetPower<BaneTyrannyPower>() != null) v = Math.Max(v, Raw(p, Deity.Bane));
         return v;
     }
 

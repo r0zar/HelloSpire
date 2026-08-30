@@ -21,7 +21,7 @@ public sealed class ZealotryPower : PaladinPower
 }
 
 /// <summary>Your Faith in Bane counts as Faith in every deity. The bottom of the fall.</summary>
-public sealed class TyrannyPower : PaladinPower
+public sealed class BaneTyrannyPower : PaladinPower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;

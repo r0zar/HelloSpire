@@ -11,10 +11,9 @@ public class PaladinCardPool : CustomCardPoolModel
     public override string BigEnergyIconPath => "big_energy.png".CharacterUiPath(Paladin.AssetFolder);
     public override string TextEnergyIconPath => "text_energy.png".CharacterUiPath(Paladin.AssetFolder);
 
-    // TODO(Phase 1): tune the card-back tint for this character.
-    public override float H => 1f;
-    public override float S => 1f;
-    public override float V => 1f;
+    // The card frame is a shader tint over the base (Ironclad-red) frame. ShaderColor drives it
+    // straight from the character colour so frame, name and relic outlines all match.
+    public override Color ShaderColor => Paladin.Color;
 
     public override Color DeckEntryCardColor => Paladin.Color;
 
