@@ -37,7 +37,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Holy Light | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Draw 1 card. Exhaust. **MP** |
 | Penance | 0 | Skill | Lose {HpLoss} HP. Gain {Energy}. |
 | Prayer of Mending | 1 | Skill | Heal a player {Heal} HP plus your Spirit. The next time they take unblocked damage, they heal {Echo} HP. Exhaust. **MP** |
-| Renew | 1 | Skill | Gain {Regen} Regen. |
+| Renew | 1 | Skill | Gain {Regen} Regen. Exhaust. |
 | Sentinel | 1 | Skill | Gain {Block} Block. Gain 1 Spirit. |
 | Templar's Verdict | 1 | Attack | Deal {Damage} damage twice. |
 | Word of Glory | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
