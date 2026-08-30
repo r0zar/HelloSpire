@@ -4,6 +4,7 @@
 shader_type canvas_item;
 
 uniform sampler2D weapon_page : filter_linear;
+uniform sampler2D weapon_shop_page : filter_linear;
 
 vec3 rgb2hsv(vec3 c) {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -26,7 +27,12 @@ void fragment() {
     if (abs(ts.x - 1000.0) < 0.5 && abs(ts.y - 269.0) < 0.5) {
         vec2 px = UV * ts;
         if (px.x >= 2.0 && px.x < 198.0 && px.y >= 59.0 && px.y < 161.0) {
-            tex = texture(weapon_page, UV);   // the sword rect becomes the warhammer
+            tex = texture(weapon_page, UV);   // combat: the sword rect becomes the warhammer
+        }
+    } else if (abs(ts.x - 1652.0) < 0.5 && abs(ts.y - 657.0) < 0.5) {
+        vec2 px = UV * ts;
+        if (px.x >= 1081.0 && px.x < 1479.0 && px.y >= 448.0 && px.y < 655.0) {
+            tex = texture(weapon_shop_page, UV);   // shop: same swap, bigger sword
         }
     }
     vec3 hsv = rgb2hsv(tex.rgb);

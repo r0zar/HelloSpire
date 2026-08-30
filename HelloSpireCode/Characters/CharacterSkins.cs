@@ -33,9 +33,13 @@ internal static class CharacterSkins
         {
             if (GD.Load<Shader>(shaderPath) is not { } shader) return null;
             material = new ShaderMaterial { Shader = shader };
-            if (character is Paladin &&
-                GD.Load<Texture2D>("res://HelloSpire/images/creature/paladin_weapon_page.png") is { } weapon)
-                material.SetShaderParameter("weapon_page", weapon);
+            if (character is Paladin)
+            {
+                if (GD.Load<Texture2D>("res://HelloSpire/images/creature/paladin_weapon_page.png") is { } weapon)
+                    material.SetShaderParameter("weapon_page", weapon);
+                if (GD.Load<Texture2D>("res://HelloSpire/images/creature/paladin_weapon_shop_page.png") is { } shopWeapon)
+                    material.SetShaderParameter("weapon_shop_page", shopWeapon);
+            }
             Cache[shaderPath] = material;
         }
         return material;
