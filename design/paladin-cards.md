@@ -7,71 +7,114 @@ The archived 91-card Spirit set is in [`paladin-faith-cards-archive.md`](paladin
 
 ## Basic (4)
 
-| Card | Cost | Type | Effect | Upgrade |
-|---|---|---|---|---|
-| Strike | 1 | Attack | Deal 6 damage. | +3 damage |
-| Defend | 1 | Skill | Gain 5 Block. | +3 Block |
-| Mend | 1 | Skill | Heal 5 HP plus your Spirit. Exhaust. | Heal 7 |
-| Judgment | 1 | Attack | Deal 10 damage. Trigger the effects of all your Seals. | costs 0 |
+| Card | Cost | Type | Effect |
+|---|---|---|---|
+| Defend | 1 | Skill | Gain {Block} Block. |
+| Judgment | 1 | Attack | Deal {Damage} damage. Trigger the effects of all your Seals. |
+| Mend | 1 | Skill | Heal {Heal} HP plus your Spirit. Exhaust. |
+| Strike | 1 | Attack | Deal {Damage} damage. |
 
-Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
+Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment. **MP** = MultiplayerOnly.
+Effects show base values; this table is regenerated from code + localization.
 
-**MP only** = `MultiplayerOnly`: never appears in solo rewards/shops. Rules in `paladin.md`:
-heals that target any player are MP cards (self-heals are unrestricted), auras are MP Powers,
-blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives it.
+## Common (20)
 
-## Common (15)
+| Card | Cost | Type | Effect |
+|---|---|---|---|
+| Absolve | 1 | Attack | Deal {Damage} damage. Apply {Weak} Weak. |
+| Bind the Wounds | 1 | Skill | Heal a player {Heal} HP plus your Spirit. They gain {Block} Block. Exhaust. **MP** |
+| Blade of Justice | 2 | Attack | Deal {Damage} damage. |
+| Blade of Wrath | 1 | Attack | Deal {Damage} damage. Lose {HpLoss} HP. |
+| Blessing of Might | 1 | Skill | A player gains {Strength} Strength. **MP** |
+| Comfort | 1 | Skill | Gain 1 Spirit. Heal {Heal} HP plus your Spirit. Exhaust. |
+| Crusader Strike | 1 | Attack | Deal {Damage} damage. Apply {Vulnerable} Vulnerable. |
+| Devotion | 1 | Skill | Gain {Spirit} Spirit. |
+| Divine Allegiance | 1 | Skill | A player gains {Block} Block. Draw 1 card. **MP** |
+| Divine Smite | 1 | Attack | Deal {Damage} damage, plus 3 for each of your Seals. |
+| Divine Storm | 1 | Attack | Deal {Damage} damage to ALL enemies. |
+| Exorcism | 2 | Attack | Deal {Damage} damage. Trigger the effects of all your Seals. |
+| Flash of Light | 0 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
+| Holy Light | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Draw 1 card. Exhaust. **MP** |
+| Penance | 0 | Skill | Lose {HpLoss} HP. Gain {Energy:energyIcons()}. |
+| Prayer of Mending | 1 | Skill | Heal a player {Heal} HP plus your Spirit. The next time they take unblocked damage, they heal {Echo} HP. Exhaust. **MP** |
+| Renew | 1 | Skill | Gain {Regen} Regen. |
+| Sentinel | 1 | Skill | Gain {Block} Block. Gain 1 Spirit. |
+| Templar's Verdict | 1 | Attack | Deal {Damage} damage twice. |
+| Word of Glory | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
 
-| Card | Cost | Type | Effect | Upgrade |
-|---|---|---|---|---|
-| Crusader Strike | 1 | Attack | Deal 10 damage. Apply 1 Vulnerable. | +3 damage |
-| Divine Storm | 1 | Attack | Deal 5 damage to ALL enemies. | +3 damage |
-| Blade of Justice | 2 | Attack | Deal 12 damage. | +4 damage |
-| Holy Light | 1 | Skill | Heal a player 5 HP plus your Spirit. Draw 1 card. Exhaust. **MP only** | Heal 8 |
-| Flash of Light | 0 | Skill | Heal a player 2 HP plus your Spirit. Exhaust. **MP only** | Heal 4 |
-| Devotion | 1 | Skill | Gain 2 Spirit. | 3 Spirit |
-| Divine Smite | 1 | Attack | Deal 3 damage, plus 3 per Seal. | +3 base |
-| Absolve | 1 | Attack | Deal 5 damage. Apply 1 Weak. | +2 / +1 |
-| Exorcism | 2 | Attack | Deal 8 damage. Trigger the effects of all your Seals. | +4 damage |
-| Comfort | 1 | Skill | Gain 1 Spirit. Heal 3 HP plus your Spirit. Exhaust. | Heal 6 |
-| Penance | 0 | Skill | Lose 4 HP. Gain 2 Energy. | 3 Energy |
-| Templar's Verdict | 1 | Attack | Deal 4 damage twice. | 4x2 -> 6x2 |
-| Word of Glory | 1 | Skill | Heal a player 4 HP plus your Spirit. Exhaust. **MP only** | Heal 7 |
-| Bind the Wounds | 1 | Skill | Heal a player 3 plus Spirit; they gain 4 Block. Exhaust. **MP only** | Heal 5 |
-| Blessing of Might | 1 | Skill | A player gains 2 Strength. **MP only** | 3 Strength |
+## Uncommon (36)
 
-## Uncommon (17)
+| Card | Cost | Type | Effect |
+|---|---|---|---|
+| Aura of Mercy | 2 | Power | At the start of your turn, heal ALL players {Heal} HP. **MP** |
+| Aura of Protection | 1 | Power | At the start of your turn, ALL players gain {Block} Block. **MP** |
+| Aura of Vitality | 2 | Power | At the start of your turn, heal the lowest-HP player {Heal} HP. **MP** |
+| Avenger's Shield | 2 | Attack | Deal {Damage} damage. Gain {Block} Block. |
+| Bastion | 2 | Skill | Gain {Block} Block now and at the start of your next turn. |
+| Blessed Recovery | 1 | Skill | Gain {Spirit} Spirit. Heal {Heal} HP plus your Spirit. Exhaust. |
+| Blessing of Protection | 1 | Skill | A player gains {Buffer} Buffer. **MP** |
+| Blessing of Sacrifice | 1 | Skill | Lose {HpLoss} HP. A player gains {Block} Block. **MP** |
+| Blessing of Wisdom | 1 | Skill | A player gains {Energy} Energy at the start of their next turn. **MP** |
+| Bulwark | 2 | Skill | Gain {Block} Block. |
+| Circle of Healing | 2 | Skill | Heal ALL players {Heal} HP plus your Spirit. Exhaust. **MP** |
+| Consecrated Ground | 1 | Power | Enemies that attack you take {Thorns} damage. |
+| Consecration | 1 | Power | At the start of your turn, deal {Damage} damage to ALL enemies. |
+| Crusader Aura | 2 | Power | At the start of your turn, ALL players gain {Strength} Strength. **MP** |
+| Divine Favor | 0 | Skill | Gain {Energy:energyIcons()}. Exhaust. |
+| Divine Purpose | 1 | Skill | Trigger the effects of all your Seals. Draw 1 card. |
+| Eye for an Eye | 1 | Skill | Gain {Block} Block. This turn, enemies that attack you take {Thorns} damage. |
+| Hammer of the Righteous | 1 | Attack | Deal damage equal to your Block. |
+| Hammer of Wrath | 2 | Attack | Deal {Damage} damage. Deals double damage to enemies at or below half HP. |
+| Holy Shield | 1 | Power | Whenever a card gains you Block, gain {Block} more. |
+| Judgment of Light | 2 | Skill | Mark an enemy: whenever a player attacks it, the attacker heals {Heal} HP. **MP** |
+| Rebuke | 1 | Skill | An enemy loses {Strength} Strength. |
+| Reckoning | 3 | Attack | Deal {Damage} damage to ALL enemies. Trigger the effects of all your Seals. |
+| Redemption | 2 | Skill | Heal {Heal} HP plus your Spirit. Exhaust. |
+| Repentance | 1 | Skill | Apply {Weak} Weak. |
+| Retribution | 2 | Power | The first time each turn an enemy attacks you, gain {Strength} Strength. |
+| Righteous Fury | 2 | Power | At the start of your turn, gain {Strength} Strength. |
+| Sanctuary | 1 | Skill | ALL players gain {Block} Block. Exhaust. **MP** |
+| Seal of Command | 1 | Skill | Gain Seal of Command: your first Attack each turn applies 1 Vulnerable. Judgment: apply {Amount} Vulnerable. |
+| Seal of Justice | 1 | Skill | Gain Seal of Justice: your first Attack each turn applies 1 Weak. Judgment: apply {Amount} Weak. |
+| Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: your Attacks deal {Amount} additional damage. Judgment: deal 5 damage. |
+| Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: your first Attack each turn draws a card. Judgment: deal damage equal to your hand size, then draw {Amount}. |
+| Shield of the Righteous | 1 | Skill | Gain {Block} Block. Trigger the effects of all your Seals. |
+| Vigil | 1 | Skill | Gain 1 Spirit. At the start of your next turn, gain {Energy} Energy. |
+| Wake of Ashes | 2 | Attack | Deal {Damage} damage to ALL enemies. Apply 1 Weak to ALL enemies. |
+| Zealotry | 1 | Power | Whenever you trigger your Seals, gain {Strength} Strength. |
 
-| Card | Cost | Type | Effect | Upgrade |
-|---|---|---|---|---|
-| Hammer of Wrath | 2 | Attack | Deal 9 damage. Double vs enemies at or below half HP. | +3 damage |
-| Consecration | 1 | Power | At the start of your turn, deal 3 damage to ALL enemies. | 5 damage |
-| Avenger's Shield | 2 | Attack | Deal 8 damage. Gain 8 Block. | +3/+3 |
-| Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: Attacks deal +2. Judgment: deal 5. | Attacks +3 |
-| Seal of Command | 1 | Skill | Gain Seal of Command: first Attack/turn applies 1 Vulnerable. Judgment: 2 Vulnerable. | Judgment: 3 |
-| Seal of Justice | 1 | Skill | Gain Seal of Justice: first Attack/turn applies 1 Weak. Judgment: 2 Weak. | Judgment: 3 |
-| Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: first Attack/turn draws. Judgment: hand-size damage, draw 1. | draw 2 |
-| Divine Purpose | 1 | Skill | Trigger the effects of all your Seals. Draw 1 card. | costs 0 |
-| Shield of the Righteous | 1 | Skill | Gain 5 Block. Trigger the effects of all your Seals. | +3 Block |
-| Divine Favor | 0 | Skill | Gain 2 Energy. Exhaust. | 3 Energy |
-| Vigil | 1 | Skill | Gain 1 Spirit. Next turn: gain 2 Energy. | 3 Energy |
-| Rebuke | 1 | Skill | An enemy loses 2 Strength. | 3 Strength |
-| Righteous Fury | 2 | Power | At the start of your turn, gain 1 Strength. | costs 1 |
-| Circle of Healing | 2 | Skill | Heal ALL players 4 plus your Spirit. Exhaust. **MP only** | Heal 6 |
-| Blessing of Sacrifice | 1 | Skill | Lose 3 HP. A player gains 8 Block. **MP only** | +3 Block |
-| Aura of Protection | 1 | Power | Start of turn: ALL players gain 2 Block. **MP only** | 3 Block |
-| Aura of Mercy | 2 | Power | Start of turn: heal ALL players 2. **MP only** | Heal 3 |
+## Rare (26)
 
-## Rare (6)
+| Card | Cost | Type | Effect |
+|---|---|---|---|
+| Aegis of Light | 2 | Skill | Gain {Block} Block. Exhaust. |
+| Ardent Defender | 2 | Power | The first time each turn an enemy attacks you, heal {Heal} HP. |
+| Avenging Crusader | 3 | Power | Whenever you play an Attack, heal the lowest-HP player {Heal} HP. **MP** |
+| Avenging Wrath | 2 | Power | Whenever you trigger your Seals, they trigger twice. |
+| Beacon of Light | 1 | Power | A player becomes the Beacon: whenever you heal a player, the Beacon also heals {Heal} HP. **MP** |
+| Blessing of Kings | 2 | Skill | A player gains {Amount} Strength and {Amount} Dexterity. **MP** |
+| Crusade | 3 | Power | At the start of your turn, gain {Amount} Strength and {Amount} Dexterity. |
+| Divine Hymn | 3 | Skill | Heal ALL players {Heal} HP plus your Spirit. Exhaust. **MP** |
+| Divine Intervention | 1 | Skill | Heal {Heal} HP plus TWICE your Spirit. Exhaust. |
+| Divine Sacrifice | 1 | Skill | ALL OTHER players gain {Buffer} Buffer. Exhaust. **MP** |
+| Divine Shield | 2 | Skill | Gain {Buffer} Buffer. Exhaust. |
+| Final Reckoning | 3 | Attack | Deal {Damage} damage. If this kills the enemy, gain {Energy:energyIcons()}. |
+| Greater Judgment | 2 | Attack | Deal {Damage} damage. Trigger the effects of all your Seals twice. |
+| Guardian of Ancient Kings | 2 | Power | At the start of your turn, gain {Buffer} Buffer. |
+| Hallowed Ground | 3 | Power | At the start of your turn, deal {Amount} damage to ALL enemies and gain {Amount} Block. |
+| Hammer of Justice | 3 | Attack | Deal {Damage} damage. Stun the enemy. |
+| Holy Avenger | 0 | Skill | Double your Spirit. Exhaust. |
+| Lay on Hands | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
+| Retribution Aura | 2 | Power | Whenever ANY player is attacked, the attacker takes {Thorns} damage. **MP** |
+| Seal of the Crusader | 1 | Skill | Gain Seal of the Crusader: your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |
+| Seal of the Martyr | 1 | Skill | Gain Seal of the Martyr: enemies that hit you take {Amount} damage. Judgment: deal {Amount} damage to ALL enemies. |
+| Thunderous Smite | 2 | Attack | Deal {Damage} damage to ALL enemies. |
+| Tyr's Deliverance | 2 | Power | At the start of your turn, heal ALL players {Amount} HP and they gain {Amount} Block. **MP** |
+| Vow of Enmity | 1 | Power | Mark an enemy: your Attacks against it deal {Bonus} additional damage. |
+| Wrathful Smite | 1 | Attack | Deal {Damage} damage. Apply 2 Weak. Trigger the effects of all your Seals. |
+| Zeal | 0 | Skill | Gain {Energy} Energy for each of your Seals. Exhaust. |
 
-| Card | Cost | Type | Effect | Upgrade |
-|---|---|---|---|---|
-| Hammer of Justice | 3 | Attack | Deal 4 damage. Stun the enemy. | costs 2 |
-| Seal of the Martyr | 1 | Skill | Gain Seal of the Martyr: enemies that hit you take 3. Judgment: 3 to ALL. | 4 / 4 |
-| Avenging Wrath | 2 | Power | Whenever you trigger your Seals, they trigger twice. | costs 1 |
-| Zeal | 0 | Skill | Gain 1 Energy for each of your Seals. Exhaust. | 2 per Seal |
-| Lay on Hands | 1 | Skill | Heal a player 12 HP plus your Spirit. Exhaust. **MP only** | Heal 16 |
-| Beacon of Light | 1 | Power | A player becomes the Beacon: your heals also heal them 3. **MP only** | Heal 4 |
+Total: 86 cards (25 multiplayer-only). Upgrades live in code; see each card class.
 
 ## Powers
 
