@@ -24,10 +24,12 @@ public class Paladin : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 75;
 
-    // The designed starter: 4 Strike / 4 Defend / 1 Mend / 1 Aura of Protection. No card names
-    // a deity and none generates Faith, so the starter pushes the player toward no god -- the
-    // first Faith decision is the first card reward. Every other Paladin card is in the reward
-    // pool via [Pool] on PaladinCard.
+    // The designed starter: 4 Strike / 4 Defend / 1 Mend / 1 Hammer of Justice. No card names a
+    // deity and none generates Faith, so the starter pushes the player toward no god -- the
+    // first Faith decision is the first card reward. Aura of Protection was the original
+    // signature starter but it is ally-targeting, which the game treats as multiplayer-only
+    // content; a starter must work solo. Every other Paladin card is in the reward pool via
+    // [Pool] on PaladinCard.
     public override IEnumerable<CardModel> StartingDeck =>
     [
         ModelDb.Card<StrikePaladin>(),
@@ -39,7 +41,7 @@ public class Paladin : PlaceholderCharacterModel
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<Mend>(),
-        ModelDb.Card<AuraOfProtection>(),
+        ModelDb.Card<HammerOfJustice>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<HolySymbol>()];

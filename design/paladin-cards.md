@@ -13,7 +13,19 @@ House rules every card obeys:
 - **Multipliers are capped at two**, both Rare: `Zealotry`, `Avenging Wrath`.
 - **Deities do not gate card types.** Every deity attacks, heals, and blocks.
 
-Notation: `[T]` `[I]` `[Y]` `[B]` = Torm / Ilmater / Tyr / Bane. `[T+Y]` = hybrid.
+Notation: `[T]` `[I]` `[Y]` `[B]` = Torm / Ilmater / Tyr / Bane. `[T+Y]` = hybrid. `[MP]` = multiplayer-only.
+
+## Multiplayer-only cards
+
+The game has a first-class flag, `CardMultiplayerConstraint.MultiplayerOnly`, enforced at the
+source: `CardPoolModel.GetUnlockedCards` filters it out, so a flagged card **never appears as a
+reward in a solo run**. Every shipped `AnyAlly` / `AllAllies` card carries it, and `AnyAlly`
+explicitly excludes the owner -- there is no self-target fallback, by design.
+
+So the rule is simple: **any card that targets an ally is `[MP]`.** The Paladin has about 25,
+against the base game's 4-5 per character. That is the character's co-op identity and it is
+fine, but it means the solo Paladin is a noticeably smaller card pool. Solo viability has to
+come from the non-`[MP]` cards alone.
 
 ---
 
@@ -25,7 +37,7 @@ Every deck starts with these.
 Strike               1E  [-]  Deal 6 damage.
 Defend               1E  [-]  Gain 5 Block.
 Mend                 1E  [-]  Heal 5.
-Aura of Protection   1E  [-]  Power. At the start of your turn, all allies gain 2 Block.
+Hammer of Justice    2E  [-]  Deal 10 damage. Stun the enemy.
 ```
 
 **No starter names a deity, and none generates Faith.** The starter must not push a player
@@ -35,29 +47,30 @@ passively off cards you cannot avoid drawing. No starter has Exhaust.
 
 `Mend` is a true Defend mirror: same cost, same number, HP instead of Block.
 
-`Aura of Protection` is a starter Power — something no shipped character has. It gives
-2 Block to everyone including you, so solo it is a modest self-Power and in a party of three
-it is 6 Block a turn across the group. It scales with the party with no multiplayer-specific
-text, and it says on turn one what this character is for.
+`Hammer of Justice` is the signature starter: a 2-cost tempo tool that buys a turn, which is
+how a defensive character with no Faith yet survives Act 1. (Aura of Protection was the
+original pick, but it is ally-targeting, and the game treats every ally-targeting card as
+multiplayer-only content. A starter must work solo.)
 
-Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Aura of Protection — ten cards.
+Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice — ten cards.
 
 ---
 
-## Common (19)
+## Common (20)
 
 The backbone. Playable, unexciting, seen constantly. **No common generates Faith.** Faith is
 scarce by design: commons are pure gameplay, a handful of uncommons grant 1, and the real
 engines are the Oaths and rares. A deck accumulates Faith because the player took specific
 reward cards, never because the cards they see every fight happen to carry it.
 
-### Torm (6)
+### Torm (7)
 
 ```
 Hold the Line      1E  [T]    Gain 8 Block.
 Shield Bash        1E  [T+Y]  Deal 5 damage. Gain 3 Block.
 Brace              1E  [T]    Gain 8 Block.
-Interpose          1E  [T]    Gain 4 Block. Grant an ally 4 Block.
+Interpose          1E  [T]    Gain 4 Block. Grant an ally 4 Block.                   [MP]
+Aura of Protection 1E  [T]    Power. At the start of your turn, all allies gain 2 Block. [MP]
 Steadfast          0E  [T]    Gain 3 Block. Draw 1 card.
 Shield Wall        2E  [T]    Gain 12 Block.
 ```
@@ -65,12 +78,12 @@ Shield Wall        2E  [T]    Gain 12 Block.
 ### Ilmater (6)
 
 ```
-Soothe             1E  [I]    Heal an ally 6.
-Flash of Light     1E  [I]    Heal an ally 5.                              [WoW]
+Soothe             1E  [I]    Heal an ally 6.  [MP]
+Flash of Light     1E  [I]    Heal an ally 5.                              [WoW]  [MP]
 Holy Shock         1E  [I+Y]  Deal 5 damage OR heal 5.                     [WoW]
 Salve              0E  [I]    Heal yourself 3.
 Renew              1E  [I]    Power. At the start of your turn, heal 2.
-Comfort            1E  [I]    Heal an ally 4. Draw 1 card.
+Comfort            1E  [I]    Heal an ally 4. Draw 1 card.  [MP]
 ```
 
 ### Tyr (6)
@@ -103,7 +116,7 @@ this is the tier that decides tall vs wide.
 Bulwark                1E  [T]    Gain Block equal to your Faith in Torm.
 Holy Shield            1E  [T+Y]  Gain 5 Block. Until end of turn, whenever you
                                   are attacked, deal 3 damage to the attacker.
-Guardian's Mercy       1E  [T+I]  Gain 4 Block. Heal an ally 3.
+Guardian's Mercy       1E  [T+I]  Gain 4 Block. Heal an ally 3.  [MP]
 Blessing of Protection 1E  [T]    Grant an ally 8 Block.                        [WoW]
 Consecrated Ground     2E  [T]    Power. Whenever you play a card that gains
                                   Block, all allies gain 1 Block.
@@ -112,7 +125,7 @@ Bastion                2E  [T]    Gain 10 Block. Block is not removed at the
 Retribution            1E  [T+Y]  Deal damage equal to the Block you gained
                                   this turn.
 Shield Slam            1E  [T+Y]  Deal damage equal to your Block.              [WoW]
-Sentinel               1E  [T]    Power. Whenever an ally is attacked, gain
+Sentinel               1E  [T]    Power. Whenever an ally is attacked, gain  [MP]
                                   2 Block.
 Immovable Object       2E  [T]    Requires 3 Faith in Torm. Gain 15 Block.
 ```
@@ -120,26 +133,26 @@ Immovable Object       2E  [T]    Requires 3 Faith in Torm. Gain 15 Block.
 ### Ilmater (10)
 
 ```
-Blessing of Sacrifice  1E  [I]    Power. Damage an ally would take is dealt   [WoW]
+Blessing of Sacrifice  1E  [I]    Power. Damage an ally would take is dealt   [WoW]  [MP]
                                   to you instead, halved.
-Aura of Mercy          2E  [I]    Power. Aura — whenever you heal an ally,
+Aura of Mercy          2E  [I]    Power. Aura — whenever you heal an ally,  [MP]
                                   every other ally heals 1.
-Absolve                1E  [I]    Heal an ally 5. Remove one debuff from them.
-Holy Light             2E  [I]    Heal an ally 12.                            [WoW]
-Bind the Wounds        1E  [I]    Heal an ally 4. Gain 1 Faith in Ilmater.
-Prayer of Mending      1E  [I]    Heal an ally 4. At the start of your next
+Absolve                1E  [I]    Heal an ally 5. Remove one debuff from them.  [MP]
+Holy Light             2E  [I]    Heal an ally 12.                            [WoW]  [MP]
+Bind the Wounds        1E  [I]    Heal an ally 4. Gain 1 Faith in Ilmater.  [MP]
+Prayer of Mending      1E  [I]    Heal an ally 4. At the start of your next  [MP]
                                   turn, heal them 4 again.
-Martyr                 1E  [I]    Lose 4 HP. Heal an ally 8.
-Circle of Healing      2E  [I]    Heal all allies 4.
-Faithful Servant       2E  [I]    Requires 3 Faith in Ilmater. Heal an ally
+Martyr                 1E  [I]    Lose 4 HP. Heal an ally 8.  [MP]
+Circle of Healing      2E  [I]    Heal all allies 4.  [MP]
+Faithful Servant       2E  [I]    Requires 3 Faith in Ilmater. Heal an ally  [MP]
                                   equal to your Faith in Ilmater.
-Sanctuary              1E  [I+T]  Heal an ally 3. Grant them 5 Block.
+Sanctuary              1E  [I+T]  Heal an ally 3. Grant them 5 Block.  [MP]
 ```
 
 ### Tyr (10)
 
 ```
-Holy Smite             1E  [Y+I]  Deal 6 damage. Heal an ally 3.
+Holy Smite             1E  [Y+I]  Deal 6 damage. Heal an ally 3.  [MP]
 Blade of Justice       1E  [Y]    Deal 9 damage. Gain 1 Faith in Tyr.         [WoW]
 Judgment               1E  [Y]    Deal 5 damage. The enemy takes 4 additional [WoW]
                                   damage from all sources this turn.
@@ -150,7 +163,7 @@ Zeal                   1E  [Y]    Deal 4 damage 2 times.
 Equal Measure          1E  [Y]    Deal damage equal to your Faith in Tyr.
 Consecration           2E  [Y]    Power. At the start of your turn, deal 3    [WoW, adapted]
                                   damage to ALL enemies.
-Crusader Aura          2E  [Y]    Power. Aura — all allies' Attacks deal      [WoW]
+Crusader Aura          2E  [Y]    Power. Aura — all allies' Attacks deal      [WoW]  [MP]
                                   1 additional damage.
 Divine Purpose         1E  [Y]    Requires 3 Faith in Tyr. Deal 10 damage.    [WoW]
                                   Gain 1 Energy.
@@ -186,9 +199,9 @@ Shield of the Righteous   1E  [T]    Gain Block equal to twice your Faith       
                                      in Torm.
 Ardent Defender           2E  [T]    Power. The first time you would die this   [WoW]
                                      combat, instead heal to a third of max HP.
-Divine Allegiance         1E  [T]    Power. Whenever an ally would take damage, [D&D Crown]
+Divine Allegiance         1E  [T]    Power. Whenever an ally would take damage, [D&D Crown]  [MP]
                                      you may take it instead.
-Aura of Devotion          2E  [T]    Power. Aura — all allies take 1 less       [D&D core]
+Aura of Devotion          2E  [T]    Power. Aura — all allies take 1 less       [D&D core]  [MP]
                                      damage from attacks for every 5 Faith
                                      in Torm.
 Avenger's Shield          1E  [T+Y]  Deal 8 damage to up to 3 enemies.          [WoW]
@@ -202,15 +215,15 @@ Divine Shield             2E  [T]    Requires 4 Faith in Torm. You take no      
 ### Ilmater (7)
 
 ```
-Lay on Hands              2E  [I]    Heal an ally to full. Exhaust.             [WoW + D&D]
-Beacon of Light           2E  [I]    Power. Choose an ally. Whenever you heal,  [WoW]
+Lay on Hands              2E  [I]    Heal an ally to full. Exhaust.             [WoW + D&D]  [MP]
+Beacon of Light           2E  [I]    Power. Choose an ally. Whenever you heal,  [WoW]  [MP]
                                      they also heal half that much.
-Word of Glory             1E  [I]    Spend 3 Faith in Ilmater. Heal an ally 12. [WoW]
+Word of Glory             1E  [I]    Spend 3 Faith in Ilmater. Heal an ally 12. [WoW]  [MP]
 Aura of Vitality          2E  [I]    Power. Aura — at the start of your turn,   [D&D]
                                      all allies heal 3.
-Light of Dawn             2E  [I]    Heal all allies equal to half your Faith   [WoW]
+Light of Dawn             2E  [I]    Heal all allies equal to half your Faith   [WoW]  [MP]
                                      in Ilmater.
-Redemption                3E  [I]    Requires 5 Faith in Ilmater. Revive a     [D&D Revivify]
+Redemption                3E  [I]    Requires 5 Faith in Ilmater. Revive a     [D&D Revivify]  [MP]
                                      downed ally at 1 HP. Exhaust.
 The Broken God            2E  [I]    Power. At the start of your turn, all
                                      allies heal equal to half your Faith

@@ -9,11 +9,13 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Power. At the start of your turn, all allies gain 2 Block. The Paladin's signature starter --
-/// no shipped character has a starter Power. Deity-neutral by design.
+/// Power. At the start of your turn, all allies gain 2 Block. Ally-targeting, so multiplayer-only:
+/// the game's own AllAllies cards all carry this constraint and never appear in solo rewards.
 /// </summary>
-public sealed class AuraOfProtection() : PaladinCard(1, CardType.Power, CardRarity.Basic, TargetType.Self)
+public sealed class AuraOfProtection() : PaladinCard(1, CardType.Power, CardRarity.Common, TargetType.Self)
 {
+    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
+
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<AuraOfProtectionPower>(2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

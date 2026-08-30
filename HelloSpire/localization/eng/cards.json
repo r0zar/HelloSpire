@@ -198,5 +198,7 @@
   "HELLOSPIRE-DEFEND_PALADIN.title": "Defend",
   "HELLOSPIRE-DEFEND_PALADIN.description": "Gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-AURA_OF_PROTECTION.title": "Aura of Protection",
-  "HELLOSPIRE-AURA_OF_PROTECTION.description": "At the start of your turn, all allies gain {AuraOfProtectionPower:diff()} [gold]Block[/gold]."
+  "HELLOSPIRE-AURA_OF_PROTECTION.description": "At the start of your turn, all allies gain {AuraOfProtectionPower:diff()} [gold]Block[/gold].",
+  "HELLOSPIRE-HAMMER_OF_JUSTICE.title": "Hammer of Justice",
+  "HELLOSPIRE-HAMMER_OF_JUSTICE.description": "Deal {Damage:diff()} damage.\n[gold]Stun[/gold] the enemy."
 }
