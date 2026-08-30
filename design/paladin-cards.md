@@ -70,29 +70,29 @@ reward cards, never because the cards they see every fight happen to carry it.
 ```
 Hold the Line      1E  [T]    Gain 8 Block.
 Shield Bash        1E  [T+Y]  Deal 5 damage. Gain 3 Block.
-Brace              1E  [T]    Gain 8 Block.
+Brace              1E  [T]    Gain 6 Warded.
 Interpose          1E  [T]    Gain 4 Block. A player gains 4 Block.
 Aura of Protection 1E  [T]    Power. At the start of your turn, all allies gain 2 Block.
 Steadfast          0E  [T]    Gain 3 Block. Draw 1 card.
-Shield Wall        2E  [T]    Gain 12 Block.
+Shield Wall        2E  [T]    Gain 11 Warded.
 ```
 
 ### Ilmater (6)
 
 ```
 Soothe             1E  [I]    Heal a player 6.
-Flash of Light     1E  [I]    Heal a player 5.                              [WoW]
+Flash of Light     1E  [I]    Heal a player 5. Blessed.                              [WoW]
 Holy Shock         1E  [I+Y]  Deal 5 damage OR heal 5.                     [WoW]
-Salve              0E  [I]    Heal yourself 3.
+Salve              0E  [I]    Heal yourself 3. Blessed.
 Renew              1E  [I]    Power. At the start of your turn, heal 2.
-Comfort            1E  [I]    Heal a player 4. Draw 1 card.
+Comfort            1E  [I]    Heal a player 4. Draw 1 card. Blessed.
 ```
 
 ### Tyr (6)
 
 ```
 Smite              1E  [Y]    Deal 9 damage.
-Crusader Strike    1E  [Y]    Deal 6 damage 2 times.                       [WoW]
+Crusader Strike    1E  [Y]    Deal 5 damage 2 times. Apply 1 Judged.       [WoW]
 Cleave             1E  [Y]    Deal 5 damage to ALL enemies.
 Righteous Blow     2E  [Y]    Deal 14 damage.
 Rebuke             1E  [Y]    Deal 4 damage. Apply 1 Weak.
@@ -102,7 +102,7 @@ Vengeful Mending   1E  [Y+I]  Deal 7 damage. Heal yourself 3.
 ### Neutral (1)
 
 ```
-Prayer             1E  [-]    Draw 2 cards.
+Prayer             1E  [-]    Draw 2 cards. Blessed.
 ```
 
 ---
@@ -122,14 +122,13 @@ Guardian's Mercy       1E  [T+I]  Gain 4 Block. Heal a player 3.
 Blessing of Protection 1E  [T]    A player gains 8 Block.                        [WoW]
 Consecrated Ground     2E  [T]    Power. Whenever you play a card that gains
                                   Block, all allies gain 1 Block.
-Bastion                2E  [T]    Gain 10 Block. Block is not removed at the
-                                  start of your next turn.
+Bastion                2E  [T]    Gain 8 Block and 8 Warded.
 Retribution            1E  [T+Y]  Deal damage equal to the Block you gained
                                   this turn.
 Shield Slam            1E  [T+Y]  Deal damage equal to your Block.              [WoW]
 Sentinel               1E  [T]    Power. Whenever an ally is attacked, gain  [MP]
                                   2 Block.
-Immovable Object       2E  [T]    Requires 3 Faith in Torm. Gain 15 Block.
+Immovable Object       2E  [T]    Requires 3 Faith in Torm. Gain 15 Warded.
 ```
 
 ### Ilmater (10)
@@ -141,23 +140,23 @@ Aura of Mercy          2E  [I]    Power. Aura — whenever you heal an ally,  [M
                                   every other ally heals 1.
 Absolve                1E  [I]    Heal a player 5. Remove one debuff from them.
 Holy Light             2E  [I]    Heal a player 12.                            [WoW]
-Bind the Wounds        1E  [I]    Heal a player 4. Gain 1 Faith in Ilmater.
+Bind the Wounds        1E  [I]    Heal a player 4. Gain 1 Faith in Ilmater. Blessed.
 Prayer of Mending      1E  [I]    Heal a player 4. At the start of your next
                                   turn, heal them 4 again.
 Martyr                 1E  [I]    Lose 4 HP. Heal a player 8.
 Circle of Healing      2E  [I]    Heal all allies 4.
 Faithful Servant       2E  [I]    Requires 3 Faith in Ilmater. Heal a player
                                   equal to your Faith in Ilmater.
-Sanctuary              1E  [I+T]  Heal a player 3. Grant them 5 Block.
+Sanctuary              1E  [I+T]  Heal a player 3. Grant them 5 Block. Blessed.
 ```
 
 ### Tyr (10)
 
 ```
-Holy Smite             1E  [Y+I]  Deal 6 damage. Heal a player 3.
-Blade of Justice       1E  [Y]    Deal 9 damage. Gain 1 Faith in Tyr.         [WoW]
-Judgment               1E  [Y]    Deal 5 damage. The enemy takes 4 additional [WoW]
-                                  damage from all sources this turn.
+Holy Smite             1E  [Y+I]  Deal 6 damage. Heal a player 3. Blessed.
+Blade of Justice       1E  [Y]    Deal 9 damage. Apply 1 Judged.               [WoW]
+                                  Gain 1 Faith in Tyr.
+Judgment               1E  [Y]    Deal 5 damage. Apply 2 Judged.               [WoW]
 Exorcism               1E  [Y]    Deal 12 damage. Exhaust.                     [WoW]
 Wake of Ashes          2E  [Y]    Deal 7 damage to ALL enemies.                [WoW]
                                   Gain 1 Faith in Tyr.
@@ -178,7 +177,7 @@ Sacrament              1E  [-]    Convert all Faith in one deity to another.
 Kneel                  0E  [-]    Name a deity. Gain 1 Faith in it. Exhaust.
 Devotion               1E  [-]    Gain 1 Faith in your highest deity.
 Tithe                  1E  [B]    Spend 3 Faith. Gain 2 Energy.
-Litany                 1E  [-]    Draw 1 card for every 4 Faith in your
+Litany                 1E  [-]    Draw 1 card for every 4 Faith in your Blessed.
                                   highest deity.
 Seal of Command        1E  [-]    Seal — for 3 turns, your Attacks deal       [WoW]
                                   2 additional damage.
@@ -220,10 +219,10 @@ Divine Shield             2E  [T]    Requires 4 Faith in Torm. You take no      
 Lay on Hands              2E  [I]    Heal a player to full. Exhaust.             [WoW + D&D]
 Beacon of Light           2E  [I]    Power. Choose an ally. Whenever you heal,  [WoW]  [MP]
                                      they also heal half that much.
-Word of Glory             1E  [I]    Spend 3 Faith in Ilmater. Heal a player 12. [WoW]
+Word of Glory             1E  [I]    Spend 3 Faith in Ilmater. Heal a player 12. Blessed. [WoW]
 Aura of Vitality          2E  [I]    Power. Aura — at the start of your turn,   [D&D]
                                      all allies heal 3.
-Light of Dawn             2E  [I]    Heal all allies equal to half your Faith   [WoW]
+Light of Dawn             2E  [I]    Heal all allies equal to half your Faith Blessed.   [WoW]
                                      in Ilmater.
 Redemption                3E  [I]    Requires 5 Faith in Ilmater. Revive a     [D&D Revivify]  [MP]
                                      downed ally at 1 HP. Exhaust.

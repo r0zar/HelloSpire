@@ -236,6 +236,34 @@ Tyr       Scales of Judgment        At the start of each combat, gain 3 Faith in
                                     Whenever you take damage, gain 1 Faith in Tyr.
 ```
 
+## The second layer: Judged, Warded, Blessed
+
+Faith alone left the Paladin as stock verbs plus a counter. Every shipped character has two or
+three systems that *interact*; this is the Paladin's second. One status per verb, and Faith is
+what upgrades each of them.
+
+| | Deity | What it is | How Faith deepens it |
+|---|---|---|---|
+| **Judged** | Tyr | A stacking debuff: the enemy takes +1 damage from every player Attack, per stack. Flat, per hit, never decays. | At 3 Tyr Faith every application is one deeper. |
+| **Warded** | Torm | Block that survives the start of your turn, up to the Warded amount, then erodes by 3 a turn. Real Block, not a regrant. | Torm Faith slows the erosion: 3, then 2 at 5 Faith, then 1 at 10. |
+| **Blessed** | Ilmater | A card keyword. Playing a Blessed card makes every Aura you have pulse again. | The Auras themselves scale off Faith (Devotion, The Broken God). |
+
+Why these three clear the "is it a mechanic" bar where overheal did not:
+
+- **Judged is a per-hit multiplier** the whole party benefits from -- multi-hit cards and focus
+  fire scale with it, so it creates decisions about *which* enemy and *which* cards, not just
+  bigger numbers. Nothing in the base game is a flat stacking per-hit debuff.
+- **Warded makes "hold the line" literal.** You build a wall and watch it erode; whether to
+  top it up or let it fall is a turn-by-turn call. Nothing in the base game is decaying
+  persistent Block.
+- **Blessed is the Paladin's Sly.** A Blessed card is worth playing *because* of what else is
+  out. Auras become the engine and Blessed cards the fuel, which makes Powers matter mid-fight
+  rather than only at setup.
+
+In code: `JudgedPower` and `WardedPower` are generated powers; `IAura.Pulse` is implemented by
+all seven Auras; `PaladinCard.PulseAuras` is what a Blessed card calls; the keyword tooltip is
+a BaseLib `[CustomEnum] StaticHoverTip` in `PaladinTips`.
+
 ## Supporting card categories
 
 These are card *types*, not mechanics competing with Faith:
