@@ -42,7 +42,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Templar's Verdict | 1 | Attack | Deal {Damage} damage twice. |
 | Word of Glory | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
 
-## Uncommon (36)
+## Uncommon (37)
 
 | Card | Cost | Type | Effect |
 |---|---|---|---|
@@ -78,6 +78,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Seal of Justice | 1 | Skill | Gain Seal of Justice: your first Attack each turn applies 1 Weak. Judgment: apply {Amount} Weak. |
 | Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: your Attacks deal {Amount} additional damage. Judgment: deal 5 damage. |
 | Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: your first Attack each turn draws a card. Judgment: deal damage equal to your hand size, then draw {Amount}. |
+| Shield of Faith | 1 | Skill | Gain {Plating} Plating. |
 | Shield of the Righteous | 1 | Skill | Gain {Block} Block. Trigger the effects of all your Seals. |
 | Vigil | 1 | Skill | Gain 1 Spirit. At the start of your next turn, gain {Energy} Energy. Innate. |
 | Wake of Ashes | 2 | Attack | Deal {Damage} damage to ALL enemies. Apply 1 Weak to ALL enemies. |
@@ -122,7 +123,7 @@ Effects show base values; this table is regenerated from code + localization.
 |---|---|---|---|
 | Geas | -- | Status | The oath weighs what it weighs. Ethereal. Unplayable. |
 
-Total: 89 cards (25 multiplayer-only). Upgrades live in code; see each card class.
+Total: 90 cards (25 multiplayer-only). Upgrades live in code; see each card class.
 
 ## Powers
 

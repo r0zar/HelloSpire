@@ -374,5 +374,7 @@
   "HELLOSPIRE-GEAS.title": "Geas",
   "HELLOSPIRE-GEAS.description": "The oath weighs what it weighs.",
   "HELLOSPIRE-HOLY_WRATH.title": "Holy Wrath",
-  "HELLOSPIRE-HOLY_WRATH.description": "Trigger the effects of all your [gold]Seals[/gold] X times."
+  "HELLOSPIRE-HOLY_WRATH.description": "Trigger the effects of all your [gold]Seals[/gold] X times.",
+  "HELLOSPIRE-SHIELD_OF_FAITH.title": "Shield of Faith",
+  "HELLOSPIRE-SHIELD_OF_FAITH.description": "Gain {Plating:diff()} [gold]Plating[/gold]."
 }
