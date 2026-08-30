@@ -11,6 +11,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// <summary>
 /// Gain 1 Spirit now; 2 Energy at the start of next turn (the game's own EnergyNextTurnPower).
 /// The banking shape nobody else has as identity: prayer tonight, strength tomorrow.
+/// Upgraded it is Innate -- the vigil was kept overnight, so you begin holding it.
 /// </summary>
 public sealed class Vigil() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
@@ -24,5 +25,9 @@ public sealed class Vigil() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon
             DynamicVars["Energy"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Energy"].UpgradeValueBy(1m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars["Energy"].UpgradeValueBy(1m);
+        AddKeyword(CardKeyword.Innate);
+    }
 }

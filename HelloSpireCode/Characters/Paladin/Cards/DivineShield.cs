@@ -11,10 +11,10 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Gain 2 Buffer (ignore the next 2 damage instances). Exhaust. The bubble.</summary>
+/// <summary>Gain 2 Buffer. Exhaust, Retain -- hold the bubble until the hit that matters.</summary>
 public sealed class DivineShield() : PaladinCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Retain];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Buffer", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

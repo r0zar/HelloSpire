@@ -368,5 +368,11 @@
   "HELLOSPIRE-TYRS_DELIVERANCE.title": "Tyr's Deliverance",
   "HELLOSPIRE-TYRS_DELIVERANCE.description": "At the start of your turn, heal ALL players {Amount:diff()} HP and they gain {Amount:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-AVENGING_CRUSADER.title": "Avenging Crusader",
-  "HELLOSPIRE-AVENGING_CRUSADER.description": "Whenever you play an Attack, heal the lowest-HP player {Heal:diff()} HP."
+  "HELLOSPIRE-AVENGING_CRUSADER.description": "Whenever you play an Attack, heal the lowest-HP player {Heal:diff()} HP.",
+  "HELLOSPIRE-SACRED_OATH.title": "Sacred Oath",
+  "HELLOSPIRE-SACRED_OATH.description": "Gain {Amount:diff()} [gold]Strength[/gold] and {Amount:diff()} [gold]Spirit[/gold].\nShuffle a [gold]Geas[/gold] into your draw pile.",
+  "HELLOSPIRE-GEAS.title": "Geas",
+  "HELLOSPIRE-GEAS.description": "The oath weighs what it weighs.",
+  "HELLOSPIRE-HOLY_WRATH.title": "Holy Wrath",
+  "HELLOSPIRE-HOLY_WRATH.description": "Trigger the effects of all your [gold]Seals[/gold] X times."
 }

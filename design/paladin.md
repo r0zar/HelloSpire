@@ -200,3 +200,18 @@ Multiplayer identity on top: 25 MP-only cards -- heals (AnyPlayer + Exhaust), bl
 (single-shot ally buffs incl. Kings/Wisdom/Protection), auras (party-wide per-turn powers incl.
 Crusader/Vitality/Retribution/Tyr's), and the co-op build-arounds Beacon of Light, Judgment of
 Light and Avenging Crusader.
+
+## Keyword coverage
+
+Every game keyword appears where the lore earns it:
+
+| Mechanic | Where |
+|---|---|
+| Exhaust | all repeatable heals + the energy family (20+ cards) |
+| Ethereal | Zeal (fervor fades), Geas (the burden lifts) |
+| Innate | Vigil+ (the vigil was kept overnight; you start holding it) |
+| Retain | Divine Shield (hold the bubble), Holy Wrath+ |
+| Unplayable | Geas (Sacred Oath's token burden) |
+| Eternal | Sacred Oath (an oath cannot be unsworn -- unremovable from the deck) |
+| X-cost | Holy Wrath (trigger all Seals X times) |
+| Sly | deliberately absent: it is the Silent's discard identity, not paladin lore |

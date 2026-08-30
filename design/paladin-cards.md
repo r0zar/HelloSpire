@@ -35,7 +35,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Exorcism | 2 | Attack | Deal {Damage} damage. Trigger the effects of all your Seals. |
 | Flash of Light | 0 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
 | Holy Light | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Draw 1 card. Exhaust. **MP** |
-| Penance | 0 | Skill | Lose {HpLoss} HP. Gain {Energy:energyIcons()}. |
+| Penance | 0 | Skill | Lose {HpLoss} HP. Gain {Energy}. |
 | Prayer of Mending | 1 | Skill | Heal a player {Heal} HP plus your Spirit. The next time they take unblocked damage, they heal {Echo} HP. Exhaust. **MP** |
 | Renew | 1 | Skill | Gain {Regen} Regen. |
 | Sentinel | 1 | Skill | Gain {Block} Block. Gain 1 Spirit. |
@@ -60,7 +60,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Consecrated Ground | 1 | Power | Enemies that attack you take {Thorns} damage. |
 | Consecration | 1 | Power | At the start of your turn, deal {Damage} damage to ALL enemies. |
 | Crusader Aura | 2 | Power | At the start of your turn, ALL players gain {Strength} Strength. **MP** |
-| Divine Favor | 0 | Skill | Gain {Energy:energyIcons()}. Exhaust. |
+| Divine Favor | 0 | Skill | Gain {Energy}. Exhaust. |
 | Divine Purpose | 1 | Skill | Trigger the effects of all your Seals. Draw 1 card. |
 | Eye for an Eye | 1 | Skill | Gain {Block} Block. This turn, enemies that attack you take {Thorns} damage. |
 | Hammer of the Righteous | 1 | Attack | Deal damage equal to your Block. |
@@ -79,11 +79,11 @@ Effects show base values; this table is regenerated from code + localization.
 | Seal of Righteousness | 1 | Skill | Gain Seal of Righteousness: your Attacks deal {Amount} additional damage. Judgment: deal 5 damage. |
 | Seal of Wisdom | 1 | Skill | Gain Seal of Wisdom: your first Attack each turn draws a card. Judgment: deal damage equal to your hand size, then draw {Amount}. |
 | Shield of the Righteous | 1 | Skill | Gain {Block} Block. Trigger the effects of all your Seals. |
-| Vigil | 1 | Skill | Gain 1 Spirit. At the start of your next turn, gain {Energy} Energy. |
+| Vigil | 1 | Skill | Gain 1 Spirit. At the start of your next turn, gain {Energy} Energy. Innate. |
 | Wake of Ashes | 2 | Attack | Deal {Damage} damage to ALL enemies. Apply 1 Weak to ALL enemies. |
 | Zealotry | 1 | Power | Whenever you trigger your Seals, gain {Strength} Strength. |
 
-## Rare (26)
+## Rare (28)
 
 | Card | Cost | Type | Effect |
 |---|---|---|---|
@@ -97,24 +97,32 @@ Effects show base values; this table is regenerated from code + localization.
 | Divine Hymn | 3 | Skill | Heal ALL players {Heal} HP plus your Spirit. Exhaust. **MP** |
 | Divine Intervention | 1 | Skill | Heal {Heal} HP plus TWICE your Spirit. Exhaust. |
 | Divine Sacrifice | 1 | Skill | ALL OTHER players gain {Buffer} Buffer. Exhaust. **MP** |
-| Divine Shield | 2 | Skill | Gain {Buffer} Buffer. Exhaust. |
-| Final Reckoning | 3 | Attack | Deal {Damage} damage. If this kills the enemy, gain {Energy:energyIcons()}. |
+| Divine Shield | 2 | Skill | Gain {Buffer} Buffer. Exhaust. Retain. |
+| Final Reckoning | 3 | Attack | Deal {Damage} damage. If this kills the enemy, gain {Energy}. |
 | Greater Judgment | 2 | Attack | Deal {Damage} damage. Trigger the effects of all your Seals twice. |
 | Guardian of Ancient Kings | 2 | Power | At the start of your turn, gain {Buffer} Buffer. |
 | Hallowed Ground | 3 | Power | At the start of your turn, deal {Amount} damage to ALL enemies and gain {Amount} Block. |
 | Hammer of Justice | 3 | Attack | Deal {Damage} damage. Stun the enemy. |
 | Holy Avenger | 0 | Skill | Double your Spirit. Exhaust. |
+| Holy Wrath | X | Attack | Trigger the effects of all your Seals X times. Retain. |
 | Lay on Hands | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
 | Retribution Aura | 2 | Power | Whenever ANY player is attacked, the attacker takes {Thorns} damage. **MP** |
+| Sacred Oath | 1 | Skill | Gain {Amount} Strength and {Amount} Spirit. Shuffle a Geas into your draw pile. Eternal. |
 | Seal of the Crusader | 1 | Skill | Gain Seal of the Crusader: your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |
 | Seal of the Martyr | 1 | Skill | Gain Seal of the Martyr: enemies that hit you take {Amount} damage. Judgment: deal {Amount} damage to ALL enemies. |
 | Thunderous Smite | 2 | Attack | Deal {Damage} damage to ALL enemies. |
 | Tyr's Deliverance | 2 | Power | At the start of your turn, heal ALL players {Amount} HP and they gain {Amount} Block. **MP** |
 | Vow of Enmity | 1 | Power | Mark an enemy: your Attacks against it deal {Bonus} additional damage. |
 | Wrathful Smite | 1 | Attack | Deal {Damage} damage. Apply 2 Weak. Trigger the effects of all your Seals. |
-| Zeal | 0 | Skill | Gain {Energy} Energy for each of your Seals. Exhaust. |
+| Zeal | 0 | Skill | Gain {Energy} Energy for each of your Seals. Exhaust. Ethereal. |
 
-Total: 86 cards (25 multiplayer-only). Upgrades live in code; see each card class.
+## Token (1)
+
+| Card | Cost | Type | Effect |
+|---|---|---|---|
+| Geas | 0 | Skill | The oath weighs what it weighs. Ethereal. Unplayable. |
+
+Total: 89 cards (25 multiplayer-only). Upgrades live in code; see each card class.
 
 ## Powers
 
