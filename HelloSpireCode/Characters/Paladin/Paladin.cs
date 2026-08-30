@@ -60,6 +60,13 @@ public class Paladin : PlaceholderCharacterModel
         }
     }
 
+    /// <summary>
+    /// The character-select backsplash. The game instantiates this as a Control scene into the
+    /// select screen's background container; BaseLib routes it through CharacterSelectBg, which
+    /// also puts it on the preload list. A TextureRect over the 2560x1200 canvas the base game uses.
+    /// </summary>
+    public override string CustomCharacterSelectBg => "res://HelloSpire/scenes/char_select_bg_paladin.tscn";
+
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectLockedIconPath => "char_select_locked.png".CharacterUiPath(AssetFolder);
