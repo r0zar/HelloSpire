@@ -48,16 +48,24 @@ public sealed class DefendGunslinger() : GunslingerCard(1, CardType.Skill, CardR
 }
 
 /// <summary>
-/// Load 2-4 Lead Rounds. Half the starting deck's job is putting bullets in the gun.
+/// Load 2-4 Lead Rounds and gain a little Block. Half the starting deck's job is putting bullets
+/// in the gun.
 ///
 /// The count is rolled rather than fixed, which is the character's whole temperament in the very
 /// first card you play: a handful of shells goes in, and how many is the gun's business. The floor
 /// is what the card used to be worth, so a bad roll is never worse than the old card.
+///
+/// The 3 Block is the fix for the turn-one dilemma. Reloading used to be a turn where nothing
+/// happened at all — no damage, no defence, one card spent on a promise — which is where the
+/// "Gunslinger feels weak" complaint actually starts. It is deliberately under a Defend, so the
+/// card is still a reload that covers you rather than a Defend that also loads.
 /// </summary>
 public sealed class Reload() : GunslingerCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
+    public override bool GainsBlock => true;
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("LoadMin", 2m), new DynamicVar("LoadMax", 4m)];
+        [new DynamicVar("LoadMin", 2m), new DynamicVar("LoadMax", 4m), new BlockVar(3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load), Tip(GunslingerTips.TheCylinder)];
 
@@ -66,12 +74,14 @@ public sealed class Reload() : GunslingerCard(1, CardType.Skill, CardRarity.Basi
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await Revolver.LoadBetween(ctx, Gun, Rounds.Lead,
             DynamicVars["LoadMin"].IntValue, DynamicVars["LoadMax"].IntValue);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars["LoadMin"].UpgradeValueBy(1m);
         DynamicVars["LoadMax"].UpgradeValueBy(1m);
+        DynamicVars.Block.UpgradeValueBy(2m);
     }
 }
 

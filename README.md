@@ -99,6 +99,23 @@ Files must live at `res://HelloSpire/localization/<lang>/`. A file at `res://loc
 
 The game ships a Roslyn analyzer (`STS001`) that **fails the build** if a model references a key you haven't written, and lists exactly which ones are missing. Treat its errors as your checklist rather than an obstacle.
 
+## Card & relic editor
+
+`card-editor/` is a local web app for balancing the sets: cost, var values and
+upgrade deltas, card and relic text, and drag-and-drop art cropped into every
+size the mod loads.
+
+```bash
+cd card-editor && npm install && npm run dev    # http://localhost:5180
+```
+
+It edits the C# in place rather than generating it — it records the byte range
+of each number it can identify and splices replacements in, so `OnPlay` bodies
+and formatting survive a save untouched. Its warnings tab lists the mistakes the
+compiler cannot catch: classes with no localized title, classes with no art, and
+duplicate class names (which silently share a portrait and a string-table key).
+See `card-editor/README.md`.
+
 ## Where the real documentation is
 
 The game ships its own API docs — `data_sts2_windows_x86_64/sts2.xml`, ~5 MB covering roughly 19,600 members with real summaries. Alongside it sit `0Harmony.dll` and `MonoMod.*`, so patching is first-class. Start there before guessing.

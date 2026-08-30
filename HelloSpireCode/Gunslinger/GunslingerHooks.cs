@@ -50,6 +50,12 @@ public interface IArmorListener
     void OnArmorPrevented(Creature owner);
 }
 
+/// <summary>Reacts to Armor being gained. Distinct from <see cref="IArmorListener"/>, which fires when Armor spends itself.</summary>
+public interface IArmorGainListener
+{
+    Task OnArmorGained(PlayerChoiceContext ctx, GunContext gun, int amount);
+}
+
 /// <summary>Reacts to the cylinder running completely dry.</summary>
 public interface ICylinderEmptiedListener
 {
@@ -103,6 +109,9 @@ public static class GunslingerHooks
 
     public static Task NotifyDodgeGained(PlayerChoiceContext ctx, GunContext gun, int amount) =>
         Dispatch<IDodgeListener>(gun, listener => listener.OnDodgeGained(ctx, gun, amount));
+
+    public static Task NotifyArmorGained(PlayerChoiceContext ctx, GunContext gun, int amount) =>
+        Dispatch<IArmorGainListener>(gun, listener => listener.OnArmorGained(ctx, gun, amount));
 
     public static Task NotifyCylinderEmptied(PlayerChoiceContext ctx, GunContext gun) =>
         Dispatch<ICylinderEmptiedListener>(gun, listener => listener.OnCylinderEmptied(ctx, gun));

@@ -13,10 +13,13 @@ namespace HelloSpire.HelloSpireCode.Gunslinger.Cards;
 // Uncommon Skills 16-31: the ammunition menu, and the defensive layers that make the Gunslinger
 // able to stand still for a turn while the gun refills.
 
-/// <summary>Load a Lead Round and a Crippling Round.</summary>
+/// <summary>Load a Lead Round and a Crippling Round. Gain Block.</summary>
 public sealed class Bandolier() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Lead", 1m)];
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Lead", 1m), new BlockVar(3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(GunslingerTips.Load), HoverTipFactory.FromPower<WeakPower>()];
@@ -25,14 +28,25 @@ public sealed class Bandolier() : GunslingerCard(1, CardType.Skill, CardRarity.U
     {
         await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Lead"].IntValue);
         await Revolver.Load(ctx, Gun, Rounds.Crippling);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
     }
 
     protected override void OnUpgrade() => DynamicVars["Lead"].UpgradeValueBy(1m);
 }
 
-/// <summary>Top the gun right up with Lead.</summary>
+/// <summary>
+/// Top the gun right up with Lead, and take cover while you do it.
+///
+/// Two Energy and a card for ammunition alone is the single largest tempo hole in the character;
+/// the Block is what makes spending a whole turn on the reload survivable rather than a gift to
+/// whatever is swinging at you.
+/// </summary>
 public sealed class Speedloader() : GunslingerCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(5m, ValueProp.Move)];
+
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
@@ -40,6 +54,7 @@ public sealed class Speedloader() : GunslingerCard(2, CardType.Skill, CardRarity
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await Revolver.FillEmpty(ctx, Gun, Rounds.Lead);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -54,7 +69,10 @@ public sealed class Speedloader() : GunslingerCard(2, CardType.Skill, CardRarity
 /// </summary>
 public sealed class CustomLoad() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Special", 1m)];
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Special", 1m), new BlockVar(3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
 
@@ -62,6 +80,7 @@ public sealed class CustomLoad() : GunslingerCard(1, CardType.Skill, CardRarity.
     {
         await Revolver.Load(ctx, Gun, PickAmmunition(), DynamicVars["Special"].IntValue);
         await Revolver.Load(ctx, Gun, Rounds.Lead);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
     }
 
     private Func<Round> PickAmmunition()
@@ -75,28 +94,40 @@ public sealed class CustomLoad() : GunslingerCard(1, CardType.Skill, CardRarity.
     protected override void OnUpgrade() => DynamicVars["Special"].UpgradeValueBy(1m);
 }
 
-/// <summary>Load Piercing Rounds — the answer to a Block-heavy fight.</summary>
+/// <summary>Load Piercing Rounds — the answer to a Block-heavy fight. Gain a little Block.</summary>
 public sealed class PiercingCartridge() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Load", 2m)];
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Load", 2m), new BlockVar(2m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
         await Revolver.Load(ctx, Gun, Rounds.Piercing, DynamicVars["Load"].IntValue);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
+    }
 
     protected override void OnUpgrade() => DynamicVars["Load"].UpgradeValueBy(1m);
 }
 
-/// <summary>Load Guard Rounds, so that shooting and defending stop competing.</summary>
+/// <summary>Load Guard Rounds, so that shooting and defending stop competing. Gain Block now, too.</summary>
 public sealed class GuardCartridge() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Load", 2m)];
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Load", 2m), new BlockVar(3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
         await Revolver.Load(ctx, Gun, Rounds.Guard, DynamicVars["Load"].IntValue);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
+    }
 
     protected override void OnUpgrade() => DynamicVars["Load"].UpgradeValueBy(1m);
 }
@@ -202,13 +233,21 @@ public sealed class UnderTheDuster() : GunslingerCard(1, CardType.Skill, CardRar
     protected override void OnUpgrade() => DynamicVars["ArmorPower"].UpgradeValueBy(1m);
 }
 
-/// <summary>Gain Block; more if you kept the gun holstered this turn.</summary>
+/// <summary>
+/// Gain Block; more if you kept the gun holstered this turn, and a Round for the trouble.
+///
+/// The Load sits on the same "have not Fired" branch as the bonus Block, because that branch is
+/// the turn where the character is doing nothing but waiting — which is exactly the turn a reload
+/// belongs in.
+/// </summary>
 public sealed class HunkerDown() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(8m, ValueProp.Move), new BlockVar("Bonus", 4m, ValueProp.Move)];
+        [new BlockVar(8m, ValueProp.Move), new BlockVar("Bonus", 4m, ValueProp.Move), new DynamicVar("Load", 1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -217,6 +256,7 @@ public sealed class HunkerDown() : GunslingerCard(1, CardType.Skill, CardRarity.
         if (Revolver.Peek(Gun) is not { FiredThisTurn: true })
         {
             await GunslingerEffects.GainBlock(Gun, DynamicVars["Bonus"].BaseValue);
+            await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
         }
     }
 
@@ -246,7 +286,15 @@ public sealed class DuckAndWeave() : GunslingerCard(2, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(6m);
 }
 
-/// <summary>Block that only shows up when something is actually coming, and Armor against a big hit.</summary>
+/// <summary>
+/// Block that only shows up when something is actually coming, Armor against a big hit, and a
+/// reload when nothing is coming at all.
+///
+/// The Load fixes the card's real failure mode rather than raising its ceiling: against a turn
+/// with no Attack intent this card used to do literally nothing, which made it a dead draw the
+/// player could not see coming. Now the quiet turn is the reload turn, so the two halves of the
+/// card cover each other and neither branch is blank.
+/// </summary>
 public sealed class DiveForCover() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     private const int ArmorThreshold = 20;
@@ -254,9 +302,13 @@ public sealed class DiveForCover() : GunslingerCard(1, CardType.Skill, CardRarit
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(9m, ValueProp.Move), new PowerVar<ArmorPower>(1m), new DynamicVar("Threshold", ArmorThreshold)];
+    [
+        new BlockVar(9m, ValueProp.Move), new PowerVar<ArmorPower>(1m),
+        new DynamicVar("Threshold", ArmorThreshold), new DynamicVar("Load", 2m)
+    ];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<ArmorPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(GunslingerTips.Load), HoverTipFactory.FromPower<ArmorPower>()];
 
     protected override bool ShouldGlowGoldInternal =>
         CombatState?.HittableEnemies.Any(GunslingerEffects.IntendsToAttack) ?? false;
@@ -264,7 +316,11 @@ public sealed class DiveForCover() : GunslingerCard(1, CardType.Skill, CardRarit
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         var incoming = GunslingerEffects.IncomingAttackDamage(Gun);
-        if (incoming <= 0) return;
+        if (incoming <= 0)
+        {
+            await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
+            return;
+        }
 
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
 
@@ -305,18 +361,18 @@ public sealed class GritTeeth() : GunslingerCard(1, CardType.Skill, CardRarity.U
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Spin, and take whatever the cylinder gives you: cover, or a way out.</summary>
+/// <summary>Spin, and take whatever the cylinder gives you: cover, or a way out and a fresh Round.</summary>
 public sealed class DeadMansBluff() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(9m, ValueProp.Move), new PowerVar<DodgePower>(1m)];
+        [new BlockVar(9m, ValueProp.Move), new PowerVar<DodgePower>(1m), new DynamicVar("Load", 1m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(GunslingerTips.Spin), HoverTipFactory.FromPower<DodgePower>()];
+        [Tip(GunslingerTips.Spin), Tip(GunslingerTips.Load), HoverTipFactory.FromPower<DodgePower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -325,6 +381,7 @@ public sealed class DeadMansBluff() : GunslingerCard(1, CardType.Skill, CardRari
         if (Revolver.Peek(Gun) is { UnderHammer: null })
         {
             await GunslingerEffects.GainDodge(ctx, Gun, DynamicVars["DodgePower"].BaseValue);
+            await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
             return;
         }
 

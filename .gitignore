@@ -10,3 +10,6 @@ packages/
 .editorconfig
 *.user
 Directory.Build.props
+# card editor (local dev tool)
+card-editor/node_modules/
+card-editor/dist/

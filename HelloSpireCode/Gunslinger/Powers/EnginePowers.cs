@@ -185,10 +185,14 @@ public sealed class IronWillPower : GunslingerEnginePower
     }
 }
 
-/// <summary>Dodge is rare and expensive; this makes each point of it also worth a chunk of Block.</summary>
-public sealed class UntouchablePower : GunslingerEnginePower, IDodgeListener
+/// <summary>
+/// Every point of Armor also buys Block, which turns the character's flat mitigation into a
+/// per-turn cushion. Armor arrives in larger helpings than Dodge ever did, so the rate is low
+/// and the volume does the work.
+/// </summary>
+public sealed class UntouchablePower : GunslingerEnginePower, IArmorGainListener
 {
-    public async Task OnDodgeGained(PlayerChoiceContext ctx, GunContext gun, int amount)
+    public async Task OnArmorGained(PlayerChoiceContext ctx, GunContext gun, int amount)
     {
         Flash();
         await GunslingerEffects.GainBlock(gun, Amount * amount);

@@ -108,7 +108,7 @@ public sealed class LongShot() : GunslingerCard(2, CardType.Attack, CardRarity.R
 }
 
 /// <summary>Jam something far too powerful into the chamber and pull the trigger anyway.</summary>
-public sealed class BlackPowder() : GunslingerCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class BlackPowder() : GunslingerCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("RoundDamage", 16m)];
 
@@ -164,10 +164,16 @@ public sealed class NoWitnesses() : GunslingerCard(3, CardType.Attack, CardRarit
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Fire 1, and hit with the same Round again. The damage repeats; the effect does not.</summary>
+/// <summary>
+/// Fire 2, and hit with each Round again. The damage repeats; the effect does not.
+///
+/// Both shots echo, so the card is worth two chambers rather than one — it wants a cylinder with
+/// something good in the next two slots, not just under the hammer.
+/// </summary>
 public sealed class DoubleTap() : GunslingerCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Repeats", 1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Fire", 2m), new DynamicVar("Repeats", 1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Fire)];
 
@@ -175,7 +181,7 @@ public sealed class DoubleTap() : GunslingerCard(1, CardType.Attack, CardRarity.
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        await Revolver.Fire(ctx, Gun, play.Target,
+        await Revolver.FireTimes(ctx, Gun, play.Target, DynamicVars["Fire"].IntValue,
             new FireOptions { ExtraDamageRepeats = DynamicVars["Repeats"].IntValue });
     }
 
