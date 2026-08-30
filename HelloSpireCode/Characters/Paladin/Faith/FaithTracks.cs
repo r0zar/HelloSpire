@@ -20,21 +20,9 @@ public static class FaithTracks
 
     public static int Amount(PlayerCombatState state, Deity deity) => Get(state, deity).Amount;
 
-    // Holy Symbol: the first Faith gain of a combat is multiplied. Keyed per combat state so
-    // it resets naturally each fight, and consumed on the first gain regardless of deity.
-    private static readonly Dictionary<PlayerCombatState, (int multiplier, Action onFire)> _firstGain = new();
-
-    public static void ArmFirstGainMultiplier(PlayerCombatState state, int multiplier, Action onFire)
-        => _firstGain[state] = (multiplier, onFire);
-
     public static void Gain(PlayerCombatState state, Deity deity, int amount)
     {
         if (amount <= 0) return;
-        if (_firstGain.Remove(state, out var armed))
-        {
-            amount *= armed.multiplier;
-            armed.onFire();
-        }
         Get(state, deity).ModifyAmount(amount);
     }
 

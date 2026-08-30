@@ -98,8 +98,12 @@ print and Ilmater 1 from the Oath.
 These are hard constraints, not guidelines. They exist so a Faith number means the same thing
 in every deck.
 
-1. **Generation is always flat.** `Gain 2 Faith.` Never proportional, never scaled off another
+1. **Generation is always flat.** `Gain 1 Faith.` Never proportional, never scaled off another
    value. Proportional generation is much harder to balance and compounds with everything.
+1a. **Generation is scarce.** No common generates Faith. A few uncommons grant 1. The Oaths and
+   rares are the engines. Thresholds are tuned to that scarcity: 3 is a real bar, 5 is a
+   late-fight ceiling. An earlier draft had half the commons carrying Faith, which made the
+   mechanic passive -- you accumulated it by playing the deck rather than by building for it.
 2. **Triggers must be countable.** `Whenever you play an Attack`, not `whenever you deal
    damage` — a multi-hit or AoE card would fire the latter five times off one play. Same for
    Torm: key off playing a card that gains Block, not off each Block instance.
@@ -169,7 +173,7 @@ deity. Falling is the only way in.
 ```
 Falter            0E  Spend 5 Faith in any deity. Gain 3 Faith in Bane.
                       Draw 2 cards. Gain 1 Energy.
-The Black Hand    2E  Requires 6 Faith in Bane.
+The Black Hand    2E  Requires 3 Faith in Bane.
                       Deal heavy damage to ALL enemies.
 Time of Troubles  3E  Spend ALL Faith in Torm. Deal double that damage
                       to one enemy. Gain that much Faith in Bane.
@@ -187,9 +191,14 @@ this is for.
 
 ## Starting relic: Holy Symbol
 
-**Holy Symbol** — *While held, your first Faith gain each combat is doubled. When your total
-Faith in one deity across the run reaches N, the Holy Symbol is consumed and you receive that
-deity's relic.*
+**Holy Symbol** — *At the start of each combat, gain 1 Faith in your highest deity. When your
+total Faith in one deity across the run reaches N, the Holy Symbol is consumed and you receive
+that deity's relic.*
+
+With Faith scarce, the relic is the one guaranteed source in the game: the mechanic is always
+faintly alive, and devotion snowballs slowly through the relic rather than through commons. On
+a fresh combat with no Faith anywhere it defaults to Torm. (An earlier version doubled your
+first gain -- dead weight when the first gain might be two fights away.)
 
 This follows three base-game patterns at once: **Touch of Orobas** (replaces your starter
 relic with an upgraded one), **Sword of Stone** (transforms after a milestone), and
