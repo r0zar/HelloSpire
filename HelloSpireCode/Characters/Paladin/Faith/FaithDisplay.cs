@@ -60,9 +60,20 @@ public sealed class FaithDisplay(FaithResource resource) : ICustomResourceVisual
         }
 
         var live = FaithTracks.Get(playerCombatState, resource.Deity);
-        var label = row.GetNode<Label>($"{resource.Deity}/Stack/Count");
-        label.Text = live.Amount.ToString();
-        live.AmountChanged += (_, now) => label.Text = now.ToString();
+        var tile = row.GetNode<Control>(resource.Deity.ToString());
+        var label = tile.GetNode<Label>("Stack/Count");
+
+        void Show(int amount)
+        {
+            label.Text = amount.ToString();
+            // Invisible at zero, appears on the first gain. Faith is a mod-wide resource, so any
+            // character that picks up a Paladin card and gains Faith sees it -- but nobody sees
+            // three empty tiles before they have any.
+            tile.Visible = amount > 0;
+        }
+
+        Show(live.Amount);
+        live.AmountChanged += (_, now) => Show(now);
     }
 
     /// <summary>Sit where the orbs would, then rise above them. Centred on the creature.</summary>
