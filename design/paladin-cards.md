@@ -20,7 +20,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 heals that target any player are MP cards (self-heals are unrestricted), auras are MP Powers,
 blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives it.
 
-## Common (14)
+## Common (15)
 
 | Card | Cost | Type | Effect | Upgrade |
 |---|---|---|---|---|
