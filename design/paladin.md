@@ -24,19 +24,17 @@ at the speed of play, not the speed of writing.
 |---|---|
 | Starting HP | 75 — matches Regent and Defect; the kit is inherently sturdy, so no more than that |
 | Colour | gold `#e8c46a`, on the card frame via `ShaderColor` |
-| Starter relic | **Holy Fervor** — *Whenever you play a card that heals, gain 1 Strength. Once per turn.* |
+| Starter relic | **Holy Symbol** — *At the start of each combat, gain 3 Faith.* |
 
-Holy Fervor is the one piece of the old build that survived, because it does not depend on
-anything else. It turns the character's least-valued verb (healing) into its most-valued stat
-(Strength), which makes every heal card a scaling decision. The once-per-turn cap is what keeps
-Mend + a second heal from being a turn-one Demon Form.
+Holy Fervor (heal a card, gain 1 Strength, once per turn) moves to the relic pool: now that
+heals cost Faith, it pays you for spending it.
 
 ### Starter deck — ten cards
 
 ```
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
-1x Mend               1E  Heal 6 HP.
+1x Mend               1E  Costs 1 Faith. Heal 6 HP.
 1x Hammer of Justice  2E  Deal 10 damage. Stun the enemy.
 ```
 
@@ -47,9 +45,22 @@ character survives Act 1 — and it is the card that says on turn one what the P
 No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
 must be understood on sight.
 
+### Faith (holy only, for now)
+
+One number on the side panel, next to energy, where the Regent's Stars live. The **Holy Symbol**
+(starter relic) grants 3 at the start of each combat. **Mend costs 1 Faith** and is unplayable at
+zero; **Smite earns 1**. That is the heal economy: roughly three heals a fight unless the deck
+earns more, and earning means playing proactive cards -- so stalling to heal does not work. No
+Exhaust needed.
+
+The full signed design -- unholy Faith as negative, sign-gated costs, the Fallen relic, six
+polarity-by-role archetypes -- is agreed and parked until holy is proven in play. It extends
+this without rework: unholy is just the other side of the same number.
+
 ### Card pool
 
-Empty. Every reward the Paladin sees today is colorless or shop.
+One card: **Smite** (1E, deal 9, gain 1 Faith). Everything else the Paladin sees today is
+colorless or shop.
 
 ## What is settled
 

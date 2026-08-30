@@ -11,12 +11,16 @@ The archived 91-card Faith set is in [`paladin-faith-cards-archive.md`](paladin-
 |---|---|---|---|---|
 | Strike | 1 | Attack | Deal 6 damage. | +3 damage |
 | Defend | 1 | Skill | Gain 5 Block. | +3 Block |
-| Mend | 1 | Skill | Heal 6 HP. | +3 HP |
+| Mend | 1 | Skill | Costs 1 Faith. Heal 6 HP. | +3 HP |
 | Hammer of Justice | 2 | Attack | Deal 10 damage. Stun the enemy. | +4 damage |
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice.
 
-## Common (0)
+## Common (1)
+
+| Card | Cost | Type | Effect | Upgrade |
+|---|---|---|---|---|
+| Smite | 1 | Attack | Deal 9 damage. Gain 1 Faith. | +3 damage |
 
 ## Uncommon (0)
 
@@ -26,7 +30,8 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice.
 
 | Relic | Rarity | Effect |
 |---|---|---|
-| Holy Fervor | Starter | Whenever you play a card that heals, gain 1 Strength. Once per turn. |
+| Holy Symbol | Starter | At the start of each combat, gain 3 Faith. |
+| Holy Fervor | Common | Whenever you play a card that heals, gain 1 Strength. Once per turn. |
 
 ## Adding a card
 

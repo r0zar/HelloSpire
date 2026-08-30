@@ -40,7 +40,7 @@ public class Paladin : PlaceholderCharacterModel
         ModelDb.Card<HammerOfJustice>(),
     ];
 
-    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<HolyFervor>()];
+    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<HolySymbol>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<PaladinCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<PaladinRelicPool>();

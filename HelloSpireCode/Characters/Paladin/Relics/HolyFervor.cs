@@ -10,7 +10,8 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 
 /// <summary>
-/// The Paladin's starter relic. Whenever you play a card that heals, gain 1 Strength. Once per turn.
+/// Pool relic. Whenever you play a card that heals, gain 1 Strength. Once per turn. Now that
+/// heals cost Faith, this pays you for spending it.
 ///
 /// Turns the character's least-valued verb into its most-valued stat: healing is weak in Slay
 /// the Spire and Strength is the strongest scaling there is. A heal-heavy deck becomes a
@@ -24,7 +25,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 /// </summary>
 public sealed class HolyFervor : PaladinRelic
 {
-    public override RelicRarity Rarity => RelicRarity.Starter;
+    public override RelicRarity Rarity => RelicRarity.Common;
 
     private bool _usedThisTurn;
 
