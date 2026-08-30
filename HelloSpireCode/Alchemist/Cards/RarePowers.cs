@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
+using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
 // Rare Powers 21-25. One engine per pool: Gold in, Gold out, Potions, Exhaust, Potency.
@@ -53,7 +54,7 @@ public sealed class EternalCrucible() : AlchemistCard(2, CardType.Power, CardRar
 public sealed class GoldenEngine() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<GoldenEnginePower>(1m), new BlockVar("Bonus", 2m)];
+        [new PowerVar<GoldenEnginePower>(1m), new BlockVar("Bonus", 2m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<GoldenEnginePower>()];
 

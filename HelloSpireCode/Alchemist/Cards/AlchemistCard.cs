@@ -2,6 +2,7 @@ using HelloSpire.HelloSpireCode.Characters;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.HoverTips;
 
+using HelloSpire.HelloSpireCode.Alchemist;
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
 /// <summary>

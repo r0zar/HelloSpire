@@ -2,6 +2,9 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 
+using HelloSpire.HelloSpireCode.Alchemist;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Nodes.CommonUi;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 
 /// <summary>
@@ -132,7 +135,7 @@ public static class Alchemy
         if (card == null) return;
 
         if (AlchemistEffects.Peek(lab)?.Owner.GetPower<Powers.RefinersEyePower>() != null)
-            card.Upgrade();
+            CardCmd.Upgrade(card, CardPreviewStyle.None);
 
         await LabBridge.Current.CreateInHand(ctx, lab.Player, card, freeThisTurn);
 
@@ -166,7 +169,7 @@ public static class Alchemy
     /// </summary>
     public static async Task<bool> UpgradeOnePermanently(PlayerChoiceContext ctx, LabContext lab)
     {
-        var candidates = OtherCardsInHand(lab).Where(card => !card.Upgraded).ToList();
+        var candidates = OtherCardsInHand(lab).Where(card => !card.IsUpgraded).ToList();
         if (candidates.Count == 0) return false;
 
         var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates);

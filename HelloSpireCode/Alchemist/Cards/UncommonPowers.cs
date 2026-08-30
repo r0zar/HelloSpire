@@ -5,6 +5,8 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
+using HelloSpire.HelloSpireCode.Alchemist.Lab;
+using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
 // Uncommon Powers 29-35. Each attaches a payout to a verb the character already uses every turn —
@@ -94,7 +96,7 @@ public sealed class MerchantsInstinct() : AlchemistCard(1, CardType.Power, CardR
 public sealed class ReactiveMixture() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<ReactiveMixturePower>(1m), new BlockVar("Bonus", 0m)];
+        [new PowerVar<ReactiveMixturePower>(1m), new BlockVar("Bonus", 0m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<ReactiveMixturePower>()];

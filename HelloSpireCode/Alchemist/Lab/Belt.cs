@@ -1,6 +1,8 @@
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
+using MegaCrit.Sts2.Core.Models;
+using HelloSpire.HelloSpireCode.Alchemist;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 
 /// <summary>What a Distill actually consumed. Essence Distillation branches on the rarity.</summary>

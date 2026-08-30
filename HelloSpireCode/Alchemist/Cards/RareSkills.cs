@@ -264,7 +264,7 @@ public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRari
 
         if (!await Ledger.Render(ctx, Lab, DynamicVars["Render"].IntValue)) return;
 
-        await Alchemy.Create(ctx, Lab, chosen.MakeCopy());
+        await Alchemy.Create(ctx, Lab, chosen.CreateClone());
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.MaxHpToCard);
     }
 

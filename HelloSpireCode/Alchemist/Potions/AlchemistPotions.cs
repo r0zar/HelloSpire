@@ -5,6 +5,8 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
+using HelloSpire.HelloSpireCode.Alchemist;
+using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
 
 /// <summary>Shared plumbing for the Alchemist's potions — just enough to reach the bench.</summary>
@@ -72,7 +74,7 @@ public sealed class PhilosophersStone : AlchemistPotion
     {
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
         {
-            await DamageCmd.Attack(20m).FromCreature(Owner.Creature).Targeting(enemy).Execute(ctx);
+            await CreatureCmd.Damage(ctx, enemy, 20m, ValueProp.Unpowered, Owner.Creature, null);
         }
 
         await AlchemistEffects.GainBlock(Lab, 20m);

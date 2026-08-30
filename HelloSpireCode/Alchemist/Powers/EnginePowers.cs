@@ -7,6 +7,10 @@ using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Rooms;
+using HelloSpire.HelloSpireCode.Alchemist;
+using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Powers;
 
 /// <summary>
@@ -53,7 +57,7 @@ public sealed class ResidualHeatPower : AlchemistEnginePower, IPotionUseListener
         if (target == null) return;
 
         Flash();
-        await DamageCmd.Attack(Amount).FromCreature(Owner).Targeting(target).Execute(ctx);
+        await CreatureCmd.Damage(ctx, target, Amount, ValueProp.Unpowered, Owner, null);
     }
 }
 
@@ -151,7 +155,7 @@ public sealed class CompoundInterestPower : AlchemistEnginePower
     /// <summary>Percentage of Invested Gold returned. 25 base, 33 upgraded.</summary>
     public int Percent { get; set; } = 25;
 
-    public override async Task AfterCombatEnd(PlayerChoiceContext ctx, ICombatState state)
+    public override async Task AfterCombatEnd(CombatRoom room)
     {
         if (Lab is not { } lab) return;
 
@@ -159,7 +163,7 @@ public sealed class CompoundInterestPower : AlchemistEnginePower
         if (refund <= 0) return;
 
         Flash();
-        await Ledger.GainGold(ctx, lab, refund);
+        await Ledger.GainGold(new ThrowingPlayerChoiceContext(), lab, refund);
     }
 }
 
@@ -181,7 +185,7 @@ public sealed class EternalCruciblePower : AlchemistEnginePower, IPotionUseListe
         return Task.CompletedTask;
     }
 
-    public override Task AfterCombatEnd(PlayerChoiceContext ctx, ICombatState state)
+    public override Task AfterCombatEnd(CombatRoom room)
     {
         _usedThisCombat = false;
         return Task.CompletedTask;

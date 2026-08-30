@@ -1,5 +1,6 @@
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
+using HelloSpire.HelloSpireCode.Alchemist;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 
 /// <summary>

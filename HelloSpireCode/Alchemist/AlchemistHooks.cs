@@ -1,6 +1,7 @@
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
+using MegaCrit.Sts2.Core.Models;
 namespace HelloSpire.HelloSpireCode.Alchemist;
 
 /// <summary>What kind of value a Transform produced. Alchemist's Ledger does not care which.</summary>

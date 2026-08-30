@@ -171,7 +171,7 @@ public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Un
         if (chosen == null) return;
 
         var gold = Math.Min(
-            DynamicVars["Gold"].IntValue + DynamicVars["PerEnergy"].IntValue * Math.Max(0, chosen.EnergyCost.Value),
+            DynamicVars["Gold"].IntValue + DynamicVars["PerEnergy"].IntValue * Math.Max(0, chosen.EnergyCost.Canonical),
             DynamicVars["Cap"].IntValue);
 
         await Alchemy.Exhaust(ctx, Lab, chosen);
