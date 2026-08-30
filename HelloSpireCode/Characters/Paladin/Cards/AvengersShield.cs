@@ -20,7 +20,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>Deal {Damage} damage to up to 3 enemies. Gain {Block} Block.</summary>
-public sealed class AvengersShield() : PaladinCard(1, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
+public sealed class AvengersShield() : PaladinCard(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
 {
     public override bool GainsBlock => true;
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move), new BlockVar(6m, ValueProp.Move)];

@@ -27,7 +27,7 @@ Still open, roughly in order:
 - **Relics.** Only the starter exists; the eight character relics are unwritten.
 - **Run-milestone relic transform** (the old Holy Symbol idea) is recorded, not built.
 
-The Gunslinger is **fully in code**: 4 basics, 80 cards, 5 multiplayer cards, 8 relics, 3 potions,
+The Gunslinger is **fully in code**: 4 basics, 82 cards, 5 multiplayer cards, 8 relics, 3 potions,
 the Cylinder and its on-screen widget. Unlike the Paladin it is hand-written, not generated.
 
 It has had **one balance pass** (2026-08-29), aimed at "the character feels weaker than the other

@@ -283,10 +283,10 @@ reproducible.
 
 ### Reload
 **1 Energy — Skill**  
-Load 2-4 Lead Rounds.
+Load 2-4 Lead Rounds. Gain 3 Block.
 
 **Reload+**  
-Load 3-5 Lead Rounds.
+Load 3-5 Lead Rounds. Gain 5 Block.
 
 ### Quick Draw
 **0 Energy — Attack**  
@@ -336,31 +336,32 @@ Balance rationale:
 
 ---
 
-# 7. Complete 80-Card Pool
+# 7. Complete 82-Card Pool
 
-## Commons — 20
+## Commons — 21
 | # | Card | Type | Cost | Base | Upgrade | Role |
 |---:|---|---|---:|---|---|---|
 | 1 | **Snap Shot** | Attack | 1 | Fire 1. Draw 1 card. | Gain 2 Deadeye, then Fire 1. Draw 1 card. | Fire / draw |
 | 2 | **Fan the Hammer** | Attack | 2 | Fire 3. | Fire 4. | Multi-shot |
-| 3 | **Last Round** | Attack | 1 | Fire 1. If the Cylinder is empty afterward, deal 6 additional damage. | Additional damage becomes 9. | Empty-cylinder |
-| 4 | **Suppressing Fire** | Attack | 1 | Fire 1. If a Round hits, apply 1 Weak. | Apply 2 Weak instead. | Weak / Fire |
-| 5 | **Ricochet** | Attack | 1 | Fire 1. If a Round hits, deal 4 damage to ALL other enemies. | Splash damage becomes 6. | AoE / Fire |
-| 6 | **Pistol Whip** | Attack | 1 | Deal 9 damage. | Deal 12 damage. | Non-Fire fallback |
-| 7 | **Shoulder Shot** | Attack | 1 | Deal 7 damage. Gain 4 Block. | Deal 9 damage. Gain 5 Block. | Hybrid |
-| 8 | **Gut Shot** | Attack | 1 | Deal 8 damage. If the enemy is Weak, deal 4 additional damage. | Deal 10 damage; bonus becomes 6. | Weak payoff |
-| 9 | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. | Deal 5 damage. | Cheap Weak |
-| 10 | **Point Blank** | Attack | 1 | Deal 10 damage. If all 6 chambers are loaded, deal 4 additional damage. | Deal 13 damage; bonus becomes 5. | Full-cylinder |
-| 11 | **Fresh Cartridges** | Skill | 1 | Load 2 Lead Rounds and 1 random Round. | Load 2 random Rounds. | Ammo / wildcard |
-| 12 | **Quick Load** | Skill | 0 | Load 1-2 more of the last Round you Loaded. Exhaust. | Load 2-3. Exhaust. | Ammo tempo |
-| 13 | **Heavy Cartridge** | Skill | 1 | Load 1 Heavy Round. Gain 3 Block. | Gain 5 Block. | Heavy ammo |
-| 14 | **Crippling Cartridge** | Skill | 1 | Load 1 Crippling Round. Gain 3 Block. | Gain 5 Block. | Weak ammo |
-| 15 | **Take Cover** | Skill | 1 | Gain 7 Block. | Gain 10 Block. | Block |
-| 16 | **Duster Up** | Skill | 1 | Gain 5 Block. Gain 1 Armor. | Gain 7 Block. Gain 1 Armor. | Armor |
-| 17 | **Roll Aside** | Skill | 1 | Gain 5 Block. Cycle 1. If the new chamber is empty, gain 3 more Block. | Gain 7 Block; conditional Block becomes 4. | Cycle / Block |
-| 18 | **Steady Hand** | Skill | 1 | Gain 5 Deadeye. | Gain 8 Deadeye. | Shot empowerment |
-| 19 | **Spin Cylinder** | Skill | 0 | Spin. Draw 1 card. Exhaust. | After Spinning, gain 3 Deadeye. Draw 1 card. Exhaust. | Spin |
-| 20 | **Pocket Sand** | Skill | 1 | Apply 2 Weak. | Costs 0. | Weak |
+| 3 | **Lead Storm** | Attack | 2 | Load 2 Lead Rounds, then Fire 2. | Load 3 Lead Rounds, then Fire 3. | Self-contained Fire |
+| 4 | **Last Round** | Attack | 1 | Fire 1. If the Cylinder is empty afterward, return a Reload to your hand from anywhere. | Costs 0. | Empty-cylinder |
+| 5 | **Suppressing Fire** | Attack | 1 | Fire 1. If a Round hits, apply 1 Weak. | Apply 2 Weak instead. | Weak / Fire |
+| 6 | **Ricochet** | Attack | 1 | Fire 1. If a Round hits, deal 4 damage to ALL other enemies. | Splash damage becomes 6. | AoE / Fire |
+| 7 | **Pistol Whip** | Attack | 1 | Deal 9 damage. | Deal 12 damage. | Non-Fire fallback |
+| 8 | **Shoulder Shot** | Attack | 1 | Deal 7 damage. Gain 4 Block. | Deal 9 damage. Gain 5 Block. | Hybrid |
+| 9 | **Gut Shot** | Attack | 1 | Deal 8 damage. If the enemy is Weak, deal 4 additional damage. | Deal 10 damage; bonus becomes 6. | Weak payoff |
+| 10 | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. | Deal 5 damage. | Cheap Weak |
+| 11 | **Point Blank** | Attack | 1 | Deal 10 damage. If all 6 chambers are loaded, deal 4 additional damage. | Deal 13 damage; bonus becomes 5. | Full-cylinder |
+| 12 | **Fresh Cartridges** | Skill | 1 | Load 2 Lead Rounds and 1 random Round. Gain 2 Block. | Load 2 random Rounds. | Ammo / wildcard |
+| 13 | **Quick Load** | Skill | 0 | Load 1-2 more of the last Round you Loaded. Gain 2 Block. Exhaust. | Load 2-3. Exhaust. | Ammo tempo |
+| 14 | **Heavy Cartridge** | Skill | 1 | Load 1 Heavy Round. Gain 3 Block. | Gain 5 Block. | Heavy ammo |
+| 15 | **Crippling Cartridge** | Skill | 1 | Load 1 Crippling Round. Gain 3 Block. | Gain 5 Block. | Weak ammo |
+| 16 | **Take Cover** | Skill | 1 | Gain 7 Block. If the chamber under the hammer is empty, Load 1 Lead Round. | Gain 10 Block. | Block / failsafe ammo |
+| 17 | **Duster Up** | Skill | 1 | Gain 3 Block. Gain 1 Armor. Load 1 Guard Round. | Gain 5 Block. Gain 1 Armor. Load 1 Guard Round. | Armor / defensive ammo |
+| 18 | **Roll Aside** | Skill | 1 | Gain 5 Block. Cycle 1. If the new chamber is empty, gain 3 more Block and Load 1 Lead Round. | Gain 7 Block; conditional Block becomes 4. | Cycle / Block |
+| 19 | **Steady Hand** | Skill | 1 | Gain 5 Deadeye. | Gain 8 Deadeye. | Shot empowerment |
+| 20 | **Spin Cylinder** | Skill | 0 | Spin. Draw 1 card. Exhaust. | After Spinning, gain 3 Deadeye. Draw 1 card. Exhaust. | Spin |
+| 21 | **Pocket Sand** | Skill | 1 | Apply 2 Weak. | Costs 0. | Weak |
 
 ## Uncommons — 35
 | # | Card | Type | Cost | Base | Upgrade | Role |
@@ -368,40 +369,40 @@ Balance rationale:
 | 1 | **Called Shot** | Attack | 1 | Choose a loaded chamber. Move it under the hammer. Fire 1. | Gain 4 Deadeye before firing. | Precision |
 | 2 | **Quickdraw** | Attack | 0 | Fire 1. If it Clicks, draw 2 cards. Exhaust. | Draw 3 cards on a Click. | Click payoff |
 | 3 | **Double Action** | Attack | 1 | Fire 2. | Gain 3 Deadeye, then Fire 2. | Multi-shot |
-| 4 | **Through the Coat** | Attack | 1 | Fire 1. This shot ignores Block regardless of Round type. | Gain 4 Deadeye before firing. | Piercing |
-| 5 | **Kneecapper** | Attack | 1 | Deal 8 damage. If the enemy has no Block, apply 2 Weak. | Deal 11 damage and apply 3 Weak. | Weak |
-| 6 | **Pinning Shot** | Attack | 1 | Fire 1. If the target is Weak, apply 1 Debilitate. | Apply 2 Debilitate instead. | Weak / Debilitate |
-| 7 | **Crossfire** | Attack | 1 | Fire 1. If a Round hits, deal 5 damage to ALL other enemies. | Splash damage becomes 8. | AoE |
-| 8 | **Trick Shot** | Attack | 1 | Spin. Fire 2 at random enemies. Rounds fired by this card deal +2 damage. | Bonus becomes +4. | Spin / Multi-shot |
-| 9 | **Run the Cylinder** | Attack | 2 | Fire until a chamber Clicks, up to 6 times. | Rounds fired by this card deal +2 damage. | Loaded-chain |
-| 10 | **Empty the Cylinder** | Attack | 3 | Fire 6. Exhaust. | Costs 2. | Full salvo |
-| 11 | **Covering Fire** | Attack | 2 | Fire 2. Gain 4 Block for each Round that hits. | Gain 5 Block per hit. | Fire / Block |
-| 12 | **Lead Storm** | Attack | 2 | Load 2 Lead Rounds, then Fire 2. | Load 3 Lead Rounds, then Fire 3. | Self-contained Fire |
+| 4 | **Reckless Fire** | Attack | 2 | Fire 2-5. | Fire 3-6. | Multi-shot gamble |
+| 5 | **Through the Coat** | Attack | 1 | Fire 1. This shot ignores Block regardless of Round type. | Gain 4 Deadeye before firing. | Piercing |
+| 6 | **Kneecapper** | Attack | 1 | Deal 8 damage. If the enemy has no Block, apply 2 Weak. | Deal 11 damage and apply 3 Weak. | Weak |
+| 7 | **Pinning Shot** | Attack | 1 | Fire 1. If the target is Weak, apply 1 Debilitate. | Apply 2 Debilitate instead. | Weak / Debilitate |
+| 8 | **Crossfire** | Attack | 1 | Fire 1. If a Round hits, deal 5 damage to ALL other enemies. | Splash damage becomes 8. | AoE |
+| 9 | **Trick Shot** | Attack | 1 | Spin. Fire 2 at random enemies. Rounds fired by this card deal +2 damage. | Bonus becomes +4. | Spin / Multi-shot |
+| 10 | **Run the Cylinder** | Attack | 2 | Fire until a chamber Clicks, up to 6 times. | Rounds fired by this card deal +2 damage. | Loaded-chain |
+| 11 | **Empty the Cylinder** | Attack | 3 | Fire 6. Exhaust. | Costs 2. | Full salvo |
+| 12 | **Covering Fire** | Attack | 2 | Fire 2. Gain 4 Block for each Round that hits. | Gain 5 Block per hit. | Fire / Block |
 | 13 | **Hammerfall** | Attack | 2 | Gain 8 Deadeye. Fire 2. | Gain 12 Deadeye. Fire 2. | Burst |
 | 14 | **Showdown** | Attack | 1 | Deal 6 damage. If the enemy intends to Attack, Fire 1. | Deal 9 damage before the conditional Fire. | Intent payoff |
 | 15 | **Reversal** | Attack | 1 | If you gained Armor this turn, Fire 2. Otherwise, Fire 1. | Gain 3 Deadeye before firing. | Armor crossover |
-| 16 | **Bandolier** | Skill | 1 | Load 1 Lead Round and 1 Crippling Round. | Also Load 1 additional Lead Round. | Mixed ammo |
-| 17 | **Speedloader** | Skill | 2 | Fill all empty chambers with Lead Rounds. Exhaust. | Costs 1. | Reload |
-| 18 | **Custom Load** | Skill | 1 | Choose Heavy, Crippling, or Guard. Load 1 of that Round and 1 Lead Round. | Load 2 of the chosen Round and 1 Lead Round. | Ammo choice |
-| 19 | **Piercing Cartridge** | Skill | 1 | Load 2 Piercing Rounds. | Load 3 Piercing Rounds. | Piercing ammo |
-| 20 | **Guard Cartridge** | Skill | 1 | Load 2 Guard Rounds. | Load 3 Guard Rounds. | Guard ammo |
+| 16 | **Bandolier** | Skill | 1 | Load 1 Lead Round and 1 Crippling Round. Gain 3 Block. | Also Load 1 additional Lead Round. | Mixed ammo |
+| 17 | **Speedloader** | Skill | 2 | Fill all empty chambers with Lead Rounds. Gain 5 Block. Exhaust. | Costs 1. | Reload |
+| 18 | **Custom Load** | Skill | 1 | Choose Heavy, Crippling, or Guard. Load 1 of that Round and 1 Lead Round. Gain 3 Block. | Load 2 of the chosen Round and 1 Lead Round. | Ammo choice |
+| 19 | **Piercing Cartridge** | Skill | 1 | Load 2 Piercing Rounds. Gain 2 Block. | Load 3 Piercing Rounds. | Piercing ammo |
+| 20 | **Guard Cartridge** | Skill | 1 | Load 2 Guard Rounds. Gain 3 Block. | Load 3 Guard Rounds. | Guard ammo |
 | 21 | **Smoke Cartridge** | Skill | 1 | Load 1 Smoke Round. Gain 4 Block. | Gain 6 Block. | Dodge ammo |
 | 22 | **Re-Cock** | Skill | 0 | Cycle 1. Gain 2 Deadeye. | Gain 4 Deadeye. | Cycle |
 | 23 | **Check the Cylinder** | Skill | 0 | Cycle up to 2. If the current chamber is loaded, draw 1 card. Exhaust. | Cycle up to 3. | Selection |
 | 24 | **Stacked Chamber** | Skill | 1 | The next Round you Load is placed under the hammer. Gain 5 Deadeye. | Gain 8 Deadeye. | Setup |
 | 25 | **Under the Duster** | Skill | 1 | Gain 3 Armor. | Gain 4 Armor. | Armor |
-| 26 | **Hunker Down** | Skill | 1 | Gain 8 Block. If you have not Fired this turn, gain 4 more Block. | Gain 10 Block; conditional Block becomes 5. | Block |
+| 26 | **Hunker Down** | Skill | 1 | Gain 8 Block. If you have not Fired this turn, gain 4 more Block and Load 1 Lead Round. | Gain 10 Block; conditional Block becomes 5. | Block |
 | 27 | **Duck and Weave** | Skill | 2 | Gain 1 Dodge. Exhaust. | Also gain 6 Block. | Dodge |
-| 28 | **Dive for Cover** | Skill | 1 | If any enemy intends to Attack, gain 9 Block. If total incoming Attack damage is 20 or more, gain 1 Armor. | Gain 12 Block; gain 2 Armor at the threshold. | Intent defense |
+| 28 | **Dive for Cover** | Skill | 1 | If any enemy intends to Attack, gain 9 Block. If total incoming Attack damage is 20 or more, gain 1 Armor. If no enemy intends to Attack, Load 2 Lead Rounds instead. | Gain 12 Block; gain 2 Armor at the threshold. | Intent defense |
 | 29 | **Grit Teeth** | Skill | 1 | Lose 2 HP. Gain 10 Block and 2 Armor. | Gain 13 Block and 2 Armor. | Risk defense |
-| 30 | **Dead Man's Bluff** | Skill | 1 | Spin. If the current chamber is empty, gain 1 Dodge; otherwise gain 9 Block. Exhaust. | Loaded result gives 12 Block. | Spin defense |
+| 30 | **Dead Man's Bluff** | Skill | 1 | Spin. If the current chamber is empty, gain 1 Dodge and Load 1 Lead Round; otherwise gain 9 Block. Exhaust. | Loaded result gives 12 Block. | Spin defense |
 | 31 | **Cold Read** | Skill | 1 | Apply 1 Weak and 1 Debilitate. Exhaust. | Apply 2 Weak and 1 Debilitate. | Debuff control |
 | 32 | **Gunfighter's Rhythm** | Power | 1 | Every 6th Round you Fire, draw 1 card. | Draw 2 cards instead. | Cylinder cadence |
 | 33 | **Hard Leather** | Power | 1 | The first time each turn Armor prevents damage, gain 3 Block next turn. | Gain 5 Block next turn. | Armor engine |
 | 34 | **Smoke and Lead** | Power | 1 | The first time each turn you Fire a Round, gain 3 Block. | Gain 4 Block. | Fire defense |
 | 35 | **Sure Hand** | Power | 1 | The first time each turn you Spin, gain 4 Deadeye. | Gain 6 Deadeye. | Spin engine |
 
-## Rares — 25
+## Rares — 26
 | # | Card | Type | Cost | Base | Upgrade | Role |
 |---:|---|---|---:|---|---|---|
 | 1 | **High Noon** | Attack | 3 | Gain 3 Deadeye. Fire 6. Exhaust. | Costs 2. | Signature salvo |
@@ -411,24 +412,25 @@ Balance rationale:
 | 5 | **Black Powder** | Attack | 1 | Replace the current chamber with a Black Powder Round, then Fire 1. | The Black Powder Round deals 20 instead of 16 damage. | Risk damage |
 | 6 | **Last Word** | Attack | 2 | Fire 1. If the target is Weak, Fire 1 again. If the target is Debilitated, Fire 1 again. | Rounds fired by this card deal +2 damage. | Debuff salvo |
 | 7 | **No Witnesses** | Attack | 3 | Fire the current loaded Round at ALL enemies, then empty that chamber. Its non-damage effect triggers only once. | Costs 2. | AoE ammo duplication |
-| 8 | **Double-Tap** | Attack | 1 | Fire 1. If it hits, repeat that Round's damage once; do not repeat its other effect. | Repeat its damage twice instead. | Ammo damage duplication |
+| 8 | **Double-Tap** | Attack | 1 | Fire 2. Each Round that hits repeats its damage once; do not repeat its other effect. | Repeat each Round's damage twice instead. | Ammo damage duplication |
 | 9 | **Final Chamber** | Attack | 1 | Fire 1. If the Cylinder becomes empty, gain 2 Energy. Exhaust. | Also draw 2 cards if the Cylinder becomes empty. | Empty-cylinder tempo |
 | 10 | **Russian Roulette** | Skill | 0 | Load 1 Dead Man's Round into a random empty chamber. Spin, then Self-Fire 1. If it Clicks, gain 1 Energy and draw 2 cards. Exhaust. | The Dead Man's Round deals 30 instead of 24 damage. | Signature gamble |
 | 11 | **Stack the Cylinder** | Skill | 1 | Rearrange all chambers in any order and choose the hammer position. Exhaust. | Costs 0. | Perfect control |
-| 12 | **Perfect Reload** | Skill | 2 | Choose Lead, Heavy, Crippling, Guard, or Piercing. Fill all empty chambers with that Round. Exhaust. | Costs 1. | Ammo capstone |
+| 12 | **Perfect Reload** | Skill | 2 | Choose Lead, Heavy, Crippling, Guard, or Piercing. Fill all empty chambers with that Round. Gain 5 Block. Exhaust. | Costs 1. | Ammo capstone |
 | 13 | **Ghost Step** | Skill | 2 | Gain 2 Dodge. Exhaust. | Costs 1. | Dodge capstone |
 | 14 | **Armored Longcoat** | Skill | 2 | Gain 5 Armor. Exhaust. | Gain 7 Armor. | Armor capstone |
 | 15 | **Never Still** | Skill | 1 | Gain 1 Dodge. Next turn, gain 1 Energy and draw 1 card. Exhaust. | Draw 2 cards next turn. | Tempo defense |
 | 16 | **Deadeye Focus** | Skill | 1 | Gain 12 Deadeye. Exhaust. | Gain 16 Deadeye. | Shot capstone |
-| 17 | **Sixth Sense** | Skill | 1 | Choose a chamber. If loaded, move it under the hammer and draw 2 cards. If empty, gain 1 Dodge. Exhaust. | Draw 3 if loaded; if empty, also gain 5 Block. | Precision defense |
+| 17 | **Sixth Sense** | Skill | 1 | Choose a chamber. If loaded, move it under the hammer and draw 2 cards. If empty, gain 1 Armor. Exhaust. | Draw 3 if loaded; if empty, also gain 5 Block. | Precision defense |
 | 18 | **Rending Cartridge** | Skill | 1 | Load 2 Rending Rounds. Exhaust. | Load 3 Rending Rounds. | Debilitate ammo |
-| 19 | **Quickdraw Legend** | Power | 2 | The first card you play each turn that Fires costs 1 less. | Costs 1. | Fire tempo |
-| 20 | **Bottomless Bandolier** | Power | 2 | At the start of your turn, if there is an empty chamber, Load 1 random special Round: Heavy, Crippling, Piercing, or Guard. | Also gain 2 Deadeye after loading. | Ammo engine |
-| 21 | **Loaded Dice** | Power | 1 | After you Spin, you may Cycle 1. | You may Cycle up to 2 instead. | Spin control |
-| 22 | **Iron Will** | Power | 2 | The first time each turn Armor would decrease, it does not. | Costs 1. | Armor engine |
-| 23 | **Untouchable** | Power | 2 | Whenever you gain Dodge, gain 6 Block. | Gain 8 Block instead. | Dodge engine |
-| 24 | **Debilitating Presence** | Power | 2 | The first time each turn you apply Weak, also apply 1 Debilitate. | Costs 1. | Debuff engine |
-| 25 | **Sixth Shot** | Power | 3 | Every 6th Round you Fire deals +15 damage and grants 1 Energy. | Bonus damage becomes +20. | Cylinder capstone |
+| 19 | **Lucky Shot** | Skill | 0 | Load 1 random Round. | Load 2 random Rounds. | Free ammo gamble |
+| 20 | **Quickdraw Legend** | Power | 2 | The first card you play each turn that Fires costs 1 less. | Costs 1. | Fire tempo |
+| 21 | **Bottomless Bandolier** | Power | 2 | At the start of your turn, if there is an empty chamber, Load 1 random special Round: Heavy, Crippling, Piercing, or Guard. | Also gain 2 Deadeye after loading. | Ammo engine |
+| 22 | **Loaded Dice** | Power | 1 | After you Spin, you may Cycle 1. | You may Cycle up to 2 instead. | Spin control |
+| 23 | **Iron Will** | Power | 2 | The first time each turn Armor would decrease, it does not. | Costs 1. | Armor engine |
+| 24 | **Untouchable** | Power | 2 | Whenever you gain Armor, gain 1 Block per stack. | Gain 2 Block per stack instead. | Armor engine |
+| 25 | **Debilitating Presence** | Power | 2 | The first time each turn you apply Weak, also apply 1 Debilitate. | Costs 1. | Debuff engine |
+| 26 | **Sixth Shot** | Power | 3 | Every 6th Round you Fire deals +15 damage and grants 1 Energy. | Bonus damage becomes +20. | Cylinder capstone |
 
 ---
 
@@ -463,12 +465,12 @@ section 4 for the full list and the two rules that keep it fair.
 
 # 10. Multiplayer Cards — 5
 
-These are outside the 80 normal-card pool, matching the current STS2 pattern.
+These are outside the 82 normal-card pool, matching the current STS2 pattern.
 
 | Card | Type | Cost | Effect | Upgrade |
 |---|---|---:|---|---|
 | **Covering Partner** | Skill | 1 | ALL players gain 5 Block. Cycle 1. | ALL players gain 7 Block. |
-| **Suppressive Volley** | Attack | 2 | Fire 2. Apply 1 Weak to ALL enemies. | Apply 2 Weak. |
+| **Suppressive Volley** | Attack | 2 | Fire 3. Apply 1 Weak to ALL enemies. | Apply 2 Weak. |
 | **Hand Me That** | Skill | 1 | Another player draws 2 cards. Load 2 Lead Rounds. | They draw 3 cards. |
 | **Softened Up** | Skill | 1 | Apply 1 Debilitate to ALL enemies. Exhaust. | Apply 2 Debilitate. |
 | **Stand Together** | Skill | 2 | ALL players gain 8 Block. You gain 1 Dodge. | ALL players gain 11 Block. |
@@ -553,6 +555,7 @@ Key cards:
 - Hard Leather
 - Armored Longcoat
 - Iron Will
+- Untouchable
 
 Play pattern:
 Layer Block over a small Armor reserve and let Armor shave off damage that leaks through.
@@ -571,7 +574,6 @@ Key cards:
 - Dead Man's Bluff
 - Ghost Step
 - Never Still
-- Untouchable
 
 Play pattern:
 Use Dodge on the exact turn it matters; do not try to bank it.
@@ -591,6 +593,7 @@ Key cards:
 - Final Chamber
 - Spare Speedloader
 - Speedloader
+- Lucky Shot
 
 Play pattern:
 Empty the Cylinder on purpose, collect damage/Energy/draw payoffs, then reload quickly.
@@ -664,6 +667,40 @@ Initial targets:
 - Common 1-Energy pure Block: 7–10.
 - Hybrid block/ammo cards: ~3–6 Block plus setup value.
 - Armor should not replace Block; most decks still need ordinary Block cards.
+
+### Block/ammo exchange rate (balance pass, 2026-08-30)
+The character had a clean split it did not want: reload cards did nothing for the turn they were
+played, and Block cards did nothing for the gun. That is two dead halves of a deck, and it is the
+same "the Gunslinger feels weak" complaint from the other side — the turn you reload is the turn
+you get hit, and the turn you Block is the turn the cylinder runs dry.
+
+Both sides now cross over, priced off the Cartridge commons that already did it (Heavy Cartridge
+is 1 Energy for 1 Heavy Round and 3 Block):
+
+| Rider | Costs |
+|---|---|
+| Load 1 Lead Round on a Block card | 2 Block |
+| Load 1 specialist Round on a Block card | 3 Block |
+| A Load on a branch that is already conditional | free |
+| Block on a card that only Loads | 2–3 at 1 Energy, 5 at 2 Energy |
+
+Two rules keep this from flattening the deck:
+
+**A rider never replaces the card's job.** Take Cover keeps the full 7 Block and only Loads when
+the chamber under the hammer is already empty; Guard Cartridge still Loads 2 Guard Rounds and the
+3 Block does not buy a Round back. The Block on a reload card is deliberately under a Defend, so
+these are reloads that cover you, not Defends that also load.
+
+**Conditional Loads are free because they are self-limiting.** Roll Aside, Hunker Down, Dead Man's
+Bluff and Take Cover all Load on a branch that requires an empty chamber or a held trigger, which
+means the Load can never overwrite ammunition the player was about to Fire. Dive for Cover is the
+clearest case: its Load lives in the branch where the card used to do nothing at all, so it raises
+the floor without touching the ceiling.
+
+Left alone deliberately: **Grit Teeth** (already the densest defensive uncommon, and paying for a
+Round in HP changes what the card is), **Duck and Weave** and **Ghost Step** (Dodge is premium and
+should not accumulate riders), and **Rending Cartridge** / **Lucky Shot** (a Rare debuff engine and
+a 0-cost gamble, both already at their ceiling).
 
 ## 13.3 Armor
 Treat 1 Armor as approximately:

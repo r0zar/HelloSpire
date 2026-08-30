@@ -107,7 +107,7 @@ public sealed class EmptyBottle() : AlchemistCard(0, CardType.Attack, CardRarity
 public sealed class CinnabarEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(9m, ValueProp.Move), new PowerVar<VulnerablePower>(1m)];
+        [new DamageVar(9m, ValueProp.Move), new PowerVar<VulnerablePower>(2m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<VulnerablePower>()];
 

@@ -82,13 +82,13 @@ public sealed class IronWill() : GunslingerCard(2, CardType.Power, CardRarity.Ra
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Whenever you gain Dodge, gain Block as well.</summary>
+/// <summary>Whenever you gain Armor, gain Block as well.</summary>
 public sealed class Untouchable() : GunslingerCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<UntouchablePower>(6m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<UntouchablePower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<DodgePower>(), HoverTipFactory.FromPower<UntouchablePower>()];
+        [HoverTipFactory.FromPower<ArmorPower>(), HoverTipFactory.FromPower<UntouchablePower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -96,7 +96,7 @@ public sealed class Untouchable() : GunslingerCard(2, CardType.Power, CardRarity
         await PowerCmd.Apply<UntouchablePower>(ctx, Owner.Creature, DynamicVars["UntouchablePower"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["UntouchablePower"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars["UntouchablePower"].UpgradeValueBy(1m);
 }
 
 /// <summary>The first Weak you apply each turn drags a Debilitate with it.</summary>

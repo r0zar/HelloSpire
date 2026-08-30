@@ -246,26 +246,31 @@ public sealed class CoveringFire() : GunslingerCard(2, CardType.Attack, CardRari
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(1m);
 }
 
-/// <summary>Loads itself and then fires. The one card that never cares what the gun was doing.</summary>
-public sealed class LeadStorm() : GunslingerCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+/// <summary>
+/// Empty the gun at whatever is in front of you and find out how much was in it.
+///
+/// The floor is worth the Energy on its own and the ceiling empties a full cylinder, so the card
+/// rewards a stocked gun without ever being dead in an unprepared one — the wide roll is the point.
+/// </summary>
+public sealed class RecklessFire() : GunslingerCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Load", 2m), new DynamicVar("Fire", 2m)];
+        [new DynamicVar("FireMin", 2m), new DynamicVar("FireMax", 5m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load), Tip(GunslingerTips.Fire)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Fire)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
-        await Revolver.FireTimes(ctx, Gun, play.Target, DynamicVars["Fire"].IntValue);
+        var times = Revolver.Roll(Gun, DynamicVars["FireMin"].IntValue, DynamicVars["FireMax"].IntValue);
+        await Revolver.FireTimes(ctx, Gun, play.Target, times);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Load"].UpgradeValueBy(1m);
-        DynamicVars["Fire"].UpgradeValueBy(1m);
+        DynamicVars["FireMin"].UpgradeValueBy(1m);
+        DynamicVars["FireMax"].UpgradeValueBy(1m);
     }
 }
 

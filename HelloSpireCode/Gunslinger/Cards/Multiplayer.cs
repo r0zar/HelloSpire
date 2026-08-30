@@ -124,7 +124,7 @@ public sealed class CoveringPartner() : GunslingerMultiplayerCard(1, CardType.Sk
 }
 
 /// <summary>
-/// Fire 2. Apply Weak to ALL enemies.
+/// Fire 3. Apply Weak to ALL enemies.
 ///
 /// The payload: the burst turn that also turns the room's damage down for everyone at the table.
 /// The Weak lands after the shots so that a Crippling Round's own Weak stacks with it rather
@@ -133,7 +133,7 @@ public sealed class CoveringPartner() : GunslingerMultiplayerCard(1, CardType.Sk
 public sealed class SuppressiveVolley() : GunslingerMultiplayerCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Fire", 2m), new PowerVar<WeakPower>(1m)];
+        [new DynamicVar("Fire", 3m), new PowerVar<WeakPower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(GunslingerTips.Fire), HoverTipFactory.FromPower<WeakPower>()];

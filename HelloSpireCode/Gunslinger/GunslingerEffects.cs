@@ -1,6 +1,7 @@
 using HelloSpire.HelloSpireCode.Gunslinger.Powers;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -60,6 +61,8 @@ public static class GunslingerEffects
         // Gunslinger state lives.
         var cylinder = await Cylinder.Revolver.Get(ctx, gun);
         if (cylinder != null) cylinder.ArmorGainedThisTurn = true;
+
+        await GunslingerHooks.NotifyArmorGained(ctx, gun, (int)amount);
     }
 
     public static async Task GainDodge(PlayerChoiceContext ctx, GunContext gun, decimal amount)
@@ -73,6 +76,25 @@ public static class GunslingerEffects
     {
         if (count <= 0) return;
         await CardPileCmd.Draw(ctx, count, gun.Player);
+    }
+
+    /// <summary>
+    /// Moves the first <typeparamref name="TCard"/> found anywhere in combat — Draw, Discard or
+    /// Exhaust — into the Hand. False when the player has no copy left to fetch.
+    ///
+    /// Last Round reaches into the Exhaust pile, which is why this searches every pile rather than
+    /// taking one: "from anywhere" is the point of the card.
+    /// </summary>
+    public static async Task<bool> ReturnToHand<TCard>(GunContext gun) where TCard : CardModel
+    {
+        var card = CardPile
+            .GetCards(gun.Player, PileType.Draw, PileType.Discard, PileType.Exhaust)
+            .FirstOrDefault(candidate => candidate is TCard);
+
+        if (card == null) return false;
+
+        await CardPileCmd.Add(card, PileType.Hand);
+        return true;
     }
 
     public static async Task GainEnergy(GunContext gun, decimal amount)

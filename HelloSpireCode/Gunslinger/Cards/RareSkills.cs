@@ -65,12 +65,19 @@ public sealed class StackTheCylinder() : GunslingerCard(1, CardType.Skill, CardR
 /// </summary>
 public sealed class PerfectReload() : GunslingerCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(5m, ValueProp.Move)];
+
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
         await Revolver.FillEmpty(ctx, Gun, PickAmmunition());
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
+    }
 
     private Func<Round> PickAmmunition()
     {
@@ -85,7 +92,7 @@ public sealed class PerfectReload() : GunslingerCard(2, CardType.Skill, CardRari
 }
 
 /// <summary>Gain Dodge. Two whole hits, gone.</summary>
-public sealed class GhostStep() : GunslingerCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class GhostStep() : GunslingerCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DodgePower>(2m)];
 
@@ -100,7 +107,7 @@ public sealed class GhostStep() : GunslingerCard(2, CardType.Skill, CardRarity.R
 }
 
 /// <summary>Gain a wall of Armor that lasts as long as the fight does.</summary>
-public sealed class ArmoredLongcoat() : GunslingerCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class ArmoredLongcoat() : GunslingerCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ArmorPower>(5m)];
 
@@ -156,12 +163,12 @@ public sealed class DeadeyeFocus() : GunslingerCard(1, CardType.Skill, CardRarit
 public sealed class SixthSense() : GunslingerCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new CardsVar(2), new PowerVar<DodgePower>(1m), new BlockVar(0m, ValueProp.Move)];
+        [new CardsVar(2), new PowerVar<ArmorPower>(1m), new BlockVar(0m, ValueProp.Move)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(GunslingerTips.TheCylinder), HoverTipFactory.FromPower<DodgePower>()];
+        [Tip(GunslingerTips.TheCylinder), HoverTipFactory.FromPower<ArmorPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -171,7 +178,7 @@ public sealed class SixthSense() : GunslingerCard(1, CardType.Skill, CardRarity.
             return;
         }
 
-        await GunslingerEffects.GainDodge(ctx, Gun, DynamicVars["DodgePower"].BaseValue);
+        await GunslingerEffects.GainArmor(ctx, Gun, DynamicVars["ArmorPower"].BaseValue);
         await GunslingerEffects.GainBlock(Gun, DynamicVars.Block.BaseValue);
     }
 
@@ -180,6 +187,26 @@ public sealed class SixthSense() : GunslingerCard(1, CardType.Skill, CardRarity.
         DynamicVars.Cards.UpgradeValueBy(1m);
         DynamicVars.Block.UpgradeValueBy(5m);
     }
+}
+
+/// <summary>
+/// Free, and the gun picks the ammunition. The purest expression of the character's bargain:
+/// you get a chamber for nothing and give up all say in what is in it.
+/// </summary>
+public sealed class LuckyShot() : GunslingerCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Wild", 1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        // Rolled once per Round, so an upgraded copy is two different surprises rather than a pair.
+        for (var i = 0; i < DynamicVars["Wild"].IntValue; i++)
+            await Revolver.Load(ctx, Gun, Rounds.RandomOrdinary(Gun), 1);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["Wild"].UpgradeValueBy(1m);
 }
 
 /// <summary>Load Rending Rounds — the Gunslinger's only repeatable source of Debilitate.</summary>

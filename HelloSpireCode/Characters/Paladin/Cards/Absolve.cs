@@ -20,7 +20,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>Heal a player {Heal} HP. Remove one debuff from them.</summary>
-public sealed class Absolve() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
+public sealed class Absolve() : PaladinCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(5m)];
 

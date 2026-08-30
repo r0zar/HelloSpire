@@ -22,7 +22,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// <summary>Heal a player {Heal} HP. Gain 1 Faith in Ilmater. Blessed.</summary>
 public sealed class BindTheWounds() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(2m)];
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(PaladinTips.Blessed)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -33,7 +33,7 @@ public sealed class BindTheWounds() : PaladinCard(1, CardType.Skill, CardRarity.
         await PulseAuras(choiceContext);
     }
 
-    protected override void OnUpgrade() { DynamicVars["Heal"].UpgradeValueBy(3m); }
+    protected override void OnUpgrade() { DynamicVars["Heal"].UpgradeValueBy(2m); }
 
     private IEnumerable<Creature> Allies()  => Owner.Creature.CombatState.PlayerCreatures.OfType<Creature>().Where(c => c.IsAlive);
     private IEnumerable<Creature> Enemies() => Owner.Creature.CombatState.Creatures.OfType<Creature>().Where(c => !c.IsPlayer && c.IsHittable);
