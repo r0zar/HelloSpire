@@ -1,0 +1,248 @@
+<title>The Gunslinger — Card Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Vollkorn:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ash:#1a1310; --ash-2:#221a15; --ash-3:#2b2119; --hairline:#4a382a;
+    --bone:#ece2c8; --bone-dim:#ad9d84;
+    --dust:#c9a876; --rust:#9c4a2e; --gunmetal:#8b93a3; --horizon:#d9793a; --blood:#7a2d24;
+    --common:#8f7148; --uncommon:#8b93a3; --rare:#d9793a; --basic:#6b5c46;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--ash);color:var(--bone);font-family:'Vollkorn',Georgia,serif;font-size:1.02rem;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--horizon);}
+  .wrap{max-width:1400px;margin:0 auto;padding:clamp(20px,4vw,56px) clamp(18px,4vw,40px) 80px;}
+  h1,h2{font-family:'Rye',Georgia,serif;font-weight:400;text-wrap:balance;color:var(--bone);margin:0;}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin:0 0 8px;}
+  h1{font-size:clamp(2.1rem,4.6vw,3rem);}
+  .sub{font-family:'IBM Plex Mono',monospace;color:var(--bone-dim);font-size:.85rem;margin-top:10px;}
+  section{margin-top:56px;}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:1px solid var(--hairline);padding-bottom:12px;}
+  .section-head h2{font-size:1.4rem;}
+  .section-head .count{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--bone-dim);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+  .card{
+    background:linear-gradient(180deg,var(--ash-2),var(--ash-3));
+    border:1px solid var(--hairline); border-radius:6px;
+    display:flex;flex-direction:column; overflow:hidden; position:relative;
+    aspect-ratio:5/7.2; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.5); }
+  .card[data-rarity="Common"]{ box-shadow:inset 0 0 0 2px var(--common); }
+  .card[data-rarity="Uncommon"]{ box-shadow:inset 0 0 0 2px var(--uncommon); }
+  .card[data-rarity="Rare"]{ box-shadow:inset 0 0 0 2px var(--rare); }
+  .card[data-rarity="Basic"]{ box-shadow:inset 0 0 0 2px var(--basic); }
+  .cost{
+    position:absolute; top:6px; left:6px; width:22px; height:22px; border-radius:50%;
+    background:var(--ash); border:1.5px solid var(--horizon);
+    color:var(--horizon); font-family:'IBM Plex Mono',monospace; font-weight:600;
+    font-size:.72rem; display:flex; align-items:center; justify-content:center; z-index:2;
+  }
+  .rarity-tag{
+    position:absolute; top:6px; right:6px; font-family:'IBM Plex Mono',monospace;
+    font-size:.55rem; letter-spacing:.04em; text-transform:uppercase; opacity:.75; z-index:2;
+  }
+  .art{ flex:0 0 50%; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .art svg{ width:50%; height:50%; }
+  .name{ font-family:'Vollkorn',serif; font-weight:600; font-size:.74rem; text-align:center; padding:5px 6px 2px; color:var(--bone); line-height:1.15; text-wrap:balance; }
+  .type{ text-align:center; font-family:'IBM Plex Mono',monospace; font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; color:var(--bone-dim); margin-bottom:3px; }
+  .text{ flex:1; font-size:.6rem; padding:2px 8px 8px; color:var(--bone-dim); line-height:1.3; overflow:hidden; }
+  footer{margin-top:70px;padding-top:20px;border-top:1px solid var(--hairline);font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--bone-dim);}
+</style>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <symbol id="i-bullet" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"><path d="M38 12 H62 V52 L50 92 L38 52 Z"/><path d="M38 30 H62"/></g></symbol>
+  <symbol id="i-bulletstack" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5.5" stroke-linejoin="round"><path d="M16 20 H30 V44 L23 62 L16 44 Z"/><path d="M43 14 H57 V44 L50 66 L43 44 Z"/><path d="M70 20 H84 V44 L77 62 L70 44 Z"/></g></symbol>
+  <symbol id="i-cylinder" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="6"/><g fill="currentColor"><circle cx="50" cy="18" r="6"/><circle cx="78" cy="35" r="6"/><circle cx="78" cy="65" r="6"/><circle cx="50" cy="82" r="6"/><circle cx="22" cy="65" r="6"/><circle cx="22" cy="35" r="6"/></g></symbol>
+  <symbol id="i-spin" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M20 50 A30 30 0 1 1 30 71"/><path d="M14 60 L20 50 L32 54"/></g></symbol>
+  <symbol id="i-plate" viewBox="0 0 100 100"><rect x="14" y="20" width="72" height="60" rx="8" fill="none" stroke="currentColor" stroke-width="6"/><g fill="currentColor"><circle cx="26" cy="32" r="3.5"/><circle cx="74" cy="32" r="3.5"/><circle cx="26" cy="68" r="3.5"/><circle cx="74" cy="68" r="3.5"/></g></symbol>
+  <symbol id="i-feather" viewBox="0 0 100 100"><path d="M78 14 C50 20 24 44 20 82 C58 78 82 52 88 24 Z" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linejoin="round"/><path d="M76 20 L28 76" fill="none" stroke="currentColor" stroke-width="4"/></symbol>
+  <symbol id="i-arrowdown" viewBox="0 0 100 100"><path d="M50 12 C40 34 34 46 34 60 C34 76 42 88 50 88 C58 88 66 76 66 60" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M50 88 L38 74 M50 88 L62 74" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 100 100"><path d="M50 8 L86 22 V50 C86 74 70 88 50 94 C30 88 14 74 14 50 V22 Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+  <symbol id="i-aura" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5"><circle cx="50" cy="50" r="14"/><circle cx="50" cy="50" r="30" opacity=".7"/><circle cx="50" cy="50" r="44" opacity=".4"/></g></symbol>
+  <symbol id="i-target" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5"><circle cx="50" cy="50" r="38"/><circle cx="50" cy="50" r="20"/></g><path d="M50 4 V20 M50 80 V96 M4 50 H20 M80 50 H96" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6 L61 38 L96 38 L67 58 L78 92 L50 71 L22 92 L33 58 L4 38 L39 38 Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="6"/><text x="50" y="62" font-size="34" text-anchor="middle" fill="currentColor" font-family="serif">$</text></symbol>
+  <symbol id="i-flame" viewBox="0 0 100 100"><path d="M50 10 C60 30 70 34 70 54 C70 74 58 90 50 90 C42 90 30 74 30 54 C30 44 36 42 40 34 C42 46 48 46 48 38 C48 28 44 20 50 10 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></symbol>
+</defs>
+</svg>
+
+<div class="wrap">
+  <p class="kicker">Card Gallery · v1</p>
+  <h1>THE GUNSLINGER</h1>
+  <p class="sub">Systematic mockups generated from the full 80-card design (<a href="https://github.com/r0zar/HelloSpire/blob/main/design/gunslinger.md">design/gunslinger.md</a>) — icon and rarity frame computed from each card's real type and Cylinder keywords, not hand-painted per card. <span id="tally"></span></p>
+
+  <div id="sections"></div>
+
+  <footer>Reference only — see ART.md for the actual game-asset pipeline and required PNG sizes. Numbers throughout are placeholders per design/gunslinger.md.</footer>
+</div>
+
+<script>
+const BASIC = [
+  ["Reload","1","Skill","Basic","Load 2 Lead Rounds."],
+  ["Quick Draw","0","Attack","Basic","Fire 1."],
+];
+const COMMON = [
+  ["Snap Shot","1","Attack","Common","Fire 1. Draw 1 card."],
+  ["Fan the Hammer","2","Attack","Common","Fire 3."],
+  ["Last Round","1","Attack","Common","Fire 1. If the Cylinder is empty afterward, deal 6 additional damage."],
+  ["Suppressing Fire","1","Attack","Common","Fire 1. If a Round hits, apply 1 Weak."],
+  ["Ricochet","1","Attack","Common","Fire 1. If a Round hits, deal 4 damage to ALL other enemies."],
+  ["Pistol Whip","1","Attack","Common","Deal 9 damage."],
+  ["Shoulder Shot","1","Attack","Common","Deal 7 damage. Gain 4 Block."],
+  ["Gut Shot","1","Attack","Common","Deal 8 damage. If the enemy is Weak, deal 4 additional damage."],
+  ["Warning Shot","0","Attack","Common","Deal 3 damage. Apply 1 Weak. Exhaust."],
+  ["Point Blank","1","Attack","Common","Deal 10 damage. If all 6 chambers are loaded, deal 4 additional damage."],
+  ["Fresh Cartridges","1","Skill","Common","Load 2 Lead Rounds."],
+  ["Quick Load","0","Skill","Common","Load 1 Lead Round. Exhaust."],
+  ["Heavy Cartridge","1","Skill","Common","Load 1 Heavy Round. Gain 3 Block."],
+  ["Crippling Cartridge","1","Skill","Common","Load 1 Crippling Round. Gain 3 Block."],
+  ["Take Cover","1","Skill","Common","Gain 7 Block."],
+  ["Duster Up","1","Skill","Common","Gain 5 Block. Gain 1 Armor."],
+  ["Roll Aside","1","Skill","Common","Gain 5 Block. Cycle 1. If the new chamber is empty, gain 3 more Block."],
+  ["Steady Hand","1","Skill","Common","Gain 5 Deadeye."],
+  ["Spin Cylinder","0","Skill","Common","Spin. Draw 1 card. Exhaust."],
+  ["Pocket Sand","1","Skill","Common","Apply 2 Weak."],
+];
+const UNCOMMON = [
+  ["Called Shot","1","Attack","Uncommon","Choose a loaded chamber. Move it under the hammer. Fire 1."],
+  ["Quickdraw","0","Attack","Uncommon","Fire 1. If it Clicks, draw 2 cards. Exhaust."],
+  ["Double Action","1","Attack","Uncommon","Fire 2."],
+  ["Through the Coat","1","Attack","Uncommon","Fire 1. This shot ignores Block regardless of Round type."],
+  ["Kneecapper","1","Attack","Uncommon","Deal 8 damage. If the enemy has no Block, apply 2 Weak."],
+  ["Pinning Shot","1","Attack","Uncommon","Fire 1. If the target is Weak, apply 1 Debilitate."],
+  ["Crossfire","1","Attack","Uncommon","Fire 1. If a Round hits, deal 5 damage to ALL other enemies."],
+  ["Trick Shot","1","Attack","Uncommon","Spin. Fire 2 at random enemies. Rounds fired by this card deal +2 damage."],
+  ["Run the Cylinder","2","Attack","Uncommon","Fire until a chamber Clicks, up to 6 times."],
+  ["Empty the Cylinder","3","Attack","Uncommon","Fire 6. Exhaust."],
+  ["Covering Fire","2","Attack","Uncommon","Fire 2. Gain 4 Block for each Round that hits."],
+  ["Lead Storm","2","Attack","Uncommon","Load 2 Lead Rounds, then Fire 2."],
+  ["Hammerfall","2","Attack","Uncommon","Gain 8 Deadeye. Fire 2."],
+  ["Showdown","1","Attack","Uncommon","Deal 6 damage. If the enemy intends to Attack, Fire 1."],
+  ["Reversal","1","Attack","Uncommon","If you gained Armor this turn, Fire 2. Otherwise, Fire 1."],
+  ["Bandolier","1","Skill","Uncommon","Load 1 Lead Round and 1 Crippling Round."],
+  ["Speedloader","2","Skill","Uncommon","Fill all empty chambers with Lead Rounds. Exhaust."],
+  ["Custom Load","1","Skill","Uncommon","Choose Heavy, Crippling, or Guard. Load 1 of that Round and 1 Lead Round."],
+  ["Piercing Cartridge","1","Skill","Uncommon","Load 2 Piercing Rounds."],
+  ["Guard Cartridge","1","Skill","Uncommon","Load 2 Guard Rounds."],
+  ["Smoke Cartridge","1","Skill","Uncommon","Load 1 Smoke Round. Gain 4 Block."],
+  ["Re-Cock","0","Skill","Uncommon","Cycle 1. Gain 2 Deadeye."],
+  ["Check the Cylinder","0","Skill","Uncommon","Cycle up to 2. If the current chamber is loaded, draw 1 card. Exhaust."],
+  ["Stacked Chamber","1","Skill","Uncommon","The next Round you Load is placed under the hammer. Gain 5 Deadeye."],
+  ["Under the Duster","1","Skill","Uncommon","Gain 3 Armor."],
+  ["Hunker Down","1","Skill","Uncommon","Gain 8 Block. If you have not Fired this turn, gain 4 more Block."],
+  ["Duck and Weave","2","Skill","Uncommon","Gain 1 Dodge. Exhaust."],
+  ["Dive for Cover","1","Skill","Uncommon","If any enemy intends to Attack, gain 9 Block. If total incoming Attack damage is 20 or more, gain 1 Armor."],
+  ["Grit Teeth","1","Skill","Uncommon","Lose 2 HP. Gain 10 Block and 2 Armor."],
+  ["Dead Man's Bluff","1","Skill","Uncommon","Spin. If the current chamber is empty, gain 1 Dodge; otherwise gain 9 Block. Exhaust."],
+  ["Cold Read","1","Skill","Uncommon","Apply 1 Weak and 1 Debilitate. Exhaust."],
+  ["Gunfighter's Rhythm","1","Power","Uncommon","Every 6th Round you Fire, draw 1 card."],
+  ["Hard Leather","1","Power","Uncommon","The first time each turn Armor prevents damage, gain 3 Block next turn."],
+  ["Smoke and Lead","1","Power","Uncommon","The first time each turn you Fire a Round, gain 3 Block."],
+  ["Sure Hand","1","Power","Uncommon","The first time each turn you Spin, gain 4 Deadeye."],
+];
+const RARE = [
+  ["High Noon","3","Attack","Rare","Gain 3 Deadeye. Fire 6. Exhaust."],
+  ["One Bullet Left","1","Attack","Rare","Fire 1. If it was the only loaded Round before firing, its damage is doubled."],
+  ["Executioner's Calm","2","Attack","Rare","Fire 2. If the target is both Weak and Debilitated, Rounds fired by this card deal 50% more damage."],
+  ["Long Shot","2","Attack","Rare","Gain 3 Deadeye for each empty chamber, then Fire 1."],
+  ["Black Powder","1","Attack","Rare","Replace the current chamber with a Black Powder Round, then Fire 1."],
+  ["Last Word","2","Attack","Rare","Fire 1. If the target is Weak, Fire 1 again. If the target is Debilitated, Fire 1 again."],
+  ["No Witnesses","3","Attack","Rare","Fire the current loaded Round at ALL enemies, then empty that chamber."],
+  ["Double-Tap","1","Attack","Rare","Fire 1. If it hits, repeat that Round's damage once."],
+  ["Final Chamber","1","Attack","Rare","Fire 1. If the Cylinder becomes empty, gain 2 Energy. Exhaust."],
+  ["Russian Roulette","0","Skill","Rare","Load 1 Dead Man's Round into a random empty chamber. Spin, then Self-Fire 1. If it Clicks, gain 1 Energy and draw 2 cards. Exhaust."],
+  ["Stack the Cylinder","1","Skill","Rare","Rearrange all chambers in any order and choose the hammer position. Exhaust."],
+  ["Perfect Reload","2","Skill","Rare","Choose Lead, Heavy, Crippling, Guard, or Piercing. Fill all empty chambers with that Round. Exhaust."],
+  ["Ghost Step","2","Skill","Rare","Gain 2 Dodge. Exhaust."],
+  ["Armored Longcoat","2","Skill","Rare","Gain 5 Armor. Exhaust."],
+  ["Never Still","1","Skill","Rare","Gain 1 Dodge. Next turn, gain 1 Energy and draw 1 card. Exhaust."],
+  ["Deadeye Focus","1","Skill","Rare","Gain 12 Deadeye. Exhaust."],
+  ["Sixth Sense","1","Skill","Rare","Choose a chamber. If loaded, move it under the hammer and draw 2 cards. If empty, gain 1 Dodge. Exhaust."],
+  ["Rending Cartridge","1","Skill","Rare","Load 2 Rending Rounds. Exhaust."],
+  ["Quickdraw Legend","2","Power","Rare","The first card you play each turn that Fires costs 1 less."],
+  ["Bottomless Bandolier","2","Power","Rare","At the start of your turn, if there is an empty chamber, Load 1 random special Round."],
+  ["Loaded Dice","1","Power","Rare","After you Spin, you may Cycle 1."],
+  ["Iron Will","2","Power","Rare","The first time each turn Armor would decrease, it does not."],
+  ["Untouchable","2","Power","Rare","Whenever you gain Dodge, gain 6 Block."],
+  ["Debilitating Presence","2","Power","Rare","The first time each turn you apply Weak, also apply 1 Debilitate."],
+  ["Sixth Shot","3","Power","Rare","Every 6th Round you Fire deals +15 damage and grants 1 Energy."],
+];
+const RELICS = [
+  ["Old Iron","-","Relic","Starter","At the start of each combat, Load 3 Lead Rounds."],
+  ["True Iron","-","Relic","Starter","Ancient upgrade. At the start of each combat, fill all 6 chambers with Lead Rounds. Lead Rounds deal 1 additional damage."],
+  ["Oiled Rag","-","Relic","Common","The first time each combat you play a card that Loads, also Load 1 Lead Round."],
+  ["Tin Badge","-","Relic","Uncommon","The first time each turn you apply Weak, gain 3 Block."],
+  ["Spare Speedloader","-","Relic","Uncommon","The first time each combat the Cylinder becomes completely empty, Load 3 Lead Rounds."],
+  ["Longcoat Plates","-","Relic","Rare","Start each combat with 3 Armor."],
+  ["Lucky Coin","-","Relic","Rare","The first time each turn you Spin: if the current chamber is loaded, draw 1 card; if empty, gain 4 Block."],
+  ["Engraved Hammer","-","Relic","Rare","The first successful Round you Fire each turn deals +4 damage."],
+  ["Ivory Handle","-","Relic","Shop","Non-Lead Rounds deal +3 damage."],
+];
+const POTIONS = [
+  ["Speedloader Flask","-","Potion","Common","Load 3 Lead Rounds into empty chambers."],
+  ["Sightline Tonic","-","Potion","Uncommon","Gain 10 Deadeye."],
+  ["Ghost Smoke","-","Potion","Rare","Gain 2 Dodge this turn."],
+];
+const MULTIPLAYER = [
+  ["Covering Partner","1","Skill","Multiplayer","ALL players gain 5 Block. Cycle 1."],
+  ["Suppressive Volley","2","Attack","Multiplayer","Fire 2. Apply 1 Weak to ALL enemies."],
+  ["Hand Me That","1","Skill","Multiplayer","Another player draws 2 cards. Load 2 Lead Rounds."],
+  ["Softened Up","1","Skill","Multiplayer","Apply 1 Debilitate to ALL enemies. Exhaust."],
+  ["Stand Together","2","Skill","Multiplayer","ALL players gain 8 Block. You gain 1 Dodge."],
+];
+
+function pickIcon(card){
+  const text = card[4], type = card[2];
+  const lead = text.split(/[.]/)[0].toLowerCase();
+  const all = text.toLowerCase();
+  if(type==="Relic") return /spin|coin/.test(all) ? "i-coin" : /cylinder|chamber/.test(all) ? "i-cylinder" : /armor/.test(all) ? "i-plate" : "i-star";
+  if(type==="Potion") return /deadeye/.test(all) ? "i-target" : /dodge/.test(all) ? "i-feather" : "i-bulletstack";
+  if(type==="Power") return "i-aura";
+  if(/^russian roulette|self-fire/.test(lead)) return "i-target";
+  if(/^load/.test(lead)) return "i-bulletstack";
+  if(/^fill all|chambers/.test(lead)) return "i-cylinder";
+  if(/^spin/.test(lead)) return "i-spin";
+  if(/^cycle|^re-cock/.test(lead)) return "i-spin";
+  if(/armor/.test(all)) return "i-plate";
+  if(/dodge/.test(all)) return "i-feather";
+  if(/weak|debilitate/.test(lead)) return "i-arrowdown";
+  if(type==="Attack") return "i-bullet";
+  if(/block/.test(lead)) return "i-shield";
+  if(/exhaust/.test(lead)) return "i-flame";
+  return "i-shield";
+}
+
+function renderSection(title, cards){
+  const grid = cards.map(c=>{
+    const [n,cost,type,rarity,text] = c;
+    const icon = pickIcon(c);
+    const tint = {Common:"var(--common)",Uncommon:"var(--uncommon)",Rare:"var(--rare)",Basic:"var(--basic)",Starter:"var(--horizon)",Shop:"var(--horizon)",Multiplayer:"var(--gunmetal)"}[rarity]||"var(--bone-dim)";
+    return `<div class="card" data-rarity="${rarity}">
+      ${cost!=="-"?`<div class="cost">${cost}</div>`:""}
+      <div class="rarity-tag" style="color:${tint}">${rarity}</div>
+      <div class="art" style="color:${tint}"><svg><use href="#${icon}"/></svg></div>
+      <div class="name">${n}</div>
+      <div class="type">${type}</div>
+      <div class="text">${text}</div>
+    </div>`;
+  }).join("");
+  return `<section><div class="section-head"><h2>${title}</h2><span class="count">${cards.length} ${cards.length===1?"card":"cards"}</span></div><div class="grid">${grid}</div></section>`;
+}
+
+document.getElementById("sections").innerHTML =
+  renderSection("Basic", BASIC) +
+  renderSection("Common", COMMON) +
+  renderSection("Uncommon", UNCOMMON) +
+  renderSection("Rare", RARE) +
+  renderSection("Relics", RELICS) +
+  renderSection("Potions", POTIONS) +
+  renderSection("Multiplayer", MULTIPLAYER);
+
+document.getElementById("tally").textContent =
+  `${BASIC.length+COMMON.length+UNCOMMON.length+RARE.length} cards, ${RELICS.length} relics, ${POTIONS.length} potions, ${MULTIPLAYER.length} multiplayer cards — ${BASIC.length+COMMON.length+UNCOMMON.length+RARE.length+RELICS.length+POTIONS.length+MULTIPLAYER.length} total.`;
+</script>

@@ -1,0 +1,262 @@
+<title>The Paladin — Card Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --night:#0c1120; --night-2:#131a2e; --night-3:#1a2238; --hairline:#2c3654;
+    --ivory:#eee7d6; --ivory-dim:#a6a8bd;
+    --gold:#d9b25c; --gold-bright:#f3d68a;
+    --vigil-blue:#7f96c9; --order-red:#b0525f;
+    --common:#8b93ab; --uncommon:#7f96c9; --rare:#f3d68a; --basic:#6d7488;
+    --torm:#7f96c9; --ilmater:#f0e6d6; --tyr:#f3d68a; --bane:#b0525f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--night);color:var(--ivory);font-family:'Crimson Text',Georgia,serif;font-size:1.02rem;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--gold-bright);}
+  .wrap{max-width:1400px;margin:0 auto;padding:clamp(20px,4vw,56px) clamp(18px,4vw,40px) 80px;}
+  h1,h2{font-family:'Cinzel',Georgia,serif;font-weight:500;text-wrap:balance;color:var(--ivory);margin:0;}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--vigil-blue);margin:0 0 8px;}
+  h1{font-size:clamp(2.2rem,5vw,3.2rem);}
+  .sub{font-family:'IBM Plex Mono',monospace;color:var(--ivory-dim);font-size:.85rem;margin-top:10px;}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.04em;}
+  .legend span{display:flex;align-items:center;gap:6px;color:var(--ivory-dim);}
+  .legend i{width:10px;height:10px;border-radius:50%;display:inline-block;}
+  section{margin-top:56px;}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:1px solid var(--hairline);padding-bottom:12px;}
+  .section-head h2{font-size:1.5rem;}
+  .section-head .count{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--ivory-dim);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+  .card{
+    background:linear-gradient(180deg,var(--night-2),var(--night-3));
+    border:1px solid var(--hairline); border-radius:6px;
+    display:flex;flex-direction:column; overflow:hidden; position:relative;
+    aspect-ratio:5/7.2; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.5); }
+  .card[data-rarity="Common"]{ box-shadow:inset 0 0 0 2px var(--common); }
+  .card[data-rarity="Uncommon"]{ box-shadow:inset 0 0 0 2px var(--uncommon); }
+  .card[data-rarity="Rare"]{ box-shadow:inset 0 0 0 2px var(--rare); }
+  .card[data-rarity="Basic"]{ box-shadow:inset 0 0 0 2px var(--basic); }
+  .cost{
+    position:absolute; top:6px; left:6px; width:22px; height:22px; border-radius:50%;
+    background:var(--night); border:1.5px solid var(--gold-bright);
+    color:var(--gold-bright); font-family:'IBM Plex Mono',monospace; font-weight:600;
+    font-size:.72rem; display:flex; align-items:center; justify-content:center; z-index:2;
+  }
+  .rarity-tag{
+    position:absolute; top:6px; right:6px; font-family:'IBM Plex Mono',monospace;
+    font-size:.55rem; letter-spacing:.04em; text-transform:uppercase; opacity:.75; z-index:2;
+  }
+  .deity-tag{
+    position:absolute; bottom:4px; right:6px; font-family:'IBM Plex Mono',monospace;
+    font-size:.5rem; letter-spacing:.06em; text-transform:uppercase; opacity:.6; z-index:2;
+  }
+  .art{ flex:0 0 50%; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .art svg{ width:50%; height:50%; }
+  .name{ font-family:'Cinzel',Georgia,serif; font-weight:500; font-size:.72rem; text-align:center; padding:5px 6px 2px; color:var(--ivory); line-height:1.15; text-wrap:balance; }
+  .type{ text-align:center; font-family:'IBM Plex Mono',monospace; font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:3px; }
+  .text{ flex:1; font-size:.6rem; padding:2px 8px 8px; color:var(--ivory-dim); line-height:1.3; overflow:hidden; }
+  footer{margin-top:70px;padding-top:20px;border-top:1px solid var(--hairline);font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--ivory-dim);}
+</style>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <symbol id="i-sword" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M50 8 L50 66"/><path d="M32 24 L68 24"/><path d="M50 66 L38 90"/><path d="M50 66 L62 90"/><path d="M44 78 L56 78"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 100 100"><path d="M50 8 L86 22 V50 C86 74 70 88 50 94 C30 88 14 74 14 50 V22 Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+  <symbol id="i-aura" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5"><circle cx="50" cy="50" r="14"/><circle cx="50" cy="50" r="30" opacity=".7"/><circle cx="50" cy="50" r="44" opacity=".4"/></g></symbol>
+  <symbol id="i-cross" viewBox="0 0 100 100"><path d="M42 8 H58 V42 H92 V58 H58 V92 H42 V58 H8 V42 H42 Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shieldcross" viewBox="0 0 100 100"><path d="M50 8 L86 22 V50 C86 74 70 88 50 94 C30 88 14 74 14 50 V22 Z" fill="none" stroke="currentColor" stroke-width="5.5"/><path d="M50 32 V70 M35 51 H65" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-sunblade" viewBox="0 0 100 100"><g stroke="currentColor" stroke-width="4" opacity=".65"><line x1="50" y1="4" x2="50" y2="16"/><line x1="18" y1="18" x2="26" y2="26"/><line x1="82" y1="18" x2="74" y2="26"/></g><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M50 24 L50 72"/><path d="M36 36 L64 36"/><path d="M50 72 L40 92"/><path d="M50 72 L60 92"/></g></symbol>
+  <symbol id="i-brokenhalo" viewBox="0 0 100 100"><path d="M50 10 A40 40 0 1 1 22 30" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M10 45 L22 30 L30 42" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5"><path d="M50 10 V80"/><path d="M20 26 H80"/><path d="M20 26 L8 50 A16 12 0 0 0 32 50 Z"/><path d="M80 26 L68 50 A16 12 0 0 0 92 50 Z"/><path d="M34 90 H66"/></g></symbol>
+  <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6 L61 38 L96 38 L67 58 L78 92 L50 71 L22 92 L33 58 L4 38 L39 38 Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 100 100"><path d="M50 8 C66 34 80 52 80 68 C80 84 66 94 50 94 C34 94 20 84 20 68 C20 52 34 34 50 8 Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 100 100"><path d="M50 10 C60 30 70 34 70 54 C70 74 58 90 50 90 C42 90 30 74 30 54 C30 44 36 42 40 34 C42 46 48 46 48 38 C48 28 44 20 50 10 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></symbol>
+</defs>
+</svg>
+
+<div class="wrap">
+  <p class="kicker">Card Gallery · v1</p>
+  <h1>THE PALADIN</h1>
+  <p class="sub">Systematic mockups generated from the full card design (<a href="https://github.com/r0zar/HelloSpire/blob/main/design/paladin-cards.md">design/paladin-cards.md</a>) — icon, deity tint, and rarity frame computed from each card's real type, deity, and keywords. <span id="tally"></span></p>
+  <div class="legend">
+    <span><i style="background:var(--torm)"></i>Torm — Protection</span>
+    <span><i style="background:var(--ilmater)"></i>Ilmater — Holy</span>
+    <span><i style="background:var(--tyr)"></i>Tyr — Retribution</span>
+    <span><i style="background:var(--bane)"></i>Bane — the Fall</span>
+    <span><i style="background:var(--ivory-dim)"></i>Neutral</span>
+  </div>
+
+  <div id="sections"></div>
+
+  <footer>Reference only — see ART.md for the actual game-asset pipeline and required PNG sizes. Numbers throughout are placeholders per design/paladin-cards.md.</footer>
+</div>
+
+<script>
+// fields: name, cost, type, rarity, text, deity (T/I/Y/B/mixed codes or '-')
+const BASIC = [
+  ["Strike","1","Attack","Basic","Deal 6 damage.","-"],
+  ["Defend","1","Skill","Basic","Gain 5 Block.","-"],
+  ["Mend","1","Skill","Basic","Heal 5.","-"],
+  ["Aura of Protection","1","Power","Basic","At the start of your turn, all allies gain 2 Block.","-"],
+];
+const COMMON = [
+  ["Hold the Line","1","Skill","Common","Gain 7 Block. Gain 1 Faith in Torm.","T"],
+  ["Shield Bash","1","Attack","Common","Deal 5 damage. Gain 3 Block.","TY"],
+  ["Brace","1","Skill","Common","Gain 8 Block.","T"],
+  ["Interpose","1","Skill","Common","Gain 4 Block. Grant an ally 4 Block.","T"],
+  ["Steadfast","0","Skill","Common","Gain 3 Block. Gain 1 Faith in Torm.","T"],
+  ["Shield Wall","2","Skill","Common","Gain 12 Block.","T"],
+  ["Soothe","1","Skill","Common","Heal an ally 6.","I"],
+  ["Flash of Light","1","Skill","Common","Heal an ally 4. Gain 1 Faith in Ilmater.","I"],
+  ["Holy Shock","1","Attack","Common","Deal 5 damage OR heal 5.","IY"],
+  ["Salve","0","Skill","Common","Heal yourself 3. Gain 1 Faith in Ilmater.","I"],
+  ["Renew","1","Power","Common","At the start of your turn, heal 2.","I"],
+  ["Comfort","1","Skill","Common","Heal an ally 4. Draw 1 card.","I"],
+  ["Smite","1","Attack","Common","Deal 8 damage. Gain 1 Faith in Tyr.","Y"],
+  ["Crusader Strike","1","Attack","Common","Deal 7 damage. Gain 1 Faith in Tyr.","Y"],
+  ["Cleave","1","Attack","Common","Deal 5 damage to ALL enemies.","Y"],
+  ["Righteous Blow","2","Attack","Common","Deal 14 damage.","Y"],
+  ["Rebuke","1","Attack","Common","Deal 4 damage. Apply 1 Weak.","Y"],
+  ["Vengeful Mending","1","Attack","Common","Deal 7 damage. Heal yourself 3.","YI"],
+  ["Prayer","1","Skill","Common","Draw 2 cards.","-"],
+  ["Devotion","0","Skill","Common","Gain 1 Faith in your highest deity. Exhaust.","-"],
+  ["Kneel","0","Skill","Common","Name a deity. Gain 2 Faith in it. Exhaust.","-"],
+];
+const UNCOMMON = [
+  ["Bulwark","1","Skill","Uncommon","Gain Block equal to your Faith in Torm.","T"],
+  ["Holy Shield","1","Skill","Uncommon","Gain 5 Block. Until end of turn, whenever you are attacked, deal 3 damage to the attacker.","TY"],
+  ["Guardian's Mercy","1","Skill","Uncommon","Gain 4 Block. Heal an ally 3.","TI"],
+  ["Blessing of Protection","1","Skill","Uncommon","Grant an ally 8 Block.","T"],
+  ["Consecrated Ground","2","Power","Uncommon","Whenever you play a card that gains Block, all allies gain 1 Block.","T"],
+  ["Bastion","2","Skill","Uncommon","Gain 10 Block. Block is not removed at the start of your next turn.","T"],
+  ["Retribution","1","Attack","Uncommon","Deal damage equal to the Block you gained this turn.","TY"],
+  ["Shield Slam","1","Attack","Uncommon","Deal damage equal to your Block.","TY"],
+  ["Sentinel","1","Power","Uncommon","Whenever an ally is attacked, gain 2 Block.","T"],
+  ["Immovable Object","2","Skill","Uncommon","Requires 6 Faith in Torm. Gain 15 Block.","T"],
+  ["Blessing of Sacrifice","1","Power","Uncommon","Damage an ally would take is dealt to you instead, halved.","I"],
+  ["Aura of Mercy","2","Power","Uncommon","Aura — whenever you heal an ally, every other ally heals 1.","I"],
+  ["Absolve","1","Skill","Uncommon","Heal an ally 5. Remove one debuff from them.","I"],
+  ["Holy Light","2","Skill","Uncommon","Heal an ally 12.","I"],
+  ["Bind the Wounds","1","Skill","Uncommon","Heal an ally 3. Gain 2 Faith in Ilmater.","I"],
+  ["Prayer of Mending","1","Skill","Uncommon","Heal an ally 4. At the start of your next turn, heal them 4 again.","I"],
+  ["Martyr","1","Skill","Uncommon","Lose 4 HP. Heal an ally 8.","I"],
+  ["Circle of Healing","2","Skill","Uncommon","Heal all allies 4.","I"],
+  ["Faithful Servant","2","Skill","Uncommon","Requires 6 Faith in Ilmater. Heal an ally equal to your Faith in Ilmater.","I"],
+  ["Sanctuary","1","Skill","Uncommon","Heal an ally 3. Grant them 5 Block.","IT"],
+  ["Holy Smite","1","Attack","Uncommon","Deal 6 damage. Heal an ally 3.","YI"],
+  ["Blade of Justice","1","Attack","Uncommon","Deal 9 damage. Gain 2 Faith in Tyr.","Y"],
+  ["Judgment","1","Attack","Uncommon","Deal 5 damage. The enemy takes 4 additional damage from all sources this turn.","Y"],
+  ["Exorcism","1","Attack","Uncommon","Deal 12 damage. Exhaust.","Y"],
+  ["Wake of Ashes","2","Attack","Uncommon","Deal 7 damage to ALL enemies. Gain 2 Faith in Tyr.","Y"],
+  ["Zeal","1","Attack","Uncommon","Deal 4 damage 2 times.","Y"],
+  ["Equal Measure","1","Attack","Uncommon","Deal damage equal to your Faith in Tyr.","Y"],
+  ["Consecration","2","Power","Uncommon","At the start of your turn, deal 3 damage to ALL enemies.","Y"],
+  ["Crusader Aura","2","Power","Uncommon","Aura — all allies' Attacks deal 1 additional damage.","Y"],
+  ["Divine Purpose","1","Attack","Uncommon","Requires 6 Faith in Tyr. Deal 10 damage. Gain 1 Energy.","Y"],
+  ["Sacrament","1","Skill","Uncommon","Convert all Faith in one deity to another.","-"],
+  ["Tithe","1","Skill","Uncommon","Spend 3 Faith. Gain 2 Energy.","B"],
+  ["Litany","1","Skill","Uncommon","Draw 1 card for every 4 Faith in your highest deity.","-"],
+  ["Seal of Command","1","Power","Uncommon","Seal — for 3 turns, your Attacks deal 2 additional damage.","-"],
+  ["Seal of Light","1","Power","Uncommon","Seal — for 3 turns, whenever you play an Attack, heal 2.","-"],
+  ["Hallowed Ground","2","Power","Uncommon","Whenever you gain Faith in your highest deity, gain 1 Block.","-"],
+];
+const RARE = [
+  ["Shield of the Righteous","1","Skill","Rare","Gain Block equal to twice your Faith in Torm.","T"],
+  ["Ardent Defender","2","Power","Rare","The first time you would die this combat, instead heal to a third of max HP.","T"],
+  ["Divine Allegiance","1","Power","Rare","Whenever an ally would take damage, you may take it instead.","T"],
+  ["Aura of Devotion","2","Power","Rare","Aura — all allies take 1 less damage from attacks for every 5 Faith in Torm.","T"],
+  ["Avenger's Shield","1","Attack","Rare","Deal 8 damage to up to 3 enemies. Gain 6 Block.","TY"],
+  ["Guardian of Ancient Kings","3","Skill","Rare","Requires 10 Faith in Torm. For 3 turns, all damage you take is halved.","T"],
+  ["Divine Shield","2","Skill","Rare","Requires 8 Faith in Torm. You take no damage next turn. Exhaust.","T"],
+  ["Lay on Hands","2","Skill","Rare","Heal an ally to full. Exhaust.","I"],
+  ["Beacon of Light","2","Power","Rare","Choose an ally. Whenever you heal, they also heal half that much.","I"],
+  ["Word of Glory","1","Skill","Rare","Spend 3 Faith in Ilmater. Heal an ally 12.","I"],
+  ["Aura of Vitality","2","Power","Rare","Aura — at the start of your turn, all allies heal 3.","I"],
+  ["Light of Dawn","2","Skill","Rare","Heal all allies equal to half your Faith in Ilmater.","I"],
+  ["Redemption","3","Skill","Rare","Requires 12 Faith in Ilmater. Revive a downed ally at 1 HP. Exhaust.","I"],
+  ["The Broken God","2","Power","Rare","At the start of your turn, all allies heal equal to half your Faith in Ilmater.","I"],
+  ["Divine Smite","1","Attack","Rare","Deal 8 damage. If you have 5 or more Faith in any deity, deal 8 additional.","Y"],
+  ["Hammer of Wrath","1","Attack","Rare","Deal 10 damage. If the enemy is below half HP, deal 10 additional and gain 2 Faith in Tyr.","Y"],
+  ["Vow of Enmity","1","Power","Rare","Choose an enemy. Your Attacks against it deal 4 additional damage.","Y"],
+  ["Eye for an Eye","1","Power","Rare","Whenever you take damage, deal that much to the attacker.","Y"],
+  ["Divine Storm","2","Attack","Rare","Deal 10 damage to ALL enemies. Heal 3 for each enemy hit.","YI"],
+  ["Final Reckoning","3","Attack","Rare","Deal damage to ALL enemies equal to your total Faith across every deity.","Y"],
+  ["The Scales","2","Attack","Rare","Deal damage equal to twice your Faith in Tyr.","Y"],
+  ["Oath of the Crown","2","Power","Rare","Whenever you play a card that gains Block, gain 1 Faith in Torm.","T"],
+  ["Oath of Redemption","1","Power","Rare","Whenever you play a card that heals, gain 1 Faith in Ilmater.","I"],
+  ["Oath of Vengeance","2","Power","Rare","Whenever you play an Attack, gain 1 Faith in Tyr.","Y"],
+  ["Heresy","3","Power","Rare","Your Faith in every deity counts as your highest.","-"],
+  ["Zealotry","3","Power","Rare","Whenever you gain Faith, gain 1 additional.","-"],
+  ["Avenging Wrath","2","Power","Rare","Requires 8 Faith in Tyr. For 3 turns, Attacks deal 5 additional and heals restore 5 additional.","Y"],
+  ["Time of Troubles","3","Skill","Rare","Spend ALL Faith in Torm. Deal double that damage to one enemy. Gain that much Faith in Bane.","B"],
+  ["Tyranny","2","Power","Rare","Requires 10 Faith in Bane. Your Faith in Bane counts as Faith in every deity.","B"],
+];
+const RELICS = [
+  ["Holy Symbol","-","Relic","Starter","While held, your first Faith gain each combat is doubled. When your total Faith in one deity across the run reaches N, this is consumed and you receive that deity's relic.","-"],
+  ["Gauntlet of the True","-","Relic","Rare","Block is not fully removed at the start of your turn; keep half.","T"],
+  ["Bound Hands","-","Relic","Rare","At the start of each combat, all allies heal 4.","I"],
+  ["Scales of Judgment","-","Relic","Rare","At the start of each combat, gain 3 Faith in Tyr. Whenever you take damage, gain 1 Faith in Tyr.","Y"],
+];
+
+function pickIcon(card){
+  const text = card[4], type = card[2], deity = card[5]||"-";
+  const lead = text.split(/[.]/)[0].toLowerCase();
+  if(type==="Relic") return deity==="T"?"i-shieldcross":deity==="I"?"i-drop":deity==="Y"?"i-sunblade":"i-star";
+  if(deity.includes("B")) return "i-brokenhalo";
+  if(type==="Power") return "i-aura";
+  if(deity==="Y" && type==="Attack") return "i-sunblade";
+  if(deity==="T") return "i-shieldcross";
+  if(deity==="I") return "i-cross";
+  if(type==="Attack") return "i-sword";
+  if(/heal/.test(lead)) return "i-drop";
+  if(/block/.test(lead)) return "i-shield";
+  if(/exhaust/.test(lead)) return "i-flame";
+  if(/faith|deity/.test(lead)) return "i-star";
+  return "i-shield";
+}
+function deityColor(deity){
+  if(!deity||deity==="-") return "var(--ivory-dim)";
+  if(deity.includes("B")) return "var(--bane)";
+  if(deity[0]==="T") return "var(--torm)";
+  if(deity[0]==="I") return "var(--ilmater)";
+  if(deity[0]==="Y") return "var(--tyr)";
+  return "var(--ivory-dim)";
+}
+function deityLabel(d){
+  if(!d||d==="-") return "";
+  return d.split("").map(c=>({T:"Torm",I:"Ilmater",Y:"Tyr",B:"Bane"}[c]||"")).filter(Boolean).join(" + ");
+}
+
+function renderSection(title, cards){
+  const grid = cards.map(c=>{
+    const [n,cost,type,rarity,text,deity] = c;
+    const icon = pickIcon(c);
+    const tint = deity && deity!=="-" ? deityColor(deity) : {Common:"var(--common)",Uncommon:"var(--uncommon)",Rare:"var(--rare)",Basic:"var(--basic)",Starter:"var(--gold-bright)"}[rarity]||"var(--ivory-dim)";
+    return `<div class="card" data-rarity="${rarity}">
+      ${cost!=="-"?`<div class="cost">${cost}</div>`:""}
+      <div class="rarity-tag" style="color:${ {Common:"var(--common)",Uncommon:"var(--uncommon)",Rare:"var(--rare)",Basic:"var(--basic)",Starter:"var(--gold-bright)"}[rarity]||"var(--ivory-dim)" }">${rarity}</div>
+      <div class="art" style="color:${tint}"><svg><use href="#${icon}"/></svg></div>
+      <div class="name">${n}</div>
+      <div class="type">${type}</div>
+      <div class="text">${text}</div>
+      ${deityLabel(deity)?`<div class="deity-tag" style="color:${tint}">${deityLabel(deity)}</div>`:""}
+    </div>`;
+  }).join("");
+  return `<section><div class="section-head"><h2>${title}</h2><span class="count">${cards.length} ${cards.length===1?"card":"cards"}</span></div><div class="grid">${grid}</div></section>`;
+}
+
+document.getElementById("sections").innerHTML =
+  renderSection("Basic", BASIC) +
+  renderSection("Common", COMMON) +
+  renderSection("Uncommon", UNCOMMON) +
+  renderSection("Rare", RARE) +
+  renderSection("Relics", RELICS);
+
+const total = BASIC.length+COMMON.length+UNCOMMON.length+RARE.length;
+document.getElementById("tally").textContent =
+  `${total} cards, ${RELICS.length} relics — ${total+RELICS.length} total. (The doc's own header says 91; its per-tier breakdown sums to ${total} — a pre-existing typo in the source, not something changed here.)`;
+</script>

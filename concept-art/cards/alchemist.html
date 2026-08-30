@@ -1,0 +1,263 @@
+<title>The Alchemist — Card Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#15110c; --ink-2:#1d1710; --ink-3:#241d13; --hairline:#3a2f1f;
+    --parchment:#ede3c8; --parchment-dim:#b6a988;
+    --brass:#c99a46; --brass-bright:#e8c169;
+    --verdigris:#6b9a83; --ember:#a8461f; --reagent:#9ed14a;
+    --common:#9a8b6a; --uncommon:#6b9a83; --rare:#e8c169; --basic:#7a7062;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--ink);color:var(--parchment);font-family:'Spectral',Georgia,serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--brass-bright);}
+  .wrap{max-width:1400px;margin:0 auto;padding:clamp(20px,4vw,56px) clamp(18px,4vw,40px) 80px;}
+  h1,h2{font-family:'IM Fell English SC',Georgia,serif;font-weight:400;text-wrap:balance;color:var(--parchment);margin:0;}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--verdigris);margin:0 0 8px;}
+  h1{font-size:clamp(2.2rem,5vw,3.2rem);}
+  .sub{font-family:'IBM Plex Mono',monospace;color:var(--parchment-dim);font-size:.85rem;margin-top:10px;}
+  section{margin-top:56px;}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:1px solid var(--hairline);padding-bottom:12px;}
+  .section-head h2{font-size:1.5rem;}
+  .section-head .count{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--parchment-dim);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+  .card{
+    background:linear-gradient(180deg,var(--ink-2),var(--ink-3));
+    border:1px solid var(--hairline);
+    border-radius:6px;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    position:relative;
+    aspect-ratio:5/7.2;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.5); }
+  .card[data-rarity="Common"]{ box-shadow:inset 0 0 0 2px var(--common); }
+  .card[data-rarity="Uncommon"]{ box-shadow:inset 0 0 0 2px var(--uncommon); }
+  .card[data-rarity="Rare"]{ box-shadow:inset 0 0 0 2px var(--rare); }
+  .card[data-rarity="Basic"]{ box-shadow:inset 0 0 0 2px var(--basic); }
+  .cost{
+    position:absolute; top:6px; left:6px; width:22px; height:22px; border-radius:50%;
+    background:var(--ink); border:1.5px solid var(--brass-bright);
+    color:var(--brass-bright); font-family:'IBM Plex Mono',monospace; font-weight:600;
+    font-size:.72rem; display:flex; align-items:center; justify-content:center; z-index:2;
+  }
+  .rarity-tag{
+    position:absolute; top:6px; right:6px; font-family:'IBM Plex Mono',monospace;
+    font-size:.55rem; letter-spacing:.04em; text-transform:uppercase; opacity:.75; z-index:2;
+  }
+  .art{
+    flex:0 0 56%; display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+  }
+  .art svg{ width:52%; height:52%; }
+  .name{
+    font-family:'IM Fell English SC',Georgia,serif; font-size:.78rem; text-align:center;
+    padding:5px 6px 2px; color:var(--parchment); line-height:1.15; text-wrap:balance;
+  }
+  .type{
+    text-align:center; font-family:'IBM Plex Mono',monospace; font-size:.55rem;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--parchment-dim); margin-bottom:3px;
+  }
+  .text{
+    flex:1; font-size:.62rem; padding:2px 8px 8px; color:var(--parchment-dim);
+    line-height:1.3; overflow:hidden;
+  }
+  footer{margin-top:70px;padding-top:20px;border-top:1px solid var(--hairline);font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--parchment-dim);}
+</style>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <symbol id="i-sword" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M50 8 L50 66"/><path d="M32 24 L68 24"/><path d="M50 66 L38 90"/><path d="M50 66 L62 90"/><path d="M44 78 L56 78"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 100 100"><path d="M50 8 L86 22 V50 C86 74 70 88 50 94 C30 88 14 74 14 50 V22 Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+  <symbol id="i-aura" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5"><circle cx="50" cy="50" r="14"/><circle cx="50" cy="50" r="30" opacity=".7"/><circle cx="50" cy="50" r="44" opacity=".4"/></g></symbol>
+  <symbol id="i-flask" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"><path d="M40 12 H60 V38 L78 78 C82 88 76 94 66 94 H34 C24 94 18 88 22 78 L40 38 Z"/><path d="M36 20 H64"/></g><path d="M30 80 C40 72 60 72 70 80 L66 90 H34 Z" fill="currentColor" opacity=".5" stroke="none"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="6"/><text x="50" y="62" font-size="34" text-anchor="middle" fill="currentColor" font-family="serif">G</text></symbol>
+  <symbol id="i-flame" viewBox="0 0 100 100"><path d="M50 10 C60 30 70 34 70 54 C70 74 58 90 50 90 C42 90 30 74 30 54 C30 44 36 42 40 34 C42 46 48 46 48 38 C48 28 44 20 50 10 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 100 100"><path d="M50 88 C20 66 8 46 8 30 C8 16 20 8 32 8 C42 8 50 16 50 26 C50 16 58 8 68 8 C80 8 92 16 92 30 C92 46 80 66 50 88 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><path d="M40 30 L50 50 L44 50 L56 74" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 100 100"><path d="M50 8 C66 34 80 52 80 68 C80 84 66 94 50 94 C34 94 20 84 20 68 C20 52 34 34 50 8 Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+  <symbol id="i-cycle" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M20 50 A30 30 0 1 1 30 71"/><path d="M14 60 L20 50 L32 54"/></g></symbol>
+  <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6 L61 38 L96 38 L67 58 L78 92 L50 71 L22 92 L33 58 L4 38 L39 38 Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 100 100"><path d="M42 8 H58 V42 H92 V58 H58 V92 H42 V58 H8 V42 H42 Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-slots" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="6"><rect x="14" y="30" width="20" height="50" rx="4"/><rect x="40" y="20" width="20" height="60" rx="4"/><rect x="66" y="30" width="20" height="50" rx="4"/></g></symbol>
+  <symbol id="i-scale" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="5"><path d="M50 10 V80"/><path d="M20 26 H80"/><path d="M20 26 L8 50 A16 12 0 0 0 32 50 Z"/><path d="M80 26 L68 50 A16 12 0 0 0 92 50 Z"/><path d="M34 90 H66"/></g></symbol>
+</defs>
+</svg>
+
+<div class="wrap">
+  <p class="kicker">Card Gallery · v1</p>
+  <h1>THE ALCHEMIST</h1>
+  <p class="sub">Systematic mockups generated from the full 80-card design (<a href="https://github.com/r0zar/HelloSpire/issues/2">issue #2</a>) — icon and rarity frame computed from each card's real type and keywords, not hand-painted per card. <span id="tally"></span></p>
+
+  <div id="sections"></div>
+
+  <footer>Reference only — see ART.md for the actual game-asset pipeline and required PNG sizes.</footer>
+</div>
+
+<script>
+const BASIC = [
+  ["Pyric Formula","1","Skill","Basic","Brew an Explosive Ampoule. Exhaust. (Deal 10 damage to ALL enemies.)"],
+  ["Aegis Formula","1","Skill","Basic","Brew a Block Potion. Exhaust. (Gain 12 Block.)"],
+];
+const COMMON = [
+  ["Flask Toss","1","Attack","Common","Deal 8 damage. If you used a Potion this turn, deal 4 additional damage."],
+  ["Glass Shard","1","Attack","Common","Deal 9 damage. If you have an empty Potion Slot, deal 3 additional damage."],
+  ["Scatter Flask","1","Attack","Common","Deal 5 damage to ALL enemies. If you used a Potion this turn, deal 3 additional damage to ALL enemies."],
+  ["Gilded Scalpel","1","Attack","Common","Deal 8 damage. If you gained Gold this turn, deal 3 additional damage."],
+  ["Pyric Burst","2","Attack","Common","Deal 16 damage. You may Invest 3 Gold to deal 6 additional damage."],
+  ["Quick Silver","0","Attack","Common","Deal 4 damage. If a Potion Slot became empty this turn, deal 4 additional damage."],
+  ["Crucible Blow","1","Attack","Common","Deal 8 damage. You may Exhaust another card in your Hand to deal 6 additional damage."],
+  ["Copper Shot","1","Attack","Common","Deal 7 damage. You may Invest 2 Gold to apply 1 Weak."],
+  ["Transmute","1","Skill","Common","Exhaust another card in your Hand. Gain 5 Gold. Exhaust."],
+  ["Salvage Reagents","0","Skill","Common","Exhaust another card in your Hand. Gain 4 Block and 2 Gold. Exhaust."],
+  ["Pocket Formula","1","Skill","Common","Brew a random Common Combat Potion. Exhaust."],
+  ["Glass Apron","1","Skill","Common","Gain 7 Block plus 1 Block for each empty Potion Slot."],
+  ["Steady Pour","1","Skill","Common","Gain 8 Block. If you used a Potion this turn, gain 3 additional Block."],
+  ["Dilute","0","Skill","Common","Distill a Potion. Draw 2 cards. Exhaust."],
+  ["Recycle Glass","1","Skill","Common","Gain 5 Block. You may Exhaust another card in your Hand to gain 5 additional Block."],
+  ["Coin Purse","0","Skill","Common","You may Invest 4 Gold to gain 1 Energy. Exhaust."],
+  ["Bitter Solvent","1","Skill","Common","Apply 2 Weak. If you used a Potion this turn, gain 4 Block."],
+  ["Market Sense","1","Skill","Common","Draw 2 cards, then discard 1. If you spent Gold this turn, gain 3 Block."],
+  ["Empty Vial","1","Skill","Common","Gain 5 Block. If you have no Potions, draw 2 cards."],
+  ["Residual Heat","1","Power","Common","The first time each turn you use a Potion, deal 3 damage to a random enemy."],
+];
+const UNCOMMON = [
+  ["Bottle Barrage","1","Attack","Uncommon","Deal 3 damage for each occupied Potion Slot."],
+  ["Shatterstock","1","Attack","Uncommon","Deal 9 damage. You may Distill a Potion to deal 9 damage again."],
+  ["Pressure Burst","1","Attack","Uncommon","Deal 8 damage. If your Potion Belt is full, deal 8 additional damage."],
+  ["Empty Bottle","0","Attack","Uncommon","Deal 4 damage. If you have no Potions, deal 4 additional damage and draw 1 card."],
+  ["Cinnabar Edge","1","Attack","Uncommon","Deal 9 damage. If you Exhausted a card this turn, apply 1 Vulnerable."],
+  ["Black Market Blade","1","Attack","Uncommon","Deal 8 damage. You may Invest up to 5 Gold; deal 2 additional damage for each Gold invested."],
+  ["Volatile Compound","2","Attack","Uncommon","Deal 18 damage. Costs 1 Energy instead if you used a Potion this turn."],
+  ["Flash Powder","1","Attack","Uncommon","Deal 6 damage to ALL enemies. You may Invest 4 Gold to deal 5 additional damage to ALL enemies."],
+  ["Auric Needle","1","Attack","Uncommon","Deal 7 damage. Deal 1 additional damage for each Gold gained this combat, up to +10."],
+  ["Corkscrew","1","Attack","Uncommon","Deal 5 damage twice. If you Distilled a Potion this turn, deal 5 damage three times instead."],
+  ["Reactive Slash","1","Attack","Uncommon","Deal 10 damage. If you created a card this turn, deal 5 additional damage."],
+  ["Mercury Lance","2","Attack","Uncommon","Deal 20 damage. Exhaust a random other card in your Hand."],
+  ["Distillation Column","1","Skill","Uncommon","Distill a Potion. Gain 2 Energy. Exhaust."],
+  ["Reconstitute","1","Skill","Uncommon","Choose a Potion you used this combat. Brew a Volatile copy of it. Exhaust."],
+  ["Buy Ingredients","0","Skill","Uncommon","You may Invest 6 Gold. If you do, choose 1 of 3 random Common Combat Potions and Brew it. Exhaust."],
+  ["Commission","1","Skill","Uncommon","You may Invest 8 Gold. If you do, create a random Alchemist card in your Hand. It costs 0 this turn. Exhaust."],
+  ["Field Upgrade","1","Skill","Uncommon","Upgrade a card in your Hand for this combat. You may Invest 4 Gold to Upgrade ALL cards in your Hand instead."],
+  ["Gilded Guard","1","Skill","Uncommon","Gain 7 Block. You may Invest up to 5 Gold; gain 2 additional Block for each Gold invested."],
+  ["Liquidate","1","Skill","Uncommon","Exhaust another card in your Hand. Gain 3 Gold plus 2 Gold per Energy that card costs, up to 9 Gold. Exhaust."],
+  ["Smelt the Weak","0","Skill","Uncommon","Exhaust a Status or non-Eternal Curse from your Hand. Gain 1 Energy. Exhaust."],
+  ["Spare Flask","1","Skill","Uncommon","Gain 5 Block. If you have an empty Potion Slot, Brew a random Common Combat Potion. Exhaust."],
+  ["Stabilize","1","Skill","Uncommon","Choose a Volatile Potion. You may Invest 40 Gold to remove Volatile from it. Exhaust."],
+  ["Safety Goggles","1","Skill","Uncommon","Gain 3 Block for each empty Potion Slot."],
+  ["Emergency Reserve","0","Skill","Uncommon","You may Invest 5 Gold to draw 2 cards. Exhaust."],
+  ["Gold Leaf","1","Skill","Uncommon","Gain 7 Block. If you gained Gold this turn, gain 7 additional Block."],
+  ["Cost of Knowledge","0","Skill","Uncommon","You may Invest 3 Gold. If you do, draw 1 card and Upgrade it for this combat. Exhaust."],
+  ["Catalytic Wash","1","Skill","Uncommon","Exhaust up to 2 cards in your Hand. Draw 1 card for each card Exhausted."],
+  ["False Bottom","1","Skill","Uncommon","Put a card from your Hand on the bottom of your Draw Pile. Draw 2 cards. If you used a Potion this turn, gain 4 Block."],
+  ["Tincture Trade","1","Skill","Uncommon","Distill a Potion. Gain 8 Block and draw 1 card."],
+  ["Heat Bath","1","Power","Uncommon","The first time each turn you Brew a Potion, gain 4 Block."],
+  ["Coin Press","1","Power","Uncommon","The first time each turn you Exhaust a card, gain 1 Gold. Can trigger at most 3 times each combat."],
+  ["Merchant's Instinct","1","Power","Uncommon","Whenever you Invest Gold, gain 3 Block."],
+  ["Reactive Mixture","1","Power","Uncommon","The first time each turn you use a Potion, draw 1 card."],
+  ["Closed System","1","Power","Uncommon","The first time each turn a Potion Slot becomes empty, gain 4 Block."],
+  ["Refiner's Eye","2","Power","Uncommon","Cards you create during combat are created Upgraded."],
+];
+const RARE = [
+  ["Philosopher's Flame","2","Attack","Rare","Deal 20 damage. You may Invest 10 Gold to deal 20 additional damage."],
+  ["Chain Reaction","2","Attack","Rare","Deal 10 damage to ALL enemies, plus 4 additional damage to ALL enemies for each Potion used this turn, up to 3 Potions."],
+  ["Midas Needle","1","Attack","Rare","Deal 5 damage plus 1 damage for each Gold spent this combat, up to +30."],
+  ["Matter Annihilation","2","Attack","Rare","Exhaust another card in your Hand. Deal 8 damage plus 7 damage for each Energy that card costs."],
+  ["Homunculus Assault","2","Attack","Rare","Deal 14 damage. You may Invest 8 Gold to create 2 random Attack cards in your Hand. They cost 0 this turn."],
+  ["Gilded Execution","2","Attack","Rare","Deal 18 damage. If Fatal, gain 15 Gold."],
+  ["Grand Combustion","3","Attack","Rare","Deal 18 damage to ALL enemies. Distill any number of Potions; deal 6 additional damage to ALL enemies for each Potion Distilled. Exhaust."],
+  ["Alchemize","1","Skill","Rare","Procure a random Potion. Exhaust."],
+  ["Heavy Transmute","1","Skill","Rare","Exhaust every other card in your Hand. Gain 4 Gold for each card Exhausted this way. Exhaust."],
+  ["Magnum Opus","3","Skill","Rare","Fill all empty Potion Slots with random Volatile Combat Potions. Exhaust."],
+  ["Gilded Revision","1","Skill","Rare","Upgrade ALL cards in your Hand for this combat. You may Invest 8 Gold; if you do, they cost 1 less this turn."],
+  ["Masterwork","2","Skill","Rare","You may Invest 50 Gold to permanently Upgrade another card in your Hand. Exhaust."],
+  ["Grand Commission","1","Skill","Rare","You may Invest 12 Gold. If you do, choose 1 of 3 random Rare Alchemist cards and add it to your Hand. It costs 0 this turn. Exhaust."],
+  ["Essence Distillation","1","Skill","Rare","Distill a Potion. Common: gain 1 Energy and draw 1. Uncommon: gain 2 Energy and draw 1. Rare: gain 2 Energy and draw 2. Exhaust."],
+  ["Bottled Time","1","Skill","Rare","The next Potion you use this turn resolves normally but is not consumed. Exhaust."],
+  ["Refill the Retort","2","Skill","Rare","Choose a Potion you used this combat. Brew 2 Volatile copies of it. Exhaust."],
+  ["Gold Standard","0","Skill","Rare","You may Invest 10 Gold to gain 2 Energy and draw 2 cards. Exhaust."],
+  ["Perfect Solvent","1","Skill","Rare","Exhaust up to 3 other cards in your Hand. Gain 5 Block and draw 1 card for each card Exhausted. Exhaust."],
+  ["Emergency Apothecary","2","Skill","Rare","Brew a Block Potion and an Energy Potion. Exhaust."],
+  ["Compound Interest","1","Power","Rare","At the end of combat, regain 25% of the Gold you spent through Invest this combat, rounded down."],
+  ["Eternal Crucible","2","Power","Rare","The first Potion you use each combat resolves twice but is consumed only once."],
+  ["Golden Engine","2","Power","Rare","The first time each turn you gain Gold during combat, draw 1 card and gain 2 Block."],
+  ["Conservation of Matter","2","Power","Rare","The first time each turn you Exhaust a card, draw 1 card."],
+  ["Laboratory Network","2","Power","Rare","At the start of your turn, if you have an empty Potion Slot, there is a 25% chance to Brew a random Common Combat Potion."],
+  ["Philosopher's Method","3","Power","Rare","Whenever you use a Potion, gain 1 Strength and 1 Dexterity this turn."],
+];
+const RELICS = [
+  ["Portable Alembic","-","Relic","Starter","At the start of each combat, Brew a random Common Combat Potion."],
+  ["Greater Alembic","-","Relic","Starter","Ancient upgrade. At the start of each combat, Brew 2 random Common Combat Potions."],
+  ["Cork Stopper","-","Relic","Common","The first time each combat you use a Potion, draw 1 card."],
+  ["Ceramic Retort","-","Relic","Uncommon","The first time each turn you Brew a Potion, gain 4 Block."],
+  ["Assayer's Lens","-","Relic","Uncommon","The first time each combat you gain Gold during combat, gain 1 Energy."],
+  ["Golden Crucible","-","Relic","Rare","Whenever a card grants you Gold during combat, gain 3 additional Gold."],
+  ["Bottomless Stopper","-","Relic","Rare","The first Volatile Potion you use each combat is not consumed. The next use consumes it normally."],
+  ["Glass Homunculus","-","Relic","Rare","The first time each combat you Invest Gold, create a random Alchemist card in your Hand. It costs 0 this turn."],
+  ["Gilded Ledger","-","Relic","Shop","Invest costs are reduced by 2 Gold, to a minimum of 1. Merchant prices are 10% higher."],
+];
+const POTIONS = [
+  ["Solvent Flask","-","Potion","Common","Choose a card in your Hand. Exhaust it. Draw 2 cards."],
+  ["Aurum Tincture","-","Potion","Uncommon","Gain 15 Gold and 1 Energy."],
+  ["Panacea of Plenty","-","Potion","Rare","Fill all empty Potion Slots with random Volatile Common Combat Potions."],
+];
+const MULTIPLAYER = [
+  ["Shared Flask","1","Skill","Multiplayer","Choose another player. They gain 8 Block. Brew a Block Potion for yourself. Exhaust."],
+  ["Bulk Order","1","Skill","Multiplayer","You may Invest 8 Gold. If you do, ALL players draw 1 card and gain 4 Block. Exhaust."],
+  ["Community Formula","2","Skill","Multiplayer","ALL players choose 1 of 3 random Common cards to create in their Hand."],
+  ["Pass the Bottle","0","Skill","Multiplayer","Choose another player. They gain 1 Energy. Distill one of your Potions. Exhaust."],
+  ["Joint Venture","2","Power","Multiplayer","The first time each combat any player uses a Potion, ALL players gain 3 Block."],
+];
+
+function pickIcon(card){
+  const text = card[4], type = card[2];
+  const lead = text.split(/[.]/)[0].toLowerCase(); // primary clause only — a mention in a bonus clause shouldn't override the card's real type
+  if(type==="Relic"||type==="Potion") return "i-flask";
+  if(type==="Power") return "i-aura";
+  if(type==="Attack") return "i-sword";
+  // Skills: pick by primary verb
+  if(/render/.test(lead)) return "i-heart";
+  if(/^brew/.test(lead)) return "i-flask";
+  if(/^distill/.test(lead)) return "i-drop";
+  if(/invest/.test(lead)) return "i-coin";
+  if(/upgrade/.test(lead)) return "i-cycle";
+  if(/slot/.test(lead)) return "i-slots";
+  if(/gold/.test(lead)) return "i-coin";
+  if(/block/.test(lead)) return "i-shield";
+  if(/exhaust/.test(lead)) return "i-flame";
+  return "i-shield";
+}
+
+function renderSection(title, cards){
+  const grid = cards.map(c=>{
+    const [n,cost,type,rarity,text] = c;
+    const icon = pickIcon(c);
+    const tint = {Common:"var(--common)",Uncommon:"var(--uncommon)",Rare:"var(--rare)",Basic:"var(--basic)",Starter:"var(--brass-bright)",Shop:"var(--brass-bright)",Multiplayer:"var(--verdigris)"}[rarity]||"var(--parchment-dim)";
+    return `<div class="card" data-rarity="${rarity}">
+      ${cost!=="-"?`<div class="cost">${cost}</div>`:""}
+      <div class="rarity-tag" style="color:${tint}">${rarity}</div>
+      <div class="art" style="color:${tint}"><svg><use href="#${icon}"/></svg></div>
+      <div class="name">${n}</div>
+      <div class="type">${type}</div>
+      <div class="text">${text}</div>
+    </div>`;
+  }).join("");
+  return `<section><div class="section-head"><h2>${title}</h2><span class="count">${cards.length} ${cards.length===1?"card":"cards"}</span></div><div class="grid">${grid}</div></section>`;
+}
+
+document.getElementById("sections").innerHTML =
+  renderSection("Basic", BASIC) +
+  renderSection("Common", COMMON) +
+  renderSection("Uncommon", UNCOMMON) +
+  renderSection("Rare", RARE) +
+  renderSection("Relics", RELICS) +
+  renderSection("Potions", POTIONS) +
+  renderSection("Multiplayer", MULTIPLAYER);
+
+document.getElementById("tally").textContent =
+  `${BASIC.length+COMMON.length+UNCOMMON.length+RARE.length} cards, ${RELICS.length} relics, ${POTIONS.length} potions, ${MULTIPLAYER.length} multiplayer cards — ${BASIC.length+COMMON.length+UNCOMMON.length+RARE.length+RELICS.length+POTIONS.length+MULTIPLAYER.length} total.`;
+</script>
