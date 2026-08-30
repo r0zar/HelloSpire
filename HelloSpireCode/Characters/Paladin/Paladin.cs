@@ -24,26 +24,22 @@ public class Paladin : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 75;
 
-    // PROTOTYPE DECK. Not the designed starter (4 Strike / 4 Defend / 1 Mend / 1 Aura of
-    // Protection). This is built to exercise every Faith path in one fight: printed Faith
-    // (Smite, Hold the Line), Oath-triggered Faith across all three verbs, a deity-neutral
-    // heal, and a threshold payoff (The Scales). Replace once the mechanic is verified.
+    // The designed starter: 4 Strike / 4 Defend / 1 Mend / 1 Aura of Protection. No card names
+    // a deity and none generates Faith, so the starter pushes the player toward no god -- the
+    // first Faith decision is the first card reward. Every other Paladin card is in the reward
+    // pool via [Pool] on PaladinCard.
     public override IEnumerable<CardModel> StartingDeck =>
     [
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<Smite>(),
-        ModelDb.Card<Smite>(),
-        ModelDb.Card<HoldTheLine>(),
-        ModelDb.Card<HoldTheLine>(),
+        ModelDb.Card<StrikePaladin>(),
+        ModelDb.Card<StrikePaladin>(),
+        ModelDb.Card<StrikePaladin>(),
+        ModelDb.Card<StrikePaladin>(),
+        ModelDb.Card<DefendPaladin>(),
+        ModelDb.Card<DefendPaladin>(),
+        ModelDb.Card<DefendPaladin>(),
+        ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<Mend>(),
-        ModelDb.Card<Mend>(),
-        ModelDb.Card<OathOfVengeanceCard>(),
-        ModelDb.Card<OathOfTheCrownCard>(),
-        ModelDb.Card<OathOfRedemptionCard>(),
-        ModelDb.Card<TheScales>(),
+        ModelDb.Card<AuraOfProtection>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<HolySymbol>()];
