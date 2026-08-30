@@ -54,6 +54,14 @@ public class Alchemist : PlaceholderCharacterModel
         }
     }
 
+
+    /// <summary>
+    /// The in-combat body: our own NCreatureVisuals scene with a static Sprite2D, replacing the
+    /// inherited Ironclad rig. Same pipeline as the Paladin's; placeholder art, spec for real
+    /// art in design/paladin.md under Combat visuals.
+    /// </summary>
+    public override string CustomVisualPath => "res://HelloSpire/scenes/creature_visuals_alchemist.tscn";
+
     public override string CustomIconTexturePath => "character_icon.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectIconPath => "char_select.png".CharacterUiPath(AssetFolder);
     public override string CustomCharacterSelectLockedIconPath => "char_select_locked.png".CharacterUiPath(AssetFolder);

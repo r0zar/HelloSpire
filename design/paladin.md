@@ -158,8 +158,9 @@ contract (unique names): `%Visuals` (Node2D body), `%Bounds` (Control hitbox), `
 is null-safe about missing spine rigs (animation triggers no-op, SFX still plays), so a static
 image is a legitimate creature.
 
-**Art request (Dan): the combat body.** Replaces
-`HelloSpire/images/creature/paladin_body.png` (current file is a generated placeholder).
+**Art request (Dan): the combat bodies.** All three characters use this pipeline now; each
+replaces one file under `HelloSpire/images/creature/` (current files are generated
+placeholders): `paladin_body.png`, `gunslinger_body.png`, `alchemist_body.png`.
 
 - Full-body Paladin, standing idle, **facing right** (players stand on the left side).
 - Transparent PNG, roughly **512x832** (any similar ratio works; the scene scales it 0.8x, so
