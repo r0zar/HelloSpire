@@ -1,6 +1,6 @@
 {
   "HELLOSPIRE-MEND.title": "Mend",
-  "HELLOSPIRE-MEND.description": "Heal a player {Heal:diff()} HP plus your [gold]Spirit[/gold].\n[gold]Exhaust[/gold].",
+  "HELLOSPIRE-MEND.description": "Heal {Heal:diff()} HP plus your [gold]Spirit[/gold].\n[gold]Exhaust[/gold].",
   "HELLOSPIRE-STRIKE_GUNSLINGER.title": "Strike",
   "HELLOSPIRE-STRIKE_GUNSLINGER.description": "Deal {Damage:diff()} damage.",
   "HELLOSPIRE-DEFEND_GUNSLINGER.title": "Defend",

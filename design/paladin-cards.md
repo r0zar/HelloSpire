@@ -11,14 +11,14 @@ The archived 91-card Spirit set is in [`paladin-faith-cards-archive.md`](paladin
 |---|---|---|---|---|
 | Strike | 1 | Attack | Deal 6 damage. | +3 damage |
 | Defend | 1 | Skill | Gain 5 Block. | +3 Block |
-| Mend | 1 | Skill | Heal a player 5 HP plus your Spirit. Exhaust. | Heal 7 |
+| Mend | 1 | Skill | Heal 5 HP plus your Spirit. Exhaust. | Heal 7 |
 | Judgment | 1 | Attack | Trigger your Seal's effect. Unplayable without a Seal. | costs 0 |
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 
-**MP only** = `MultiplayerOnly`: never appears in solo rewards/shops. Heals target `AnyPlayer`
-(the caster's Spirit boosts the heal, whoever receives it). Rules in `paladin.md` under
-Multiplayer identity: heals are MP cards, auras are MP Powers, blessings are MP Skills.
+**MP only** = `MultiplayerOnly`: never appears in solo rewards/shops. Rules in `paladin.md`:
+heals that target any player are MP cards (self-heals are unrestricted), auras are MP Powers,
+blessings are MP Skills. The caster's Spirit boosts every heal, whoever receives it.
 
 ## Common (8)
 

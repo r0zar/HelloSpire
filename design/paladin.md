@@ -54,11 +54,9 @@ entirely and never see a dead card).
 
 The category rules:
 
-- **Heals target `AnyPlayer` and are MultiplayerOnly.** Solo, `AnyPlayer` still works (you are
-  the only target) -- but pool heals only appear in co-op, where healing allies is worth a
-  card. Exception: **Mend**, the starter heal, stays solo-legal so the starter deck functions
-  everywhere. Seal of Light also stays solo-legal: it heals the owner as an engine, not as a
-  targeted heal.
+- **Heals that target `AnyPlayer` are MultiplayerOnly.** Self-heals are unrestricted -- Mend
+  and Seal of Light are self-heals and appear everywhere. Ally-targeting heals (Holy Light,
+  Flash of Light, and the co-op batch to come) only exist where allies do.
 - **Auras are MultiplayerOnly Powers** -- ongoing party-wide effects (none built yet).
 - **Blessings are MultiplayerOnly Skills** -- single-shot ally buffs (none built yet).
 - All heals route through `Spirit.Heal(healer, target, amount)`: the *caster's* Spirit boosts
