@@ -11,12 +11,12 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 
 /// <summary>
 /// Pool relic. Whenever you play a card that heals, gain 1 Strength. Once per turn. Now that
-/// heals cost Faith, this pays you for spending it.
+/// healing scales with Spirit, this pays you for doing it.
 ///
 /// Turns the character's least-valued verb into its most-valued stat: healing is weak in Slay
 /// the Spire and Strength is the strongest scaling there is. A heal-heavy deck becomes a
 /// scaling deck, which makes Ilmater cards attractive to a Tyr build -- the cross-deity blending
-/// the design wants -- without touching Faith, which stays scarce.
+/// the design wants -- without touching Spirit itself.
 ///
 /// Trigger is "played a card that heals", not "HP went up": countable, credits ally heals to the
 /// Paladin, and does not fire on potions, Regen or end-of-combat heals. Once per turn caps a

@@ -48,7 +48,8 @@ must be understood on sight.
 
 Strength raises attacks, Dexterity raises Block, **Spirit raises healing** -- one icon in the
 power bar next to Strength, reset per combat like the others. The **Holy Symbol** (starter
-relic) grants 3 at the start of each combat; **Smite** earns 1 more per play.
+relic) grants 3 at the start of each combat. Nothing else grants it yet; cards that
+earn Spirit are the obvious next design space.
 
 **Mend Exhausts.** That is the anti-stall guarantee now -- one heal per copy per fight, no
 economy to police. Spirit is why the one heal is worth building toward: Mend heals 5 + Spirit
@@ -65,8 +66,8 @@ be negative Spirit on the same icon.
 
 ### Card pool
 
-One card: **Smite** (1E, deal 9, gain 1 Spirit). Everything else the Paladin sees today is
-colorless or shop.
+Empty. Every card is added one at a time, deliberately, after the previous one is playtested.
+Everything the Paladin sees today is colorless or shop.
 
 ## What is settled
 
@@ -96,7 +97,7 @@ Not a plan. A shortlist to pick one from, each chosen to test one thing:
 
 | Card | Tests |
 |---|---|
-| **Smite** — 1E, deal 9 | does a plain better Strike make Act 1 feel right, or is it just filler? |
+| **Smite** — 1E, deal 9, gain 1 Spirit (built once, pulled pending playtest) | does a plain better Strike make Act 1 feel right, or is it just filler? |
 | **Hold the Line** — 1E, gain 8 Block | same question for defence |
 | **Vengeful Mending** — 1E, deal 7, heal 3 | the heal-on-attack pattern, and Holy Fervor firing off an Attack |
 | **Renew** — 1E Power, heal 2 at turn start | healing over time as a Power; whether a Power belongs this early |

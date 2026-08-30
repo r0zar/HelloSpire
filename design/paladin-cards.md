@@ -16,11 +16,7 @@ The archived 91-card Spirit set is in [`paladin-faith-cards-archive.md`](paladin
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice.
 
-## Common (1)
-
-| Card | Cost | Type | Effect | Upgrade |
-|---|---|---|---|---|
-| Smite | 1 | Attack | Deal 9 damage. Gain 1 Spirit. | +3 damage |
+## Common (0)
 
 ## Uncommon (0)
 
@@ -30,7 +26,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Hammer of Justice.
 
 | Power | Effect |
 |---|---|
-| Spirit | Increases the healing of your cards. The Paladin's Strength-for-heals; granted by Holy Symbol (3/combat) and Smite. |
+| Spirit | Increases the healing of your cards. The Paladin's Strength-for-heals; granted by Holy Symbol (3/combat). |
 
 ## Relics
 
