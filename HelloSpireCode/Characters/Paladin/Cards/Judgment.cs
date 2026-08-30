@@ -4,21 +4,18 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 4 damage. Stun the enemy. A rare: buying a whole turn is too strong to see every run.
-/// Mostly a bought turn with a token hit; the upgrade buys the discount (3 to 2), not a number.
+/// Deal 6 damage, then Judge: consume your Seal and trigger its effect. A Strike when no Seal is
+/// up; the evoke button when one is. The starter card that teaches the Seal loop.
 /// </summary>
-public sealed class HammerOfJustice() : PaladinCard(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class Judgment() : PaladinCard(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [StunIntent.GetStaticHoverTip()];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(4m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -26,8 +23,8 @@ public sealed class HammerOfJustice() : PaladinCard(3, CardType.Attack, CardRari
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(choiceContext);
-        await CreatureCmd.Stun(cardPlay.Target);
+        await Seals.Judge(choiceContext, Owner, cardPlay.Target);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }

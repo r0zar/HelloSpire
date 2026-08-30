@@ -24,7 +24,7 @@ public class Paladin : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 75;
 
-    // The starter: 4 Strike / 4 Defend / 1 Mend / 1 Hammer of Justice. The Paladin is being built
+    // The starter: 4 Strike / 4 Defend / 1 Mend / 1 Judgment. The Paladin is being built
     // one card at a time from here; every addition is a deliberate decision, not a batch.
     public override IEnumerable<CardModel> StartingDeck =>
     [
@@ -37,10 +37,10 @@ public class Paladin : PlaceholderCharacterModel
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<Mend>(),
-        ModelDb.Card<HammerOfJustice>(),
+        ModelDb.Card<Judgment>(),
     ];
 
-    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<HolySymbol>()];
+    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<LibramOfRighteousness>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<PaladinCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<PaladinRelicPool>();

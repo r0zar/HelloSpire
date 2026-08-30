@@ -24,7 +24,7 @@ at the speed of play, not the speed of writing.
 |---|---|
 | Starting HP | 75 — matches Regent and Defect; the kit is inherently sturdy, so no more than that |
 | Colour | gold `#e8c46a`, on the card frame via `ShaderColor` |
-| Starter relic | **Holy Symbol** — *At the start of each combat, gain 3 Spirit.* |
+| Starter relic | **Libram of Righteousness** — *At the start of each combat, gain Seal of Righteousness.* |
 
 Holy Fervor (heal a card, gain 1 Strength, once per turn) moves to the relic pool: now that
 heals cost Spirit, it pays you for spending it.
@@ -35,21 +35,36 @@ heals cost Spirit, it pays you for spending it.
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
 1x Mend               1E  Heal 5 HP plus your Spirit. Exhaust.
-1x Hammer of Justice  3E  Deal 4 damage. Stun the enemy.
+1x Judgment           1E  Deal 6 damage. Consume your Seal, triggering its effect.
 ```
 
 The deck reads as *durable but slow to kill*, which is the D&D and WoW read of the class. Mend
-is a Defend mirror in HP. Hammer of Justice is a bought turn with a token hit; the upgrade buys the discount, not a number.
+is a Defend mirror in HP. Judgment is a Strike when no Seal is up and the evoke button when one is -- it teaches the
+Seal loop from turn one. Hammer of Justice moved to the Rare pool: a bought turn is too strong
+to see every run.
 
 No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
 must be understood on sight.
+
+### Seals and Judgment
+
+The Defect's orbs, with a one-slot rule. A **Seal** is a passive buff while active; **Judgment**
+consumes it and triggers its effect -- channel and evoke, except you only ever have one, so a
+new Seal replaces the old. Which Seal is up, and whether to cash it in, is the decision.
+
+**Seal of Righteousness** (starter, from the Libram): Attacks deal +2 damage; Judged, it deals
+10 damage. Cracked Core translated: passive trickle, real evoke.
+
+Implementation: a Seal is a `Single`-stack power (`SealPower`); `Seals.Grant` enforces the
+one-slot rule, `Seals.Judge` fires `OnJudged` and removes it. New Seals are one subclass, one
+loc entry, one icon each.
 
 ### Spirit, the third stat (was: Faith)
 
 Strength raises attacks, Dexterity raises Block, **Spirit raises healing** -- one icon in the
 power bar next to Strength, reset per combat like the others. The **Holy Symbol** (starter
-relic) grants 3 at the start of each combat. Nothing else grants it yet; cards that
-earn Spirit are the obvious next design space.
+**Currently sourceless**: the Holy Symbol (its granter) was replaced by the Libram, so Mend
+reads +0 until a Spirit-granting card or relic lands. The stat stays; deliberately unfed.
 
 **Mend Exhausts.** That is the anti-stall guarantee now -- one heal per copy per fight, no
 economy to police. Spirit is why the one heal is worth building toward: Mend heals 5 + Spirit

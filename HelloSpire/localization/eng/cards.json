@@ -204,5 +204,7 @@
   "HELLOSPIRE-RIDE_TOGETHER.title": "Ride Together",
   "HELLOSPIRE-RIDE_TOGETHER.description": "The first time each turn each other player plays an Attack, [gold]Load[/gold] 1 [gold]Lead Round[/gold].",
   "HELLOSPIRE-RIDE_TOGETHER.upgrade.description": "The first time each turn each other player plays an Attack, [gold]Load[/gold] 1 [gold]Lead Round[/gold] and gain {Deadeye} [gold]Deadeye[/gold].",
-  "HELLOSPIRE-COLD_READ.upgrade.description": "apply 2 weak and 2 debilitate"
+  "HELLOSPIRE-COLD_READ.upgrade.description": "apply 2 weak and 2 debilitate",
+  "HELLOSPIRE-JUDGMENT.title": "Judgment",
+  "HELLOSPIRE-JUDGMENT.description": "Deal {Damage:diff()} damage.\nConsume your [gold]Seal[/gold], triggering its effect."
 }
