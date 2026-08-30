@@ -118,6 +118,57 @@ public static class GunslingerEffects
     /// <summary>Total incoming Attack damage this turn across every enemy. Dive for Cover reads this.</summary>
     public static int IncomingAttackDamage(GunContext gun) => GunslingerIntents.TotalIncomingAttackDamage(gun);
 
+    // ------------------------------------------------------------------ the rest of the table
+
+    /// <summary>
+    /// Everyone in the fight, the Gunslinger included, in combat order. Empty outside combat.
+    ///
+    /// Solo, this is a list of one — which is the reason the multiplayer cards degrade quietly
+    /// rather than throwing: "ALL players" and "you" are the same sentence with one player.
+    /// </summary>
+    public static IReadOnlyList<Player> AllPlayers(GunContext gun)
+    {
+        var state = State(gun);
+        return state == null ? [] : state.Players.ToList();
+    }
+
+    /// <summary>Everyone except the Gunslinger. Empty in single-player.</summary>
+    public static IReadOnlyList<Player> Allies(GunContext gun) =>
+        AllPlayers(gun).Where(player => player != gun.Player).ToList();
+
+    /// <summary>
+    /// The ally a card was pointed at, falling back to the Gunslinger.
+    ///
+    /// Hand Me That is an ally-targeted card in a game that is usually played alone, so the
+    /// fallback is not an error path: solo, "another player draws 2" is "you draw 2". The same
+    /// applies if targeting resolves to nothing because the ally has already died.
+    /// </summary>
+    public static Player ResolveAlly(GunContext gun, Creature? target)
+    {
+        if (target == null || target == gun.Self) return gun.Player;
+
+        return AllPlayers(gun).FirstOrDefault(player => player.Creature == target) ?? gun.Player;
+    }
+
+    /// <summary>Block for everyone at the table, the Gunslinger included.</summary>
+    public static async Task GainBlockAll(GunContext gun, decimal amount)
+    {
+        if (amount <= 0) return;
+
+        foreach (var player in AllPlayers(gun))
+        {
+            if (player.Creature == null) continue;
+            await CreatureCmd.GainBlock(player.Creature, amount, ValueProp.Move, null, false);
+        }
+    }
+
+    /// <summary>Cards into one specific player's hand. Hand Me That's whole payload.</summary>
+    public static async Task DrawFor(PlayerChoiceContext ctx, Player player, int count)
+    {
+        if (count <= 0) return;
+        await CardPileCmd.Draw(ctx, count, player);
+    }
+
     public static bool HasRelic<T>(GunContext gun) where T : RelicModel => HasRelic<T>(gun.Player);
 
     public static bool HasRelic<T>(Player player) where T : RelicModel =>
