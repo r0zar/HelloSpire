@@ -154,12 +154,18 @@ reset — so adding one is a class, a localization entry and a build.
 
 ## Combat visuals
 
-The Paladin no longer borrows the Ironclad's body: `Paladin.CustomVisualPath` points at
-`HelloSpire/scenes/creature_visuals_paladin.tscn`, our own `NCreatureVisuals` scene. Scene
-contract (unique names): `%Visuals` (Node2D body), `%Bounds` (Control hitbox), `%IntentPos`,
-`%CenterPos`, optional `%OrbPos`/`%TalkPos` markers. The body is a static Sprite2D -- the game
-is null-safe about missing spine rigs (animation triggers no-op, SFX still plays), so a static
-image is a legitimate creature.
+The Paladin wears the Ironclad's spine rig, repainted: `PaladinSkin` (Harmony postfix on
+`Creature.CreateVisuals`) swaps the atlas texture pages for our gold-and-white repaint on the
+Paladin's instance only, so all six base animations (idle/attack/cast/hurt/die/relaxed) come
+free. The repaint lives at `images/creature/paladin_atlas.png` (+`_2`), generated from the
+extracted Ironclad atlas by `tools` recolor (reds -> cream tabard, leather -> pale gold, rage
+glow -> holy gold). The game runs Spine 4.2.36; a from-scratch Paladin rig stays the long-term
+path (spec below), but the repaint ships today.
+
+The Gunslinger and Alchemist still use the static-scene pipeline: our own `NCreatureVisuals`
+scene with a Sprite2D body -- scene contract (unique names): `%Visuals`, `%Bounds`,
+`%IntentPos`, `%CenterPos`, optional `%OrbPos`/`%TalkPos`. The game is null-safe about missing
+spine rigs, so a static image is a legitimate creature.
 
 **Art request (Dan): the combat bodies.** All three characters use this pipeline now; each
 replaces one file under `HelloSpire/images/creature/` (current files are generated
