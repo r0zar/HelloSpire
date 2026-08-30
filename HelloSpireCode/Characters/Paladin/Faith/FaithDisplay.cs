@@ -38,6 +38,7 @@ public sealed class FaithDisplay(FaithResource resource) : ICustomResourceVisual
         [Deity.Torm]    = new Color("e8c46a"),
         [Deity.Ilmater] = new Color("6ad48a"),
         [Deity.Tyr]     = new Color("d4703c"),
+        [Deity.Bane]    = new Color("7a3fb0"),
     };
 
     public void AddDisplay(NCombatUi nCombatUi, PlayerCombatState playerCombatState)

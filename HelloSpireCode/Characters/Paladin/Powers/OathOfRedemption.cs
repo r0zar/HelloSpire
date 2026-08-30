@@ -20,7 +20,7 @@ public sealed class OathOfRedemption : PaladinPower
     {
         if (delta <= 0m) return;
         if (!creature.IsPlayer) return;
-        FaithTracks.Gain(Owner.Player.PlayerCombatState, Deity.Ilmater, 1);
+        FaithTracks.Gain(Owner.Player, Deity.Ilmater, 1);
         await Task.CompletedTask;
     }
 }

@@ -26,3 +26,4 @@ public abstract class FaithResource(Deity deity) : BasicCustomResource($"HelloSp
 public sealed class TormFaith()    : FaithResource(Deity.Torm);
 public sealed class IlmaterFaith() : FaithResource(Deity.Ilmater);
 public sealed class TyrFaith()     : FaithResource(Deity.Tyr);
+public sealed class BaneFaith()    : FaithResource(Deity.Bane);

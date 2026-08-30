@@ -67,5 +67,14 @@
   "HELLOSPIRE-AURA_OF_PROTECTION_POWER.smartDescription": "At the start of your turn, all allies gain [blue]{Amount}[/blue] [gold]Block[/gold].",
   "HELLOSPIRE-RIDE_TOGETHER_POWER.title": "Ride Together",
   "HELLOSPIRE-RIDE_TOGETHER_POWER.description": "The first time each turn each other player plays an Attack, [gold]Load[/gold] a [gold]Lead Round[/gold].",
-  "HELLOSPIRE-RIDE_TOGETHER_POWER.smartDescription": "The first time each turn each other player plays an Attack, [gold]Load[/gold] [blue]{Amount}[/blue] [gold]Lead Round[/gold]."
+  "HELLOSPIRE-RIDE_TOGETHER_POWER.smartDescription": "The first time each turn each other player plays an Attack, [gold]Load[/gold] [blue]{Amount}[/blue] [gold]Lead Round[/gold].",
+  "HELLOSPIRE-HERESY_POWER.title": "Heresy",
+  "HELLOSPIRE-HERESY_POWER.description": "Your [gold]Faith[/gold] in every deity counts as your highest.",
+  "HELLOSPIRE-HERESY_POWER.smartDescription": "Your [gold]Faith[/gold] in every deity counts as your highest.",
+  "HELLOSPIRE-ZEALOTRY_POWER.title": "Zealotry",
+  "HELLOSPIRE-ZEALOTRY_POWER.description": "Whenever you gain [gold]Faith[/gold], gain [blue]1[/blue] additional.",
+  "HELLOSPIRE-ZEALOTRY_POWER.smartDescription": "Whenever you gain [gold]Faith[/gold], gain [blue]1[/blue] additional.",
+  "HELLOSPIRE-TYRANNY_POWER.title": "Tyranny",
+  "HELLOSPIRE-TYRANNY_POWER.description": "Your [gold]Faith[/gold] in [gold]Bane[/gold] counts as [gold]Faith[/gold] in every deity.",
+  "HELLOSPIRE-TYRANNY_POWER.smartDescription": "Your [gold]Faith[/gold] in [gold]Bane[/gold] counts as [gold]Faith[/gold] in every deity."
 }

@@ -17,7 +17,7 @@ public sealed class OathOfVengeance : PaladinPower
     {
         if (cardPlay.Card.Owner != Owner.Player) return;
         if (cardPlay.Card.Type != CardType.Attack) return;
-        FaithTracks.Gain(Owner.Player.PlayerCombatState, Deity.Tyr, 1);
+        FaithTracks.Gain(Owner.Player, Deity.Tyr, 1);
         await Task.CompletedTask;
     }
 }

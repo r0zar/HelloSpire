@@ -17,7 +17,7 @@ public sealed class OathOfTheCrown : PaladinPower
     {
         if (cardPlay.Card.Owner != Owner.Player) return;
         if (!cardPlay.Card.GainsBlock) return;
-        FaithTracks.Gain(Owner.Player.PlayerCombatState, Deity.Torm, 1);
+        FaithTracks.Gain(Owner.Player, Deity.Torm, 1);
         await Task.CompletedTask;
     }
 }
