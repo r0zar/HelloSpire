@@ -12,18 +12,18 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
 /// A Seal: the Paladin's answer to the Defect's orbs, with a one-slot rule. A Seal is a passive
-/// buff while it is active (each subclass hooks whatever it modifies), and Judgment consumes it
-/// to trigger its <see cref="OnJudged"/> effect -- the evoke.
+/// buff while it is active (each subclass hooks whatever it modifies), and Judgment triggers its
+/// <see cref="OnJudged"/> effect. Seals persist -- Judging does not consume them.
 ///
-/// One at a time is the whole tension: a new Seal replaces the old, so choosing which Seal is up
-/// -- and whether to cash it in -- is the decision the system sells.
+/// One at a time is the whole tension: a new Seal replaces the old, so which Seal is up decides
+/// both your passive and what every Judgment does.
 /// </summary>
 public abstract class SealPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
 
-    /// <summary>The evoke: what happens when this Seal is Judged. The Seal is removed after.</summary>
+    /// <summary>What happens when this Seal is Judged. The Seal persists.</summary>
     public abstract Task OnJudged(PlayerChoiceContext ctx, Creature target);
 }
 
@@ -42,12 +42,11 @@ public static class Seals
         await PowerCmd.Apply<T>(ctx, p.Creature, amount, p.Creature, source);
     }
 
-    /// <summary>Judge: consume the active Seal and trigger its effect. No Seal, no effect.</summary>
+    /// <summary>Judge: trigger the active Seal's effect. The Seal stays. No Seal, no effect.</summary>
     public static async Task Judge(PlayerChoiceContext ctx, Player p, Creature target)
     {
         if (Active(p.Creature) is not { } seal) return;
         seal.Flash();
         await seal.OnJudged(ctx, target);
-        await PowerCmd.Remove(seal);
     }
 }

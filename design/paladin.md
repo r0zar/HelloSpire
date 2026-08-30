@@ -35,29 +35,29 @@ heals cost Spirit, it pays you for spending it.
 4x Strike             1E  Deal 6 damage.
 4x Defend             1E  Gain 5 Block.
 1x Mend               1E  Heal 5 HP plus your Spirit. Exhaust.
-1x Judgment           1E  Deal 6 damage. Consume your Seal, triggering its effect.
+1x Judgment           1E  Trigger your Seal's effect. Unplayable without a Seal.
 ```
 
 The deck reads as *durable but slow to kill*, which is the D&D and WoW read of the class. Mend
-is a Defend mirror in HP. Judgment is a Strike when no Seal is up and the evoke button when one is -- it teaches the
-Seal loop from turn one. Hammer of Justice moved to the Rare pool: a bought turn is too strong
-to see every run.
+is a Defend mirror in HP. Judgment is a blank card that the active Seal fills in -- it teaches the Seal loop from turn
+one. Hammer of Justice moved to the Rare pool: a bought turn is too strong to see every run.
 
 No starter card carries any mechanic beyond the base game's. That is deliberate: the starter
 must be understood on sight.
 
 ### Seals and Judgment
 
-The Defect's orbs, with a one-slot rule. A **Seal** is a passive buff while active; **Judgment**
-consumes it and triggers its effect -- channel and evoke, except you only ever have one, so a
-new Seal replaces the old. Which Seal is up, and whether to cash it in, is the decision.
+The Defect's orbs, with a one-slot rule and no evoke cost. A **Seal** is a passive buff while
+active. **Judgment** is nothing but the trigger: unplayable without a Seal, and its effect is
+entirely whatever the active Seal's judge effect is. Seals persist through Judgment; you only
+ever have one, so which Seal is up decides both your passive and what Judgment does.
 
-**Seal of Righteousness** (starter, from the Holy Book): Attacks deal +2 damage; Judged, it deals
-10 damage. Cracked Core translated: passive trickle, real evoke.
+**Seal of Righteousness** (starter, from the Holy Book): Attacks deal +2 damage; Judged, deal
+8 damage -- a full card's worth, since the judge is Judgment's whole payload.
 
 Implementation: a Seal is a `Single`-stack power (`SealPower`); `Seals.Grant` enforces the
-one-slot rule, `Seals.Judge` fires `OnJudged` and removes it. New Seals are one subclass, one
-loc entry, one icon each.
+one-slot rule, `Seals.Judge` fires `OnJudged` (no removal). New Seals are one subclass, one
+loc entry, one icon each -- and each new Seal is also a new Judgment.
 
 ### Spirit, the third stat (was: Faith)
 

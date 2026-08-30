@@ -12,7 +12,7 @@ The archived 91-card Spirit set is in [`paladin-faith-cards-archive.md`](paladin
 | Strike | 1 | Attack | Deal 6 damage. | +3 damage |
 | Defend | 1 | Skill | Gain 5 Block. | +3 Block |
 | Mend | 1 | Skill | Heal 5 HP plus your Spirit. Exhaust. | Heal 7 |
-| Judgment | 1 | Attack | Deal 6 damage. Consume your Seal, triggering its effect. | +3 damage |
+| Judgment | 1 | Attack | Trigger your Seal's effect. Unplayable without a Seal. | costs 0 |
 
 Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 
@@ -31,7 +31,7 @@ Starter deck: 4 Strike, 4 Defend, 1 Mend, 1 Judgment.
 | Power | Effect |
 |---|---|
 | Spirit | Increases the healing of your cards. The Paladin's Strength-for-heals. Currently sourceless. |
-| Seal of Righteousness | Attacks deal +2 damage. Judged: deal 10 damage. One Seal at a time. |
+| Seal of Righteousness | Attacks deal +2 damage. Judged: deal 8 damage. One Seal at a time; Judging does not consume it. |
 
 ## Relics
 
