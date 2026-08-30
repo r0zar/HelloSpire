@@ -59,7 +59,7 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
     private Control? _root;
     private Control? _ring;
     private Label? _count;
-    private readonly Panel[] _chambers = new Panel[CylinderPower.ChamberCount];
+    private readonly Panel?[] _chambers = new Panel?[CylinderPower.ChamberCount];
 
     /// <summary>Ring rotation in chamber-widths, unwrapped so 5 -> 0 turns forwards, not back 300°.</summary>
     private double _turnUnits;
@@ -74,22 +74,33 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
         var me = CombatManager.Instance?.DebugOnlyGetState() is { } state ? LocalContext.GetMe(state) : null;
         if (me == null || me.PlayerCombatState != playerCombatState || me.Creature == null) return;
 
-        _creature = me.Creature;
-        _root = Build();
+        // BaseLib builds one visuals handler per registered resource and keeps it for the life of
+        // the process, calling this once per combat on the same instance. Nothing below may assume
+        // a fresh object: the rotation bookkeeping in particular has to start from the state a new
+        // CylinderPower starts in, or the first Spins of the second combat do not read as Spins.
+        Reset();
 
-        Attach(nCombatUi, _root);
+        _creature = me.Creature;
+        var root = _root = Build();
+
+        Attach(nCombatUi, root);
 
         // Hidden until this player actually has a gun: the resource is registered mod-wide, so a
         // Paladin's combat reaches this code too and should see nothing.
-        _root.Visible = false;
+        root.Visible = false;
 
         CylinderPower.AnyChanged += OnCylinderChanged;
-        _root.TreeExited += Detach;
+
+        // Only the widget that is still the current one tears itself down. A previous combat's
+        // root can leave the tree after this one has already been built, and an unguarded handler
+        // would unsubscribe the live widget.
+        root.TreeExited += () => { if (_root == root) Reset(); };
 
         if (_creature.GetPower<CylinderPower>() is { } existing) OnCylinderChanged(existing);
     }
 
-    private void Detach()
+    /// <summary>Back to the state a brand new handler would be in. Safe to call more than once.</summary>
+    private void Reset()
     {
         CylinderPower.AnyChanged -= OnCylinderChanged;
         _creature = null;
@@ -97,6 +108,10 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
         _ring = null;
         _count = null;
         _tween = null;
+        Array.Clear(_chambers);
+        _turnUnits = 0;
+        _lastHammer = 0;
+        _lastSpin = 0;
     }
 
     // ------------------------------------------------------------------ state
@@ -110,8 +125,10 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
 
         for (var i = 0; i < CylinderPower.ChamberCount; i++)
         {
+            if (_chambers[i] is not { } chamber) continue;
+
             var round = cylinder.Chambers[i];
-            Paint(_chambers[i], round == null ? Empty : ColorFor(round));
+            Paint(chamber, round == null ? Empty : ColorFor(round));
         }
 
         if (_count != null) _count.Text = cylinder.LoadedCount.ToString();
