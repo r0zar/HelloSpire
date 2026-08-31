@@ -5,18 +5,22 @@ using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Characters;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Gold;
 using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.Factories;
+using MegaCrit.Sts2.Core.GameActions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Potions;
+using MegaCrit.Sts2.Core.Multiplayer.Game;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using MegaCrit.Sts2.Core.Nodes.Multiplayer;
+using MegaCrit.Sts2.Core.Runs;
 
 namespace HelloSpire.HelloSpireCode.Alchemist;
 
@@ -46,7 +50,7 @@ public sealed class WiredLabBridge : ILabBridge
         cost = System.Math.Max(1, cost - AlchemistHooks.InvestDiscount(LabContext.From(player)));
         if (player.Gold < cost) return false;
 
-        if (!await Confirm(ctx, "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.header", "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.body", cost))
+        if (!await Confirm(ctx, player, "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.header", "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.body", cost))
             return false;
 
         await PlayerCmd.LoseGold(cost, player, GoldLossType.Spent);
@@ -58,7 +62,7 @@ public sealed class WiredLabBridge : ILabBridge
     {
         if (player.Creature == null || player.Creature.MaxHp - cost <= 0) return false;
 
-        if (!await Confirm(ctx, "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.header", "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body", cost))
+        if (!await Confirm(ctx, player, "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.header", "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body", cost))
             return false;
 
         await CreatureCmd.LoseMaxHp(ctx, player.Creature, cost, isFromCard: true);
@@ -76,8 +80,43 @@ public sealed class WiredLabBridge : ILabBridge
     /// decompiled from NResetGameplayButton.ResetSettingsAfterConfirmation in sts2.dll. The Yes/No
     /// button labels reuse the base game's own "Confirm"/"Cancel" loc keys (main_menu_ui,
     /// GENERIC_POPUP.confirm/cancel) rather than minting new ones.
+    ///
+    /// Multiplayer: a card's OnPlay runs on every connected client to keep game state
+    /// deterministic, not just the client of the player who played it (confirmed via a real
+    /// in-game report of the Invest prompt popping up for every player at once). The fix, mirrored
+    /// exactly from CardSelectCmd.FromHand (decompiled from sts2.dll): only the player's own client
+    /// shows the popup (gated by LocalContext.IsMe, the same check FromHand uses), and the answer
+    /// is broadcast to every other client via PlayerChoiceSynchronizer so their simulation reaches
+    /// the same Gold/Max-HP state without ever showing them a popup of their own. ReserveChoiceId
+    /// is called unconditionally, before branching, because it also has to stay in lock-step across
+    /// clients -- exactly how FromHand calls it.
     /// </summary>
-    private static async Task<bool> Confirm(PlayerChoiceContext ctx, string headerKey, string bodyKey, int cost)
+    private static async Task<bool> Confirm(PlayerChoiceContext ctx, Player player, string headerKey, string bodyKey, int cost)
+    {
+        var isLocal = LocalContext.IsMe(player) && RunManager.Instance.NetService.Type != NetGameType.Replay;
+        var choiceId = RunManager.Instance.PlayerChoiceSynchronizer.ReserveChoiceId(player);
+
+        await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
+        try
+        {
+            if (!isLocal)
+            {
+                var remote = await RunManager.Instance.PlayerChoiceSynchronizer.WaitForRemoteChoice(player, choiceId);
+                return remote.AsIndex() == 1;
+            }
+
+            var answer = await ShowPopup(headerKey, bodyKey, cost);
+            RunManager.Instance.PlayerChoiceSynchronizer.SyncLocalChoice(player, choiceId, PlayerChoiceResult.FromIndex(answer ? 1 : 0));
+            return answer;
+        }
+        finally
+        {
+            await ctx.SignalPlayerChoiceEnded();
+        }
+    }
+
+    /// <summary>The actual local popup, split out so Confirm can gate it behind LocalContext.IsMe.</summary>
+    private static async Task<bool> ShowPopup(string headerKey, string bodyKey, int cost)
     {
         // No modal layer, or one is already up: there is no safe way to ask, so Decline. This can
         // only make the bridge more conservative than intended, never less — it can never cause an
@@ -94,16 +133,8 @@ public sealed class WiredLabBridge : ILabBridge
         var yes = new LocString("main_menu_ui", "GENERIC_POPUP.confirm");
         var no = new LocString("main_menu_ui", "GENERIC_POPUP.cancel");
 
-        await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
         NModalContainer.Instance.Add(popup);
-        try
-        {
-            return await popup.WaitForConfirmation(body, header, no, yes);
-        }
-        finally
-        {
-            await ctx.SignalPlayerChoiceEnded();
-        }
+        return await popup.WaitForConfirmation(body, header, no, yes);
     }
 
     // -------------------------------------------------------------------------- the belt
