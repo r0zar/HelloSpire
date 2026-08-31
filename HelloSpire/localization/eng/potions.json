@@ -28,7 +28,7 @@
   "HELLOSPIRE-VOLATILE_FIRE_POTION.title": "Volatile Fire Potion",
   "HELLOSPIRE-VOLATILE_FIRE_POTION.description": "Deal {Damage} damage.",
   "HELLOSPIRE-VOLATILE_FLEX_POTION.title": "Volatile Flex Potion",
-  "HELLOSPIRE-VOLATILE_FLEX_POTION.description": "Gain {StrengthPower} [gold]Strength[/gold] this turn, then gain 1 [gold]Weak[/gold].",
+  "HELLOSPIRE-VOLATILE_FLEX_POTION.description": "Gain {StrengthPower} [gold]Strength[/gold] this turn.",
   "HELLOSPIRE-VOLATILE_POWER_POTION.title": "Volatile Power Potion",
   "HELLOSPIRE-VOLATILE_POWER_POTION.description": "Choose 1 of 2 Power cards to add to your hand. It costs 0 this turn.",
   "HELLOSPIRE-VOLATILE_SKILL_POTION.title": "Volatile Skill Potion",

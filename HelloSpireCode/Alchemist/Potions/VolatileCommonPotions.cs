@@ -102,7 +102,7 @@ public sealed class VolatileBlockPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyPlayer;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/block_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Unpowered)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(9m, ValueProp.Unpowered)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(StaticHoverTip.Block)];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -207,7 +207,6 @@ public sealed class VolatileFlexPotion : VolatileCommonPotion
     {
         PotionModel.AssertValidForTargetedPotion(target);
         await PowerCmd.Apply<FlexPotionPower>(ctx, target, DynamicVars.Strength.BaseValue, Owner.Creature, null);
-        await PowerCmd.Apply<WeakPower>(ctx, target, 1m, Owner.Creature, null);
     }
 }
 
