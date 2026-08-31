@@ -14,7 +14,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// <summary>An enemy loses 2 Strength. The Disarm slot: authority, not violence.</summary>
 public sealed class Rebuke() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Strength", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Strength", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
