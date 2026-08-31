@@ -278,7 +278,7 @@
   "HELLOSPIRE-AURA_OF_PROTECTION.title": "Aura of Protection",
   "HELLOSPIRE-AURA_OF_PROTECTION.description": "At the start of your turn, ALL players gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-AURA_OF_MERCY.title": "Aura of Mercy",
-  "HELLOSPIRE-AURA_OF_MERCY.description": "At the start of your turn, heal ALL players {Heal:diff()} HP.",
+  "HELLOSPIRE-AURA_OF_MERCY.description": "All players gain {Regen:diff()} [gold]Regen[/gold].",
   "HELLOSPIRE-BEACON_OF_LIGHT.title": "Beacon of Light",
   "HELLOSPIRE-BEACON_OF_LIGHT.description": "A player becomes the [gold]Beacon[/gold]: whenever you heal a player, the Beacon also heals {Heal:diff()} HP.",
   "HELLOSPIRE-BLADE_OF_WRATH.title": "Blade of Wrath",
