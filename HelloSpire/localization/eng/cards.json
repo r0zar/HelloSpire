@@ -320,7 +320,7 @@
   "HELLOSPIRE-CRUSADER_AURA.title": "Crusader Aura",
   "HELLOSPIRE-CRUSADER_AURA.description": "At the start of your turn, ALL players gain {Strength:diff()} [gold]Strength[/gold].",
   "HELLOSPIRE-AURA_OF_VITALITY.title": "Aura of Vitality",
-  "HELLOSPIRE-AURA_OF_VITALITY.description": "At the start of your turn, heal the most wounded player {Heal:diff()} HP.",
+  "HELLOSPIRE-AURA_OF_VITALITY.description": "All players gain {Regen:diff()} [gold]Regen[/gold].",
   "HELLOSPIRE-BLESSING_OF_WISDOM.title": "Blessing of Wisdom",
   "HELLOSPIRE-BLESSING_OF_WISDOM.description": "A player gains {Energy:diff()} [gold]Energy[/gold] at the start of their next turn.",
   "HELLOSPIRE-BLESSING_OF_PROTECTION.title": "Blessing of Protection",
