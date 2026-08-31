@@ -19,93 +19,98 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
 // ---------------------------------------------------------------------------- Attacks
 
-/// <summary>Deal damage, more if you drank something this turn.</summary>
+/// <summary>Deal damage, then feed a random Discard card into the belt.</summary>
 public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7m, ValueProp.Move)];
 
-    protected override bool ShouldGlowGoldInternal => (AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0;
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        var bonus = (AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0
-            ? DynamicVars["Bonus"].BaseValue
-            : 0m;
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
-    }
-
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["Bonus"].UpgradeValueBy(1m);
-    }
-}
-
-/// <summary>Deal damage, more if the belt has room. The empty-belt cluster's cheapest member.</summary>
-public sealed class GlassShard() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(9m, ValueProp.Move), new DamageVar("Bonus", 3m, ValueProp.Move)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile), Tip(AlchemistTips.Transform)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var bonus = Belt.EmptySlots(Lab) > 0 ? DynamicVars["Bonus"].BaseValue : 0m;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
+        var discarded = LabBridge.Current.DiscardPile(Owner);
+        if (discarded.Count == 0) return;
+
+        var index = Owner.RunState.Rng.CombatTargets.NextInt(0, discarded.Count);
+        var card = discarded[Math.Clamp(index, 0, discarded.Count - 1)];
+
+        await Alchemy.Exhaust(ctx, Lab, card);
+        if (await Belt.BrewRandom(ctx, Lab) != null)
+            await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.CardToPotion);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>AoE, more if you drank something this turn.</summary>
-public sealed class ScatterFlask() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+/// <summary>X Energy, X hits at a random enemy each. No target selection -- the randomness is the point.</summary>
+public sealed class GlassShard() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(5m, ValueProp.Move), new DamageVar("Bonus", 3m, ValueProp.Move)];
+    protected override bool HasEnergyCostX => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(5m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var bonus = (AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0
-            ? DynamicVars["Bonus"].BaseValue
-            : 0m;
+        var hits = ResolveEnergyXValue();
 
-        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+        for (var i = 0; i < hits; i++)
         {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-                .FromCard(this).Targeting(enemy).Execute(ctx);
+            var target = AlchemistEffects.RandomEnemy(Lab);
+            if (target == null) break;
+
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(target).Execute(ctx);
         }
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage, more if you made money this turn. The Transmutation deck's attack.</summary>
-public sealed class GildedScalpel() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+/// <summary>Vulnerable or Weak, picked at random, applied to everything.</summary>
+public sealed class ScatterFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 3m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 1m)];
 
-    protected override bool ShouldGlowGoldInternal => Ledger.GainedThisTurn(Lab);
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<VulnerablePower>(), HoverTipFactory.FromPower<WeakPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        var amount = DynamicVars["Amount"].BaseValue;
+        var applyVulnerable = Owner.RunState.Rng.CombatTargets.NextInt(0, 2) == 0;
+
+        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+        {
+            if (applyVulnerable) await AlchemistEffects.ApplyVulnerable(ctx, Lab, enemy, amount);
+            else await AlchemistEffects.ApplyWeak(ctx, Lab, enemy, amount);
+        }
+    }
+
+    protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
+}
+
+/// <summary>Heavier damage, and a kill pays out a Volatile Potion.</summary>
+public sealed class GildedScalpel() : AlchemistCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(12m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var bonus = Ledger.GainedThisTurn(Lab) ? DynamicVars["Bonus"].BaseValue : 0m;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
+        if (play.Target.CurrentHp <= 0)
+            await Belt.BrewRandom(ctx, Lab);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
 /// <summary>Big damage, bigger for three Gold. The card that teaches Invest.</summary>
@@ -134,22 +139,20 @@ public sealed class PyricBurst() : AlchemistCard(2, CardType.Attack, CardRarity.
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
-/// <summary>Free damage, doubled if a slot opened up this turn.</summary>
+/// <summary>Free damage, and a card back if you already played a Skill this turn.</summary>
 public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(4m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
+        [new DamageVar(3m, ValueProp.Move), new CardsVar(1)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var bonus = (AlchemistEffects.Peek(Lab)?.SlotsEmptiedThisTurn ?? 0) > 0
-            ? DynamicVars["Bonus"].BaseValue
-            : 0m;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
+        if ((AlchemistEffects.Peek(Lab)?.SkillsPlayedThisTurn ?? 0) > 0)
+            await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);

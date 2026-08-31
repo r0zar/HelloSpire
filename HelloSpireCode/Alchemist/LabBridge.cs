@@ -146,6 +146,9 @@ public interface ILabBridge
     /// <summary>The player's current Hand, in order.</summary>
     IReadOnlyList<CardModel> Hand(Player player);
 
+    /// <summary>The player's current Discard pile, in order. Flask Toss reads it.</summary>
+    IReadOnlyList<CardModel> DiscardPile(Player player);
+
     /// <summary>Exhaust a specific card from Hand.</summary>
     Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card);
 
@@ -281,6 +284,12 @@ public sealed class UnwiredLabBridge : ILabBridge
     public IReadOnlyList<CardModel> Hand(Player player)
     {
         Report("reading the Hand");
+        return [];
+    }
+
+    public IReadOnlyList<CardModel> DiscardPile(Player player)
+    {
+        Report("reading the Discard pile");
         return [];
     }
 

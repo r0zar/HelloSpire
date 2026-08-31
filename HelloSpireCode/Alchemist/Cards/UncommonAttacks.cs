@@ -56,29 +56,22 @@ public sealed class Shatterstock() : AlchemistCard(1, CardType.Attack, CardRarit
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Double damage if you are carrying a full belt — and no reason to spend it first.</summary>
-public sealed class PressureBurst() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+/// <summary>Rig a held Potion, real or Volatile, to go off twice the next time it's used.</summary>
+public sealed class PressureBurst() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 8m, ValueProp.Move)];
-
-    protected override bool ShouldGlowGoldInternal => Belt.Held(Lab).Count > 0 && Belt.EmptySlots(Lab) == 0;
-
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        ArgumentNullException.ThrowIfNull(play.Target);
+        var held = Belt.Held(Lab);
+        if (held.Count == 0) return;
 
-        var bonus = Belt.IsFull(Lab) ? DynamicVars["Bonus"].BaseValue : 0m;
+        var chosen = held.Count == 1 ? held[0] : await LabBridge.Current.ChoosePotion(ctx, Owner, held);
+        if (chosen == null) return;
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
+        var bench = await AlchemistEffects.Bench(ctx, Lab);
+        bench?.DoubleActivate.Add(chosen);
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars["Bonus"].UpgradeValueBy(1m);
-    }
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Free, and better when you have already spent everything.</summary>
@@ -247,29 +240,30 @@ public sealed class Corkscrew() : AlchemistCard(1, CardType.Attack, CardRarity.U
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>The Gilded Scholar deck's attack: rewards having conjured something this turn.</summary>
-public sealed class ReactiveSlash() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+/// <summary>Trade a card in Hand for a stranger of the same rarity.</summary>
+public sealed class ReactiveSlash() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(10m, ValueProp.Move), new DamageVar("Bonus", 5m, ValueProp.Move)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Transform)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        ArgumentNullException.ThrowIfNull(play.Target);
+        var candidates = Alchemy.OtherCardsInHand(Lab);
+        if (candidates.Count == 0) return;
 
-        var bonus = (AlchemistEffects.Peek(Lab)?.CardsCreatedThisTurn ?? 0) > 0
-            ? DynamicVars["Bonus"].BaseValue
-            : 0m;
+        var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
+        if (chosen == null) return;
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
+        // Basic-rarity cards (Strike/Defend) have no "random other Basic" pool to draw from --
+        // RandomCard's own filter excludes Basic/Status/Curse entirely -- so transforming one
+        // Exhausts it for nothing. That is the accepted cost of picking one, not a bug: the card
+        // text says same rarity, and there is no larger Basic pool in this class to fall back to.
+        var replacement = LabBridge.Current.RandomCard(Owner, rarity: chosen.Rarity);
+
+        await Alchemy.Exhaust(ctx, Lab, chosen);
+        await Alchemy.Create(ctx, Lab, replacement);
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars["Bonus"].UpgradeValueBy(1m);
-    }
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>

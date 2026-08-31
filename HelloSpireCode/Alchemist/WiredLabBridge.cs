@@ -302,6 +302,9 @@ public sealed class WiredLabBridge : ILabBridge
     public IReadOnlyList<CardModel> Hand(Player player) =>
         PileType.Hand.GetPile(player).Cards.ToList();
 
+    public IReadOnlyList<CardModel> DiscardPile(Player player) =>
+        PileType.Discard.GetPile(player).Cards.ToList();
+
     public Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card) =>
         CardCmd.Exhaust(ctx, card);
 

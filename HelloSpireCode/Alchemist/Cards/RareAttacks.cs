@@ -42,28 +42,29 @@ public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, Card
     }
 }
 
-/// <summary>AoE that scales with how much you drank this turn. No cap: drink up.</summary>
-public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
+/// <summary>X Energy, X cards traded out of Hand for random Volatile Potions. No cap: dump the whole hand if you dare.</summary>
+public sealed class ChainReaction() : AlchemistCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new DamageVar(10m, ValueProp.Move),
-        new DamageVar("PerPotion", 4m, ValueProp.Move)
-    ];
+    protected override bool HasEnergyCostX => true;
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Transform), Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var potions = AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0;
-        var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * potions;
+        var count = ResolveEnergyXValue();
 
-        foreach (var enemy in AlchemistEffects.Enemies(Lab))
-            await DamageCmd.Attack(damage).FromCard(this).Targeting(enemy).Execute(ctx);
-    }
+        for (var i = 0; i < count; i++)
+        {
+            var candidates = Alchemy.OtherCardsInHand(Lab);
+            if (candidates.Count == 0) break;
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["PerPotion"].UpgradeValueBy(1m);
+            var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
+            if (chosen == null) break;
+
+            await Alchemy.Exhaust(ctx, Lab, chosen);
+            await Belt.BrewRandom(ctx, Lab);
+        }
     }
 }
 

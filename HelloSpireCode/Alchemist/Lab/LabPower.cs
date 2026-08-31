@@ -41,6 +41,13 @@ public sealed class LabPower : HelloSpirePower
     /// </summary>
     public readonly HashSet<PotionModel> Volatile = [];
 
+    /// <summary>
+    /// Potions marked by Pressure Burst: the next time one of these is used, PotionUsePatch runs
+    /// its OnUse a second time before the Potion is removed from the tracker. One-shot -- removed
+    /// the moment it fires, so marking a Potion twice does not stack into three activations.
+    /// </summary>
+    public readonly HashSet<PotionModel> DoubleActivate = [];
+
     /// <summary>Potions used this combat, in order. Reconstitute and Refill the Retort read this.</summary>
     public readonly List<PotionModel> UsedThisCombat = [];
 
@@ -71,6 +78,9 @@ public sealed class LabPower : HelloSpirePower
     /// <summary>Cards created into Hand this turn. Reactive Slash reads it.</summary>
     public int CardsCreatedThisTurn { get; set; }
 
+    /// <summary>Skill cards played this turn, by any means. Set by SkillPlayTrackerPatch. QuickSilver reads it.</summary>
+    public int SkillsPlayedThisTurn { get; set; }
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DynamicVar("Held", 0m),
@@ -90,6 +100,7 @@ public sealed class LabPower : HelloSpirePower
         GoldSpentThisTurn = 0;
         CardsExhaustedThisTurn = 0;
         CardsCreatedThisTurn = 0;
+        SkillsPlayedThisTurn = 0;
 
         return Task.CompletedTask;
     }

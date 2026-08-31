@@ -112,7 +112,9 @@ public static class AlchemistEffects
         if (enemies.Count == 0) return null;
         if (enemies.Count == 1) return enemies[0];
 
-        var index = lab.Player.RunState.Rng.CombatTargets.NextInt(0, enemies.Count - 1);
+        // NextInt's upper bound is exclusive; Count - 1 here made the last enemy unreachable --
+        // the same off-by-one already found and fixed in Alchemy.ExhaustRandomOther.
+        var index = lab.Player.RunState.Rng.CombatTargets.NextInt(0, enemies.Count);
         return enemies[Math.Clamp(index, 0, enemies.Count - 1)];
     }
 
