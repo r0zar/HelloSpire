@@ -291,7 +291,7 @@
   "HELLOSPIRE-DIVINE_ALLEGIANCE.title": "Divine Allegiance",
   "HELLOSPIRE-DIVINE_ALLEGIANCE.description": "A player gains {Block:diff()} [gold]Block[/gold].\nDraw 1 card.",
   "HELLOSPIRE-BULWARK.title": "Bulwark",
-  "HELLOSPIRE-BULWARK.description": "Gain {Block:diff()} [gold]Block[/gold].",
+  "HELLOSPIRE-BULWARK.description": "Gain {Block:diff()} [gold]Block[/gold]. [gold]Block[/gold] is not removed at the start of your next turn.",
   "HELLOSPIRE-BASTION.title": "Bastion",
   "HELLOSPIRE-BASTION.description": "Gain {Block:diff()} [gold]Block[/gold] now and at the start of your next turn.",
   "HELLOSPIRE-EYE_FOR_AN_EYE.title": "Eye for an Eye",
