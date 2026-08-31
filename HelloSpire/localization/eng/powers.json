@@ -69,7 +69,7 @@
   "HELLOSPIRE-BANE_TYRANNY_POWER.description": "Your [gold]Faith[/gold] in [gold]Bane[/gold] counts as [gold]Faith[/gold] in every deity.",
   "HELLOSPIRE-BANE_TYRANNY_POWER.smartDescription": "Your [gold]Faith[/gold] in [gold]Bane[/gold] counts as [gold]Faith[/gold] in every deity.",
   "HELLOSPIRE-SPIRIT_POWER.title": "Spirit",
-  "HELLOSPIRE-SPIRIT_POWER.description": "Increases the healing of your healing effects.",
+  "HELLOSPIRE-SPIRIT_POWER.description": "Increases your healing effects.",
   "HELLOSPIRE-SPIRIT_POWER.smartDescription": "Your healing effects restore [blue]{Amount}[/blue] additional HP.",
   "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.title": "Seal of Righteousness",
   "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.description": "Your Attacks deal additional damage. [gold]Judgment[/gold]: deal 5 damage.",
