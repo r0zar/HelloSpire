@@ -35,6 +35,6 @@ public sealed class ArdentDefenderPower : HelloSpirePower
         if (_usedThisTurn || target != Owner || dealer == null || !props.IsPoweredAttack()) return;
         _usedThisTurn = true;
         Flash();
-        await CreatureCmd.Heal(Owner, Amount);
+        await PowerCmd.Apply<RegenPower>(choiceContext, Owner, Amount, Owner, null);
     }
 }

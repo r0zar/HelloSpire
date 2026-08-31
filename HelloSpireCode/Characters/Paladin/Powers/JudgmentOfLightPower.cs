@@ -28,6 +28,6 @@ public sealed class JudgmentOfLightPower : HelloSpirePower
     {
         if (target != Owner || dealer == null || !dealer.IsPlayer || dealer.IsDead || !props.IsPoweredAttack()) return;
         Flash();
-        await CreatureCmd.Heal(dealer, Amount);
+        await PowerCmd.Apply<RegenPower>(choiceContext, dealer, Amount, Owner, null);
     }
 }
