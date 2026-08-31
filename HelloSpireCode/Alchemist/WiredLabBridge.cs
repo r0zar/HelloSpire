@@ -289,8 +289,20 @@ public sealed class WiredLabBridge : ILabBridge
             .Where(c => type == null || c.Type == type)
             .ToList();
         if (options.Count == 0) return null;
+
+        // player.RunState.CreateCard makes a card scoped to the RUN (deck-level) -- fine for a
+        // shop or reward screen, but this card is about to be dropped straight into Hand mid-combat.
+        // Confirmed via sts2.dll: the base game's own combat-generation helpers
+        // (CardFactory.GetDistinctForCombat/GetForCombat, used by e.g. Infernal Blade) create
+        // through player.Creature.CombatState.CreateCard instead, which is what registers the card
+        // with the active CombatState. A Run-scoped card added to Hand isn't in that registry, so it
+        // plays fine visually but throws "must be added to a CombatState before playing it" the
+        // moment it's actually played -- and that exception corrupts the action queue for the rest
+        // of the combat, so every card played after it fails the same way. Confirmed in a real
+        // session: Homunculus Assault created a Pressure Burst this way, which failed to play, and
+        // every subsequent card that combat (including an ordinary drawn Auric Needle) failed too.
         var model = player.RunState.Rng.CombatTargets.NextItem(options);
-        return player.RunState.CreateCard(model, player);
+        return player.Creature?.CombatState?.CreateCard(model, player);
     }
 
     public async Task CreateInHand(PlayerChoiceContext ctx, Player player, CardModel card, bool costsZeroThisTurn)
