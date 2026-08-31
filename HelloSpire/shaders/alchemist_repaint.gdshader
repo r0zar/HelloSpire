@@ -26,9 +26,9 @@ void fragment() {
     if (abs(ts.x - 618.0) < 0.5 && abs(ts.y - 523.0) < 0.5) {
         vec2 px = UV * ts;
         if (px.x >= 389.0 && px.x < 463.0 && px.y >= 74.0 && px.y < 112.0) {
-            tex = texture(weapon_page, UV);   // back hand: dagger becomes a potion
+            tex = vec4(0.0);                  // back hand: no blade, just the fist
         } else if (px.x >= 389.0 && px.x < 457.0 && px.y >= 114.0 && px.y < 173.0) {
-            tex = vec4(0.0);                  // front hand: no blade, just the fist
+            tex = texture(weapon_page, UV);   // front hand: dagger becomes a potion
         }
     }
     vec3 hsv = rgb2hsv(tex.rgb);
