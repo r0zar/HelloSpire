@@ -254,10 +254,10 @@ public sealed class ReactiveSlash() : AlchemistCard(1, CardType.Skill, CardRarit
         if (chosen == null) return;
 
         // Basic-rarity cards (Strike/Defend) have no "random other Basic" pool to draw from --
-        // RandomCard's own filter excludes Basic/Status/Curse entirely -- so transforming one
-        // Exhausts it for nothing. That is the accepted cost of picking one, not a bug: the card
-        // text says same rarity, and there is no larger Basic pool in this class to fall back to.
-        var replacement = LabBridge.Current.RandomCard(Owner, rarity: chosen.Rarity);
+        // RandomCard's own filter excludes Basic/Status/Curse entirely. Rather than Exhaust one
+        // for nothing, a Basic steps up to a random Common instead of matching its own rarity.
+        var rarity = chosen.Rarity == CardRarity.Basic ? CardRarity.Common : chosen.Rarity;
+        var replacement = LabBridge.Current.RandomCard(Owner, rarity: rarity);
 
         await Alchemy.Exhaust(ctx, Lab, chosen);
         await Alchemy.Create(ctx, Lab, replacement);

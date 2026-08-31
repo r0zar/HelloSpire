@@ -445,7 +445,7 @@
   "HELLOSPIRE-CORKSCREW.title": "Corkscrew",
   "HELLOSPIRE-CORKSCREW.description": "Deal {Damage:diff()} damage twice. If you [gold]Distilled[/gold] this turn, three times.",
   "HELLOSPIRE-REACTIVE_SLASH.title": "Reactive Slash",
-  "HELLOSPIRE-REACTIVE_SLASH.description": "Exhaust a card in your hand: create a random card of the same rarity in your hand.",
+  "HELLOSPIRE-REACTIVE_SLASH.description": "Exhaust a card in your hand: create a random card of the same rarity in your hand. Basic cards become Common.",
   "HELLOSPIRE-MERCURY_LANCE.title": "Mercury Lance",
   "HELLOSPIRE-MERCURY_LANCE.description": "Deal {Damage:diff()} damage. Exhaust a random other card in your hand.",
   "HELLOSPIRE-DISTILLATION_COLUMN.title": "Distillation Column",
