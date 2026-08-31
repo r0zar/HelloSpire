@@ -36,7 +36,7 @@ public static class Alchemy
         var candidates = OtherCardsInHand(lab);
         if (candidates.Count == 0) return false;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
         if (chosen == null) return false;
 
         await Exhaust(ctx, lab, chosen);
@@ -95,7 +95,7 @@ public static class Alchemy
 
         if (junk.Count == 0) return false;
 
-        var chosen = junk.Count == 1 ? junk[0] : await LabBridge.Current.ChooseCard(ctx, lab.Player, junk);
+        var chosen = junk.Count == 1 ? junk[0] : await LabBridge.Current.ChooseCard(ctx, lab.Player, junk, lab.Card);
         if (chosen == null) return false;
 
         await Exhaust(ctx, lab, chosen);
@@ -107,7 +107,7 @@ public static class Alchemy
         var candidates = OtherCardsInHand(lab);
         if (candidates.Count == 0) return false;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
         if (chosen == null) return false;
 
         await LabBridge.Current.DiscardCard(ctx, lab.Player, chosen);
@@ -119,7 +119,7 @@ public static class Alchemy
         var candidates = OtherCardsInHand(lab);
         if (candidates.Count == 0) return false;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
         if (chosen == null) return false;
 
         await LabBridge.Current.BottomOfDraw(ctx, lab.Player, chosen);
@@ -151,7 +151,7 @@ public static class Alchemy
         var candidates = OtherCardsInHand(lab);
         if (candidates.Count == 0) return false;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
         if (chosen == null) return false;
 
         await LabBridge.Current.UpgradeForCombat(ctx, lab.Player, chosen);
@@ -174,7 +174,7 @@ public static class Alchemy
         var candidates = OtherCardsInHand(lab).Where(card => !card.IsUpgraded).ToList();
         if (candidates.Count == 0) return false;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
         if (chosen == null) return false;
 
         await LabBridge.Current.UpgradePermanently(lab.Player, chosen);

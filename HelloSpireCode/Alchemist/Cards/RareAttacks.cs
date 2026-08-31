@@ -115,7 +115,7 @@ public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, Car
 
         if (candidates.Count > 0)
         {
-            var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates);
+            var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
             if (chosen != null)
             {
                 damage += DynamicVars["PerEnergy"].BaseValue * Math.Max(0, chosen.EnergyCost.Canonical);

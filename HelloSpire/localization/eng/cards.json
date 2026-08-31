@@ -546,5 +546,9 @@
   "HELLOSPIRE-DISTILLATION_MASTERY.title": "Distillation Mastery",
   "HELLOSPIRE-DISTILLATION_MASTERY.description": "Whenever you [gold]Distill[/gold], gain {DistillationMasteryPower:diff()} [gold]Potency[/gold].",
   "HELLOSPIRE-VIAL_BANDOLIER.title": "Vial Bandolier",
-  "HELLOSPIRE-VIAL_BANDOLIER.description": "Gain {Slots} extra Potion Slots this combat. [gold]Volatile[/gold] Potions only."
+  "HELLOSPIRE-VIAL_BANDOLIER.description": "Gain {Slots} extra Potion Slots this combat. [gold]Volatile[/gold] Potions only.",
+  "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.header": "Invest?",
+  "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.body": "Pay {Cost} Gold?",
+  "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.header": "Render?",
+  "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body": "Pay {Cost} Max HP?"
 }

@@ -114,8 +114,15 @@ public interface ILabBridge
     /// <summary>Ask the player to pick one held Potion, or null if they hold none.</summary>
     Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from);
 
-    /// <summary>Ask the player to pick one card from a set, typically their Hand.</summary>
-    Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from);
+    /// <summary>
+    /// Ask the player to pick one card from a set, typically their Hand.
+    /// </summary>
+    /// <param name="source">
+    /// The card, potion or relic that kicked off this selection (e.g. the Transmute being played).
+    /// The real hand-selection screen requires a non-null source internally; pass the card whose
+    /// effect is asking, never null.
+    /// </param>
+    Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source);
 
     // -------------------------------------------------------------------------- hand and piles
 
@@ -224,7 +231,7 @@ public sealed class UnwiredLabBridge : ILabBridge
         return Task.FromResult<PotionModel?>(null);
     }
 
-    public Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from)
+    public Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source)
     {
         Report("choosing a card");
         return Task.FromResult<CardModel?>(null);

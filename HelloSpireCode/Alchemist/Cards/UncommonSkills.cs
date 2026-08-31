@@ -167,7 +167,7 @@ public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Un
         var candidates = Alchemy.OtherCardsInHand(Lab);
         if (candidates.Count == 0) return;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
         if (chosen == null) return;
 
         var gold = Math.Min(

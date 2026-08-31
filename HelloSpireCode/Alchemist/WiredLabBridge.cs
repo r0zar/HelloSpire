@@ -6,13 +6,17 @@ using HelloSpire.HelloSpireCode.Characters;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Gold;
+using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.Factories;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Potions;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
+using MegaCrit.Sts2.Core.Nodes.Multiplayer;
 
 namespace HelloSpire.HelloSpireCode.Alchemist;
 
@@ -21,10 +25,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// actual APIs (PotionCmd/PotionFactory for the belt, PlayerCmd for Gold, CreatureCmd.LoseMaxHp
 /// for Render, CardSelectCmd for choices, CardCmd/CardPileCmd for the piles).
 ///
-/// Two deliberate deviations from the stub's ideal, both documented rather than hidden:
-/// - Invest and Render auto-Pay when affordable instead of prompting. Playing a card whose text
-///   says "Invest 3" is the consent, exactly as playing Bloodletting consents to the HP loss;
-///   a bespoke Pay-or-Decline popup is a later nicety, not a correctness requirement.
+/// One remaining deliberate deviation, documented rather than hidden:
 /// - ChoosePotion takes the first held Potion rather than asking. The game has no potion-select
 ///   UI to borrow; a real picker is the remaining polish item.
 /// </summary>
@@ -35,11 +36,20 @@ public sealed class WiredLabBridge : ILabBridge
 
     public Task GainGold(Player player, int amount) => PlayerCmd.GainGold(amount, player);
 
+    /// <summary>
+    /// Invest is a real Pay/Decline prompt, not a rubber stamp. The affordability check happens
+    /// before any UI is created: too poor means an automatic Decline, never a popup asking about
+    /// Gold the player doesn't have.
+    /// </summary>
     public async Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost)
     {
         cost = System.Math.Max(1, cost - AlchemistHooks.InvestDiscount(LabContext.From(player)));
         if (player.Gold < cost) return false;
-        await PlayerCmd.LoseGold(cost, player);
+
+        if (!await Confirm(ctx, "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.header", "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.body", cost))
+            return false;
+
+        await PlayerCmd.LoseGold(cost, player, GoldLossType.Spent);
         return true;
     }
 
@@ -47,8 +57,53 @@ public sealed class WiredLabBridge : ILabBridge
     public async Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost)
     {
         if (player.Creature == null || player.Creature.MaxHp - cost <= 0) return false;
+
+        if (!await Confirm(ctx, "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.header", "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body", cost))
+            return false;
+
         await CreatureCmd.LoseMaxHp(ctx, player.Creature, cost, isFromCard: true);
         return true;
+    }
+
+    /// <summary>
+    /// The Pay/Decline primitive shared by Invest and Render.
+    ///
+    /// There is no card- or combat-scoped confirmation dialog in the base game — Invest/Render
+    /// have no vanilla precedent at all. What does exist, and is what every menu-level confirmation
+    /// in the base game (reset settings, delete profile, abandon run, disconnect...) is built on,
+    /// is <see cref="NGenericPopup"/> + <see cref="NModalContainer"/>: create the popup, add it to
+    /// the single global modal layer, await its Yes/No result. This is the exact call sequence
+    /// decompiled from NResetGameplayButton.ResetSettingsAfterConfirmation in sts2.dll. The Yes/No
+    /// button labels reuse the base game's own "Confirm"/"Cancel" loc keys (main_menu_ui,
+    /// GENERIC_POPUP.confirm/cancel) rather than minting new ones.
+    /// </summary>
+    private static async Task<bool> Confirm(PlayerChoiceContext ctx, string headerKey, string bodyKey, int cost)
+    {
+        // No modal layer, or one is already up: there is no safe way to ask, so Decline. This can
+        // only make the bridge more conservative than intended, never less — it can never cause an
+        // unasked-for Gold/Max HP spend.
+        if (NModalContainer.Instance == null || NModalContainer.Instance.OpenModal != null)
+            return false;
+
+        var popup = NGenericPopup.Create();
+        if (popup == null) return false; // TestMode, or the popup scene failed to load.
+
+        var header = new LocString("cards", headerKey);
+        var body = new LocString("cards", bodyKey);
+        body.Add("Cost", (decimal)cost);
+        var yes = new LocString("main_menu_ui", "GENERIC_POPUP.confirm");
+        var no = new LocString("main_menu_ui", "GENERIC_POPUP.cancel");
+
+        await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
+        NModalContainer.Instance.Add(popup);
+        try
+        {
+            return await popup.WaitForConfirmation(body, header, no, yes);
+        }
+        finally
+        {
+            await ctx.SignalPlayerChoiceEnded();
+        }
     }
 
     // -------------------------------------------------------------------------- the belt
@@ -90,12 +145,19 @@ public sealed class WiredLabBridge : ILabBridge
     public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from) =>
         Task.FromResult<PotionModel?>(from.Count > 0 ? from[0] : null);
 
-    public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from)
+    public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source)
     {
         // FromChooseACardScreen only supports 3 or fewer cards (throws otherwise -- confirmed via
         // a real in-game AggregateException on Salvage Reagents with a bigger hand). FromHand is
         // the documented "simple hand selection, no bespoke UI" primitive and has no such limit.
-        var chosen = await CardSelectCmd.FromHand(ctx, player, new CardSelectorPrefs(), card => from.Contains(card), null!);
+        //
+        // source cannot be null: FromHand forwards it straight into NCombatRoom's hand-selection
+        // UI (decompiled from sts2.dll), which dereferences it -- confirmed by a real
+        // NullReferenceException on Transmute when this was passed as null!. Every current caller
+        // has a real source card; the from.FirstOrDefault() fallback only exists so a future
+        // relic/potion-driven caller with no natural source can't reintroduce that crash.
+        var chosen = await CardSelectCmd.FromHand(ctx, player, new CardSelectorPrefs(), card => from.Contains(card),
+            source ?? from.FirstOrDefault());
         return chosen.FirstOrDefault();
     }
 
