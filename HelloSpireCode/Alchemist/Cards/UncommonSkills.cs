@@ -65,7 +65,7 @@ public sealed class Reconstitute() : AlchemistCard(1, CardType.Skill, CardRarity
 /// <summary>Six Gold for a Potion of your choosing. Transform: Gold into Potion.</summary>
 public sealed class BuyIngredients() : AlchemistCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Invest", 6m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new InvestVar(6m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -74,7 +74,7 @@ public sealed class BuyIngredients() : AlchemistCard(0, CardType.Skill, CardRari
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         if (await Belt.BrewChoice(ctx, Lab) != null)
             await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.GoldToPotion);
@@ -86,7 +86,7 @@ public sealed class BuyIngredients() : AlchemistCard(0, CardType.Skill, CardRari
 /// <summary>Eight Gold for a card. Transform: Gold into a card.</summary>
 public sealed class Commission() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Invest", 8m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new InvestVar(8m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -95,7 +95,7 @@ public sealed class Commission() : AlchemistCard(1, CardType.Skill, CardRarity.U
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         await Alchemy.Create(ctx, Lab, LabBridge.Current.RandomCard(Owner));
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.GoldToCard);
@@ -107,14 +107,14 @@ public sealed class Commission() : AlchemistCard(1, CardType.Skill, CardRarity.U
 /// <summary>Upgrade a card for the fight; pay four Gold to Upgrade the whole Hand instead.</summary>
 public sealed class FieldUpgrade() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Invest", 4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new InvestVar(4m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Invest), Tip(AlchemistTips.Transform)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue))
+        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this))
         {
             await Alchemy.UpgradeHandForCombat(ctx, Lab);
             await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.GoldToUpgrade);
@@ -143,7 +143,7 @@ public sealed class GildedGuard() : AlchemistCard(1, CardType.Skill, CardRarity.
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var paid = await Ledger.InvestUpTo(ctx, Lab, DynamicVars["MaxInvest"].IntValue);
+        var paid = await Ledger.InvestUpTo(ctx, Lab, DynamicVars["MaxInvest"].IntValue, this);
 
         await AlchemistEffects.GainBlock(Lab,
             DynamicVars.Block.BaseValue + DynamicVars["PerGold"].BaseValue * paid);
@@ -239,7 +239,7 @@ public sealed class SpareFlask() : AlchemistCard(1, CardType.Skill, CardRarity.U
 /// </summary>
 public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Invest", 40m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new InvestVar(40m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -258,7 +258,7 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
                 new LocString("cards", "HELLOSPIRE-ALCHEMIST_STABILIZE_CHOICE.header"));
 
         if (chosen == null) return;
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         bench.Volatile.Remove(chosen);
     }
@@ -284,7 +284,7 @@ public sealed class SafetyGoggles() : AlchemistCard(1, CardType.Skill, CardRarit
 /// <summary>Three Gold buys a card and makes it better. The cheapest Gold-to-Upgrade in the set.</summary>
 public sealed class CostOfKnowledge() : AlchemistCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Invest", 3m), new CardsVar(1)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new InvestVar(3m), new CardsVar(1)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -293,7 +293,7 @@ public sealed class CostOfKnowledge() : AlchemistCard(0, CardType.Skill, CardRar
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
         await Alchemy.UpgradeOneForCombat(ctx, Lab);

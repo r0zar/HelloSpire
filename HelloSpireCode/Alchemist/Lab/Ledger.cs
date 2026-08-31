@@ -1,4 +1,5 @@
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 
 using HelloSpire.HelloSpireCode.Alchemist;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
@@ -55,10 +56,17 @@ public static class Ledger
     /// exists — a card that is dead because the player went shopping is a broken card.
     ///
     /// Gilded Ledger's discount is applied here so it works on all twenty-odd Invest clauses.
+    ///
+    /// <paramref name="card"/> is the Invest clause's own card, when the caller has one to give --
+    /// if something has already cut that card's Energy cost to 0 for this play, the Invest Gold
+    /// cost is free too, same as InvestVar already shows on the card. Optional because Ledger has
+    /// no other user, but every real call site has a card in hand to pass.
     /// </summary>
-    public static async Task<bool> Invest(PlayerChoiceContext ctx, LabContext lab, int cost)
+    public static async Task<bool> Invest(PlayerChoiceContext ctx, LabContext lab, int cost, CardModel? card = null)
     {
-        cost = Math.Max(1, cost - AlchemistHooks.InvestDiscount(lab));
+        cost = card != null && card.EnergyCost.GetAmountToSpend() == 0
+            ? 0
+            : Math.Max(1, cost - AlchemistHooks.InvestDiscount(lab));
 
         if (!await LabBridge.Current.OfferInvest(ctx, lab.Player, cost)) return false;
 
@@ -81,10 +89,10 @@ public static class Ledger
     /// bridge only has to know how to ask one question. It costs a few extra prompts and saves a
     /// second choice API.
     /// </summary>
-    public static async Task<int> InvestUpTo(PlayerChoiceContext ctx, LabContext lab, int max)
+    public static async Task<int> InvestUpTo(PlayerChoiceContext ctx, LabContext lab, int max, CardModel? card = null)
     {
         var paid = 0;
-        while (paid < max && await Invest(ctx, lab, 1)) paid++;
+        while (paid < max && await Invest(ctx, lab, 1, card)) paid++;
         return paid;
     }
 

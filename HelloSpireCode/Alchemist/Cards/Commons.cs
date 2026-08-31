@@ -120,7 +120,7 @@ public sealed class PyricBurst() : AlchemistCard(2, CardType.Attack, CardRarity.
     [
         new DamageVar(16m, ValueProp.Move),
         new DamageVar("Bonus", 6m, ValueProp.Move),
-        new DynamicVar("Invest", 3m)
+        new InvestVar(3m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Invest)];
@@ -129,7 +129,7 @@ public sealed class PyricBurst() : AlchemistCard(2, CardType.Attack, CardRarity.
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var paid = await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue);
+        var paid = await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this);
         var bonus = paid ? DynamicVars["Bonus"].BaseValue : 0m;
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
@@ -190,7 +190,7 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
     [
         new DamageVar(7m, ValueProp.Move),
         new PowerVar<WeakPower>(1m),
-        new DynamicVar("Invest", 2m)
+        new InvestVar(2m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
@@ -203,7 +203,7 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue))
+        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this))
             await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
     }
 
@@ -368,7 +368,7 @@ public sealed class RecycleGlass() : AlchemistCard(1, CardType.Skill, CardRarity
 public sealed class CoinPurse() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new EnergyVar(1), new DynamicVar("Invest", 4m)];
+        [new EnergyVar(1), new InvestVar(4m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -376,7 +376,7 @@ public sealed class CoinPurse() : AlchemistCard(0, CardType.Skill, CardRarity.Co
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue))
+        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this))
             await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
     }
 

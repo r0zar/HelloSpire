@@ -139,7 +139,7 @@ public sealed class BlackMarketBlade() : AlchemistCard(1, CardType.Attack, CardR
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var paid = await Ledger.InvestUpTo(ctx, Lab, DynamicVars["MaxInvest"].IntValue);
+        var paid = await Ledger.InvestUpTo(ctx, Lab, DynamicVars["MaxInvest"].IntValue, this);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue + DynamicVars["PerGold"].BaseValue * paid)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
@@ -197,14 +197,14 @@ public sealed class FlashPowder() : AlchemistCard(1, CardType.Attack, CardRarity
     [
         new DamageVar(6m, ValueProp.Move),
         new DamageVar("Bonus", 5m, ValueProp.Move),
-        new DynamicVar("Invest", 4m)
+        new InvestVar(4m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Invest)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var bonus = await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)
+        var bonus = await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)
             ? DynamicVars["Bonus"].BaseValue
             : 0m;
 

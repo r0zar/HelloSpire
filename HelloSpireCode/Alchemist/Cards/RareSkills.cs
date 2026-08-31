@@ -93,7 +93,7 @@ public sealed class MagnumOpus() : AlchemistCard(3, CardType.Skill, CardRarity.R
 /// <summary>Fifty Gold for a permanent Upgrade. The top of the Invest table.</summary>
 public sealed class Masterwork() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Invest", 50m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new InvestVar(50m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -102,7 +102,7 @@ public sealed class Masterwork() : AlchemistCard(2, CardType.Skill, CardRarity.R
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         if (await Alchemy.UpgradeOnePermanently(ctx, Lab))
             await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.GoldToUpgrade);
@@ -164,7 +164,7 @@ public sealed class BottledTime() : AlchemistCard(1, CardType.Skill, CardRarity.
 public sealed class GoldStandard() : AlchemistCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Invest", 10m), new EnergyVar(2), new CardsVar(2)];
+        [new InvestVar(10m), new EnergyVar(2), new CardsVar(2)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -172,7 +172,7 @@ public sealed class GoldStandard() : AlchemistCard(0, CardType.Skill, CardRarity
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
@@ -214,7 +214,7 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 /// </summary>
 public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Invest", 75m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new InvestVar(75m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -223,7 +223,7 @@ public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         // Permanent: granted straight through the bridge with no bench record, so the
         // combat-end cleanup never takes it back -- player slots are run state and it persists.

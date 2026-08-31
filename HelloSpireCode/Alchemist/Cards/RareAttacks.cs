@@ -18,7 +18,7 @@ public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, Card
     [
         new DamageVar(20m, ValueProp.Move),
         new DamageVar("Bonus", 20m, ValueProp.Move),
-        new DynamicVar("Invest", 10m)
+        new InvestVar(10m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Invest)];
@@ -27,7 +27,7 @@ public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, Card
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var bonus = await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)
+        var bonus = await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)
             ? DynamicVars["Bonus"].BaseValue
             : 0m;
 
@@ -143,7 +143,7 @@ public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, Car
 public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(14m, ValueProp.Move), new DynamicVar("Invest", 8m), new CardsVar(2)];
+        [new DamageVar(14m, ValueProp.Move), new InvestVar(8m), new CardsVar(2)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Invest), Tip(AlchemistTips.Transform)];
@@ -154,7 +154,7 @@ public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, Card
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
+        if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this)) return;
 
         for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
             await Alchemy.Create(ctx, Lab, LabBridge.Current.RandomCard(Owner, type: CardType.Attack));
