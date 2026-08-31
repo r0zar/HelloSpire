@@ -1,4 +1,5 @@
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
+using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -36,24 +37,20 @@ public sealed class BottleBarrage() : AlchemistCard(1, CardType.Attack, CardRari
     protected override void OnUpgrade() => DynamicVars["PerPotion"].UpgradeValueBy(1m);
 }
 
-/// <summary>Hit, then pour a Potion out to hit again. Transform: Potion into damage.</summary>
-public sealed class Shatterstock() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+/// <summary>Hit, then Brew a Volatile Fire Potion.</summary>
+public sealed class Shatterstock() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Transform)];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-
-        if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.PotionToTempo);
+        await Belt.Brew(ctx, Lab, ModelDb.Potion<VolatileFirePotion>().ToMutable());
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
