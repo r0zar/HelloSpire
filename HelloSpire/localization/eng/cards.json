@@ -275,7 +275,7 @@
   "HELLOSPIRE-CIRCLE_OF_HEALING.title": "Circle of Healing",
   "HELLOSPIRE-CIRCLE_OF_HEALING.description": "Heal ALL players {Heal:diff()} HP.",
   "HELLOSPIRE-AURA_OF_PROTECTION.title": "Aura of Protection",
-  "HELLOSPIRE-AURA_OF_PROTECTION.description": "At the start of your turn, ALL players gain {Block:diff()} [gold]Block[/gold].",
+  "HELLOSPIRE-AURA_OF_PROTECTION.description": "At the end of your turn, ALL players gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-AURA_OF_MERCY.title": "Aura of Mercy",
   "HELLOSPIRE-AURA_OF_MERCY.description": "Whenever you gain [gold]Spirit[/gold], ALL players heal that much HP.",
   "HELLOSPIRE-BEACON_OF_LIGHT.title": "Beacon of Light",

@@ -11,18 +11,23 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>Aura: at the start of your side's turn, ALL players gain Amount Block.</summary>
+/// <summary>
+/// Aura: at the END of your side's turn, ALL players gain Amount Block -- the Metallicize/Plating
+/// timing. Start-of-turn was a bug in effect: the Block landed right as the turn's own Block
+/// reset wiped it, so the aura appeared to do nothing.
+/// </summary>
 public sealed class AuraOfProtectionPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override async Task BeforeSideTurnStart(PlayerChoiceContext choiceContext, CombatSide side,
-        IReadOnlyList<Creature> participants, ICombatState combatState)
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
     {
-        if (side != Owner.Side) return;
+        if (side != Owner.Side || Owner.IsDead) return;
         Flash();
-        foreach (var player in combatState.PlayerCreatures.Where(c => c.IsAlive))
+        if (Owner.CombatState is not { } state) return;
+        foreach (var player in state.PlayerCreatures.Where(c => c.IsAlive))
             await CreatureCmd.GainBlock(player, Amount, ValueProp.Unpowered, null);
     }
 }
