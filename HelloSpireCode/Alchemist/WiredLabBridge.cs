@@ -176,7 +176,7 @@ public sealed class WiredLabBridge : ILabBridge
     public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from) =>
         Task.FromResult<PotionModel?>(from.Count > 0 ? from[0] : null);
 
-    public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source)
+    public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null)
     {
         // FromChooseACardScreen only supports 3 or fewer cards (throws otherwise -- confirmed via
         // a real in-game AggregateException on Salvage Reagents with a bigger hand). FromHand is
@@ -187,7 +187,14 @@ public sealed class WiredLabBridge : ILabBridge
         // NullReferenceException on Transmute when this was passed as null!. Every current caller
         // has a real source card; the from.FirstOrDefault() fallback only exists so a future
         // relic/potion-driven caller with no natural source can't reintroduce that crash.
-        var chosen = await CardSelectCmd.FromHand(ctx, player, new CardSelectorPrefs(), card => from.Contains(card),
+        // A default-constructed CardSelectorPrefs is a trap, not a "no preferences" value: its
+        // Prompt is null (the hand UI formats it unconditionally -> NRE) and MaxSelect is 0 (no
+        // card can ever be picked), so the selection never resolves and, in multiplayer, every
+        // other client hangs in WaitForRemoteChoice. The real constructor gives min = max = 1:
+        // pick one card and the selection completes; with exactly one candidate the game skips
+        // the screen entirely, same as vanilla.
+        var prefs = new CardSelectorPrefs(prompt ?? CardSelectorPrefs.ExhaustSelectionPrompt, 1);
+        var chosen = await CardSelectCmd.FromHand(ctx, player, prefs, card => from.Contains(card),
             source ?? from.FirstOrDefault());
         return chosen.FirstOrDefault();
     }

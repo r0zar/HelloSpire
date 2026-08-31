@@ -2,6 +2,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Potions;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 namespace HelloSpire.HelloSpireCode.Alchemist;
@@ -122,7 +123,7 @@ public interface ILabBridge
     /// The real hand-selection screen requires a non-null source internally; pass the card whose
     /// effect is asking, never null.
     /// </param>
-    Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source);
+    Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null);
 
     // -------------------------------------------------------------------------- hand and piles
 
@@ -231,7 +232,7 @@ public sealed class UnwiredLabBridge : ILabBridge
         return Task.FromResult<PotionModel?>(null);
     }
 
-    public Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source)
+    public Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null)
     {
         Report("choosing a card");
         return Task.FromResult<CardModel?>(null);

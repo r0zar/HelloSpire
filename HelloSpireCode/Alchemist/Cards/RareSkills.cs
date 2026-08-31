@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.CardSelection;
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
 using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Alchemist.Powers;
@@ -259,7 +260,8 @@ public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRari
         var candidates = Alchemy.OtherCardsInHand(Lab);
         if (candidates.Count == 0) return;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this,
+            CardSelectorPrefs.TransformSelectionPrompt);
         if (chosen == null) return;
 
         if (!await Ledger.Render(ctx, Lab, DynamicVars["Render"].IntValue)) return;
