@@ -228,7 +228,7 @@
   "HELLOSPIRE-SEAL_OF_COMMAND.title": "Seal of Command",
   "HELLOSPIRE-SEAL_OF_COMMAND.description": "Your first Attack each turn applies 1 [gold]Vulnerable[/gold]. [gold]Judgment[/gold]: apply {Amount:diff()} [gold]Vulnerable[/gold].",
   "HELLOSPIRE-SEAL_OF_JUSTICE.title": "Seal of Justice",
-  "HELLOSPIRE-SEAL_OF_JUSTICE.description": "Your first Attack each turn lowers its target's [gold]Strength[/gold] by 1. [gold]Judgment[/gold]: apply {Amount:diff()} [gold]Weak[/gold].",
+  "HELLOSPIRE-SEAL_OF_JUSTICE.description": "Your first Attack each turn lowers its target's [gold]Strength[/gold] by 1 this turn. [gold]Judgment[/gold]: apply {Amount:diff()} [gold]Weak[/gold].",
   "HELLOSPIRE-SEAL_OF_WISDOM.title": "Seal of Wisdom",
   "HELLOSPIRE-SEAL_OF_WISDOM.description": "Your first Attack each turn draws a card. [gold]Judgment[/gold]: deal damage equal to your hand size, then draw {Amount:diff()}.",
   "HELLOSPIRE-SEAL_OF_THE_MARTYR.title": "Seal of the Martyr",
