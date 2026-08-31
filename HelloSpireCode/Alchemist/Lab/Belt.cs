@@ -40,15 +40,23 @@ public static class Belt
     {
         if (potion == null) return null;
 
-        var placed = await LabBridge.Current.Brew(ctx, lab.Player, potion);
-        if (placed == null) return null;
-
+        // Marked Volatile BEFORE calling the bridge, not after: PotionCmd.TryToProcure (confirmed
+        // via sts2.dll) places this exact instance into the belt and creates its NPotion visual
+        // node synchronously, so VolatilePotionOutlinePatch's Reload() postfix fires and checks
+        // this HashSet before the line below would otherwise have added anything to it. Marking
+        // afterward means every freshly-Brewed Volatile Potion renders one frame too late to ever
+        // show its outline, since Reload() isn't called again just because Volatile state changes.
         var bench = await AlchemistEffects.Bench(ctx, lab);
-        if (bench != null)
+        if (volatilePotion && bench != null) bench.Volatile.Add(potion);
+
+        var placed = await LabBridge.Current.Brew(ctx, lab.Player, potion);
+        if (placed == null)
         {
-            if (volatilePotion) bench.Volatile.Add(placed);
-            bench.BrewedThisTurn++;
+            bench?.Volatile.Remove(potion);
+            return null;
         }
+
+        if (bench != null) bench.BrewedThisTurn++;
 
         await AlchemistHooks.NotifyBrewed(ctx, lab, placed);
         return placed;
