@@ -92,7 +92,9 @@ public sealed class ConservationOfMatter() : AlchemistCard(2, CardType.Power, Ca
 /// <summary>
 /// Every Potion you pour out makes the next one stronger.
 ///
-/// The Brewer's only compounding line, and the reason Distill is not purely a sacrifice.
+/// The Brewer's only compounding line, and the reason Distill is not purely a sacrifice. Potency
+/// applies to Volatile Potions only, so this never leaks into the Rare Potion a shop happened to
+/// sell you.
 /// </summary>
 public sealed class DistillationMastery() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {

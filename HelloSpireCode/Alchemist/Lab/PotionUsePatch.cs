@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using System.Reflection;
 using System.Threading.Tasks;
 using HarmonyLib;
@@ -75,26 +73,6 @@ internal static class PotionUsePatch
 
     private static MethodBase TargetMethod() => _onUseWrapper!;
 
-    /// <summary>
-    /// Potency, applied at the last moment before the Potion's own effect computes: bump every
-    /// damage/Block var by the bonus. Tracked per instance so the wrapper can restore the values
-    /// after use -- a Potion saved from consumption (Bottled Time) must not keep the bump and
-    /// stack it on its next drink. Applies to EVERY Potion the Alchemist uses; Volatile is gone.
-    /// </summary>
-    private static readonly Dictionary<PotionModel, int> _bumped = new();
-
-    [HarmonyPrefix]
-    private static void BeforeOnUseWrapper(PotionModel __instance)
-    {
-        var player = __instance.Owner;
-        if (player?.Character is not HelloSpire.HelloSpireCode.Characters.Alchemist) return;
-        var bonus = Belt.PotencyBonus(LabContext.From(player), __instance);
-        if (bonus <= 0) return;
-        foreach (var v in __instance.DynamicVars.Values)
-            if (v is DamageVar or BlockVar) v.BaseValue += bonus;
-        _bumped[__instance] = bonus;
-    }
-
     [HarmonyPostfix]
     private static void AfterOnUseWrapper(PotionModel __instance, PlayerChoiceContext choiceContext, ref Task __result)
     {
@@ -106,9 +84,6 @@ internal static class PotionUsePatch
     {
         await original;
 
-        if (_bumped.Remove(potion, out var bonus))
-            foreach (var v in potion.DynamicVars.Values)
-                if (v is DamageVar or BlockVar) v.BaseValue -= bonus;
         var player = potion.Owner;
         if (player?.Character is not HelloSpire.HelloSpireCode.Characters.Alchemist) return;
 

@@ -24,7 +24,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 /// Procure a real, persistent Potion.
 ///
 /// The base game's Colorless card, adopted into this pool because the name and the mechanic are
-/// too exact to ignore. This Potion survives combat,
+/// too exact to ignore. The major exception to the Volatile rule: this Potion survives combat,
 /// which is why it stays Rare and Exhausts.
 ///
 /// TODO(Phase 3): suppress the Colorless copy while playing the Alchemist, or two cards share a
@@ -40,7 +40,8 @@ public sealed class Alchemize() : AlchemistCard(1, CardType.Skill, CardRarity.Ra
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        await Belt.Brew(ctx, Lab, LabBridge.Current.RandomCombatPotion(Owner, null));
+        // Not Volatile: Procured Potions are real inventory.
+        await Belt.Brew(ctx, Lab, LabBridge.Current.RandomCombatPotion(Owner, null), volatilePotion: false);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -78,7 +79,7 @@ public sealed class MagnumOpus() : AlchemistCard(3, CardType.Skill, CardRarity.R
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.ThePotionBelt)];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile), Tip(AlchemistTips.ThePotionBelt)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -208,7 +209,7 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 /// Seventy-five Gold for a real, permanent, unrestricted Potion Slot.
 ///
 /// Deliberately asymmetric with Extra Vial and Bandolier: cheap slots are temporary and can only
-/// hold on, and the one path to a permanent unrestricted slot costs as much as
+/// hold Volatile Potions, and the one path to a permanent unrestricted slot costs as much as
 /// Masterwork. Permanent resources cost permanent opportunity.
 /// </summary>
 public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
@@ -275,7 +276,7 @@ public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRari
 /// <summary>
 /// Render 6 Max HP to make the Philosopher's Stone.
 ///
-/// The only source of the Stone, and the Stone endures — so it survives the fight and can
+/// The only source of the Stone, and the Stone is not Volatile — so it survives the fight and can
 /// be hoarded for a boss. That permanence is what six Max HP is actually buying: not an effect,
 /// an object.
 /// </summary>
@@ -292,7 +293,7 @@ public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity
     {
         if (!await Ledger.Render(ctx, Lab, DynamicVars["Render"].IntValue)) return;
 
-        await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>());
+        await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>(), volatilePotion: false);
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.MaxHpToPotion);
     }
 

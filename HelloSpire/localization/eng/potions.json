@@ -10,7 +10,7 @@
   "HELLOSPIRE-AURUM_TINCTURE.title": "Aurum Tincture",
   "HELLOSPIRE-AURUM_TINCTURE.description": "Gain 15 [gold]Gold[/gold] and 1 [gold]Energy[/gold].",
   "HELLOSPIRE-PANACEA_OF_PLENTY.title": "Panacea of Plenty",
-  "HELLOSPIRE-PANACEA_OF_PLENTY.description": "Fill all empty Potion Slots with random Common Combat Potions.",
+  "HELLOSPIRE-PANACEA_OF_PLENTY.description": "Fill all empty Potion Slots with random [gold]Volatile[/gold] Common Combat Potions.",
   "HELLOSPIRE-PHILOSOPHERS_STONE.title": "Philosopher's Stone",
   "HELLOSPIRE-PHILOSOPHERS_STONE.description": "Deal 20 damage to ALL enemies. Gain 20 [gold]Block[/gold], 2 [gold]Energy[/gold], 2 [gold]Strength[/gold] and 2 [gold]Dexterity[/gold]. Draw 3 cards."
 }

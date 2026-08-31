@@ -32,10 +32,19 @@ public sealed class LabPower : HelloSpirePower
 
     // ------------------------------------------------------------------ Potions
 
+    /// <summary>
+    /// Potions this bench Brewed and has not yet lost, by reference.
+    ///
+    /// Volatile is tracked here rather than as a flag on the Potion because a Potion model is
+    /// shared game state — marking one Volatile would mark every copy of it, including one the
+    /// player bought at a Merchant. Identity is the only safe key.
+    /// </summary>
+    public readonly HashSet<PotionModel> Volatile = [];
+
     /// <summary>Potions used this combat, in order. Reconstitute and Refill the Retort read this.</summary>
     public readonly List<PotionModel> UsedThisCombat = [];
 
-    /// <summary>Extra Potion Slots granted for this combat only.</summary>
+    /// <summary>Extra Potion Slots granted for this combat only. All of them are Volatile-only.</summary>
     public int TemporarySlots { get; set; }
 
     public int PotionsUsedThisTurn { get; set; }
@@ -86,13 +95,18 @@ public sealed class LabPower : HelloSpirePower
     }
 
     /// <summary>
-    /// The bench closes: the temporary slots are taken back. The game relocates any occupant of a
-    /// doomed slot into an earlier free one, or discards it if the belt is full -- that squeeze is
-    /// the cost of leaning on temporary slots.
+    /// The bench closes: Volatile Potions are discarded (they never leave combat), and then the
+    /// temporary slots are taken back. That order matters -- discarding first empties the doomed
+    /// slots, so a real Potion sitting in one relocates instead of being lost (the game moves
+    /// occupants of removed slots into earlier free ones).
     /// </summary>
     public override async Task AfterCombatEnd(CombatRoom room)
     {
         if (Owner.Player is not { } player) return;
+
+        foreach (var potion in LabBridge.Current.Held(player).Where(Volatile.Contains).ToList())
+            await LabBridge.Current.Discard(null!, player, potion);
+        Volatile.Clear();
 
         if (TemporarySlots > 0)
         {
@@ -103,11 +117,12 @@ public sealed class LabPower : HelloSpirePower
 }
 
 /// <summary>
-/// Potency: whenever you use a Potion, its damage and Block values increase by this much.
+/// Potency: whenever you use a Volatile Potion, its damage and Block values increase by this much.
 ///
 /// A Power so that it reads like Strength and Dexterity, which is exactly what it is — a stat with
-/// one deliberate restriction. Applies to every Potion the Alchemist
-/// uses -- the class's licensed exception to "Potions ignore stats".
+/// one deliberate restriction. It never applies to a found, bought or Procured Potion; that
+/// restriction is the whole reason the class is allowed an exception to "Potions ignore stats" at
+/// all, and <see cref="Belt"/> is the only place that enforces it.
 /// </summary>
 public sealed class PotencyPower : HelloSpirePower
 {
