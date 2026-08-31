@@ -151,12 +151,12 @@ public sealed class GildedGuard() : AlchemistCard(1, CardType.Skill, CardRarity.
 
 /// <summary>
 /// Transmute that pays by the pound: the more Energy the card you feed it cost, the more it is
-/// worth. Capped, so a stray Curse cannot be turned into a shop trip.
+/// worth. Uncapped -- feed it whatever you like.
 /// </summary>
 public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Gold", 3m), new DynamicVar("PerEnergy", 2m), new DynamicVar("Cap", 9m)];
+        [new DynamicVar("Gold", 3m), new DynamicVar("PerEnergy", 2m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -170,9 +170,8 @@ public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Un
         var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
         if (chosen == null) return;
 
-        var gold = Math.Min(
-            DynamicVars["Gold"].IntValue + DynamicVars["PerEnergy"].IntValue * Math.Max(0, chosen.EnergyCost.Canonical),
-            DynamicVars["Cap"].IntValue);
+        var gold = DynamicVars["Gold"].IntValue +
+            DynamicVars["PerEnergy"].IntValue * Math.Max(0, chosen.EnergyCost.Canonical);
 
         await Alchemy.Exhaust(ctx, Lab, chosen);
         await Ledger.GainGold(ctx, Lab, gold);
@@ -182,7 +181,7 @@ public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Un
     protected override void OnUpgrade()
     {
         DynamicVars["Gold"].UpgradeValueBy(1m);
-        DynamicVars["Cap"].UpgradeValueBy(2m);
+        DynamicVars["PerEnergy"].UpgradeValueBy(1m);
     }
 }
 
