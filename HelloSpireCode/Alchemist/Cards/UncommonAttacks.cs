@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -147,22 +148,33 @@ public sealed class BlackMarketBlade() : AlchemistCard(1, CardType.Attack, CardR
 }
 
 /// <summary>
-/// Heavy damage, cheaper on a turn you drank something.
+/// Heavy damage, and a real, visible cost drop once you've drunk something this turn.
 ///
-/// Implemented as a refund rather than as a cost reduction, like the Gunslinger's Quickdraw
-/// Legend: the cost hooks cannot see "you will have used a Potion" before the card is played, and
-/// the two only differ when the Energy was not there to spend in the first place.
+/// Was implemented as an after-the-fact Energy refund (matching the Gunslinger's Quickdraw
+/// Legend), which nets the same Energy total in the common case but never changes the number
+/// printed on the card -- confirmed live: the card looked and cost exactly the same regardless of
+/// whether the discount was "active." Rebuilt on CardEnergyCost.SetThisTurnOrUntilPlayed instead
+/// (base-game precedent: Enlightenment, Flatten), triggered live via IPotionUseListener --
+/// AlchemistHooks.Listeners now also checks Hand cards, not just Relics and Powers, so a card can
+/// react to something happening while it is still sitting unplayed.
+///
+/// Known gap, accepted rather than built around: a copy drawn AFTER a Potion was already used
+/// this turn does not retroactively pick up the discount -- there is no "card entered Hand" hook
+/// to catch that moment, only "a Potion was used while this card already existed."
 /// </summary>
-public sealed class VolatileCompound() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class VolatileCompound() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy), IPotionUseListener
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(18m, ValueProp.Move)];
+
+    public Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    {
+        EnergyCost.SetThisTurnOrUntilPlayed(1, reduceOnly: true);
+        return Task.CompletedTask;
+    }
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
-
-        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
-            await AlchemistEffects.GainEnergy(Lab, 1m);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
     }

@@ -99,11 +99,21 @@ public static class AlchemistHooks
 {
     private static bool _dispatching;
 
-    /// <summary>Relics then powers, both filtered to those implementing <typeparamref name="T"/>.</summary>
+    /// <summary>
+    /// Relics, then Hand cards, then powers, all filtered to those implementing
+    /// <typeparamref name="T"/>. Hand cards are here so a card can react to board state while it
+    /// is still sitting unplayed -- Volatile Compound's live cost reduction is the first user: it
+    /// implements IPotionUseListener directly (no Power needed) and sets its own
+    /// EnergyCost.SetThisTurnOrUntilPlayed the moment a Potion is used, rather than refunding
+    /// Energy after the fact with no visible change to the card.
+    /// </summary>
     public static IEnumerable<T> Listeners<T>(LabContext lab) where T : class
     {
         foreach (var relic in lab.Player.Relics)
             if (relic is T listener) yield return listener;
+
+        foreach (var card in LabBridge.Current.Hand(lab.Player))
+            if (card is T listener) yield return listener;
 
         var creature = lab.Player.Creature;
         if (creature == null) yield break;
