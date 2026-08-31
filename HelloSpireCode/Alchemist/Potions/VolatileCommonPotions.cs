@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BaseLib.Utils;
 using Godot;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -21,12 +22,28 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
 
 /// <summary>
-/// Base for the Alchemist's Volatile Potions: registers with ModelDb like any custom potion (so
-/// localization and <see cref="CustomPackedImagePath"/> resolution work) WITHOUT joining
-/// AlchemistPotionPool the way <see cref="Characters.AlchemistPotion"/> does -- these must never
-/// turn up at a Merchant or a reward screen. Only WiredLabBridge's own curated list hands one out,
-/// via Belt.Brew, and Belt.Brew always marks its result Volatile.
+/// A registered pool that nothing ever queries. BaseLib's CustomContentDictionary hard-requires
+/// every CustomPotionModel to carry a [Pool(typeof(...))] attribute (confirmed live: the game
+/// refused to start at all -- "Model ... must be marked with a PoolAttribute" -- when
+/// VolatileCommonPotion had none), so joining a real pool isn't optional. AlchemistPotionPool was
+/// the obvious choice, but it's the exact pool MegaCrit.Sts2.Core.Factories.PotionFactory reads
+/// from Player.Character.PotionPool for shops and reward screens -- joining it would make these
+/// potions purchasable and offerable, which the design explicitly forbids. This pool exists solely
+/// to satisfy the attribute requirement: no Character's PotionPool property ever returns it, so
+/// nothing outside WiredLabBridge's own curated list (see VolatileCommonPotion.VolatileCommonPool
+/// in WiredLabBridge.cs) ever enumerates it.
 /// </summary>
+public sealed class VolatilePotionPool : BaseLib.Abstracts.CustomPotionPoolModel;
+
+/// <summary>
+/// Base for the Alchemist's Volatile Potions: registers with ModelDb like any custom potion (so
+/// localization and <see cref="CustomPackedImagePath"/> resolution work) via the inert
+/// <see cref="VolatilePotionPool"/> above, rather than <see cref="Characters.AlchemistPotion"/>'s
+/// AlchemistPotionPool -- these must never turn up at a Merchant or a reward screen. Only
+/// WiredLabBridge's own curated list hands one out, via Belt.Brew, and Belt.Brew always marks its
+/// result Volatile.
+/// </summary>
+[Pool(typeof(VolatilePotionPool))]
 public abstract class VolatileCommonPotion : BaseLib.Abstracts.CustomPotionModel
 {
     public override PotionRarity Rarity => PotionRarity.Common;
