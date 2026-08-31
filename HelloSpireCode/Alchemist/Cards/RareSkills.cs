@@ -4,7 +4,6 @@ using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Alchemist.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -111,10 +110,10 @@ public sealed class Masterwork() : AlchemistCard(2, CardType.Skill, CardRarity.R
     protected override void OnUpgrade() => DynamicVars["Invest"].UpgradeValueBy(-10m);
 }
 
-/// <summary>Pour a Potion out; the better the Potion, the better the return.</summary>
+/// <summary>Pour a Potion out for a flat Energy-and-card return.</summary>
 public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(0), new EnergyVar(2)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(2), new CardsVar(1)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -123,22 +122,18 @@ public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, Car
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var result = await Belt.Distill(ctx, Lab);
-        if (!result.Distilled) return;
+        if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
 
-        var (energy, cards) = result.Rarity switch
-        {
-            PotionRarity.Rare => (2, 2),
-            PotionRarity.Uncommon => (2, 1),
-            _ => (1, 1)
-        };
-
-        await AlchemistEffects.GainEnergy(Lab, energy);
-        await AlchemistEffects.Draw(ctx, Lab, cards + DynamicVars.Cards.IntValue);
+        await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
+        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.PotionToTempo);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars.Energy.UpgradeValueBy(1m);
+        DynamicVars.Cards.UpgradeValueBy(1m);
+    }
 }
 
 /// <summary>The next Potion this turn is not consumed. The best line in the class, and it knows it.</summary>
