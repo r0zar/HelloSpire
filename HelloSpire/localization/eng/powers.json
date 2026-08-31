@@ -116,7 +116,7 @@
   "HELLOSPIRE-CRUSADER_AURA_POWER.title": "Crusader Aura",
   "HELLOSPIRE-CRUSADER_AURA_POWER.description": "Start of turn: ALL players gain Strength.",
   "HELLOSPIRE-CRUSADER_AURA_POWER.smartDescription": "At the start of your turn, ALL players gain [blue]{Amount}[/blue] [gold]Strength[/gold].",
-  "HELLOSPIRE-JUDGMENT_OF_LIGHT_POWER.title": "Judgment of Light",
+  "HELLOSPIRE-JUDGMENT_OF_LIGHT_POWER.title": "Mark of Light",
   "HELLOSPIRE-JUDGMENT_OF_LIGHT_POWER.description": "Players that attack this creature heal, plus their [gold]Spirit[/gold].",
   "HELLOSPIRE-JUDGMENT_OF_LIGHT_POWER.smartDescription": "Whenever a player attacks this creature, the attacker heals [blue]{Amount}[/blue] HP plus their [gold]Spirit[/gold].",
   "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS_POWER.title": "Guardian of Ancient Kings",

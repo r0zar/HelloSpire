@@ -324,7 +324,7 @@
   "HELLOSPIRE-BLESSING_OF_WISDOM.description": "A player gains {Energy:diff()} [gold]Energy[/gold] at the start of their next turn.",
   "HELLOSPIRE-BLESSING_OF_PROTECTION.title": "Blessing of Protection",
   "HELLOSPIRE-BLESSING_OF_PROTECTION.description": "A player gains {Buffer:diff()} [gold]Buffer[/gold].",
-  "HELLOSPIRE-JUDGMENT_OF_LIGHT.title": "Judgment of Light",
+  "HELLOSPIRE-JUDGMENT_OF_LIGHT.title": "Mark of Light",
   "HELLOSPIRE-JUDGMENT_OF_LIGHT.description": "Mark an enemy: whenever a player attacks it, the attacker heals {Heal:diff()} HP plus their [gold]Spirit[/gold].",
   "HELLOSPIRE-SANCTUARY.title": "Sanctuary",
   "HELLOSPIRE-SANCTUARY.description": "ALL players gain {Block:diff()} [gold]Block[/gold].",

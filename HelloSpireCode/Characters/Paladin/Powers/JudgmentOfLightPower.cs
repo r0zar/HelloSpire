@@ -17,6 +17,10 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
 /// Sits on an ENEMY: whenever a player attacks it, the attacker heals Amount plus their own Spirit.
+///
+/// Displayed as "Mark of Light": Judgment is the seal-trigger keyword and this card never judges,
+/// so the WoW name was actively misleading here. The class keeps its old name because the model
+/// id derives from it -- renaming the class would orphan the card in existing run decks.
 /// </summary>
 public sealed class JudgmentOfLightPower : HelloSpirePower
 {
