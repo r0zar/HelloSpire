@@ -15,7 +15,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>Whenever the owner plays an Attack, heal the lowest-HP player Amount.</summary>
+/// <summary>Whenever the owner plays an Attack, heal the most wounded player (lowest HP fraction).</summary>
 public sealed class AvengingCrusaderPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
@@ -26,9 +26,10 @@ public sealed class AvengingCrusaderPower : HelloSpirePower
         if (cardPlay.Card.Owner?.Creature != Owner || cardPlay.Card.Type != CardType.Attack) return;
         var state = Owner.CombatState;
         if (state == null) return;
-        var lowest = state.PlayerCreatures.Where(c => c.IsAlive).OrderBy(c => c.CurrentHp).FirstOrDefault();
-        if (lowest == null) return;
+        var wounded = state.PlayerCreatures.Where(c => c.IsAlive && c.CurrentHp < c.MaxHp)
+            .OrderBy(c => (double)c.CurrentHp / c.MaxHp).FirstOrDefault();
+        if (wounded == null) return;
         Flash();
-        await CreatureCmd.Heal(lowest, Amount);
+        await CreatureCmd.Heal(wounded, Amount);
     }
 }

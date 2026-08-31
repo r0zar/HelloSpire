@@ -15,7 +15,8 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>Aura: at the start of your side's turn, heal the lowest-HP player Amount.</summary>
+/// <summary>Aura: at the start of your side's turn, heal the most wounded player (lowest HP
+/// fraction). Nobody wounded, nobody healed -- full-health low-max players are not targets.</summary>
 public sealed class AuraOfVitalityPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
@@ -26,8 +27,8 @@ public sealed class AuraOfVitalityPower : HelloSpirePower
     {
         if (side != Owner.Side) return;
         Flash();
-        var lowest = combatState.PlayerCreatures.Where(c => c.IsAlive)
-            .OrderBy(c => c.CurrentHp).FirstOrDefault();
-        if (lowest != null) await CreatureCmd.Heal(lowest, Amount);
+        var wounded = combatState.PlayerCreatures.Where(c => c.IsAlive && c.CurrentHp < c.MaxHp)
+            .OrderBy(c => (double)c.CurrentHp / c.MaxHp).FirstOrDefault();
+        if (wounded != null) await CreatureCmd.Heal(wounded, Amount);
     }
 }

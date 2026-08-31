@@ -48,7 +48,7 @@ Effects show base values; this table is regenerated from code + localization.
 |---|---|---|---|
 | Aura of Mercy | 2 | Power | At the start of your turn, heal ALL players {Heal} HP. **MP** |
 | Aura of Protection | 1 | Power | At the start of your turn, ALL players gain {Block} Block. **MP** |
-| Aura of Vitality | 2 | Power | At the start of your turn, heal the lowest-HP player {Heal} HP. **MP** |
+| Aura of Vitality | 2 | Power | At the start of your turn, heal the most wounded player {Heal} HP. **MP** |
 | Avenger's Shield | 2 | Attack | Deal {Damage} damage. Gain {Block} Block. |
 | Bastion | 2 | Skill | Gain {Block} Block now and at the start of your next turn. |
 | Blessed Recovery | 1 | Skill | Gain {Spirit} Spirit. Heal {Heal} HP plus your Spirit. Exhaust. |
@@ -90,7 +90,7 @@ Effects show base values; this table is regenerated from code + localization.
 |---|---|---|---|
 | Aegis of Light | 2 | Skill | Gain {Block} Block. Exhaust. |
 | Ardent Defender | 2 | Power | The first time each turn an enemy attacks you, heal {Heal} HP. |
-| Avenging Crusader | 3 | Power | Whenever you play an Attack, heal the lowest-HP player {Heal} HP. **MP** |
+| Avenging Crusader | 3 | Power | Whenever you play an Attack, heal the most wounded player {Heal} HP. **MP** |
 | Avenging Wrath | 2 | Power | Whenever you trigger your Seals, they trigger twice. |
 | Beacon of Light | 1 | Power | A player becomes the Beacon: whenever you heal a player, the Beacon also heals {Heal} HP. **MP** |
 | Blessing of Kings | 2 | Skill | A player gains {Amount} Strength and {Amount} Dexterity. **MP** |
