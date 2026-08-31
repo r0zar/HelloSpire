@@ -57,7 +57,8 @@ public static class Seals
         if (p.Creature.GetPower<ZealotryPower>() is { } zealotry)
         {
             zealotry.Flash();
-            await PowerCmd.Apply<StrengthPower>(ctx, p.Creature, zealotry.Amount, p.Creature, null);
+            // Avenging Wrath doubles everything a Judgment does, Zealotry's Strength included.
+            await PowerCmd.Apply<StrengthPower>(ctx, p.Creature, zealotry.Amount * triggers, p.Creature, null);
         }
     }
 }
