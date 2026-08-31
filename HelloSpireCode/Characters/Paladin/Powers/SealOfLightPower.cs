@@ -15,6 +15,9 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 /// </summary>
 public sealed class SealOfLightPower : SealPower
 {
+    /// <summary>Spirit granted per Judgment. 1 by default; an upgraded card raises it to 2.</summary>
+    public int JudgeSpirit = 1;
+
     private bool _usedThisTurn;
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -35,6 +38,6 @@ public sealed class SealOfLightPower : SealPower
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
         if (Owner.Player is not { } player) return;
-        await Spirit.Gain(ctx, player, 1);
+        await Spirit.Gain(ctx, player, JudgeSpirit);
     }
 }

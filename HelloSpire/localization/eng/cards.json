@@ -277,7 +277,7 @@
   "HELLOSPIRE-AURA_OF_PROTECTION.title": "Aura of Protection",
   "HELLOSPIRE-AURA_OF_PROTECTION.description": "At the start of your turn, ALL players gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-AURA_OF_MERCY.title": "Aura of Mercy",
-  "HELLOSPIRE-AURA_OF_MERCY.description": "All players gain {Regen:diff()} [gold]Regen[/gold].",
+  "HELLOSPIRE-AURA_OF_MERCY.description": "Whenever you gain [gold]Spirit[/gold], ALL players heal that much HP.",
   "HELLOSPIRE-BEACON_OF_LIGHT.title": "Beacon of Light",
   "HELLOSPIRE-BEACON_OF_LIGHT.description": "A player becomes the [gold]Beacon[/gold]: whenever you heal a player, the Beacon also heals {Heal:diff()} HP.",
   "HELLOSPIRE-BLADE_OF_WRATH.title": "Blade of Wrath",
@@ -319,7 +319,7 @@
   "HELLOSPIRE-CRUSADER_AURA.title": "Crusader Aura",
   "HELLOSPIRE-CRUSADER_AURA.description": "At the start of your turn, ALL players gain {Strength:diff()} [gold]Strength[/gold].",
   "HELLOSPIRE-AURA_OF_VITALITY.title": "Aura of Vitality",
-  "HELLOSPIRE-AURA_OF_VITALITY.description": "All players gain {Regen:diff()} [gold]Regen[/gold].",
+  "HELLOSPIRE-AURA_OF_VITALITY.description": "Whenever you Exhaust a card, heal the most wounded player {Heal:diff()} HP plus your [gold]Spirit[/gold].",
   "HELLOSPIRE-BLESSING_OF_WISDOM.title": "Blessing of Wisdom",
   "HELLOSPIRE-BLESSING_OF_WISDOM.description": "A player gains {Energy:diff()} [gold]Energy[/gold] at the start of their next turn.",
   "HELLOSPIRE-BLESSING_OF_PROTECTION.title": "Blessing of Protection",
@@ -562,5 +562,5 @@
   "HELLOSPIRE-DRY_FIRE.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw {DryFirePower} card.",
   "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header": "Choose a Potion to Brew",
   "HELLOSPIRE-SEAL_OF_LIGHT.title": "Seal of Light",
-  "HELLOSPIRE-SEAL_OF_LIGHT.description": "Your first Attack each turn heals {Amount:diff()} HP plus your [gold]Spirit[/gold]. [gold]Judgment[/gold]: gain 1 [gold]Spirit[/gold]."
+  "HELLOSPIRE-SEAL_OF_LIGHT.description": "Your first Attack each turn heals {Amount} HP plus your [gold]Spirit[/gold]. [gold]Judgment[/gold]: gain {Spirit:diff()} [gold]Spirit[/gold]."
 }

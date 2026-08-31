@@ -1,33 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using HelloSpire.HelloSpireCode.Characters.PaladinContent;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Aura of Vitality's little sibling: 1 Energy, all players gain a small Regen. Was an unbounded
-/// per-turn party heal -- same stall problem, same cure: Regen is self-limiting and the card
-/// Exhausts. Circle of Healing owns the party burst; this is the cheap trickle.
+/// Aura: whenever you gain Spirit, ALL players heal that much HP -- the ramp stat becomes team
+/// support at the moment of ramping. Bounded: Spirit gains are card plays, all drafted. The
+/// trigger lives in the Spirit.Gain funnel; the power is the marker it looks for.
 /// </summary>
-public sealed class AuraOfMercy() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class AuraOfMercy() : PaladinCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Regen", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        foreach (var creature in Owner.Creature.CombatState!.PlayerCreatures.Where(c => c.IsAlive))
-            await PowerCmd.Apply<RegenPower>(choiceContext, creature,
-                DynamicVars["Regen"].BaseValue, Owner.Creature, this);
+        await CreatureCmd.TriggerAnim(Owner.Creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
+        await PowerCmd.Apply<AuraOfMercyPower>(choiceContext, Owner.Creature, 1m, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Regen"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

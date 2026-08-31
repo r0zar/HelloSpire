@@ -75,8 +75,8 @@
   "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.description": "Your Attacks deal additional damage. [gold]Judgment[/gold]: deal 5 damage.",
   "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS_POWER.smartDescription": "Your Attacks deal [blue]{Amount}[/blue] additional damage. [gold]Judgment[/gold]: deal [blue]5[/blue] damage.",
   "HELLOSPIRE-SEAL_OF_LIGHT_POWER.title": "Seal of Light",
-  "HELLOSPIRE-SEAL_OF_LIGHT_POWER.description": "Your first Attack each turn heals HP plus your [gold]Spirit[/gold]. [gold]Judgment[/gold]: gain 1 [gold]Spirit[/gold].",
-  "HELLOSPIRE-SEAL_OF_LIGHT_POWER.smartDescription": "Your first Attack each turn heals [blue]{Amount}[/blue] HP plus your [gold]Spirit[/gold]. [gold]Judgment[/gold]: gain [blue]1[/blue] [gold]Spirit[/gold].",
+  "HELLOSPIRE-SEAL_OF_LIGHT_POWER.description": "Your first Attack each turn heals HP plus your [gold]Spirit[/gold]. [gold]Judgment[/gold]: gain [gold]Spirit[/gold].",
+  "HELLOSPIRE-SEAL_OF_LIGHT_POWER.smartDescription": "Your first Attack each turn heals [blue]{Amount}[/blue] HP plus your [gold]Spirit[/gold]. [gold]Judgment[/gold]: gain [gold]Spirit[/gold].",
   "HELLOSPIRE-CONSECRATION_POWER.title": "Consecration",
   "HELLOSPIRE-CONSECRATION_POWER.description": "At the start of your turn, deal damage to ALL enemies.",
   "HELLOSPIRE-CONSECRATION_POWER.smartDescription": "At the start of your turn, deal [blue]{Amount}[/blue] damage to ALL enemies.",
@@ -193,5 +193,11 @@
   "HELLOSPIRE-DISTILLATION_MASTERY_POWER.smartDescription": "Whenever you [gold]Distill[/gold], gain [blue]{Amount}[/blue] [gold]Potency[/gold].",
   "HELLOSPIRE-DRY_FIRE_POWER.title": "Dry Fire",
   "HELLOSPIRE-DRY_FIRE_POWER.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw a card.",
-  "HELLOSPIRE-DRY_FIRE_POWER.smartDescription": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw [blue]{Amount}[/blue] card."
+  "HELLOSPIRE-DRY_FIRE_POWER.smartDescription": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw [blue]{Amount}[/blue] card.",
+  "HELLOSPIRE-AURA_OF_VITALITY_POWER.title": "Aura of Vitality",
+  "HELLOSPIRE-AURA_OF_VITALITY_POWER.description": "Exhausting a card heals the most wounded player.",
+  "HELLOSPIRE-AURA_OF_VITALITY_POWER.smartDescription": "Whenever you Exhaust a card, heal the most wounded player [blue]{Amount}[/blue] HP plus your [gold]Spirit[/gold].",
+  "HELLOSPIRE-AURA_OF_MERCY_POWER.title": "Aura of Mercy",
+  "HELLOSPIRE-AURA_OF_MERCY_POWER.description": "Gaining [gold]Spirit[/gold] heals ALL players that much.",
+  "HELLOSPIRE-AURA_OF_MERCY_POWER.smartDescription": "Whenever you gain [gold]Spirit[/gold], ALL players heal that much HP."
 }

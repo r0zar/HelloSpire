@@ -29,11 +29,20 @@ public static class Spirit
 {
     public static int Of(Player p) => p.Creature.GetPowerAmount<SpiritPower>();
 
-    public static Task Gain(PlayerChoiceContext ctx, Player p, int n, CardModel? source = null)
+    public static async Task Gain(PlayerChoiceContext ctx, Player p, int n, CardModel? source = null)
     {
         // Libram of Wrath: fuel bought with the heal identity -- no Spirit while held.
-        if (p.Relics.OfType<Relics.LibramOfWrath>().Any()) return Task.CompletedTask;
-        return PowerCmd.Apply<SpiritPower>(ctx, p.Creature, n, p.Creature, source);
+        if (p.Relics.OfType<Relics.LibramOfWrath>().Any()) return;
+        await PowerCmd.Apply<SpiritPower>(ctx, p.Creature, n, p.Creature, source);
+
+        // Aura of Mercy: the bearer's Spirit gains pulse the whole team, flat -- adding Spirit on
+        // top here would double-dip the very stat being gained.
+        if (n > 0 && p.Creature.GetPower<AuraOfMercyPower>() is { } aura && p.Creature.CombatState is { } state)
+        {
+            aura.Flash();
+            foreach (var ally in state.PlayerCreatures.Where(c => c.IsAlive))
+                await CreatureCmd.Heal(ally, n);
+        }
     }
 
     /// <summary>A heal boosted by the healer's Spirit. All Paladin heal cards route through this.</summary>
