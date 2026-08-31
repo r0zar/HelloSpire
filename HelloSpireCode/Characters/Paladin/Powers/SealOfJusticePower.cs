@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The control Seal: first Attack each turn applies 1 Weak; Judged, apply Amount Weak.
+/// The control Seal: first Attack each turn lowers Strength by 1; Judged, apply Amount Weak.
 /// </summary>
 public sealed class SealOfJusticePower : SealPower
 {
@@ -38,7 +38,7 @@ public sealed class SealOfJusticePower : SealPower
         _usedThisTurn = true;
         Flash();
         foreach (var target in targets)
-            await PowerCmd.Apply<WeakPower>(choiceContext, target, 1m, Owner, null);
+            await PowerCmd.Apply<StrengthPower>(choiceContext, target, -1m, Owner, null);
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
