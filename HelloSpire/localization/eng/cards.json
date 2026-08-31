@@ -487,7 +487,7 @@
   "HELLOSPIRE-MERCHANTS_INSTINCT.title": "Merchant's Instinct",
   "HELLOSPIRE-MERCHANTS_INSTINCT.description": "Whenever you [gold]Invest[/gold], gain {MerchantsInstinctPower:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-REACTIVE_MIXTURE.title": "Reactive Mixture",
-  "HELLOSPIRE-REACTIVE_MIXTURE.description": "The first Potion you use each turn: draw {ReactiveMixturePower} card and gain {Bonus:diff()} [gold]Block[/gold].",
+  "HELLOSPIRE-REACTIVE_MIXTURE.description": "The first Potion you use each turn: draw {ReactiveMixturePower:diff()} cards.",
   "HELLOSPIRE-CLOSED_SYSTEM.title": "Closed System",
   "HELLOSPIRE-CLOSED_SYSTEM.description": "The first time a Slot empties each turn, gain {ClosedSystemPower:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-REFINERS_EYE.title": "Refiner's Eye",
