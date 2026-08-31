@@ -30,6 +30,6 @@ public sealed class AvengingCrusaderPower : HelloSpirePower
             .OrderBy(c => (double)c.CurrentHp / c.MaxHp).FirstOrDefault();
         if (wounded == null) return;
         Flash();
-        await CreatureCmd.Heal(wounded, Amount);
+        await PowerCmd.Apply<RegenPower>(choiceContext, wounded, Amount, Owner, null);
     }
 }
