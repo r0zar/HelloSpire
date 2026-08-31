@@ -16,6 +16,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// </summary>
 public sealed class SacredOath() : PaladinCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
