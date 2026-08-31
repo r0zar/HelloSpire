@@ -14,7 +14,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// <summary>The first time each turn an enemy attacks you, heal 3. Defiance as sustenance.</summary>
 public sealed class ArdentDefender() : PaladinCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Heal", 3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar("Heal", 3m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

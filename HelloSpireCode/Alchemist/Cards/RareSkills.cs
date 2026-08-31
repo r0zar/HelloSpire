@@ -225,9 +225,9 @@ public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity
     {
         if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
 
-        // TODO(Phase 3): a permanent slot is run state, not combat state, so it needs a bridge
-        // call of its own. The temporary grant is the honest interim behaviour, not the design.
-        await Belt.GrantTemporarySlots(ctx, Lab, 1);
+        // Permanent: granted straight through the bridge with no bench record, so the
+        // combat-end cleanup never takes it back -- player slots are run state and it persists.
+        await LabBridge.Current.GainSlots(Owner, 1);
     }
 
     protected override void OnUpgrade() => DynamicVars["Invest"].UpgradeValueBy(-15m);

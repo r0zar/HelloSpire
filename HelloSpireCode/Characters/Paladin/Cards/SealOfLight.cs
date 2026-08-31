@@ -20,7 +20,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 public sealed class SealOfLight() : PaladinCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Amount", 1m), new DynamicVar("Spirit", 1m)];
+        [new SpiritHealVar("Amount", 1m), new DynamicVar("Spirit", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

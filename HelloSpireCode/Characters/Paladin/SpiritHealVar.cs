@@ -26,6 +26,12 @@ public sealed class SpiritHealVar : HealVar
         _gainedSpiritVar = gainedSpiritVar;
     }
 
+    public SpiritHealVar(string name, decimal healAmount)
+        : base(name, healAmount)
+    {
+        _gainedSpiritVar = null;
+    }
+
     public override void UpdateCardPreview(CardModel card, CardPreviewMode previewMode, Creature? target, bool runGlobalHooks)
     {
         if (card.Owner == null) return; // card library / compendium: no owner, show base

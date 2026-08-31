@@ -16,7 +16,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// Sits on an ENEMY: whenever a player attacks it, the attacker heals Amount plus their own Spirit.
+/// Sits on an ENEMY: whenever a player attacks it, the attacker heals Amount, flat.
 ///
 /// Displayed as "Mark of Light": Judgment is the seal-trigger keyword and this card never judges,
 /// so the WoW name was actively misleading here. The class keeps its old name because the model
@@ -32,7 +32,8 @@ public sealed class JudgmentOfLightPower : HelloSpirePower
     {
         if (target != Owner || dealer == null || !dealer.IsPlayer || dealer.IsDead || !props.IsPoweredAttack()) return;
         Flash();
-        if (dealer.Player is { } attacker) await Spirit.Heal(attacker, dealer, Amount);
-        else await CreatureCmd.Heal(dealer, Amount);
+        // Flat by design: the healer would be whoever attacked -- possibly a teammate with a
+        // different Spirit -- so no number on the card could honestly preview a scaled heal.
+        await CreatureCmd.Heal(dealer, Amount);
     }
 }
