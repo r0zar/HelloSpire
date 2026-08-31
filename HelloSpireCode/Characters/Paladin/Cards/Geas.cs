@@ -12,13 +12,13 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// The weight of the oath: a Status (Wound-family), Unplayable and Ethereal -- it clogs a
-/// hand for a turn, then fades. Sacred Oath's price. Never appears in rewards.
+/// The weight of the oath: a Status (Wound-family), Unplayable -- and it does NOT fade at end
+/// of turn. The curse of the card is that it stays. Sacred Oath's price. Never in rewards.
 /// </summary>
 public sealed class Geas() : PaladinCard(-1, CardType.Status, CardRarity.Status, TargetType.None)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords =>
-        [CardKeyword.Unplayable, CardKeyword.Ethereal];
+        [CardKeyword.Unplayable];
 
     protected override Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay) =>
         Task.CompletedTask;
