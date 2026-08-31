@@ -47,6 +47,8 @@ public sealed class ChainReaction() : AlchemistCard(0, CardType.Skill, CardRarit
 {
     protected override bool HasEnergyCostX => true;
 
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Bonus", 0m)];
+
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Transform), Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
@@ -65,7 +67,12 @@ public sealed class ChainReaction() : AlchemistCard(0, CardType.Skill, CardRarit
             await Alchemy.Exhaust(ctx, Lab, chosen);
             await Belt.BrewRandom(ctx, Lab);
         }
+
+        for (var i = 0; i < DynamicVars["Bonus"].IntValue; i++)
+            await Belt.BrewRandom(ctx, Lab);
     }
+
+    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(1m);
 }
 
 /// <summary>

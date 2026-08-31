@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
@@ -256,7 +257,7 @@ public sealed class Corkscrew() : AlchemistCard(1, CardType.Attack, CardRarity.U
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Trade a card in Hand for a stranger of the same rarity.</summary>
+/// <summary>Trade a card in Hand for a stranger of the same rarity. Upgraded, the stranger arrives Upgraded too.</summary>
 public sealed class ReactiveSlash() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Transform)];
@@ -277,6 +278,11 @@ public sealed class ReactiveSlash() : AlchemistCard(1, CardType.Skill, CardRarit
 
         await Alchemy.Exhaust(ctx, Lab, chosen);
         await Alchemy.Create(ctx, Lab, replacement);
+
+        // No numeric var to scale, so the upgrade is a qualitative one checked here rather than
+        // in OnUpgrade: IsUpgraded is already true by the time OnPlay runs an upgraded copy.
+        if (IsUpgraded && replacement is { IsUpgradable: true })
+            CardCmd.Upgrade(replacement, CardPreviewStyle.None);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
