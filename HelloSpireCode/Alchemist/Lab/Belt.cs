@@ -137,13 +137,20 @@ public static class Belt
         return new DistillResult { Distilled = true, Rarity = potion.Rarity, WasVolatile = wasVolatile };
     }
 
-    /// <summary>Distill as many as the player is willing to. Grand Combustion.</summary>
+    /// <summary>
+    /// Distill as many as the player is willing to, one choice at a time -- they can stop with
+    /// Potions still held. Grand Combustion.
+    /// </summary>
     public static async Task<int> DistillAny(PlayerChoiceContext ctx, LabContext lab, int max)
     {
         var count = 0;
         while (count < max && Held(lab).Count > 0)
         {
-            var result = await Distill(ctx, lab);
+            var chosen = await LabBridge.Current.ChoosePotion(ctx, lab.Player, Held(lab),
+                new LocString("cards", "HELLOSPIRE-ALCHEMIST_DISTILL_CHOICE.header"), allowStop: true);
+            if (chosen == null) break;
+
+            var result = await Distill(ctx, lab, chosen);
             if (!result.Distilled) break;
             count++;
         }

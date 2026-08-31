@@ -138,7 +138,12 @@ public interface ILabBridge
     /// wrong for anything that isn't Brewing (Distill, Stabilize, Pressure Burst) -- pass a real
     /// one for those.
     /// </param>
-    Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null);
+    /// <param name="allowStop">
+    /// Offer a "Done" option that returns null even though Potions are still held. Grand
+    /// Combustion's "Distill any number" reads this loop-by-loop; every other caller wants a
+    /// mandatory pick once it has committed to asking; leave this false for those.
+    /// </param>
+    Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false);
 
     /// <summary>
     /// Ask the player to pick one card from a set, typically their Hand.
@@ -254,7 +259,7 @@ public sealed class UnwiredLabBridge : ILabBridge
         return null;
     }
 
-    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null)
+    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false)
     {
         Report("choosing a Potion");
         return Task.FromResult<PotionModel?>(null);

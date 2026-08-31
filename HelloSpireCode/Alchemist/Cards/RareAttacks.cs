@@ -192,9 +192,9 @@ public sealed class GildedExecution() : AlchemistCard(2, CardType.Attack, CardRa
 /// Empty the whole belt into the room.
 ///
 /// The Distillation deck's finisher, and the clearest statement of the Transform thesis in the
-/// class: everything you were saving becomes damage, right now, and the belt is bare afterwards.
+/// class: as much of what you were saving as you're willing to give up becomes damage, right now.
 /// </summary>
-public sealed class GrandCombustion() : AlchemistCard(3, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
+public sealed class GrandCombustion() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(18m, ValueProp.Move), new DamageVar("PerPotion", 6m, ValueProp.Move)];

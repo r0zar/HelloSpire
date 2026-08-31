@@ -243,11 +243,18 @@ public sealed class WiredLabBridge : ILabBridge
     /// the same multiplayer sync shape as Confirm: only the acting player's client shows it,
     /// the chosen index is broadcast via PlayerChoiceSynchronizer, and every other client
     /// resolves the same list entry.
+    ///
+    /// <paramref name="allowStop"/> offers a "Done" button alongside the Potions and skips the
+    /// options.Count == 1 auto-pick shortcut, so the player can stop even with exactly one Potion
+    /// left -- Grand Combustion's "distill any number" needs that; a mandatory single-Potion pick
+    /// (Distill, Stabilize, Pressure Burst) does not, and keeps the shortcut.
+    /// PlayerChoiceResult.FromIndex/AsIndexOrNull already represent "no index" over the network
+    /// (see CardReward's skip-the-reward case in sts2.dll), so a stop needs no sentinel value here.
     /// </summary>
-    private async Task<PotionModel?> ChoosePotionFrom(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options, LocString? header = null)
+    private async Task<PotionModel?> ChoosePotionFrom(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options, LocString? header = null, bool allowStop = false)
     {
         if (options.Count == 0) return null;
-        if (options.Count == 1) return options[0];
+        if (!allowStop && options.Count == 1) return options[0];
 
         var isLocal = LocalContext.IsMe(player) && RunManager.Instance.NetService.Type != NetGameType.Replay;
         var choiceId = RunManager.Instance.PlayerChoiceSynchronizer.ReserveChoiceId(player);
@@ -255,18 +262,19 @@ public sealed class WiredLabBridge : ILabBridge
         await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
         try
         {
-            int picked;
+            int? picked;
             if (!isLocal)
             {
                 var remote = await RunManager.Instance.PlayerChoiceSynchronizer.WaitForRemoteChoice(player, choiceId);
-                picked = System.Math.Clamp(remote.AsIndex(), 0, options.Count - 1);
+                picked = remote.AsIndexOrNull();
+                if (picked.HasValue) picked = System.Math.Clamp(picked.Value, 0, options.Count - 1);
             }
             else
             {
-                picked = await ShowPotionOptions(options, header);
+                picked = await ShowPotionOptions(options, header, allowStop);
                 RunManager.Instance.PlayerChoiceSynchronizer.SyncLocalChoice(player, choiceId, PlayerChoiceResult.FromIndex(picked));
             }
-            return options[picked];
+            return picked.HasValue ? options[picked.Value] : null;
         }
         finally
         {
@@ -278,15 +286,15 @@ public sealed class WiredLabBridge : ILabBridge
     /// One popup, every option with its icon, click one -- PotionPickerPopup. No UI host
     /// (TestMode, headless) means no way to ask: take the first option, never hang.
     /// </summary>
-    private static async Task<int> ShowPotionOptions(IReadOnlyList<PotionModel> options, LocString? header = null)
+    private static async Task<int?> ShowPotionOptions(IReadOnlyList<PotionModel> options, LocString? header = null, bool allowStop = false)
     {
-        var picked = PotionPickerPopup.TryShow(options, header);
+        var picked = PotionPickerPopup.TryShow(options, header, allowStop);
         return picked == null ? 0 : await picked;
     }
 
 
-    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null) =>
-        ChoosePotionFrom(ctx, player, from, prompt);
+    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false) =>
+        ChoosePotionFrom(ctx, player, from, prompt, allowStop);
 
     public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null)
     {
