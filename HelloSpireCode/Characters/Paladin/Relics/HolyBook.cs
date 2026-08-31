@@ -12,6 +12,10 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Relics;
 /// the Burning Blood weight class, not damage.
 /// The Defect's Cracked Core, translated: you start every fight with your engine primed and the
 /// starter Judgment has something to consume.
+///
+/// The default is OFFENSIVE -- Seal of Righteousness at one stack (+1 damage on Attacks, judge 5).
+/// Seal of Light lives in the draft pool as the healer lane's anchor instead: judge-heavy decks
+/// no longer bank Spirit for free, so healing power has to be drafted, not inherited.
 /// </summary>
 public sealed class HolyBook : PaladinRelic
 {
@@ -22,6 +26,6 @@ public sealed class HolyBook : PaladinRelic
     {
         if (!participants.Contains(Owner.Creature) || Owner.PlayerCombatState.TurnNumber > 1) return;
         Flash();
-        await Seals.Grant<SealOfLightPower>(choiceContext, Owner, 1m);
+        await Seals.Grant<SealOfRighteousnessPower>(choiceContext, Owner, 1m);
     }
 }

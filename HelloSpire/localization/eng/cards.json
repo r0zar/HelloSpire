@@ -560,5 +560,7 @@
   "HELLOSPIRE-POWDER_BURN.description": "Exhaust your hand.\n[gold]Load[/gold] 1 random [gold]Round[/gold] for each card Exhausted.\nDraw {Cards:diff()} cards.",
   "HELLOSPIRE-DRY_FIRE.title": "Dry Fire",
   "HELLOSPIRE-DRY_FIRE.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw {DryFirePower} card.",
-  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header": "Choose a Potion to Brew"
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header": "Choose a Potion to Brew",
+  "HELLOSPIRE-SEAL_OF_LIGHT.title": "Seal of Light",
+  "HELLOSPIRE-SEAL_OF_LIGHT.description": "Your first Attack each turn heals {Amount:diff()} HP plus your [gold]Spirit[/gold]. [gold]Judgment[/gold]: gain 1 [gold]Spirit[/gold]."
 }

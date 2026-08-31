@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The starter Seal: your first Attack each turn heals Amount (Burning Blood weight -- the
+/// The healer Seal, drafted: your first Attack each turn heals Amount (Burning Blood weight -- the
 /// per-attack version out-healed it badly and rewarded stalling). Judged: gain 1 Spirit --
 /// devotion deepens. The exception to judgments-are-offensive, by design.
 /// </summary>
