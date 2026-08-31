@@ -119,6 +119,12 @@ public interface ILabBridge
 
     // -------------------------------------------------------------------------- choices
 
+    /// <summary>Grow the player's real Potion Slots. Vial Bandolier, Extra Vial, Widen the Belt.</summary>
+    Task GainSlots(Player player, int count);
+
+    /// <summary>Shrink the player's real Potion Slots. The combat-end half of GainSlots.</summary>
+    Task LoseSlots(Player player, int count);
+
     /// <summary>Ask the player to pick one of the offered Potions. Buy Ingredients.</summary>
     Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options);
 
@@ -246,6 +252,18 @@ public sealed class UnwiredLabBridge : ILabBridge
     {
         Report("listing Potion options");
         return [];
+    }
+
+    public Task GainSlots(Player player, int count)
+    {
+        Report("gaining Potion Slots");
+        return Task.CompletedTask;
+    }
+
+    public Task LoseSlots(Player player, int count)
+    {
+        Report("losing Potion Slots");
+        return Task.CompletedTask;
     }
 
     public Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options)

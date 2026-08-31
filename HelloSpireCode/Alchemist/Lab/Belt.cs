@@ -158,13 +158,20 @@ public static class Belt
 
     public static bool IsEmpty(LabContext lab) => Held(lab).Count == 0;
 
-    /// <summary>Extra slots for the rest of this combat. Volatile-only, which is what makes them temporary.</summary>
+    /// <summary>
+    /// Extra slots for the rest of this combat. The slots are REAL -- grown on the player via the
+    /// bridge, so the game's own belt UI and Procure checks all see them -- and the bench records
+    /// the count so <see cref="LabPower.AfterCombatEnd"/> can take them back.
+    /// </summary>
     public static async Task GrantTemporarySlots(PlayerChoiceContext ctx, LabContext lab, int count)
     {
         if (count <= 0) return;
 
         var bench = await AlchemistEffects.Bench(ctx, lab);
-        if (bench != null) bench.TemporarySlots += count;
+        if (bench == null) return;
+
+        await LabBridge.Current.GainSlots(lab.Player, count);
+        bench.TemporarySlots += count;
     }
 
     // ------------------------------------------------------------------ using a Potion

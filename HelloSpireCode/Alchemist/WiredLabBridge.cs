@@ -182,6 +182,10 @@ public sealed class WiredLabBridge : ILabBridge
         return picks;
     }
 
+    public Task GainSlots(Player player, int count) => PlayerCmd.GainMaxPotionCount(count, player);
+
+    public Task LoseSlots(Player player, int count) => PlayerCmd.LoseMaxPotionCount(count, player);
+
     public PotionModel? NamedPotion(BasePotion which) => which switch
     {
         BasePotion.Block => ModelDb.Potion<BlockPotion>().ToMutable(),
