@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -24,10 +25,20 @@ public sealed class SealOfJusticePower : SealPower
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (PassivesDisabled || _usedThisTurn || cardPlay.Card.Owner?.Creature != Owner ||
-            cardPlay.Card.Type != CardType.Attack || cardPlay.Target is not { } target || target.IsDead) return;
+            cardPlay.Card.Type != CardType.Attack) return;
+
+        // Single-target attacks carry their target on the CardPlay; AoE attacks (AllEnemies)
+        // carry null and hit everything, so the debuff lands on everything they hit.
+        List<Creature> targets = [];
+        if (cardPlay.Target is { IsDead: false } single) targets.Add(single);
+        else if (cardPlay.Card.TargetType == TargetType.AllEnemies && Owner.CombatState is { } state)
+            targets.AddRange(state.HittableEnemies);
+        if (targets.Count == 0) return;
+
         _usedThisTurn = true;
         Flash();
-        await PowerCmd.Apply<WeakPower>(choiceContext, target, 1m, Owner, null);
+        foreach (var target in targets)
+            await PowerCmd.Apply<WeakPower>(choiceContext, target, 1m, Owner, null);
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
