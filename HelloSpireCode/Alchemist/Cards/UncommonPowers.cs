@@ -19,7 +19,7 @@ public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(2m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Potency), Tip(AlchemistTips.Volatile), HoverTipFactory.FromPower<PotencyPower>()];
+        [Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {

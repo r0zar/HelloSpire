@@ -16,9 +16,7 @@
   "HELLOSPIRE-MATCHED_AMMO.title": "Matched Ammunition",
   "HELLOSPIRE-MATCHED_AMMO.description": "Rounds borrowed from another player come out of their kit: Ironclad lends Heavy, Silent lends Crippling, Defect lends Piercing, Regent lends Guard, Necrobinder lends Rending, Paladin lends Guard, Alchemist lends Smoke. Anyone else, including yourself, lends Lead.",
   "HELLOSPIRE-BREW.title": "Brew",
-  "HELLOSPIRE-BREW.description": "Create a Potion in your first empty Potion Slot. A Brewed Potion is Volatile unless stated otherwise. If no Slot is empty, the Potion is lost.",
-  "HELLOSPIRE-VOLATILE.title": "Volatile",
-  "HELLOSPIRE-VOLATILE.description": "This Potion behaves normally -- it occupies a Slot, costs no Energy, and triggers Potion effects -- but it is removed at the end of combat.",
+  "HELLOSPIRE-BREW.description": "Create a Potion in your first empty Potion Slot. If no Slot is empty, the Potion is lost.",
   "HELLOSPIRE-DISTILL.title": "Distill",
   "HELLOSPIRE-DISTILL.description": "Discard one of your Potions without resolving it, in exchange for the card's listed reward. Distilling is not using a Potion, but it does empty a Slot.",
   "HELLOSPIRE-INVEST.title": "Invest",
@@ -26,9 +24,9 @@
   "HELLOSPIRE-RENDER.title": "Render",
   "HELLOSPIRE-RENDER.description": "Optionally pay Max HP -- permanently, for the whole run -- for the listed effect. Cannot be paid if it would reduce your Max HP to 0.",
   "HELLOSPIRE-POTENCY.title": "Potency",
-  "HELLOSPIRE-POTENCY.description": "Whenever you use a Volatile Potion, its damage and Block values are increased by your Potency. Never applies to found or bought Potions.",
+  "HELLOSPIRE-POTENCY.description": "Whenever you use a Potion, its damage and Block values are increased by your Potency.",
   "HELLOSPIRE-TRANSFORM.title": "Transform",
   "HELLOSPIRE-TRANSFORM.description": "Consuming a card (Exhaust), a Potion (Distill), Gold (Invest) or Max HP (Render) specifically to produce a different kind of value. Playing a card for Energy is not a Transform.",
   "HELLOSPIRE-THE_POTION_BELT.title": "The Potion Belt",
-  "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat; those Slots hold only Volatile Potions."
+  "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat."
 }

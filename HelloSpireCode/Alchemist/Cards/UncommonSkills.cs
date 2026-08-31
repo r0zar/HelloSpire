@@ -40,7 +40,7 @@ public sealed class Reconstitute() : AlchemistCard(1, CardType.Skill, CardRarity
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
+        [Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -216,7 +216,7 @@ public sealed class SpareFlask() : AlchemistCard(1, CardType.Skill, CardRarity.U
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
+        [Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -229,11 +229,11 @@ public sealed class SpareFlask() : AlchemistCard(1, CardType.Skill, CardRarity.U
 }
 
 /// <summary>
-/// Forty Gold makes a Brewed Potion permanent.
+/// Forty Gold copies a Potion.
 ///
-/// The permanent tier of the Invest table, and the only way a Volatile Potion ever survives a
-/// fight. Priced against a Merchant's Rare Potion on purpose: this should be a decision about the
-/// rest of the run, not a combat trick.
+/// Volatile is gone, so "make it permanent" stopped meaning anything. The permanent tier of the
+/// Invest table buys duplication instead: a fresh copy of any held Potion, priced against a
+/// Merchant's Rare Potion so it stays a run decision, not a combat trick.
 /// </summary>
 public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
@@ -242,22 +242,21 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Invest), Tip(AlchemistTips.Volatile)];
+        [Tip(AlchemistTips.Invest), Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var bench = await AlchemistEffects.Bench(ctx, Lab);
-        if (bench == null || bench.Volatile.Count == 0) return;
+        var held = Belt.Held(Lab);
+        if (held.Count == 0) return;
 
-        var candidates = bench.Volatile.ToList();
-        var chosen = candidates.Count == 1
-            ? candidates[0]
-            : await LabBridge.Current.ChoosePotion(ctx, Owner, candidates);
+        var chosen = held.Count == 1
+            ? held[0]
+            : await LabBridge.Current.ChoosePotion(ctx, Owner, held);
 
         if (chosen == null) return;
         if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
 
-        bench.Volatile.Remove(chosen);
+        await Belt.Brew(ctx, Lab, chosen.CanonicalInstance.ToMutable());
     }
 
     protected override void OnUpgrade() => DynamicVars["Invest"].UpgradeValueBy(-10m);
@@ -361,13 +360,13 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Two more slots for this combat. Volatile-only, so it can never bank a found Potion.</summary>
+/// <summary>Two more slots for this combat.</summary>
 public sealed class VialBandolier() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Slots", 2m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.ThePotionBelt), Tip(AlchemistTips.Volatile)];
+        [Tip(AlchemistTips.ThePotionBelt)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await Belt.GrantTemporarySlots(ctx, Lab, DynamicVars["Slots"].IntValue);

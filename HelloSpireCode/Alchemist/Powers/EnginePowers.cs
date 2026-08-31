@@ -223,7 +223,7 @@ public sealed class ConservationOfMatterPower : AlchemistEnginePower, IExhaustLi
 }
 
 /// <summary>
-/// Distilling makes the next Volatile Potion stronger.
+/// Distilling makes your Potions stronger.
 ///
 /// The Brewer archetype's only real scaling axis — without it, that deck is a pile of one-shot
 /// consumables with no way to grow.

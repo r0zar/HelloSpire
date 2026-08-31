@@ -10,13 +10,12 @@ public sealed class DistillResult
 {
     public bool Distilled { get; init; }
     public PotionRarity Rarity { get; init; }
-    public bool WasVolatile { get; init; }
 
     public static readonly DistillResult Nothing = new();
 }
 
 /// <summary>
-/// The rules of the belt: Brew, Volatile, Distill and Potency.
+/// The rules of the belt: Brew, Distill and Potency.
 ///
 /// Every Alchemist card, relic and potion goes through this class, so the Potion rules are stated
 /// once and the cards stay short enough to read as their own card text. The base-game calls it
@@ -28,15 +27,14 @@ public static class Belt
     /// <summary>
     /// Brew a Potion into the first empty slot.
     ///
-    /// Volatile unless the caller says otherwise — Alchemize Procures a real Potion, and The Great
-    /// Work's Philosopher's Stone is a trophy meant to survive the fight. Everything else vanishes
-    /// at combat end.
+    /// Brewed Potions are real Potions: they sit in real slots and they keep like any other.
+    /// (Volatile is gone -- what you make is yours.)
     ///
     /// A full belt is not an error. The card still resolved; the Potion is simply lost. That is a
     /// real cost the Brew-heavy hand is supposed to feel.
     /// </summary>
     public static async Task<PotionModel?> Brew(PlayerChoiceContext ctx, LabContext lab,
-        PotionModel? potion, bool volatilePotion = true)
+        PotionModel? potion)
     {
         if (potion == null) return null;
 
@@ -46,7 +44,6 @@ public static class Belt
         var bench = await AlchemistEffects.Bench(ctx, lab);
         if (bench != null)
         {
-            if (volatilePotion) bench.Volatile.Add(placed);
             bench.BrewedThisTurn++;
         }
 
@@ -111,20 +108,15 @@ public static class Belt
     public static async Task<DistillResult> Distill(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         var bench = await AlchemistEffects.Bench(ctx, lab);
-        var wasVolatile = bench?.Volatile.Contains(potion) ?? false;
 
         await LabBridge.Current.Discard(ctx, lab.Player, potion);
 
-        if (bench != null)
-        {
-            bench.Volatile.Remove(potion);
-            bench.DistilledThisTurn++;
-        }
+        if (bench != null) bench.DistilledThisTurn++;
 
         await NotifySlotEmptied(ctx, lab);
         await AlchemistHooks.NotifyDistilled(ctx, lab, potion);
 
-        return new DistillResult { Distilled = true, Rarity = potion.Rarity, WasVolatile = wasVolatile };
+        return new DistillResult { Distilled = true, Rarity = potion.Rarity };
     }
 
     /// <summary>Distill as many as the player is willing to. Grand Combustion.</summary>
@@ -145,7 +137,7 @@ public static class Belt
 
     public static IReadOnlyList<PotionModel> Held(LabContext lab) => LabBridge.Current.Held(lab.Player);
 
-    /// <summary>Total slots, including this combat's temporary Volatile-only ones.</summary>
+    /// <summary>Total slots, including this combat's temporary ones.</summary>
     public static int Slots(LabContext lab)
     {
         var bench = AlchemistEffects.Peek(lab);
@@ -181,10 +173,9 @@ public static class Belt
     ///
     /// Fired by <see cref="PotionUsePatch"/>, a Harmony patch on
     /// <see cref="MegaCrit.Sts2.Core.Models.PotionModel.OnUseWrapper"/> — see that class for why
-    /// that method and not one of the base game's own potion-use hooks. Potency (buffing a Volatile
-    /// Potion's own damage/Block) is a separate, still-unaddressed integration point: it needs to
-    /// change the values the potion's own OnUse computes with, which means a patch that runs before
-    /// OnUse, not a notification that runs after it.
+    /// that method and not one of the base game's own potion-use hooks. Potency is applied by the same
+    /// patch's prefix, which bumps the Potion's damage and Block vars before OnUse computes with
+    /// them -- see <see cref="PotionUsePatch"/>.
     /// </summary>
     public static async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
@@ -193,7 +184,6 @@ public static class Belt
         {
             bench.PotionsUsedThisTurn++;
             bench.UsedThisCombat.Add(potion);
-            bench.Volatile.Remove(potion);
         }
 
         await NotifySlotEmptied(ctx, lab);
@@ -201,35 +191,12 @@ public static class Belt
     }
 
     /// <summary>
-    /// Potency to add to a Volatile Potion's damage and Block values.
-    ///
-    /// Zero for anything the player found, bought or Procured. That restriction is the entire
-    /// reason this class is allowed an exception to "Potions ignore stat scaling" — without it,
-    /// Potency becomes a blanket buff to whatever Rare Potion a shop happened to sell, which no
-    /// part of the Combat Potion curation covers.
-    ///
-    /// TODO(Phase 3): the same potion-resolution patch that drives OnPotionUsed must call this and
-    /// add the result to the Potion's damage and Block.
+    /// Potency to add to a Potion's damage and Block values. Applies to EVERY Potion the
+    /// Alchemist uses -- Volatile is gone, so Potency is simply the Alchemist's potion-strength
+    /// stat. Applied by <see cref="PotionUsePatch"/> before the Potion's own OnUse runs.
     /// </summary>
-    public static int PotencyBonus(LabContext lab, PotionModel potion)
-    {
-        var bench = AlchemistEffects.Peek(lab);
-        if (bench == null || !bench.Volatile.Contains(potion)) return 0;
+    public static int PotencyBonus(LabContext lab, PotionModel potion) => AlchemistEffects.Potency(lab);
 
-        return AlchemistEffects.Potency(lab);
-    }
-
-    /// <summary>Volatile Potions do not survive the fight. Called when combat ends.</summary>
-    public static async Task ClearVolatile(PlayerChoiceContext ctx, LabContext lab)
-    {
-        var bench = AlchemistEffects.Peek(lab);
-        if (bench == null) return;
-
-        foreach (var potion in bench.Volatile.ToList())
-            await LabBridge.Current.Discard(ctx, lab.Player, potion);
-
-        bench.Volatile.Clear();
-    }
 
     private static async Task NotifySlotEmptied(PlayerChoiceContext ctx, LabContext lab)
     {

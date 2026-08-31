@@ -263,7 +263,7 @@ public sealed class PocketFormula() : AlchemistCard(1, CardType.Skill, CardRarit
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile), Tip(AlchemistTips.Transform)];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Transform)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -426,7 +426,7 @@ public sealed class MarketSense() : AlchemistCard(1, CardType.Skill, CardRarity.
 /// <summary>
 /// One more Potion Slot for this combat.
 ///
-/// The Slot is Volatile-only, which is the entire reason it is temporary — a Volatile Potion is
+/// The Slot is temporary:
 /// removed at combat end anyway, so no separate expiry rule is needed. It also means this can
 /// never be used to bank a found Rare Potion.
 /// </summary>
@@ -437,7 +437,7 @@ public sealed class ExtraVial() : AlchemistCard(1, CardType.Skill, CardRarity.Co
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.ThePotionBelt), Tip(AlchemistTips.Volatile)];
+        [Tip(AlchemistTips.ThePotionBelt)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await Belt.GrantTemporarySlots(ctx, Lab, DynamicVars["Slots"].IntValue);

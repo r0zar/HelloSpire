@@ -15,9 +15,6 @@ public static class AlchemistTips
     /// <summary>Create a Potion in the first empty Potion Slot.</summary>
     [CustomEnum] public static StaticHoverTip Brew;
 
-    /// <summary>A Potion that behaves normally but is removed at the end of combat.</summary>
-    [CustomEnum] public static StaticHoverTip Volatile;
-
     /// <summary>Discard a Potion without resolving it, for the card's listed reward.</summary>
     [CustomEnum] public static StaticHoverTip Distill;
 
@@ -27,7 +24,7 @@ public static class AlchemistTips
     /// <summary>Optionally pay Max HP, permanently, for an additional effect.</summary>
     [CustomEnum] public static StaticHoverTip Render;
 
-    /// <summary>Volatile Potions you use have their damage and Block increased by this much.</summary>
+    /// <summary>Potions you use have their damage and Block increased by this much.</summary>
     [CustomEnum] public static StaticHoverTip Potency;
 
     /// <summary>Consuming one kind of value specifically to produce a different kind.</summary>
