@@ -16,7 +16,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 /// <summary>Pour a Potion out for two Energy. The Distillation deck's engine.</summary>
 public sealed class DistillationColumn() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(2), new CardsVar(0)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(2)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -28,11 +28,10 @@ public sealed class DistillationColumn() : AlchemistCard(1, CardType.Skill, Card
         if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
 
         await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
-        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.PotionToTempo);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Make another one of something you already drank.</summary>
@@ -341,13 +340,12 @@ public sealed class FalseBottom() : AlchemistCard(1, CardType.Skill, CardRarity.
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Pour a Potion out for Block and a card. Distillation's defensive half.</summary>
+/// <summary>Pour a Potion out for Block. Distillation's defensive half.</summary>
 public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(8m, ValueProp.Move), new CardsVar(1)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(15m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Transform)];
@@ -357,7 +355,6 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
         if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
-        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.PotionToTempo);
     }
 
