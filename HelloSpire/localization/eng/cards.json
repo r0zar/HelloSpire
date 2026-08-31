@@ -550,5 +550,9 @@
   "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.header": "Invest?",
   "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.body": "Pay {Cost} Gold?",
   "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.header": "Render?",
-  "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body": "Pay {Cost} Max HP?"
+  "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body": "Pay {Cost} Max HP?",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.body": "Brew this Potion? Pass to browse {Remaining} more.",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE_LAST.body": "The last ingredients on the shelf. This Potion is brewed.",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.brew": "Brew",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.pass": "Pass"
 }
