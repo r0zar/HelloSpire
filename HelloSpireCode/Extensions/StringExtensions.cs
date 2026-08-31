@@ -75,10 +75,13 @@ public static class StringExtensions
 
     public static string PotionOutlineImagePath(this string path)
     {
-        path = Path.Join(MainFile.ResPath, "images", "potions", path);
+        // Outlines live in their own subfolder. This used to look in images/potions/, which is
+        // where the filled art is -- so a potion with art got its own fill handed back as its
+        // silhouette, and one without fell through to the default outline for the wrong reason.
+        path = Path.Join(MainFile.ResPath, "images", "potions", "outline", path);
         if (ResourceLoader.Exists(path)) return path;
 
-        MainFile.Logger.Info("Could not find potion image path: " + path);
+        MainFile.Logger.Info("Could not find potion outline image path: " + path);
         return Path.Join(MainFile.ResPath, "images", "potions", "outline", "potion.png");
     }
 

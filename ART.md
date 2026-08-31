@@ -60,6 +60,30 @@ python tools/gen_character_art.py gunslinger --motif star   --color d4703c
 This is scaffolding, not final art. Its value is correct sizes and visual distinctness so
 real art can drop straight in.
 
+## Generating the Gunslinger's power and relic icons
+
+`tools/gen_gunslinger_icons.py` is not scaffolding — it *is* the art. Every icon is a handful of
+flat vector shapes rendered through `rsvg-convert`, so the set can be re-rendered at any size and
+adjusted by editing a shape rather than repainting a bitmap. Requires `rsvg-convert`
+(`brew install librsvg`) and Pillow.
+
+```
+python tools/gen_gunslinger_icons.py                    # all 20 powers and 9 relics
+python tools/gen_gunslinger_icons.py deadeye old_iron   # just these
+python tools/gen_gunslinger_icons.py --sheet /tmp/x.png # contact sheet, to judge the set as a set
+```
+
+Two families, following what the pack already does:
+
+- **Keyword powers** — Cylinder, Deadeye, Armor, Dodge — are flat glyphs on transparent, the way
+  the base game draws Strength and Dexterity and the way the Paladin's Spirit icon does. These
+  four read as stats the character has, not as buffs it was granted.
+- **Engine powers** get the medallion disc the Alchemist's fifteen use: brown disc, brass ring,
+  pale glyph. They are things a card gave you, and the disc says so.
+
+Relic `_outline` files are derived from the alpha of the relic art itself, so a silhouette can
+never drift from the art it belongs to. Do not hand-edit them.
+
 ## Reference: extracting the base game's assets
 
 Install [Godot RE Tools](https://github.com/GDRETools/gdsdecomp) (`winget install

@@ -216,6 +216,33 @@ public sealed class DebilitatingPresencePower : GunslingerEnginePower, IWeakList
 }
 
 /// <summary>
+/// Every Click puts a Lead Round in the gun and a card in your hand.
+///
+/// The Gunslinger's one genuine failure state is a dry cylinder with no ammunition card in hand,
+/// and every card that punishes it — Quickdraw, Run the Cylinder — pays out once and moves on.
+/// This turns the failure state into the engine: a Fire card into an empty gun clicks, reloads
+/// the chamber it just passed, and the next shot of the same card finds it loaded.
+///
+/// The Load is announced from inside a hook dispatch, so it does not itself wake the Load
+/// listeners — Oiled Rag will not chain off it. That is the same re-entry guard every other
+/// listener in the character runs under, and the alternative is a relic and a power feeding each
+/// other for the rest of the combat.
+/// </summary>
+public sealed class DryFirePower : GunslingerEnginePower, IFireListener
+{
+    public async Task OnFired(PlayerChoiceContext ctx, GunContext gun, FireResult result)
+    {
+        if (!result.WasClick) return;
+
+        Flash();
+
+        // Loaded before the card is drawn so a Fire 3 into an empty gun clicks, reloads, and hits.
+        await Revolver.Load(ctx, gun, Rounds.Lead);
+        await GunslingerEffects.Draw(ctx, gun, (int)Amount);
+    }
+}
+
+/// <summary>
 /// Every 6th Round hits far harder and refunds an Energy — the capstone that pays off counting
 /// chambers all fight.
 /// </summary>

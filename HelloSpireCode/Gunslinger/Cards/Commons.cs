@@ -488,6 +488,58 @@ public sealed class SpinCylinder() : GunslingerCard(0, CardType.Skill, CardRarit
 }
 
 /// <summary>
+/// Discard a card, and turn it into ammunition.
+///
+/// The character's cheapest conversion, and the answer to the hand the Gunslinger actually
+/// struggles with: three Attacks and an empty cylinder. It costs nothing but a card, which is the
+/// resource the deck has too many of on exactly the turn it has too little ammunition.
+/// </summary>
+public sealed class ThumbTheGate() : GunslingerCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Load", 2m)];
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        // No discard, no Rounds: the card is a trade, not a free reload with a rider.
+        if (!await GunslingerEffects.DiscardChosen(ctx, Gun)) return;
+
+        await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["Load"].UpgradeValueBy(1m);
+}
+
+/// <summary>
+/// Draw, and step past a dead chamber on the way.
+///
+/// The Gunslinger's plain draw card. The Cycle is deliberately conditional rather than free: a
+/// hammer sitting on a Round is a hammer the player lined up on purpose, and a draw card that
+/// walks past it is a draw card nobody plays before their Fire.
+/// </summary>
+public sealed class TakeStock() : GunslingerCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(GunslingerTips.Cycle), Tip(GunslingerTips.TheCylinder)];
+
+    protected override bool ShouldGlowGoldInternal => Revolver.Peek(Gun) is { UnderHammer: null };
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await GunslingerEffects.Draw(ctx, Gun, DynamicVars.Cards.IntValue);
+
+        if (Revolver.Peek(Gun) is { UnderHammer: null }) await Revolver.Cycle(ctx, Gun);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
+}
+
+/// <summary>
 /// Apply 2 Weak. No gun required.
 ///
 /// Upgrading makes it free rather than making it 3 Weak. The Gunslinger's problem is that setting

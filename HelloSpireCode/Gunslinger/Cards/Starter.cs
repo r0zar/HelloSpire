@@ -86,7 +86,7 @@ public sealed class Reload() : GunslingerCard(1, CardType.Skill, CardRarity.Basi
 }
 
 /// <summary>
-/// Fire 2, for free.
+/// Fire 2, for free. Upgraded, Fire 2-3.
 ///
 /// Not to be confused with the uncommon <see cref="Quickdraw"/>, which pays off a Click. This is
 /// the starter, and it is two blank trigger pulls until you have loaded something.
@@ -94,11 +94,18 @@ public sealed class Reload() : GunslingerCard(1, CardType.Skill, CardRarity.Basi
 /// It fires twice rather than once because one Round per free card was the arithmetic that made
 /// the character feel weak: two cards and an Energy to put six damage on a target is worse than a
 /// Strike. Two chambers a card is the rate the rest of the deck is priced against.
+///
+/// The upgrade used to hand out Deadeye, and it was the worst upgrade in the pack: 2 more damage
+/// on one Round, printed on a card whose whole point is that it is free and fires twice. A third
+/// chamber some of the time is worth far more to the same card, and it upgrades the starter along
+/// the axis the character actually cares about — how much of the cylinder a card can spend — while
+/// staying honest about the gun deciding how much comes out. It is also the same "roughly what you
+/// asked for, occasionally more" roll the other starter, <see cref="Reload"/>, is built on.
 /// </summary>
 public sealed class QuickDraw() : GunslingerCard(0, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Fire", 2m), new DynamicVar("Deadeye", 0m)];
+        [new DynamicVar("FireMin", 2m), new DynamicVar("FireMax", 2m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(GunslingerTips.Fire), Tip(GunslingerTips.Click)];
@@ -107,9 +114,9 @@ public sealed class QuickDraw() : GunslingerCard(0, CardType.Attack, CardRarity.
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        await GunslingerEffects.GainDeadeye(ctx, Gun, DynamicVars["Deadeye"].BaseValue);
-        await Revolver.FireTimes(ctx, Gun, play.Target, DynamicVars["Fire"].IntValue);
+        var times = Revolver.Roll(Gun, DynamicVars["FireMin"].IntValue, DynamicVars["FireMax"].IntValue);
+        await Revolver.FireTimes(ctx, Gun, play.Target, times);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Deadeye"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars["FireMax"].UpgradeValueBy(1m);
 }

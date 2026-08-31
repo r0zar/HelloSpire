@@ -12,7 +12,7 @@ Built against **game v0.107.1** and **BaseLib 3.4.5**. Slay the Spire 2 is in Ea
 | **The Alchemist** | 68 | green | shell only — borrowed starter kit |
 | **The Gunslinger** | 72 | rust | full card set, relics, potions and cylinder UI in code; first balance pass done |
 
-The Paladin's 91-card set, Faith system and starter relic are all in code, generated from one spec (`tools/gen_paladin.py`); its numbers are untuned placeholders and most card art is a labelled tile. The Gunslinger's full set is in and compiling. The Alchemist is scaffolded but excluded from the build until its card text lands.
+The Paladin's 91-card set, Faith system and starter relic are all in code, generated from one spec (`tools/gen_paladin.py`); its numbers are untuned placeholders and most card art is a labelled tile. The Gunslinger's full set is in and compiling, with real power and relic icons generated from `tools/gen_gunslinger_icons.py`. The Alchemist is scaffolded but excluded from the build until its card text lands.
 
 - [**TODO.md**](TODO.md) — phased roadmap for building each character out, with real base-game baselines
 - [**ART.md**](ART.md) — the art pipeline: where assets live, required sizes, and how to extract the base game's art for reference

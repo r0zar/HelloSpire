@@ -78,10 +78,14 @@ The Cylinder state is fully visible to the player unless a card is resolving an 
 
 ### The cylinder on screen
 A brass ring with six chambers in it sits beside the Energy orb: a big circle with six small ones
-around the inside, a fixed hammer mark at twelve o'clock, and the loaded count in the middle.
+around the inside, a fixed sight at twelve o'clock, and the loaded count in the middle.
 
 - Each chamber is coloured by what is in it — one colour per kind of ammunition, near-black when
   empty — so the next three chambers can be read at a glance rather than counted in a tooltip.
+- The chamber under the hammer is called out by an open reticle drawn over it, not by a colour.
+  Colour is already spoken for: it is how a chamber says what is loaded in it, and the chamber
+  under the hammer is the one whose contents matter most. An outline says "this one is next"
+  without overwriting what the chamber is telling you.
 - The ring turns one sixth of a revolution each time the hammer moves, in the direction a real
   cylinder would turn, so a Fire and a Cycle look like what they are.
 - A Spin adds a whole extra revolution on top of wherever it landed. Without that, a Spin that
@@ -101,6 +105,16 @@ If every chamber is full, Loading remains legal:
 - Loading does not move the hammer.
 
 This rule prevents ammo cards from becoming unplayable while still making over-loading a meaningful sequencing cost.
+
+### The Cylinder between fights
+The Cylinder is emptied at the start of every combat: no Rounds, hammer on chamber 1, every
+counter at zero. Whatever is in the gun on turn one was put there by *this* fight — Old Iron and
+the other opening-load effects run afterwards, at the top of the player's first turn.
+
+This is worth stating as a rule because it is not free in the implementation: power models in
+StS2 outlive the combat they were applied in, so a Cylinder left alone carries the last fight's
+ammunition into the next one. `CylinderPower` clears itself both when combat ends and the first
+time it is touched in a combat it has not seen before.
 
 ### Fire X
 To **Fire 1**:
@@ -142,13 +156,35 @@ Clicks are normally a failure state, but a small number of cards turn them into 
 ---
 
 ## 3.2 Deadeye
-**Deadeye X:** The next Round you successfully Fire deals **X additional Attack damage**, then all Deadeye is removed.
+**Deadeye X:** Every Round you Fire this turn deals **X additional Attack damage**. All Deadeye is removed at the end of your turn.
 
 Rules:
-- A Click does not consume Deadeye.
-- Deadeye applies to only the first successful Round in a multi-shot Fire action.
+- A Click gets nothing, and costs nothing — Deadeye is not spent by a shot.
+- Deadeye applies to every Round in a multi-shot Fire action, not just the first.
 - Deadeye is additive, similar in practical damage ordering to Vigor, but only works on Rounds.
-- This prevents Deadeye from scaling every hit of Fire 6 while still rewarding chamber planning.
+- It does not carry across turns. Banking it for "the right chamber next turn" is not a plan.
+
+### Why this changed (2026-08-30)
+The original rule spent Deadeye on the first Round that landed, which made the keyword strictly
+worse than printing flat damage on the same card: "gain 5 Deadeye" was 5 damage once, on a card
+that also had to survive to a turn where the gun was loaded. Worse, it inverted the character —
+stacking Deadeye and then playing Fire 6 was actively wrong, when Fire 6 is the exact turn the
+whole deck is built towards.
+
+As a turn-long aura it does the job the character was designed around: prepare the cylinder,
+sharpen the turn, then spend the whole gun into it. The cost is that it no longer banks, so a
+Deadeye card played on a turn you cannot Fire is wasted — which is the right tension for a
+character whose problem is that setting the gun up and using it compete for the same Energy.
+
+**Balance note.** This is a large buff and the numbers have not been retuned to match. Deadeye
+Focus (12) into a Fire 6 turn moved from +12 damage to +72. If it plays as strong as it reads,
+the fix is on the grants rather than the rule: roughly halving Steady Hand (5), Hammerfall (8),
+Deadeye Focus (12), High Noon (3) and Sightline Tonic (10) restores the old ceiling.
+
+Expiry is implemented on the *enemy* side's turn start rather than the player's. Bottomless
+Bandolier and Ride Together both grant Deadeye from the player's turn-start sweep, and the order
+powers are visited in is not fixed — clearing on the same edge that grants would have eaten a
+fresh stack about half the time.
 
 ---
 
@@ -211,6 +247,11 @@ Self-Fire damage:
 - Ignores Strength, Weak, Vulnerable, and Deadeye.
 - Is HP loss for balance purposes, not normal enemy Attack damage.
 - Is not reduced by Block, Armor, or Dodge unless future testing explicitly changes that rule.
+
+The last line is enforced by the damage patch, which now skips anything flagged `Unpowered` —
+the flag every self-inflicted cost in this character carries. Before that, holding a single Dodge
+made Russian Roulette's Self-Fire, Grit Teeth's HP cost and the Black Powder Round's recoil all
+free, which quietly removed the risk from every risk card in the set.
 
 This creates a clean Russian Roulette ruleset.
 
@@ -293,7 +334,13 @@ Load 3-5 Lead Rounds. Gain 5 Block.
 Fire 2.
 
 **Quick Draw+**  
-Gain 2 Deadeye. Fire 2.
+Fire 2-3.
+
+The upgrade used to grant 2 Deadeye, which was the weakest upgrade in the pack: two damage, once,
+on the card whose whole identity is that it is free and spends two chambers. Upgrading it along
+the axis the character actually cares about — how much of the cylinder one card can spend — makes
+it a real choice at a campfire, and it is the same "roughly what you asked for, occasionally more"
+roll Reload already teaches on turn one.
 
 The starter deck teaches:
 1. Ammo exists, and how much of it you get is the gun's business.
@@ -336,9 +383,17 @@ Balance rationale:
 
 ---
 
-# 7. Complete 82-Card Pool
+# 7. Complete 87-Card Pool
 
-## Commons — 21
+The template in section 1 is 80 class cards, 20/35/25. This pool is 87, and the extra seven are
+deliberate: five of them (Thumb the Gate, Take Stock, Clear the Chamber, Powder Burn, Dry Fire)
+are the discard / draw / exhaust axis the first pass had almost nothing on. The Gunslinger spends
+cards faster than any other resource — ammunition is paid for in cards, and a stalled hand is the
+character's real failure state — so a set with no way to convert cards into anything was missing
+a whole verb. If the pool needs to come back to 80, the cut list is the low-impact filler in each
+rarity, not these.
+
+## Commons — 23
 | # | Card | Type | Cost | Base | Upgrade | Role |
 |---:|---|---|---:|---|---|---|
 | 1 | **Snap Shot** | Attack | 1 | Fire 1. Draw 1 card. | Gain 2 Deadeye, then Fire 1. Draw 1 card. | Fire / draw |
@@ -362,8 +417,10 @@ Balance rationale:
 | 19 | **Steady Hand** | Skill | 1 | Gain 5 Deadeye. | Gain 8 Deadeye. | Shot empowerment |
 | 20 | **Spin Cylinder** | Skill | 0 | Spin. Draw 1 card. Exhaust. | After Spinning, gain 3 Deadeye. Draw 1 card. Exhaust. | Spin |
 | 21 | **Pocket Sand** | Skill | 1 | Apply 2 Weak. | Costs 0. | Weak |
+| 22 | **Thumb the Gate** | Skill | 0 | Discard a card. Load 2 Lead Rounds. Exhaust. | Load 3 Lead Rounds. | Discard → ammo |
+| 23 | **Take Stock** | Skill | 1 | Draw 2 cards. If the chamber under the hammer is empty, Cycle 1. | Draw 3 cards. | Draw |
 
-## Uncommons — 35
+## Uncommons — 37
 | # | Card | Type | Cost | Base | Upgrade | Role |
 |---:|---|---|---:|---|---|---|
 | 1 | **Called Shot** | Attack | 1 | Choose a loaded chamber. Move it under the hammer. Fire 1. | Gain 4 Deadeye before firing. | Precision |
@@ -401,8 +458,10 @@ Balance rationale:
 | 33 | **Hard Leather** | Power | 1 | The first time each turn Armor prevents damage, gain 3 Block next turn. | Gain 5 Block next turn. | Armor engine |
 | 34 | **Smoke and Lead** | Power | 1 | The first time each turn you Fire a Round, gain 3 Block. | Gain 4 Block. | Fire defense |
 | 35 | **Sure Hand** | Power | 1 | The first time each turn you Spin, gain 4 Deadeye. | Gain 6 Deadeye. | Spin engine |
+| 36 | **Clear the Chamber** | Attack | 1 | Discard a card. Fire 2. Draw 1 card. | Draw 2 cards. | Discard → filter |
+| 37 | **Powder Burn** | Skill | 1 | Exhaust your hand. Load 1 random Round for each card Exhausted. Draw 2 cards. Exhaust. | Draw 3 cards. | Exhaust → ammo |
 
-## Rares — 26
+## Rares — 27
 | # | Card | Type | Cost | Base | Upgrade | Role |
 |---:|---|---|---:|---|---|---|
 | 1 | **High Noon** | Attack | 3 | Gain 3 Deadeye. Fire 6. Exhaust. | Costs 2. | Signature salvo |
@@ -431,6 +490,7 @@ Balance rationale:
 | 24 | **Untouchable** | Power | 2 | Whenever you gain Armor, gain 1 Block per stack. | Gain 2 Block per stack instead. | Armor engine |
 | 25 | **Debilitating Presence** | Power | 2 | The first time each turn you apply Weak, also apply 1 Debilitate. | Costs 1. | Debuff engine |
 | 26 | **Sixth Shot** | Power | 3 | Every 6th Round you Fire deals +15 damage and grants 1 Energy. | Bonus damage becomes +20. | Cylinder capstone |
+| 27 | **Dry Fire** | Power | 2 | Whenever a chamber Clicks, Load 1 Lead Round and draw 1 card. | Costs 1. | Empty-cylinder engine |
 
 ---
 
@@ -747,12 +807,14 @@ Guardrails:
 - Multiplayer Debilitate needs separate testing because allies may bring Vulnerable.
 
 ## 13.6 Deadeye
-Deadeye only buffs one successful Round.
+Deadeye buffs every Round Fired this turn and expires at end of turn.
 
 Guardrails:
 - Common Deadeye: 5–8 for 1 Energy.
 - Rare Deadeye: 12–16 with Exhaust.
-- Deadeye should not apply to every Round in a multi-shot action unless a card explicitly says so.
+- Deadeye cannot be banked across turns, so every grant has to be spendable the turn it is played.
+- The numbers above pre-date the rule change and have not been retuned — see the balance note in
+  3.2. Deadeye now multiplies with shot count, so a grant is worth roughly `X × shots this turn`.
 
 ---
 
@@ -881,7 +943,7 @@ If the class is too weak:
 3. Deadeye persists through a Click (already planned).
 4. Guard Round 4 Block → 5.
 5. Armor cards gain +1 Block alongside Armor.
-6. Quick Draw+ gains 3 Deadeye instead of 2.
+6. Quick Draw+ Fires 2-4 instead of 2-3.
 
 ---
 

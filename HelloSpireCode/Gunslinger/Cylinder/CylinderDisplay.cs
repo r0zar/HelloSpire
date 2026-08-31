@@ -248,9 +248,9 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
             _ring.AddChild(_chambers[i]);
         }
 
-        // The hammer does not turn; the cylinder turns under it.
-        var hammer = Circle("Hammer", 12f, new Vector2(Centre - 6f, -4f), Brass, Brass.Lightened(0.4f), 2);
-        root.AddChild(hammer);
+        // The sight does not turn; the cylinder turns under it. Added after the ring so it draws
+        // over whichever chamber has come round to twelve o'clock.
+        AddSight(root);
 
         _count = new Label
         {
@@ -267,6 +267,56 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
         root.AddChild(_count);
 
         return root;
+    }
+
+    /// <summary>
+    /// The sight: an open brass reticle over the chamber under the hammer, with four tick marks.
+    ///
+    /// The chamber under the hammer used to be called out by painting a brass dot on top of it,
+    /// which spent the one channel the widget cannot afford to spend — colour is how a chamber says
+    /// what ammunition is in it, and the active chamber is exactly the one whose contents matter
+    /// most. An outline says "this one" without saying anything about what is in it, so the two
+    /// readings stop competing: the reticle tells you which chamber is next, the colour underneath
+    /// still tells you what it is loaded with.
+    /// </summary>
+    private static void AddSight(Control root)
+    {
+        const float ring = ChamberSize + 12f;
+        const float radius = ring / 2f;
+        const float tickLong = 7f;
+        const float tickThick = 2f;
+        const float gap = 1f;
+
+        var centre = new Vector2(Centre, Centre - ChamberOrbit);
+        var sightColor = Brass.Lightened(0.35f);
+
+        root.AddChild(Circle("Sight", ring, centre - new Vector2(radius, radius),
+            Colors.Transparent, sightColor, 2));
+
+        // North, south, west, east — pointing in at the ring from just outside it.
+        AddTick(root, "SightN", centre + new Vector2(-tickThick / 2f, -radius - gap - tickLong),
+            new Vector2(tickThick, tickLong), sightColor);
+        AddTick(root, "SightS", centre + new Vector2(-tickThick / 2f, radius + gap),
+            new Vector2(tickThick, tickLong), sightColor);
+        AddTick(root, "SightW", centre + new Vector2(-radius - gap - tickLong, -tickThick / 2f),
+            new Vector2(tickLong, tickThick), sightColor);
+        AddTick(root, "SightE", centre + new Vector2(radius + gap, -tickThick / 2f),
+            new Vector2(tickLong, tickThick), sightColor);
+    }
+
+    private static void AddTick(Control root, string name, Vector2 position, Vector2 size, Color color)
+    {
+        var tick = new Panel
+        {
+            Name = name,
+            Position = position,
+            Size = size,
+            CustomMinimumSize = size,
+            MouseFilter = Control.MouseFilterEnum.Ignore,
+        };
+
+        tick.AddThemeStyleboxOverride("panel", new StyleBoxFlat { BgColor = color });
+        root.AddChild(tick);
     }
 
     private static Panel Circle(string name, float size, Vector2 position, Color fill, Color border, int width)

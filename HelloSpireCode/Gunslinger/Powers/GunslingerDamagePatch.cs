@@ -65,6 +65,16 @@ internal static class GunslingerDamagePatch
         // Enemies attack through their moves, never through cards. A non-null card source is the
         // player hitting something, which Armor and Dodge have no business touching.
         if (cardSource != null) return;
+
+        // Unpowered damage says, in the game's own vocabulary, that powers do not apply to it --
+        // and Armor and Dodge are powers. Everything the Gunslinger does to itself is flagged this
+        // way (GunslingerEffects.LoseHp), so without this the character's own costs were free
+        // whenever it happened to be holding Dodge: Russian Roulette's Self-Fire did nothing, and
+        // Grit Teeth and the Black Powder Round were pure upside. The design is explicit that
+        // Self-Fire is "not reduced by Block, Armor, or Dodge"; this is the line that makes that
+        // true. It also protects any future non-Attack HP loss the game sends through this hook.
+        if (props.HasFlag(ValueProp.Unpowered)) return;
+
         if (target == null || __result <= 0m) return;
 
         var dodge = target.GetPower<DodgePower>();

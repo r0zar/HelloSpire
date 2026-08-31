@@ -90,7 +90,14 @@ public sealed class ThroughTheCoat() : GunslingerCard(1, CardType.Attack, CardRa
     protected override void OnUpgrade() => DynamicVars["Deadeye"].UpgradeValueBy(4m);
 }
 
-/// <summary>Deal damage; punish an undefended enemy with Weak.</summary>
+/// <summary>
+/// Deal damage; punish an undefended enemy with Weak.
+///
+/// The Block check happens after the damage, not before, because that is the order the card is
+/// printed in and the order a player reads it: shoot, and if there is nothing left covering them,
+/// put them on the floor. Checking first meant an enemy sitting behind 4 Block that this card
+/// then blew straight through still walked away without Weak, which reads as the card not working.
+/// </summary>
 public sealed class Kneecapper() : GunslingerCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -102,10 +109,12 @@ public sealed class Kneecapper() : GunslingerCard(1, CardType.Attack, CardRarity
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var hadBlock = play.Target.Block > 0m;
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if (!hadBlock) await GunslingerEffects.ApplyWeak(ctx, Gun, play.Target, DynamicVars["WeakPower"].BaseValue);
+        if (play.Target.Block <= 0m)
+        {
+            await GunslingerEffects.ApplyWeak(ctx, Gun, play.Target, DynamicVars["WeakPower"].BaseValue);
+        }
     }
 
     protected override void OnUpgrade()
@@ -315,6 +324,33 @@ public sealed class Showdown() : GunslingerCard(1, CardType.Attack, CardRarity.U
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+}
+
+/// <summary>
+/// Throw one shell away, empty two chambers, and reach for two more cards.
+///
+/// The character's hand filter. It is hand-neutral on the way through — one card out, one or two
+/// back — so the discard is not a cost so much as a choice about which card you would rather have
+/// drawn, which is the same question the cylinder asks about chambers.
+/// </summary>
+public sealed class ClearTheChamber() : GunslingerCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Fire", 2m), new CardsVar(1)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Fire)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        // The discard is asked for first, so an empty hand costs the card nothing but the offer.
+        await GunslingerEffects.DiscardChosen(ctx, Gun);
+
+        await Revolver.FireTimes(ctx, Gun, play.Target, DynamicVars["Fire"].IntValue);
+        await GunslingerEffects.Draw(ctx, Gun, DynamicVars.Cards.IntValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
 }
 
 /// <summary>Turtling up pays out as an extra shot.</summary>

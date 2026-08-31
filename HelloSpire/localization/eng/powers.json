@@ -3,8 +3,8 @@
   "HELLOSPIRE-CYLINDER_POWER.description": "Six chambers and a hammer. [gold]Load[/gold] Rounds into it, [gold]Fire[/gold] them out.",
   "HELLOSPIRE-CYLINDER_POWER.smartDescription": "[blue]{Loaded}[/blue] of 6 chambers loaded. The hammer is on chamber [blue]{Chamber}[/blue].",
   "HELLOSPIRE-DEADEYE_POWER.title": "Deadeye",
-  "HELLOSPIRE-DEADEYE_POWER.description": "The next Round you successfully [gold]Fire[/gold] deals additional damage, then all Deadeye is removed.",
-  "HELLOSPIRE-DEADEYE_POWER.smartDescription": "The next Round you successfully [gold]Fire[/gold] deals [blue]{Amount}[/blue] additional damage, then all Deadeye is removed.",
+  "HELLOSPIRE-DEADEYE_POWER.description": "Every [gold]Round[/gold] you [gold]Fire[/gold] this turn deals additional damage. Removed at the end of your turn.",
+  "HELLOSPIRE-DEADEYE_POWER.smartDescription": "Every [gold]Round[/gold] you [gold]Fire[/gold] this turn deals [blue]{Amount}[/blue] additional damage. Removed at the end of your turn.",
   "HELLOSPIRE-ARMOR_POWER.title": "Armor",
   "HELLOSPIRE-ARMOR_POWER.description": "Reduce each instance of unblocked Attack damage, then lose 1 Armor.",
   "HELLOSPIRE-ARMOR_POWER.smartDescription": "Reduce each instance of unblocked Attack damage by [blue]{Amount}[/blue], then lose 1 Armor.",
@@ -196,5 +196,8 @@
   "HELLOSPIRE-CONSERVATION_OF_MATTER_POWER.smartDescription": "The first card you Exhaust each turn: draw [blue]{Amount}[/blue] cards.",
   "HELLOSPIRE-DISTILLATION_MASTERY_POWER.title": "Distillation Mastery",
   "HELLOSPIRE-DISTILLATION_MASTERY_POWER.description": "Whenever you [gold]Distill[/gold], gain [gold]Potency[/gold].",
-  "HELLOSPIRE-DISTILLATION_MASTERY_POWER.smartDescription": "Whenever you [gold]Distill[/gold], gain [blue]{Amount}[/blue] [gold]Potency[/gold]."
+  "HELLOSPIRE-DISTILLATION_MASTERY_POWER.smartDescription": "Whenever you [gold]Distill[/gold], gain [blue]{Amount}[/blue] [gold]Potency[/gold].",
+  "HELLOSPIRE-DRY_FIRE_POWER.title": "Dry Fire",
+  "HELLOSPIRE-DRY_FIRE_POWER.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw a card.",
+  "HELLOSPIRE-DRY_FIRE_POWER.smartDescription": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw [blue]{Amount}[/blue] card."
 }

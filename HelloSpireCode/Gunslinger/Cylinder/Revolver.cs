@@ -81,8 +81,20 @@ public static class Rounds
 /// </summary>
 public static class Revolver
 {
-    /// <summary>The cylinder if combat has already created it, without creating one.</summary>
-    public static CylinderPower? Peek(GunContext gun) => gun.Player.Creature?.GetPower<CylinderPower>();
+    /// <summary>
+    /// The cylinder if combat has already created it, without creating one.
+    ///
+    /// Power models survive the combat they were applied in, so this is also where a cylinder left
+    /// over from the previous fight is caught and emptied — see <see cref="CylinderPower.SyncCombat"/>.
+    /// Every read of the gun goes through here or through <see cref="Get"/>, so there is no path
+    /// that can see last fight's ammunition.
+    /// </summary>
+    public static CylinderPower? Peek(GunContext gun)
+    {
+        var cylinder = gun.Player.Creature?.GetPower<CylinderPower>();
+        cylinder?.SyncCombat();
+        return cylinder;
+    }
 
     // ----------------------------------------------------------------- Chance
 
@@ -111,9 +123,15 @@ public static class Revolver
         if (creature == null) return null;
 
         var existing = creature.GetPower<CylinderPower>();
-        if (existing != null) return existing;
+        if (existing != null)
+        {
+            existing.SyncCombat();
+            return existing;
+        }
 
-        return await PowerCmd.Apply<CylinderPower>(ctx, creature, 1m, creature, gun.Card);
+        var applied = await PowerCmd.Apply<CylinderPower>(ctx, creature, 1m, creature, gun.Card);
+        applied?.SyncCombat();
+        return applied;
     }
 
     // ---------------------------------------------------------------- Load
@@ -135,7 +153,9 @@ public static class Revolver
         for (var i = 0; i < count; i++)
         {
             var round = factory();
-            var slot = NextLoadSlot(cylinder, gun, ref overwriteOffset);
+            var (slot, overwrote) = await NextLoadSlot(cylinder, gun, overwriteOffset);
+            if (overwrote) overwriteOffset++;
+
             await Chamber(ctx, gun, cylinder, slot, round);
         }
     }
@@ -180,25 +200,35 @@ public static class Revolver
     /// <summary>
     /// Where the next Round goes. Stacked Chamber redirects a single Load under the hammer; failing
     /// that it is the first empty chamber clockwise, and failing that an overwrite from the hammer.
+    ///
+    /// The Stacked Chamber removal is awaited rather than fired and forgotten. It used to be the
+    /// latter, which meant a multi-Round Load — Reload right after Stacked Chamber, say — still saw
+    /// the power on every pass of the loop and stacked all three Rounds into the one chamber under
+    /// the hammer, silently discarding two of them. "The next Round you Load" has to mean exactly
+    /// one Round, and the only way to guarantee that is for the power to be gone before the next
+    /// slot is chosen.
+    ///
+    /// Returns the chamber, and whether it was an overwrite — the caller walks the overwrite
+    /// forwards so a Load into a full cylinder replaces consecutive chambers rather than the same
+    /// one over and over.
     /// </summary>
-    private static int NextLoadSlot(CylinderPower cylinder, GunContext gun, ref int overwriteOffset)
+    private static async Task<(int Index, bool Overwrote)> NextLoadSlot(CylinderPower cylinder, GunContext gun,
+        int overwriteOffset)
     {
         var stacked = gun.Player.Creature?.GetPower<StackedChamberPower>();
         if (stacked != null)
         {
-            stacked.Consume();
-            return cylinder.Hammer;
+            await stacked.Consume();
+            return (cylinder.Hammer, false);
         }
 
         for (var step = 0; step < CylinderPower.ChamberCount; step++)
         {
             var index = cylinder.Offset(step);
-            if (cylinder.Chambers[index] == null) return index;
+            if (cylinder.Chambers[index] == null) return (index, false);
         }
 
-        var overwrite = cylinder.Offset(overwriteOffset);
-        overwriteOffset++;
-        return overwrite;
+        return (cylinder.Offset(overwriteOffset), true);
     }
 
     /// <summary>Fills every empty chamber. Speedloader, Perfect Reload, True Iron, Speedloader Flask.</summary>
@@ -241,7 +271,7 @@ public static class Revolver
     /// Resolves the chamber under the hammer, then advances the hammer — whether or not it was loaded.
     ///
     /// A loaded chamber deals its damage as an Attack from the source card, so Strength, Weak and
-    /// Vulnerable all apply; Deadeye is consumed by the first successful Round only. An empty
+    /// Vulnerable all apply, and Deadeye adds its bonus to every Round Fired this turn. An empty
     /// chamber Clicks: nothing happens, the hammer still moves.
     /// </summary>
     public static async Task<FireResult> Fire(PlayerChoiceContext ctx, GunContext gun, Creature? target,
@@ -268,7 +298,7 @@ public static class Revolver
         var damage = round.Damage
                      + options.BonusDamage
                      + GunslingerHooks.RoundDamageBonus(round, gun)
-                     + await ConsumeDeadeye(gun);
+                     + Deadeye(gun);
 
         if (options.Multiplier != 1m) damage = (int)Math.Floor(damage * options.Multiplier);
         if (damage < 0) damage = 0;
@@ -336,7 +366,7 @@ public static class Revolver
         var damage = round.Damage
                      + options.BonusDamage
                      + GunslingerHooks.RoundDamageBonus(round, gun)
-                     + await ConsumeDeadeye(gun);
+                     + Deadeye(gun);
 
         if (damage < 0) damage = 0;
 
@@ -423,19 +453,17 @@ public static class Revolver
     }
 
     /// <summary>
-    /// Deadeye is all-or-nothing: the first successful Round takes the whole stack and the rest of a
-    /// salvo gets nothing. That is what stops Fire 6 from multiplying it six times over.
+    /// Deadeye's bonus for this Round.
+    ///
+    /// It is read, not spent: Deadeye applies to every Round Fired for the rest of the turn and
+    /// clears itself at the start of the next one (see <see cref="DeadeyePower"/>). A Click gets
+    /// nothing, but it costs nothing either — this is only reached once a Round is on its way out
+    /// of the barrel.
     /// </summary>
-    private static async Task<int> ConsumeDeadeye(GunContext gun)
+    private static int Deadeye(GunContext gun)
     {
         var deadeye = gun.Player.Creature?.GetPower<DeadeyePower>();
-        if (deadeye == null) return 0;
-
-        var amount = (int)deadeye.Amount;
-        if (amount <= 0) return 0;
-
-        await PowerCmd.Remove(deadeye);
-        return amount;
+        return deadeye == null ? 0 : Math.Max(0, (int)deadeye.Amount);
     }
 
     // ------------------------------------------------------- Cycle and Spin

@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Rooms;
 
 using HelloSpire.HelloSpireCode.Powers;
 
@@ -56,6 +57,51 @@ public sealed class CylinderPower : HelloSpirePower
     /// </summary>
     public int SpinCount { get; set; }
 
+    /// <summary>
+    /// The combat these chambers belong to.
+    ///
+    /// Power models outlive the combat they were applied in — the same instance is handed back the
+    /// next time it is applied, which is why every power in this mod that holds a per-combat latch
+    /// clears it in <see cref="AfterCombatEnd"/>. For the cylinder that meant walking into
+    /// the second fight of a run with the first fight's ammunition still in the gun. This is the
+    /// belt to <see cref="AfterCombatEnd"/>'s braces: whatever happened at the end of the last
+    /// combat, the first cylinder operation of a new one finds an empty gun.
+    /// </summary>
+    private ICombatState? _combat;
+
+    /// <summary>
+    /// Empties the gun if this is a combat the cylinder has not seen before. Called by every entry
+    /// point in <see cref="Cylinder.Revolver"/> before it reads or writes a chamber, and cheap
+    /// enough to call on every one of them: after the first, it is a reference comparison.
+    /// </summary>
+    public void SyncCombat()
+    {
+        var combat = Owner?.CombatState;
+        if (combat == null || ReferenceEquals(combat, _combat)) return;
+
+        _combat = combat;
+        ClearForNewCombat();
+    }
+
+    /// <summary>
+    /// Back to an empty gun: no Rounds, hammer on chamber 1, every counter and latch at zero.
+    ///
+    /// Old Iron and the rest of the opening-load relics run at the top of the player's first turn,
+    /// which is after this — so the fight still starts with something in the cylinder, it is just
+    /// something this fight put there.
+    /// </summary>
+    public void ClearForNewCombat()
+    {
+        Array.Clear(Chambers);
+        Hammer = 0;
+        RoundsFiredThisCombat = 0;
+        FiredThisTurn = false;
+        ArmorGainedThisTurn = false;
+        LastLoaded = null;
+        SpinCount = 0;
+        SyncDisplay();
+    }
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DynamicVar("Loaded", 0m),
@@ -104,6 +150,19 @@ public sealed class CylinderPower : HelloSpirePower
             ArmorGainedThisTurn = false;
             SyncDisplay();
         }
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// The gun is emptied when the fight ends, not carried into the next one.
+    ///
+    /// <see cref="SyncCombat"/> would catch a survivor anyway, but clearing here means the widget
+    /// zeroes out with the rest of the combat UI rather than a frame into the next fight.
+    /// </summary>
+    public override Task AfterCombatEnd(CombatRoom room)
+    {
+        _combat = null;
+        ClearForNewCombat();
         return Task.CompletedTask;
     }
 

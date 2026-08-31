@@ -78,6 +78,49 @@ public static class GunslingerEffects
         await CardPileCmd.Draw(ctx, count, gun.Player);
     }
 
+    // ------------------------------------------------------------------ the hand
+
+    /// <summary>
+    /// The cards in hand that a card is allowed to act on: everything except the card doing the
+    /// acting. A card being played is normally already out of the hand pile by the time it
+    /// resolves, but nothing in the game's contract promises that, and "Exhaust your hand" eating
+    /// the card that said it would be a bad way to find out.
+    /// </summary>
+    public static IReadOnlyList<CardModel> Hand(GunContext gun) =>
+        PileType.Hand.GetPile(gun.Player).Cards
+            .Where(card => card != gun.Card)
+            .ToList();
+
+    /// <summary>
+    /// Asks the player which card to discard, then discards it. False when the hand was empty and
+    /// there was nothing to ask about.
+    ///
+    /// Routed through the base game's card-selection screen rather than picking one, because
+    /// unlike the cylinder — where the mod resolves "choose a chamber" itself for want of a
+    /// chamber UI — a hand full of cards is exactly the choice the game already knows how to put
+    /// on screen, and it is the whole cost of the card.
+    /// </summary>
+    public static async Task<bool> DiscardChosen(PlayerChoiceContext ctx, GunContext gun)
+    {
+        var hand = Hand(gun);
+        if (hand.Count == 0) return false;
+
+        var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, hand, gun.Player);
+        if (chosen == null) return false;
+
+        await CardCmd.Discard(ctx, chosen);
+        return true;
+    }
+
+    /// <summary>Exhausts every other card in hand, and reports how many that was.</summary>
+    public static async Task<int> ExhaustHand(PlayerChoiceContext ctx, GunContext gun)
+    {
+        var hand = Hand(gun);
+        foreach (var card in hand) await CardCmd.Exhaust(ctx, card);
+
+        return hand.Count;
+    }
+
     /// <summary>
     /// Moves the first <typeparamref name="TCard"/> found anywhere in combat — Draw, Discard or
     /// Exhaust — into the Hand. False when the player has no copy left to fetch.

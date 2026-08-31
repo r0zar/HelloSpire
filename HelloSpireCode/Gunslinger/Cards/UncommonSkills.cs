@@ -391,6 +391,39 @@ public sealed class DeadMansBluff() : GunslingerCard(1, CardType.Skill, CardRari
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
+/// <summary>
+/// Burn the whole hand for a whole cylinder.
+///
+/// The reset button. Every other reload in the set trades Energy for ammunition; this one trades
+/// cards, which is the resource a stalled Gunslinger hand has too many of and the one the
+/// character otherwise has no way to spend. What comes out is not chosen — six cards of your
+/// choosing turning into six Rounds of the gun's choosing is the trade the whole character is
+/// built on, printed once, in full.
+/// </summary>
+public sealed class PowderBurn() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2)];
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Load)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+
+        var burned = await GunslingerEffects.ExhaustHand(ctx, Gun);
+
+        // Rolled once per Round, so a five-card hand is five different shells rather than five
+        // copies of one.
+        for (var i = 0; i < burned; i++) await Revolver.Load(ctx, Gun, Rounds.RandomOrdinary(Gun), 1);
+
+        await GunslingerEffects.Draw(ctx, Gun, DynamicVars.Cards.IntValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
+}
+
 /// <summary>Weak and Debilitate together, which is where the Gunslinger's defence really comes from.</summary>
 public sealed class ColdRead() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
 {

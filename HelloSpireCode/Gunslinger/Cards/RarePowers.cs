@@ -120,6 +120,33 @@ public sealed class DebilitatingPresence() : GunslingerCard(2, CardType.Power, C
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
+/// <summary>
+/// Every Click reloads the chamber it wasted and draws a card.
+///
+/// The rare that rewrites the character's worst turn. Priced at 2 because a deck built around
+/// Fire 6 and an empty cylinder turns this into both an engine and a reload, and it upgrades on
+/// cost rather than on cards for the same reason — the effect is already the payoff.
+/// </summary>
+public sealed class DryFire() : GunslingerCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DryFirePower>(1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+    [
+        Tip(GunslingerTips.Click),
+        Tip(GunslingerTips.Load),
+        HoverTipFactory.FromPower<DryFirePower>()
+    ];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await PowerCmd.Apply<DryFirePower>(ctx, Owner.Creature, DynamicVars["DryFirePower"].BaseValue, Owner.Creature, this);
+    }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+}
+
 /// <summary>Every 6th Round lands like a cannon and hands back an Energy.</summary>
 public sealed class SixthShot() : GunslingerCard(3, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
