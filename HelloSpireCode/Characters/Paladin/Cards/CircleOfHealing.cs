@@ -16,7 +16,7 @@ public sealed class CircleOfHealing() : PaladinCard(2, CardType.Skill, CardRarit
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(4m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

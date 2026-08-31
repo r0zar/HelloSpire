@@ -17,7 +17,7 @@ public sealed class WordOfGlory() : PaladinCard(1, CardType.Skill, CardRarity.Co
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(4m), new DynamicVar("Strength", 1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(4m), new DynamicVar("Strength", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

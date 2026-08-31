@@ -19,7 +19,7 @@ public sealed class PrayerOfMending() : PaladinCard(1, CardType.Skill, CardRarit
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(2m), new DynamicVar("Echo", 5m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(2m), new DynamicVar("Echo", 5m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

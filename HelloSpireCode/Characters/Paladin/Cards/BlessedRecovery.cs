@@ -15,7 +15,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 public sealed class BlessedRecovery() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(4m), new DynamicVar("Spirit", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(4m, "Spirit"), new DynamicVar("Spirit", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

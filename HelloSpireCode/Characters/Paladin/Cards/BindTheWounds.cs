@@ -16,7 +16,7 @@ public sealed class BindTheWounds() : PaladinCard(1, CardType.Skill, CardRarity.
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(3m), new BlockVar(4m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(3m), new BlockVar(4m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

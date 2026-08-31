@@ -14,7 +14,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 public sealed class Mend() : PaladinCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(5m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(5m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

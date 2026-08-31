@@ -15,7 +15,7 @@ public sealed class Comfort() : PaladinCard(1, CardType.Skill, CardRarity.Common
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new HealVar(3m), new DynamicVar("Spirit", 1m)];
+        [new SpiritHealVar(3m, "Spirit"), new DynamicVar("Spirit", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

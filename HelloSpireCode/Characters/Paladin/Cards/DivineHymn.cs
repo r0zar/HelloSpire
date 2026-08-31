@@ -16,7 +16,7 @@ public sealed class DivineHymn() : PaladinCard(3, CardType.Skill, CardRarity.Rar
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(10m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(10m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

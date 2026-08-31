@@ -13,7 +13,7 @@ public sealed class FlashOfLight() : PaladinCard(0, CardType.Skill, CardRarity.C
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

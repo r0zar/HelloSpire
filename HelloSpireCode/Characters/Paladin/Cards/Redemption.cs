@@ -15,7 +15,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 public sealed class Redemption() : PaladinCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(8m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(8m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
