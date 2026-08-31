@@ -163,9 +163,12 @@ public static class Belt
     /// <summary>
     /// Called when the player uses a Potion, from wherever the game announces that.
     ///
-    /// TODO(Phase 3): this needs a Harmony patch on potion resolution to actually fire, in the
-    /// same shape as the Gunslinger's damage patch. Until then the Potion-use engines
-    /// (Residual Heat, Reactive Mixture, Cork Stopper, Eternal Crucible) are inert.
+    /// Fired by <see cref="PotionUsePatch"/>, a Harmony patch on
+    /// <see cref="MegaCrit.Sts2.Core.Models.PotionModel.OnUseWrapper"/> — see that class for why
+    /// that method and not one of the base game's own potion-use hooks. Potency (buffing a Volatile
+    /// Potion's own damage/Block) is a separate, still-unaddressed integration point: it needs to
+    /// change the values the potion's own OnUse computes with, which means a patch that runs before
+    /// OnUse, not a notification that runs after it.
     /// </summary>
     public static async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
