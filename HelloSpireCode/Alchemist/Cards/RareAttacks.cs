@@ -42,19 +42,18 @@ public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, Card
     }
 }
 
-/// <summary>AoE that scales with how much you drank this turn. Capped at three.</summary>
+/// <summary>AoE that scales with how much you drank this turn. No cap: drink up.</summary>
 public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(10m, ValueProp.Move),
-        new DamageVar("PerPotion", 4m, ValueProp.Move),
-        new DynamicVar("Cap", 3m)
+        new DamageVar("PerPotion", 4m, ValueProp.Move)
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var potions = Math.Min(AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0, DynamicVars["Cap"].IntValue);
+        var potions = AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0;
         var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * potions;
 
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
@@ -72,12 +71,12 @@ public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRari
 /// Damage for every Gold you have already burned this fight.
 ///
 /// The Investor deck's finisher, and the only card that rewards spending rather than the thing
-/// spent on. Capped at +30 so a long fight cannot turn it into a one-card kill.
+/// spent on. Uncapped: a long fight CAN turn it into a one-card kill -- that is the payoff.
 /// </summary>
 public sealed class MidasNeedle() : AlchemistCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(5m, ValueProp.Move), new DynamicVar("Cap", 30m)];
+        [new DamageVar(5m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Invest)];
 
@@ -85,7 +84,7 @@ public sealed class MidasNeedle() : AlchemistCard(1, CardType.Attack, CardRarity
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var bonus = Math.Min(Ledger.SpentThisCombat(Lab), DynamicVars["Cap"].IntValue);
+        var bonus = Ledger.SpentThisCombat(Lab);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
@@ -94,7 +93,6 @@ public sealed class MidasNeedle() : AlchemistCard(1, CardType.Attack, CardRarity
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars["Cap"].UpgradeValueBy(10m);
     }
 }
 
