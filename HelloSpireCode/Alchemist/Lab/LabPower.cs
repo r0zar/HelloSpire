@@ -106,6 +106,26 @@ public sealed class LabPower : HelloSpirePower
     }
 
     /// <summary>
+    /// Real base-game hook (decompiled from sts2.dll: AbstractModel.AfterCardExhausted, dispatched
+    /// by Hook.AfterCardExhausted for every Exhaust in combat), and now the single source of truth
+    /// for CardsExhaustedThisTurn and NotifyExhausted -- Alchemy.Exhaust no longer does either
+    /// itself. This is what makes self-Exhaust cards (Aegis Formula, Pocket Formula, Stabilize,
+    /// Pressure Burst, ...) count for Cinnabar Edge and Conservation of Matter; those never call
+    /// Alchemy.Exhaust at all, since the base game Exhausts them directly as their own cost.
+    ///
+    /// Filtered to this bench's own owner: the hook fires for every listener across the whole
+    /// combat, not just this creature's own cards, and an ally's Exhaust in multiplayer should
+    /// not read as "you Exhausted a card."
+    /// </summary>
+    public override async Task AfterCardExhausted(PlayerChoiceContext ctx, CardModel card, bool causedByEthereal)
+    {
+        if (Owner.Player is not { } player || card.Owner != player) return;
+
+        CardsExhaustedThisTurn++;
+        await AlchemistHooks.NotifyExhausted(ctx, LabContext.From(player));
+    }
+
+    /// <summary>
     /// The bench closes: Volatile Potions are discarded (they never leave combat), and then the
     /// temporary slots are taken back. That order matters -- discarding first empties the doomed
     /// slots, so a real Potion sitting in one relocates instead of being lost (the game moves

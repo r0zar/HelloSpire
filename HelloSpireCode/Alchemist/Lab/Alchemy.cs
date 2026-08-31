@@ -43,15 +43,18 @@ public static class Alchemy
         return true;
     }
 
-    /// <summary>Exhaust one named card and count it.</summary>
+    /// <summary>
+    /// Exhaust one named card. CardsExhaustedThisTurn and NotifyExhausted happen automatically
+    /// from here -- see LabPower.AfterCardExhausted, a real base-game hook that fires for every
+    /// Exhaust in combat, including cards that Exhaust themselves (Aegis Formula, Pocket Formula,
+    /// Stabilize, Pressure Burst, ...) and never call this method at all. Ensuring the bench
+    /// exists first matters: that hook can only dispatch to a LabPower already attached, not
+    /// create one on demand.
+    /// </summary>
     public static async Task Exhaust(PlayerChoiceContext ctx, LabContext lab, CardModel card)
     {
+        await AlchemistEffects.Bench(ctx, lab);
         await LabBridge.Current.Exhaust(ctx, lab.Player, card);
-
-        var bench = await AlchemistEffects.Bench(ctx, lab);
-        if (bench != null) bench.CardsExhaustedThisTurn++;
-
-        await AlchemistHooks.NotifyExhausted(ctx, lab);
     }
 
     /// <summary>Exhaust up to <paramref name="max"/> other cards. Returns how many actually went.</summary>
