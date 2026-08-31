@@ -293,7 +293,7 @@ public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity
     {
         if (!await Ledger.Render(ctx, Lab, DynamicVars["Render"].IntValue)) return;
 
-        await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>(), volatilePotion: false);
+        await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>().ToMutable(), volatilePotion: false);
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.MaxHpToPotion);
     }
 
