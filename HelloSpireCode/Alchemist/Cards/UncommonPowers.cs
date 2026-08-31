@@ -95,8 +95,7 @@ public sealed class MerchantsInstinct() : AlchemistCard(1, CardType.Power, CardR
 /// <summary>The first Potion each turn also draws. Turns the belt into a second hand.</summary>
 public sealed class ReactiveMixture() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<ReactiveMixturePower>(1m), new BlockVar("Bonus", 0m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ReactiveMixturePower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<ReactiveMixturePower>()];
@@ -105,13 +104,11 @@ public sealed class ReactiveMixture() : AlchemistCard(1, CardType.Power, CardRar
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        var power = await PowerCmd.Apply<ReactiveMixturePower>(ctx, Owner.Creature,
+        await PowerCmd.Apply<ReactiveMixturePower>(ctx, Owner.Creature,
             DynamicVars["ReactiveMixturePower"].BaseValue, Owner.Creature, this);
-
-        if (power != null) power.BlockBonus = DynamicVars["Bonus"].IntValue;
     }
 
-    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars["ReactiveMixturePower"].UpgradeValueBy(1m);
 }
 
 /// <summary>The first slot emptied each turn is worth Block, whether you drank it or poured it out.</summary>

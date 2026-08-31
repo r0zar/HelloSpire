@@ -109,9 +109,6 @@ public sealed class MerchantsInstinctPower : AlchemistEnginePower, IInvestListen
 /// <summary>The first Potion each turn also draws. Turns the belt into a second hand.</summary>
 public sealed class ReactiveMixturePower : AlchemistEnginePower, IPotionUseListener
 {
-    /// <summary>Block granted alongside the card. Zero until upgraded.</summary>
-    public int BlockBonus { get; set; }
-
     public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         if (UsedThisTurn) return;
@@ -119,7 +116,6 @@ public sealed class ReactiveMixturePower : AlchemistEnginePower, IPotionUseListe
 
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-        if (BlockBonus > 0) await AlchemistEffects.GainBlock(lab, BlockBonus);
     }
 }
 
