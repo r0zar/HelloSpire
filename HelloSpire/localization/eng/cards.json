@@ -347,7 +347,7 @@
   "HELLOSPIRE-HOLY_AVENGER.title": "Holy Avenger",
   "HELLOSPIRE-HOLY_AVENGER.description": "Double your [gold]Spirit[/gold].",
   "HELLOSPIRE-DIVINE_INTERVENTION.title": "Divine Intervention",
-  "HELLOSPIRE-DIVINE_INTERVENTION.description": "Heal {Heal:diff()} HP plus TWICE your [gold]Spirit[/gold].",
+  "HELLOSPIRE-DIVINE_INTERVENTION.description": "Heal {Heal:diff()} HP plus your [gold]Spirit[/gold], twice.",
   "HELLOSPIRE-WRATHFUL_SMITE.title": "Wrathful Smite",
   "HELLOSPIRE-WRATHFUL_SMITE.description": "Deal {Damage:diff()} damage.\nApply 2 [gold]Weak[/gold].\nTrigger the effects of all your [gold]Seals[/gold].",
   "HELLOSPIRE-THUNDEROUS_SMITE.title": "Thunderous Smite",
