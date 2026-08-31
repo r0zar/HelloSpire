@@ -232,7 +232,7 @@
   "HELLOSPIRE-SEAL_OF_WISDOM.title": "Seal of Wisdom",
   "HELLOSPIRE-SEAL_OF_WISDOM.description": "Your first Attack each turn draws a card. [gold]Judgment[/gold]: deal damage equal to your hand size, then draw {Amount:diff()}.",
   "HELLOSPIRE-SEAL_OF_THE_MARTYR.title": "Seal of the Martyr",
-  "HELLOSPIRE-SEAL_OF_THE_MARTYR.description": "Enemies that hit you take {Amount:diff()} damage. [gold]Judgment[/gold]: deal {Amount:diff()} damage to ALL enemies.",
+  "HELLOSPIRE-SEAL_OF_THE_MARTYR.description": "Gain {Amount:diff()} [gold]Thorns[/gold]. [gold]Judgment[/gold]: deal {Amount:diff()} damage to ALL enemies.",
   "HELLOSPIRE-DIVINE_SMITE.title": "Divine Smite",
   "HELLOSPIRE-DIVINE_SMITE.description": "Deal {Damage:diff()} damage, plus 3 for each of your [gold]Seals[/gold].",
   "HELLOSPIRE-ABSOLVE.title": "Absolve",

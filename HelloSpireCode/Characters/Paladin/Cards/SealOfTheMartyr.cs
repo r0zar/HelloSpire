@@ -15,8 +15,12 @@ public sealed class SealOfTheMartyr() : PaladinCard(1, CardType.Power, CardRarit
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 3m)];
 
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay) =>
+    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        await PowerCmd.Apply<ThornsPower>(choiceContext, Owner.Creature,
+            DynamicVars["Amount"].BaseValue, Owner.Creature, this);
         await Seals.Grant<SealOfTheMartyrPower>(choiceContext, Owner, DynamicVars["Amount"].BaseValue, this);
+    }
 
     protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
 }

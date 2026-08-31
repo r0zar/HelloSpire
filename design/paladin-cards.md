@@ -111,7 +111,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Sacred Oath | 1 | Skill | Gain {Amount} Strength and {Amount} Spirit. Shuffle a Geas into your draw pile. |
 | Sanctified Wrath | 2 | Power | At the start of your turn, gain {Energy} Energy and lose 2 HP. |
 | Seal of the Crusader | 1 | Power | Your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |
-| Seal of the Martyr | 1 | Power | Enemies that hit you take {Amount} damage. Judgment: deal {Amount} damage to ALL enemies. |
+| Seal of the Martyr | 1 | Power | Gain {Amount} Thorns. Judgment: deal {Amount} damage to ALL enemies. |
 | Thunderous Smite | 2 | Attack | Deal {Damage} damage to ALL enemies. |
 | Tyr's Deliverance | 2 | Power | At the start of your turn, heal ALL players {Amount} HP and they gain {Amount} Block. **MP** |
 | Vow of Enmity | 1 | Power | Mark an enemy: your Attacks against it deal {Bonus} additional damage. |
@@ -136,7 +136,7 @@ Total: 91 cards (25 multiplayer-only). Upgrades live in code; see each card clas
 | Seal of Command | First Attack/turn: 1 Vulnerable. Judged: Amount Vulnerable. |
 | Seal of Justice | First Attack/turn: 1 Weak. Judged: Amount Weak. |
 | Seal of Wisdom | First Attack/turn: draw 1. Judged: deal damage equal to hand size, draw Amount. |
-| Seal of the Martyr | Enemies that hit you take Amount. Judged: Amount to ALL. |
+| Seal of the Martyr | Real Thorns from the card. Judged: Amount to ALL. |
 | Avenging Wrath | Judgments trigger all Seals twice. |
 | Consecration | Start of turn: Amount damage to ALL enemies. |
 | Righteous Fury | Start of turn: gain Amount Strength. |
