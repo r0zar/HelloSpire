@@ -40,7 +40,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Renew | 1 | Skill | Gain {Regen} Regen. Exhaust. |
 | Sentinel | 1 | Skill | Gain {Block} Block. Gain 1 Spirit. |
 | Templar's Verdict | 1 | Attack | Deal {Damage} damage twice. |
-| Word of Glory | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
+| Word of Glory | 1 | Skill | Heal a player {Heal} HP plus TWICE your Spirit. Exhaust. **MP** |
 
 ## Uncommon (37)
 

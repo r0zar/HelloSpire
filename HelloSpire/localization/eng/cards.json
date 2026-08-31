@@ -264,7 +264,7 @@
   "HELLOSPIRE-RIGHTEOUS_FURY.title": "Righteous Fury",
   "HELLOSPIRE-RIGHTEOUS_FURY.description": "At the start of your turn, gain {Strength:diff()} [gold]Strength[/gold].",
   "HELLOSPIRE-WORD_OF_GLORY.title": "Word of Glory",
-  "HELLOSPIRE-WORD_OF_GLORY.description": "Heal a player {Heal:diff()} HP plus your [gold]Spirit[/gold].",
+  "HELLOSPIRE-WORD_OF_GLORY.description": "Heal a player {Heal:diff()} HP plus TWICE your [gold]Spirit[/gold].",
   "HELLOSPIRE-BIND_THE_WOUNDS.title": "Bind the Wounds",
   "HELLOSPIRE-BIND_THE_WOUNDS.description": "Heal a player {Heal:diff()} HP plus your [gold]Spirit[/gold]. They gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-LAY_ON_HANDS.title": "Lay on Hands",
