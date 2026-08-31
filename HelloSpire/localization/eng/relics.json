@@ -27,7 +27,7 @@
   "HELLOSPIRE-IVORY_HANDLE.description": "Rounds other than [gold]Lead Rounds[/gold] deal 3 additional damage.",
   "HELLOSPIRE-IVORY_HANDLE.flavor": "Expensive, impractical, and it sits in the hand like it was grown there.",
   "HELLOSPIRE-PORTABLE_ALEMBIC.title": "Portable Alembic",
-  "HELLOSPIRE-PORTABLE_ALEMBIC.description": "At the start of each combat, [gold]Brew[/gold] a random Common Combat Potion.",
+  "HELLOSPIRE-PORTABLE_ALEMBIC.description": "At the start of each combat, [gold]Brew[/gold] a random [gold]Volatile[/gold] Common Combat Potion.",
   "HELLOSPIRE-PORTABLE_ALEMBIC.flavor": "It has survived three lab fires. The labs did not.",
   "HELLOSPIRE-HOLY_FERVOR.title": "Holy Fervor",
   "HELLOSPIRE-HOLY_FERVOR.description": "Whenever you play a card that heals, gain [blue]1[/blue] [gold]Strength[/gold]. Once per turn.",
