@@ -16,7 +16,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// Sits on an ENEMY: whenever a player attacks it, the attacker heals Amount.
+/// Sits on an ENEMY: whenever a player attacks it, the attacker heals Amount plus their own Spirit.
 /// </summary>
 public sealed class JudgmentOfLightPower : HelloSpirePower
 {
@@ -28,6 +28,7 @@ public sealed class JudgmentOfLightPower : HelloSpirePower
     {
         if (target != Owner || dealer == null || !dealer.IsPlayer || dealer.IsDead || !props.IsPoweredAttack()) return;
         Flash();
-        await PowerCmd.Apply<RegenPower>(choiceContext, dealer, Amount, Owner, null);
+        if (dealer.Player is { } attacker) await Spirit.Heal(attacker, dealer, Amount);
+        else await CreatureCmd.Heal(dealer, Amount);
     }
 }

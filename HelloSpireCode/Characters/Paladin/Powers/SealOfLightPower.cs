@@ -29,7 +29,7 @@ public sealed class SealOfLightPower : SealPower
             cardPlay.Card.Type != CardType.Attack) return;
         _usedThisTurn = true;
         Flash();
-        await PowerCmd.Apply<RegenPower>(choiceContext, Owner, Amount, Owner, null);
+        await Spirit.Heal(cardPlay.Card.Owner!, Amount);
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)

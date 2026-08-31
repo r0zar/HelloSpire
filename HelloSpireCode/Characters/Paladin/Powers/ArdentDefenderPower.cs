@@ -15,7 +15,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>First time each turn an enemy attacks you: heal Amount.</summary>
+/// <summary>First time each turn an enemy attacks you: heal Amount plus Spirit.</summary>
 public sealed class ArdentDefenderPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
@@ -35,6 +35,6 @@ public sealed class ArdentDefenderPower : HelloSpirePower
         if (_usedThisTurn || target != Owner || dealer == null || !props.IsPoweredAttack()) return;
         _usedThisTurn = true;
         Flash();
-        await PowerCmd.Apply<RegenPower>(choiceContext, Owner, Amount, Owner, null);
+        if (Owner.Player is { } player) await Spirit.Heal(player, Amount);
     }
 }

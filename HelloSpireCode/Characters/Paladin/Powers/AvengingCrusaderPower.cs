@@ -15,7 +15,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>Whenever the owner plays an Attack, heal the most wounded player (lowest HP fraction).</summary>
+/// <summary>Whenever the owner plays an Attack, heal the most wounded player (lowest HP fraction) Amount plus Spirit.</summary>
 public sealed class AvengingCrusaderPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
@@ -30,6 +30,6 @@ public sealed class AvengingCrusaderPower : HelloSpirePower
             .OrderBy(c => (double)c.CurrentHp / c.MaxHp).FirstOrDefault();
         if (wounded == null) return;
         Flash();
-        await PowerCmd.Apply<RegenPower>(choiceContext, wounded, Amount, Owner, null);
+        if (Owner.Player is { } player) await Spirit.Heal(player, wounded, Amount);
     }
 }
