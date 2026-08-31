@@ -40,6 +40,9 @@ internal static class CharacterSkins
                 if (GD.Load<Texture2D>("res://HelloSpire/images/creature/paladin_weapon_shop_page.png") is { } shopWeapon)
                     material.SetShaderParameter("weapon_shop_page", shopWeapon);
             }
+            if (character is Alchemist &&
+                GD.Load<Texture2D>("res://HelloSpire/images/creature/alchemist_weapon_page.png") is { } potion)
+                material.SetShaderParameter("weapon_page", potion);
             Cache[shaderPath] = material;
         }
         return material;
