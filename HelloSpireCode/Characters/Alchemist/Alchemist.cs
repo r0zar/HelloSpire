@@ -20,6 +20,10 @@ public class Alchemist : PlaceholderCharacterModel
 
     public static readonly Color Color = new("6ad48a");
 
+    /// <summary>The Silent's rig fits the wiry alchemist far better than the Ironclad's bulk.
+    /// Drives combat body, rest-site and shop scenes, trail, energy counter and sfx.</summary>
+    public override string PlaceholderID => "silent";
+
     public override Color NameColor => Color;
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 68;

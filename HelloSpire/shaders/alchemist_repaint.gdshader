@@ -1,4 +1,6 @@
-// Alchemist greens: repaints the Ironclad atlas at render time.
+// Alchemist browns: repaints the SILENT's spine atlas at render time.
+// Sage/dark-green cloak and hood -> brown leathers; chartreuse slash vfx -> amber;
+// teal daggers and tan bandage wraps are left alone.
 shader_type canvas_item;
 
 vec3 rgb2hsv(vec3 c) {
@@ -20,16 +22,12 @@ void fragment() {
     vec4 tex = texture(TEXTURE, UV);
     vec3 hsv = rgb2hsv(tex.rgb);
     float hd = hsv.x * 360.0;
-    bool red = hd < 25.0 || hd > 335.0;
-    if (red && hsv.y > 0.45 && hsv.z > 0.55) {
-        // rage glow -> toxic green
-        hsv = vec3(110.0 / 360.0, hsv.y, min(1.0, hsv.z * 1.1));
-    } else if ((hd < 22.0 || hd > 330.0) && hsv.y > 0.25) {
-        // maroon cloth -> deep green robe
-        hsv = vec3(145.0 / 360.0, min(1.0, hsv.y * 0.9), hsv.z * 0.85);
-    } else if (hd >= 22.0 && hd < 52.0 && hsv.y > 0.28) {
-        // leather -> olive
-        hsv = vec3(70.0 / 360.0, min(1.0, hsv.y * 0.8), hsv.z * 0.95);
+    if (hd >= 55.0 && hd < 85.0 && hsv.y > 0.55 && hsv.z > 0.55) {
+        // chartreuse slash vfx -> amber
+        hsv = vec3(40.0 / 360.0, hsv.y, min(1.0, hsv.z * 1.05));
+    } else if (hd >= 80.0 && hd < 175.0 && hsv.y > 0.18) {
+        // sage and dark green cloth -> brown leather
+        hsv = vec3(28.0 / 360.0, min(1.0, hsv.y * 0.85), hsv.z);
     }
     COLOR = vec4(hsv2rgb(hsv), tex.a);
 }
