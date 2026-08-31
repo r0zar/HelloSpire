@@ -51,7 +51,10 @@ public sealed class Reconstitute() : AlchemistCard(1, CardType.Skill, CardRarity
             ? used[0]
             : await LabBridge.Current.ChoosePotion(ctx, Owner, used);
 
-        await Belt.Brew(ctx, Lab, chosen);
+        // UsedThisCombat holds the instance that was actually drunk -- the game already removed
+        // it from the player when it was used, and re-Procuring a consumed instance leaves a dead
+        // Potion in the slot (visible, unusable, never cleaned up). Brew a fresh copy instead.
+        await Belt.Brew(ctx, Lab, chosen?.CanonicalInstance.ToMutable());
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
