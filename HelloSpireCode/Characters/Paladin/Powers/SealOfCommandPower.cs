@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The aggro Seal: first Attack each turn applies 1 Vulnerable; Judged, apply Amount Vulnerable.
+/// The aggro Seal: first Attack each turn applies 1 Vulnerable; Judged, apply Amount Debilitate.
 /// </summary>
 public sealed class SealOfCommandPower : SealPower
 {
@@ -42,5 +42,5 @@ public sealed class SealOfCommandPower : SealPower
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
-        await PowerCmd.Apply<VulnerablePower>(ctx, target, Amount, Owner, null);
+        await PowerCmd.Apply<DebilitatePower>(ctx, target, Amount, Owner, null);
 }

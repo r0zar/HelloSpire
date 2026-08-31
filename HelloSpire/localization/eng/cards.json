@@ -225,7 +225,7 @@
   "HELLOSPIRE-BLADE_OF_JUSTICE.title": "Blade of Justice",
   "HELLOSPIRE-BLADE_OF_JUSTICE.description": "Deal {Damage:diff()} damage.",
   "HELLOSPIRE-SEAL_OF_COMMAND.title": "Seal of Command",
-  "HELLOSPIRE-SEAL_OF_COMMAND.description": "Your first Attack each turn applies 1 [gold]Vulnerable[/gold]. [gold]Judgment[/gold]: apply {Amount:diff()} [gold]Vulnerable[/gold].",
+  "HELLOSPIRE-SEAL_OF_COMMAND.description": "Your first Attack each turn applies 1 [gold]Vulnerable[/gold]. [gold]Judgment[/gold]: apply {Amount:diff()} [gold]Debilitate[/gold].",
   "HELLOSPIRE-SEAL_OF_JUSTICE.title": "Seal of Justice",
   "HELLOSPIRE-SEAL_OF_JUSTICE.description": "Your first Attack each turn applies 1 [gold]Weak[/gold]. [gold]Judgment[/gold]: the target loses 4 [gold]Strength[/gold] this turn.",
   "HELLOSPIRE-SEAL_OF_WISDOM.title": "Seal of Wisdom",
