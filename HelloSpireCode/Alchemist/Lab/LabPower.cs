@@ -165,13 +165,25 @@ public sealed class PotencyPower : HelloSpirePower
 }
 
 /// <summary>
-/// The next Potion used this turn is not consumed. Bottled Time's payload.
-/// Removed by <see cref="Belt"/> as soon as it saves a Potion, or at the owner's next turn.
+/// The next <see cref="Amount"/> Potions used this turn are not consumed. Bottled Time's payload.
+///
+/// TryClaim is called by PotionUsePatch for every Potion an Alchemist uses (real or Volatile --
+/// there is nothing here that distinguishes them, and there never was; the trigger was always
+/// generic). One stack is spent per save via PowerCmd.ModifyAmount, the same way any other
+/// Counter-type Power shrinks; the Power removes itself once Amount reaches 0, same as always.
 /// </summary>
 public sealed class BottledTimePower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
+
+    /// <summary>Spend one stack for the Potion currently resolving, if any remain.</summary>
+    public async Task<bool> TryClaim(PlayerChoiceContext ctx)
+    {
+        if (Amount <= 0) return false;
+        await PowerCmd.ModifyAmount(ctx, this, -1m, null, null);
+        return true;
+    }
 
     public override async Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)
     {

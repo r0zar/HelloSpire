@@ -191,10 +191,9 @@ public static class Belt
     ///
     /// Fired by <see cref="PotionUsePatch"/>, a Harmony patch on
     /// <see cref="MegaCrit.Sts2.Core.Models.PotionModel.OnUseWrapper"/> — see that class for why
-    /// that method and not one of the base game's own potion-use hooks. Potency (buffing a Volatile
-    /// Potion's own damage/Block) is a separate, still-unaddressed integration point: it needs to
-    /// change the values the potion's own OnUse computes with, which means a patch that runs before
-    /// OnUse, not a notification that runs after it.
+    /// that method and not one of the base game's own potion-use hooks. Potency is applied by the
+    /// same patch's prefix, which bumps the Potion's damage and Block vars before OnUse computes
+    /// with them; Bottled Time's save-a-Potion is handled there too, after this method runs.
     /// </summary>
     public static async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
@@ -216,10 +215,8 @@ public static class Belt
     /// Zero for anything the player found, bought or Procured. That restriction is the entire
     /// reason this class is allowed an exception to "Potions ignore stat scaling" — without it,
     /// Potency becomes a blanket buff to whatever Rare Potion a shop happened to sell, which no
-    /// part of the Combat Potion curation covers.
-    ///
-    /// TODO(Phase 3): the same potion-resolution patch that drives OnPotionUsed must call this and
-    /// add the result to the Potion's damage and Block.
+    /// part of the Combat Potion curation covers. Applied by PotionUsePatch's prefix, before the
+    /// Potion's own OnUse runs.
     /// </summary>
     public static int PotencyBonus(LabContext lab, PotionModel potion)
     {

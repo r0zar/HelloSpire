@@ -140,14 +140,11 @@ internal static class PotionUsePatch
 
         var player = potion.Owner;
         var isAlchemist = player?.Character is HelloSpire.HelloSpireCode.Characters.Alchemist;
+        var bench = isAlchemist ? AlchemistEffects.Peek(LabContext.From(player!)) : null;
 
-        if (isAlchemist && _onUse != null)
+        if (isAlchemist && _onUse != null && bench != null && bench.DoubleActivate.Remove(potion))
         {
-            var bench = AlchemistEffects.Peek(LabContext.From(player!));
-            if (bench != null && bench.DoubleActivate.Remove(potion))
-            {
-                if (_onUse.Invoke(potion, [ctx, target]) is Task second) await second;
-            }
+            if (_onUse.Invoke(potion, [ctx, target]) is Task second) await second;
         }
 
         if (_bumped.Remove(potion, out var bonus))
@@ -155,7 +152,24 @@ internal static class PotionUsePatch
                 if (v is DamageVar or BlockVar) v.BaseValue -= bonus;
 
         if (!isAlchemist) return;
+        var lab = LabContext.From(player!);
 
-        await Belt.OnPotionUsed(ctx, LabContext.From(player!), potion);
+        // Bottled Time: capture Volatile status and spend the claim BEFORE Belt.OnPotionUsed
+        // clears bench.Volatile's tracking for this instance. The saved Potion still counts as
+        // "used" for everything else this turn -- Cork Stopper, Residual Heat, Reactive Mixture,
+        // PotionsUsedThisTurn -- only its physical removal from the belt is undone, afterward.
+        var wasVolatile = bench?.Volatile.Contains(potion) ?? false;
+        var bottledTime = player!.Creature?.GetPower<BottledTimePower>();
+        var claimed = bottledTime != null && await bottledTime.TryClaim(ctx);
+
+        await Belt.OnPotionUsed(ctx, lab, potion);
+
+        if (claimed)
+        {
+            // The game already removed this exact instance from its belt slot (RemoveBeforeUse,
+            // decompiled from sts2.dll) -- re-Procuring it would leave a dead Potion behind, the
+            // same problem Reconstitute already solves the same way: Brew a fresh copy instead.
+            await Belt.Brew(ctx, lab, potion.CanonicalInstance.ToMutable(), wasVolatile);
+        }
     }
 }
