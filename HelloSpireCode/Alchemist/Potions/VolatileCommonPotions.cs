@@ -22,32 +22,46 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
 
 /// <summary>
-/// A registered pool that nothing ever queries. BaseLib's CustomContentDictionary hard-requires
-/// every CustomPotionModel to carry a [Pool(typeof(...))] attribute (confirmed live: the game
-/// refused to start at all -- "Model ... must be marked with a PoolAttribute" -- when
-/// VolatileCommonPotion had none), so joining a real pool isn't optional. AlchemistPotionPool was
-/// the obvious choice, but it's the exact pool MegaCrit.Sts2.Core.Factories.PotionFactory reads
-/// from Player.Character.PotionPool for shops and reward screens -- joining it would make these
-/// potions purchasable and offerable, which the design explicitly forbids. This pool exists solely
-/// to satisfy the attribute requirement: no Character's PotionPool property ever returns it, so
-/// nothing outside WiredLabBridge's own curated list (see VolatileCommonPotion.VolatileCommonPool
-/// in WiredLabBridge.cs) ever enumerates it.
+/// Base for the Alchemist's Volatile Potions: joins the real AlchemistPotionPool, same as
+/// <see cref="Characters.AlchemistPotion"/>.
+///
+/// A dedicated "inert" pool was tried first and doesn't work: PotionModel.Pool (needed for
+/// tooltips and, apparently, whether the game will let you click Use at all -- confirmed live,
+/// both broke) resolves via <c>ModelDb.AllPotionPools.First(pool => pool.AllPotionIds.Contains(Id))</c>,
+/// and ModelDb.AllPotionPools (decompiled from sts2.dll) is hardcoded to exactly each Character's
+/// own PotionPool plus five specific base-game shared pools -- it does not auto-discover arbitrary
+/// custom PotionPoolModel subclasses a mod defines, no matter how they're tagged. A pool nothing in
+/// that list points at is unreachable, and any potion registered to it throws "Sequence contains no
+/// matching element" the moment anything asks for its Pool.
+///
+/// So these have to be real members of AlchemistPotionPool. Keeping them out of shops and reward
+/// screens is instead handled by <see cref="HideVolatilePotionsFromShopsAndRewardsPatch"/>, which
+/// blacklists every VolatileCommonPotion from the one method (PotionFactory.
+/// CreateRandomPotionsOutOfCombat) that actually generates a random potion outside combat.
 /// </summary>
-public sealed class VolatilePotionPool : BaseLib.Abstracts.CustomPotionPoolModel;
-
-/// <summary>
-/// Base for the Alchemist's Volatile Potions: registers with ModelDb like any custom potion (so
-/// localization and <see cref="CustomPackedImagePath"/> resolution work) via the inert
-/// <see cref="VolatilePotionPool"/> above, rather than <see cref="Characters.AlchemistPotion"/>'s
-/// AlchemistPotionPool -- these must never turn up at a Merchant or a reward screen. Only
-/// WiredLabBridge's own curated list hands one out, via Belt.Brew, and Belt.Brew always marks its
-/// result Volatile.
-/// </summary>
-[Pool(typeof(VolatilePotionPool))]
+[Pool(typeof(HelloSpire.HelloSpireCode.Characters.AlchemistPotionPool))]
 public abstract class VolatileCommonPotion : BaseLib.Abstracts.CustomPotionModel
 {
     public override PotionRarity Rarity => PotionRarity.Common;
     public override PotionUsage Usage => PotionUsage.CombatOnly;
+}
+
+/// <summary>
+/// Keeps every VolatileCommonPotion out of shops and reward screens without needing a separate,
+/// unreachable pool (see the doc comment on <see cref="VolatileCommonPotion"/> for why that doesn't
+/// work). PotionFactory.CreateRandomPotionsOutOfCombat (decompiled from sts2.dll) is the sole
+/// general-purpose "give the player a random potion outside combat" entry point and already accepts
+/// a blacklist parameter for exactly this purpose; combat generation is untouched, since
+/// WiredLabBridge's own RandomCombatPotion/CombatPotionOptions never call this method at all.
+/// </summary>
+[HarmonyLib.HarmonyPatch(typeof(PotionFactory), nameof(PotionFactory.CreateRandomPotionsOutOfCombat))]
+internal static class HideVolatilePotionsFromShopsAndRewardsPatch
+{
+    [HarmonyLib.HarmonyPrefix]
+    private static void BeforeCreate(ref IEnumerable<PotionModel>? blacklist)
+    {
+        blacklist = (blacklist ?? []).Concat(ModelDb.AllPotions.Where(p => p is VolatileCommonPotion));
+    }
 }
 
 /// <summary>
