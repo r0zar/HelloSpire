@@ -227,31 +227,13 @@ public sealed class WiredLabBridge : ILabBridge
     }
 
     /// <summary>
-    /// The base game has no pick-one-of-N popup, so the choice is a Brew/Pass walk down the list:
-    /// each option's popup is headed by the Potion's own name, Brew takes it, Pass shows the next,
-    /// and the last option has no Pass button (the Gold is spent; something gets brewed). If the
-    /// modal layer is unavailable mid-walk, the current option is taken -- never a hang.
+    /// One popup, every option with its icon, click one -- PotionPickerPopup. No UI host
+    /// (TestMode, headless) means no way to ask: take the first option, never hang.
     /// </summary>
     private static async Task<int> ShowPotionOptions(IReadOnlyList<PotionModel> options)
     {
-        for (var i = 0; i < options.Count; i++)
-        {
-            if (NModalContainer.Instance == null || NModalContainer.Instance.OpenModal != null) return i;
-            var popup = NGenericPopup.Create();
-            if (popup == null) return i; // TestMode, or the popup scene failed to load.
-
-            var last = i == options.Count - 1;
-            var body = new LocString("cards", last
-                ? "HELLOSPIRE-ALCHEMIST_BREW_CHOICE_LAST.body"
-                : "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.body");
-            body.Add("Remaining", (decimal)(options.Count - 1 - i));
-            var brew = new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.brew");
-            var pass = last ? null : new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.pass");
-
-            NModalContainer.Instance.Add(popup);
-            if (await popup.WaitForConfirmation(body, options[i].Title, pass, brew)) return i;
-        }
-        return options.Count - 1;
+        var picked = PotionPickerPopup.TryShow(options);
+        return picked == null ? 0 : await picked;
     }
 
 
