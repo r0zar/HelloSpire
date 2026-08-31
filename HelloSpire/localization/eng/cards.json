@@ -248,8 +248,6 @@
   "HELLOSPIRE-DIVINE_FAVOR.description": "Gain {Energy:energyIcons()}.",
   "HELLOSPIRE-AVENGING_WRATH.title": "Avenging Wrath",
   "HELLOSPIRE-AVENGING_WRATH.description": "Your [gold]Judgment[/gold] effects trigger twice.",
-  "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS.title": "Seal of Righteousness",
-  "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS.description": "Gain {Amount:diff()} [gold]Strength[/gold]. [gold]Judgment[/gold]: deal 5 damage.",
   "HELLOSPIRE-PENANCE.title": "Penance",
   "HELLOSPIRE-PENANCE.description": "Lose {HpLoss:diff()} HP.\nGain {Energy:energyIcons()}.",
   "HELLOSPIRE-VIGIL.title": "Vigil",
