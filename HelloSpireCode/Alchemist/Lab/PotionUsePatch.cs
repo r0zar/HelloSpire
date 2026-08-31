@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using HarmonyLib;
+using HelloSpire.HelloSpireCode.Alchemist.Powers;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -95,11 +96,23 @@ internal static class PotionUsePatch
     {
         var player = __instance.Owner;
         if (player?.Character is not HelloSpire.HelloSpireCode.Characters.Alchemist) return;
-        var bonus = Belt.PotencyBonus(LabContext.From(player), __instance);
-        if (bonus <= 0) return;
-        foreach (var v in __instance.DynamicVars.Values)
-            if (v is DamageVar or BlockVar) v.BaseValue += bonus;
-        _bumped[__instance] = bonus;
+        var lab = LabContext.From(player);
+
+        var bonus = Belt.PotencyBonus(lab, __instance);
+        if (bonus > 0)
+        {
+            foreach (var v in __instance.DynamicVars.Values)
+                if (v is DamageVar or BlockVar) v.BaseValue += bonus;
+            _bumped[__instance] = bonus;
+        }
+
+        // Eternal Crucible: claimed here, before the Potion resolves even once, since
+        // IPotionUseListener.OnPotionUsed (everything else in this class reacts through) only
+        // fires afterward -- one step too late to make this exact use resolve a second time.
+        var bench = AlchemistEffects.Peek(lab);
+        var crucible = player.Creature?.GetPower<EternalCruciblePower>();
+        if (bench != null && crucible != null && crucible.TryClaim())
+            bench.DoubleActivate.Add(__instance);
     }
 
     [HarmonyPostfix]
@@ -109,7 +122,8 @@ internal static class PotionUsePatch
     }
 
     /// <summary>
-    /// Await the real potion use first, then (for a Pressure Burst target) run its OnUse a second
+    /// Await the real potion use first, then (for a Potion marked DoubleActivate -- Pressure
+    /// Burst's chosen target, or Eternal Crucible's once-per-turn claim) run its OnUse a second
     /// time while Potency is still applied, then restore Potency and notify -- never any other
     /// order.
     ///

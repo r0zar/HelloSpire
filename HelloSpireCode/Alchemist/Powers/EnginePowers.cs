@@ -163,49 +163,38 @@ public sealed class CompoundInterestPower : AlchemistEnginePower
     }
 }
 
-/// <summary>The first Potion each combat resolves twice and is consumed once.</summary>
-public sealed class EternalCruciblePower : AlchemistEnginePower, IPotionUseListener
+/// <summary>
+/// The first Potion each turn resolves twice and is consumed once.
+///
+/// The actual double-resolution is claimed and performed by PotionUsePatch's prefix, before the
+/// Potion's own effect runs -- not here. IPotionUseListener.OnPotionUsed (what every other engine
+/// in this file reacts through) only fires AFTER a Potion has already resolved once, which is one
+/// step too late to make it resolve a second time. TryClaim is the once-per-turn latch;
+/// PotionUsePatch calls it and, if it succeeds, adds the Potion to LabPower.DoubleActivate --
+/// the same one-shot mechanism Pressure Burst uses to mark a chosen Potion.
+/// </summary>
+public sealed class EternalCruciblePower : AlchemistEnginePower
 {
-    private bool _usedThisCombat;
-
-    public Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public bool TryClaim()
     {
-        if (_usedThisCombat) return Task.CompletedTask;
-        _usedThisCombat = true;
-
+        if (UsedThisTurn) return false;
+        UsedThisTurn = true;
         Flash();
-
-        // TODO(Phase 3): re-resolving a Potion needs the same potion-resolution patch that drives
-        // Belt.OnPotionUsed. The trigger and the once-per-combat latch are correct; the second
-        // resolution is the missing half.
-        return Task.CompletedTask;
-    }
-
-    public override Task AfterCombatEnd(CombatRoom room)
-    {
-        _usedThisCombat = false;
-        return Task.CompletedTask;
+        return true;
     }
 }
 
-/// <summary>The first Gold each turn draws a card and buys a little Block.</summary>
+/// <summary>Every time you gain Gold, draw a card. No once-per-turn latch -- it really is every time.</summary>
 public sealed class GoldenEnginePower : AlchemistEnginePower, IGoldListener
 {
-    /// <summary>Block granted alongside the card.</summary>
-    public int BlockBonus { get; set; } = 2;
-
     public async Task OnGoldGained(PlayerChoiceContext ctx, LabContext lab, int amount)
     {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-        await AlchemistEffects.GainBlock(lab, BlockBonus);
     }
 }
 
-/// <summary>The first Exhaust each turn replaces itself.</summary>
+/// <summary>The first Exhaust each turn Brews a Volatile Potion (or more, once upgraded).</summary>
 public sealed class ConservationOfMatterPower : AlchemistEnginePower, IExhaustListener
 {
     public async Task OnExhausted(PlayerChoiceContext ctx, LabContext lab)
@@ -214,7 +203,8 @@ public sealed class ConservationOfMatterPower : AlchemistEnginePower, IExhaustLi
         UsedThisTurn = true;
 
         Flash();
-        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
+        for (var i = 0; i < (int)Amount; i++)
+            await Belt.BrewRandom(ctx, lab);
     }
 }
 

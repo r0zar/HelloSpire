@@ -5,7 +5,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
-using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
 // Rare Powers 21-25. One engine per pool: Gold in, Gold out, Potions, Exhaust, Potency.
@@ -32,8 +31,8 @@ public sealed class CompoundInterest() : AlchemistCard(1, CardType.Power, CardRa
     protected override void OnUpgrade() => DynamicVars["Percent"].UpgradeValueBy(8m);
 }
 
-/// <summary>The first Potion each combat resolves twice and is consumed once.</summary>
-public sealed class EternalCrucible() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
+/// <summary>The first Potion each turn resolves twice and is consumed once.</summary>
+public sealed class EternalCrucible() : AlchemistCard(3, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<EternalCruciblePower>(1m)];
 
@@ -50,34 +49,30 @@ public sealed class EternalCrucible() : AlchemistCard(2, CardType.Power, CardRar
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first Gold each turn draws a card and buys a little Block.</summary>
+/// <summary>Every time you gain Gold, draw a card.</summary>
 public sealed class GoldenEngine() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<GoldenEnginePower>(1m), new BlockVar("Bonus", 2m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<GoldenEnginePower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<GoldenEnginePower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-
-        var power = await PowerCmd.Apply<GoldenEnginePower>(ctx, Owner.Creature,
+        await PowerCmd.Apply<GoldenEnginePower>(ctx, Owner.Creature,
             DynamicVars["GoldenEnginePower"].BaseValue, Owner.Creature, this);
-
-        if (power != null) power.BlockBonus = DynamicVars["Bonus"].IntValue;
     }
 
-    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first card you burn each turn replaces itself.</summary>
+/// <summary>The first card you Exhaust each turn Brews a Volatile Potion.</summary>
 public sealed class ConservationOfMatter() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ConservationOfMatterPower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Transform), HoverTipFactory.FromPower<ConservationOfMatterPower>()];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile), HoverTipFactory.FromPower<ConservationOfMatterPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -86,7 +81,7 @@ public sealed class ConservationOfMatter() : AlchemistCard(2, CardType.Power, Ca
             DynamicVars["ConservationOfMatterPower"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => DynamicVars["ConservationOfMatterPower"].UpgradeValueBy(1m);
 }
 
 /// <summary>

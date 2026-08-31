@@ -42,9 +42,12 @@ public sealed class LabPower : HelloSpirePower
     public readonly HashSet<PotionModel> Volatile = [];
 
     /// <summary>
-    /// Potions marked by Pressure Burst: the next time one of these is used, PotionUsePatch runs
-    /// its OnUse a second time before the Potion is removed from the tracker. One-shot -- removed
-    /// the moment it fires, so marking a Potion twice does not stack into three activations.
+    /// Potions marked for a second activation: the next time one of these is used, PotionUsePatch
+    /// runs its OnUse a second time before the Potion is removed from the tracker. One-shot --
+    /// removed the moment it fires, so marking a Potion twice does not stack into three
+    /// activations. Two sources mark it: Pressure Burst picks a target explicitly; Eternal
+    /// Crucible's power claims the first Potion used each turn, in PotionUsePatch's prefix, before
+    /// that Potion has resolved even once.
     /// </summary>
     public readonly HashSet<PotionModel> DoubleActivate = [];
 
