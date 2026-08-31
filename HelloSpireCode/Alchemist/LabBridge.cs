@@ -40,12 +40,14 @@ public enum BasePotion
 ///
 /// Two of the defaults are load-bearing safety decisions, not placeholders to rush past:
 ///
-/// - <see cref="OfferInvest"/> and <see cref="OfferRender"/> both return **false** — Decline.
-///   Gold is a persistent run resource and Max HP is permanent; auto-paying either one without
-///   asking would spend the player's run behind their back. Every Invest and Render card is
-///   specified to resolve its base effect in full on a Decline, so declining is always correct
-///   and never leaves a card dead. A card that is weaker than designed is a bug; a card that
-///   quietly empties the player's purse is a much worse one.
+/// - <see cref="OfferInvest"/> and <see cref="OfferRender"/> both return **false** here. For
+///   Render that still means Decline — Max HP is permanent, so auto-paying without asking would
+///   spend the player's run behind their back. Invest is no longer a Decline at all: it is
+///   mandatory once the bridge is wired, paid automatically whenever affordable, and this stub's
+///   false is standing in for "cannot afford it" rather than a choice. Every Invest and Render
+///   card is specified to resolve its base effect in full either way, so a missing payment never
+///   leaves a card dead. A card that is weaker than designed is a bug; a card that quietly empties
+///   the player's purse is a much worse one.
 /// - <see cref="Brew"/> returning null is the same state as a full belt, which the design already
 ///   defines: the card resolves, the Potion is lost.
 ///
@@ -64,8 +66,10 @@ public interface ILabBridge
     Task GainGold(Player player, int amount);
 
     /// <summary>
-    /// Ask the player to Invest. Pay removes the Gold and returns true; Decline returns false.
-    /// Must return false without prompting when the player holds less than <paramref name="cost"/>.
+    /// Invest is mandatory, not optional: pay the Gold automatically -- no Pay/Decline prompt --
+    /// and return true, or return false without spending anything when the player holds less than
+    /// <paramref name="cost"/>. Unlike Render, there is no reason to ask; Gold is recoverable
+    /// (Compound Interest, a future run's income) in a way Max HP never is.
     /// </summary>
     Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost);
 
@@ -205,7 +209,7 @@ public sealed class UnwiredLabBridge : ILabBridge
     public Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost)
     {
         Report("Invest");
-        return Task.FromResult(false); // Decline. Never spend the player's Gold unasked.
+        return Task.FromResult(false); // Cannot pay. Never spend the player's Gold when unwired.
     }
 
     public Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost)

@@ -42,17 +42,19 @@ public sealed class WiredLabBridge : ILabBridge
     public Task GainGold(Player player, int amount) => PlayerCmd.GainGold(amount, player);
 
     /// <summary>
-    /// Invest is a real Pay/Decline prompt, not a rubber stamp. The affordability check happens
-    /// before any UI is created: too poor means an automatic Decline, never a popup asking about
-    /// Gold the player doesn't have.
+    /// Invest is mandatory, not a Pay/Decline prompt: pay automatically if the player can afford
+    /// it, otherwise return false without spending anything. No popup -- Gold is a recoverable run
+    /// resource (Compound Interest, a future run's income), unlike Render's Max HP, so there is no
+    /// decision here worth interrupting the player for.
+    ///
+    /// Caller already discounted: Ledger.Invest applies AlchemistHooks.InvestDiscount before
+    /// calling this, so doing it again here would double-apply the same discount. Confirmed live
+    /// as a real bug while removing the prompt -- Gilded Ledger's discount was being subtracted
+    /// twice, undercharging every Invest clause in the class.
     /// </summary>
     public async Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost)
     {
-        cost = System.Math.Max(1, cost - AlchemistHooks.InvestDiscount(LabContext.From(player)));
         if (player.Gold < cost) return false;
-
-        if (!await Confirm(ctx, player, "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.header", "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.body", cost))
-            return false;
 
         await PlayerCmd.LoseGold(cost, player, GoldLossType.Spent);
         return true;

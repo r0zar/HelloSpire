@@ -21,7 +21,7 @@ public static class AlchemistTips
     /// <summary>Discard a Potion without resolving it, for the card's listed reward.</summary>
     [CustomEnum] public static StaticHoverTip Distill;
 
-    /// <summary>Optionally pay Gold from your actual run total for an additional effect.</summary>
+    /// <summary>Pay Gold from your actual run total for an additional effect, if you can afford it.</summary>
     [CustomEnum] public static StaticHoverTip Invest;
 
     /// <summary>Optionally pay Max HP, permanently, for an additional effect.</summary>

@@ -7,9 +7,12 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 /// The rules of Gold and the body: Invest, Render, and the per-combat bookkeeping the payoff cards
 /// read off.
 ///
-/// The two mechanics live in one file because they are the same shape — an optional Pay/Decline
-/// clause over a permanent resource — and because keeping them together makes the one asymmetry
-/// between them impossible to miss: **Gold comes back and Max HP does not.**
+/// The two mechanics live in one file because of the one asymmetry between them that is easy to
+/// miss otherwise: **Gold comes back and Max HP does not.** That is also why they are no longer
+/// the same shape. Render stays an optional Pay/Decline prompt — Max HP is permanent, so the
+/// player must be asked. Invest is mandatory: it pays automatically whenever the player can afford
+/// it, with no prompt, since Gold is a recoverable run resource and there is nothing worth
+/// interrupting play to ask about.
 /// </summary>
 public static class Ledger
 {
@@ -43,12 +46,13 @@ public static class Ledger
     // ------------------------------------------------------------------ Gold out
 
     /// <summary>
-    /// Offer an Invest. Returns true only if the player paid.
+    /// Invest. Mandatory, not optional: pays automatically and returns true if the player can
+    /// afford it, or returns false and spends nothing otherwise. There is no Decline -- Gold is a
+    /// recoverable run resource, unlike Render's Max HP, so there is no choice worth asking about.
     ///
-    /// The contract every Invest card depends on: a Decline still resolves the card's base effect
-    /// in full, and being short of the cost only disables Pay. An Invest clause is a ceiling
-    /// raiser, never the reason a card exists — a card that is dead because the player went
-    /// shopping is a broken card.
+    /// The contract every Invest card still depends on: being short of the cost never breaks a
+    /// card, it only skips the bonus. An Invest clause is a ceiling raiser, never the reason a card
+    /// exists — a card that is dead because the player went shopping is a broken card.
     ///
     /// Gilded Ledger's discount is applied here so it works on all twenty-odd Invest clauses.
     /// </summary>
@@ -89,8 +93,8 @@ public static class Ledger
     /// <summary>
     /// Offer a Render. Returns true only if the player paid.
     ///
-    /// Structurally identical to <see cref="Invest"/> — optional, Pay/Decline, never hidden, base
-    /// effect always resolves — and completely different in weight, because **there is no way to
+    /// Unlike <see cref="Invest"/>, this stays an optional Pay/Decline prompt — never hidden, base
+    /// effect always resolves either way — because of the weight difference: **there is no way to
     /// get Max HP back**. See design/alchemist.md, Override 1. There is deliberately no
     /// counterpart to this method; do not add one.
     ///

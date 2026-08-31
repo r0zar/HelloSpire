@@ -22,7 +22,7 @@
   "HELLOSPIRE-DISTILL.title": "Distill",
   "HELLOSPIRE-DISTILL.description": "Discard one of your Potions without resolving it, in exchange for the card's listed reward. Distilling is not using a Potion, but it does empty a Slot.",
   "HELLOSPIRE-INVEST.title": "Invest",
-  "HELLOSPIRE-INVEST.description": "Optionally pay Gold from your actual run total for the listed bonus. If you cannot or do not pay, the card still resolves its base effect in full.",
+  "HELLOSPIRE-INVEST.description": "Pay Gold from your actual run total for the listed bonus, automatically, if you can afford it. If you cannot, the card still resolves its base effect in full.",
   "HELLOSPIRE-RENDER.title": "Render",
   "HELLOSPIRE-RENDER.description": "Optionally pay Max HP -- permanently, for the whole run -- for the listed effect. Cannot be paid if it would reduce your Max HP to 0.",
   "HELLOSPIRE-POTENCY.title": "Potency",
