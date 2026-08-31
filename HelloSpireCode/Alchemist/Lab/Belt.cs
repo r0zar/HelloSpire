@@ -1,6 +1,7 @@
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using HelloSpire.HelloSpireCode.Alchemist;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
@@ -109,7 +110,8 @@ public static class Belt
 
         var chosen = held.Count == 1
             ? held[0]
-            : await LabBridge.Current.ChoosePotion(ctx, lab.Player, held);
+            : await LabBridge.Current.ChoosePotion(ctx, lab.Player, held,
+                new LocString("cards", "HELLOSPIRE-ALCHEMIST_DISTILL_CHOICE.header"));
 
         if (chosen == null) return DistillResult.Nothing;
         return await Distill(ctx, lab, chosen);

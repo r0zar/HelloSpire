@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -49,7 +50,8 @@ public sealed class Reconstitute() : AlchemistCard(1, CardType.Skill, CardRarity
 
         var chosen = used.Count == 1
             ? used[0]
-            : await LabBridge.Current.ChoosePotion(ctx, Owner, used);
+            : await LabBridge.Current.ChoosePotion(ctx, Owner, used,
+                new LocString("cards", "HELLOSPIRE-ALCHEMIST_RECONSTITUTE_CHOICE.header"));
 
         // UsedThisCombat holds the instance that was actually drunk -- the game already removed
         // it from the player when it was used, and re-Procuring a consumed instance leaves a dead
@@ -252,7 +254,8 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
         var candidates = bench.Volatile.ToList();
         var chosen = candidates.Count == 1
             ? candidates[0]
-            : await LabBridge.Current.ChoosePotion(ctx, Owner, candidates);
+            : await LabBridge.Current.ChoosePotion(ctx, Owner, candidates,
+                new LocString("cards", "HELLOSPIRE-ALCHEMIST_STABILIZE_CHOICE.header"));
 
         if (chosen == null) return;
         if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;

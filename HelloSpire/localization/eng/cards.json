@@ -559,6 +559,10 @@
   "HELLOSPIRE-DRY_FIRE.title": "Dry Fire",
   "HELLOSPIRE-DRY_FIRE.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw {DryFirePower} card.",
   "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header": "Choose a Potion to Brew",
+  "HELLOSPIRE-ALCHEMIST_DISTILL_CHOICE.header": "Choose a Potion to Distill",
+  "HELLOSPIRE-ALCHEMIST_RECONSTITUTE_CHOICE.header": "Choose a Potion to Copy",
+  "HELLOSPIRE-ALCHEMIST_STABILIZE_CHOICE.header": "Choose a Potion to Stabilize",
+  "HELLOSPIRE-ALCHEMIST_DOUBLE_CHOICE.header": "Choose a Potion to Charge",
   "HELLOSPIRE-SEAL_OF_LIGHT.title": "Seal of Light",
   "HELLOSPIRE-SEAL_OF_LIGHT.description": "Your first Attack each turn heals {Amount} HP. [gold]Judgment[/gold]: gain {Spirit:diff()} [gold]Spirit[/gold]."
 }

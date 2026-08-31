@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -59,12 +60,15 @@ public sealed class Shatterstock() : AlchemistCard(1, CardType.Attack, CardRarit
 /// <summary>Rig a held Potion, real or Volatile, to go off twice the next time it's used.</summary>
 public sealed class PressureBurst() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         var held = Belt.Held(Lab);
         if (held.Count == 0) return;
 
-        var chosen = held.Count == 1 ? held[0] : await LabBridge.Current.ChoosePotion(ctx, Owner, held);
+        var chosen = held.Count == 1 ? held[0] : await LabBridge.Current.ChoosePotion(ctx, Owner, held,
+            new LocString("cards", "HELLOSPIRE-ALCHEMIST_DOUBLE_CHOICE.header"));
         if (chosen == null) return;
 
         var bench = await AlchemistEffects.Bench(ctx, Lab);

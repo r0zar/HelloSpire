@@ -129,7 +129,12 @@ public interface ILabBridge
     Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options);
 
     /// <summary>Ask the player to pick one held Potion, or null if they hold none.</summary>
-    Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from);
+    /// <param name="prompt">
+    /// The popup's title. Defaults to the generic "Choose a Potion to Brew" wording, which is
+    /// wrong for anything that isn't Brewing (Distill, Stabilize, Pressure Burst) -- pass a real
+    /// one for those.
+    /// </param>
+    Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null);
 
     /// <summary>
     /// Ask the player to pick one card from a set, typically their Hand.
@@ -245,7 +250,7 @@ public sealed class UnwiredLabBridge : ILabBridge
         return null;
     }
 
-    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from)
+    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null)
     {
         Report("choosing a Potion");
         return Task.FromResult<PotionModel?>(null);

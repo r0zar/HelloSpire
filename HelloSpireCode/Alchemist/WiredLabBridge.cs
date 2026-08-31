@@ -29,9 +29,10 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// actual APIs (PotionCmd/PotionFactory for the belt, PlayerCmd for Gold, CreatureCmd.LoseMaxHp
 /// for Render, CardSelectCmd for choices, CardCmd/CardPileCmd for the piles).
 ///
-/// One remaining deliberate deviation, documented rather than hidden:
-/// - ChoosePotion takes the first held Potion rather than asking. The game has no potion-select
-///   UI to borrow; a real picker is the remaining polish item.
+/// ChoosePotion and ChoosePotionOption share one real UI (PotionPickerPopup) and the same
+/// multiplayer-sync shape as Confirm -- see ChoosePotionFrom. Pressure Burst surfaced this: it
+/// used to silently take the first held Potion with no popup at all, which read as "the card did
+/// nothing" even though it had picked something.
 /// </summary>
 public sealed class WiredLabBridge : ILabBridge
 {
@@ -231,7 +232,17 @@ public sealed class WiredLabBridge : ILabBridge
     /// player's client shows UI (LocalContext.IsMe), the chosen index is broadcast via
     /// PlayerChoiceSynchronizer, and every other client resolves the same list entry.
     /// </summary>
-    public async Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options)
+    public Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options) =>
+        ChoosePotionFrom(ctx, player, options);
+
+    /// <summary>
+    /// Shared by ChoosePotionOption (offered Potions, e.g. Buy Ingredients) and ChoosePotion
+    /// (held Potions, e.g. Distill, Stabilize, Pressure Burst) -- same PotionPickerPopup UI and
+    /// the same multiplayer sync shape as Confirm: only the acting player's client shows it,
+    /// the chosen index is broadcast via PlayerChoiceSynchronizer, and every other client
+    /// resolves the same list entry.
+    /// </summary>
+    private async Task<PotionModel?> ChoosePotionFrom(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options, LocString? header = null)
     {
         if (options.Count == 0) return null;
         if (options.Count == 1) return options[0];
@@ -250,7 +261,7 @@ public sealed class WiredLabBridge : ILabBridge
             }
             else
             {
-                picked = await ShowPotionOptions(options);
+                picked = await ShowPotionOptions(options, header);
                 RunManager.Instance.PlayerChoiceSynchronizer.SyncLocalChoice(player, choiceId, PlayerChoiceResult.FromIndex(picked));
             }
             return options[picked];
@@ -265,15 +276,15 @@ public sealed class WiredLabBridge : ILabBridge
     /// One popup, every option with its icon, click one -- PotionPickerPopup. No UI host
     /// (TestMode, headless) means no way to ask: take the first option, never hang.
     /// </summary>
-    private static async Task<int> ShowPotionOptions(IReadOnlyList<PotionModel> options)
+    private static async Task<int> ShowPotionOptions(IReadOnlyList<PotionModel> options, LocString? header = null)
     {
-        var picked = PotionPickerPopup.TryShow(options);
+        var picked = PotionPickerPopup.TryShow(options, header);
         return picked == null ? 0 : await picked;
     }
 
 
-    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from) =>
-        Task.FromResult<PotionModel?>(from.Count > 0 ? from[0] : null);
+    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null) =>
+        ChoosePotionFrom(ctx, player, from, prompt);
 
     public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null)
     {

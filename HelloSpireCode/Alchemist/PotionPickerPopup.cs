@@ -21,8 +21,16 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// </summary>
 public static class PotionPickerPopup
 {
-    /// <summary>Show the chooser. Null when there is no UI host (TestMode, headless).</summary>
-    public static Task<int>? TryShow(IReadOnlyList<PotionModel> options)
+    /// <summary>
+    /// Show the chooser. Null when there is no UI host (TestMode, headless).
+    /// </summary>
+    /// <param name="options">The Potions to offer.</param>
+    /// <param name="header">
+    /// The popup's title. Defaults to "Choose a Potion to Brew" (Buy Ingredients and friends);
+    /// callers choosing among ALREADY-HELD Potions for something other than Brewing (Distill,
+    /// Stabilize, Pressure Burst) must pass their own, or the popup lies about what it does.
+    /// </param>
+    public static Task<int>? TryShow(IReadOnlyList<PotionModel> options, LocString? header = null)
     {
         var host = NModalContainer.Instance;
         if (host == null) return null;
@@ -57,13 +65,13 @@ public static class PotionPickerPopup
         vbox.AddThemeConstantOverride("separation", 18);
         panel.AddChild(vbox);
 
-        var header = new Label
+        var headerLabel = new Label
         {
-            Text = new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header").GetFormattedText(),
+            Text = (header ?? new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header")).GetFormattedText(),
             HorizontalAlignment = HorizontalAlignment.Center,
         };
-        header.AddThemeFontSizeOverride("font_size", 30);
-        vbox.AddChild(header);
+        headerLabel.AddThemeFontSizeOverride("font_size", 30);
+        vbox.AddChild(headerLabel);
 
         var row = new HBoxContainer();
         row.AddThemeConstantOverride("separation", 20);
