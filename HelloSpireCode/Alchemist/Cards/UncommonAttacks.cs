@@ -149,19 +149,19 @@ public sealed class BlackMarketBlade() : AlchemistCard(1, CardType.Attack, CardR
 }
 
 /// <summary>
-/// Heavy damage, and a real, visible cost drop once you've drunk something this turn.
+/// Heavy damage, and a real, visible cost drop once you've drunk something this turn -- no matter
+/// whether that happened before or after this exact copy showed up.
 ///
 /// Was implemented as an after-the-fact Energy refund (matching the Gunslinger's Quickdraw
 /// Legend), which nets the same Energy total in the common case but never changes the number
 /// printed on the card -- confirmed live: the card looked and cost exactly the same regardless of
 /// whether the discount was "active." Rebuilt on CardEnergyCost.SetThisTurnOrUntilPlayed instead
-/// (base-game precedent: Enlightenment, Flatten), triggered live via IPotionUseListener --
-/// AlchemistHooks.Listeners now also checks Hand cards, not just Relics and Powers, so a card can
-/// react to something happening while it is still sitting unplayed.
-///
-/// Known gap, accepted rather than built around: a copy drawn AFTER a Potion was already used
-/// this turn does not retroactively pick up the discount -- there is no "card entered Hand" hook
-/// to catch that moment, only "a Potion was used while this card already existed."
+/// (base-game precedent: Enlightenment, Flatten), triggered two ways so timing never matters:
+/// IPotionUseListener.OnPotionUsed for a copy already sitting in Hand when you drink something
+/// (AlchemistHooks.Listeners checks Hand cards, not just Relics and Powers, for exactly this), and
+/// AbstractModel.AfterCardDrawn (decompiled from sts2.dll -- CardModel is itself an AbstractModel,
+/// so a card can react to its own draw directly) for a copy that shows up afterward, checking the
+/// same PotionsUsedThisTurn counter every other "did you drink something" card in this class reads.
 /// </summary>
 public sealed class VolatileCompound() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy), IPotionUseListener
 {
@@ -170,6 +170,13 @@ public sealed class VolatileCompound() : AlchemistCard(2, CardType.Attack, CardR
     public Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         EnergyCost.SetThisTurnOrUntilPlayed(1, reduceOnly: true);
+        return Task.CompletedTask;
+    }
+
+    public override Task AfterCardDrawn(PlayerChoiceContext ctx, CardModel card, bool fromHandDraw)
+    {
+        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
+            EnergyCost.SetThisTurnOrUntilPlayed(1, reduceOnly: true);
         return Task.CompletedTask;
     }
 
