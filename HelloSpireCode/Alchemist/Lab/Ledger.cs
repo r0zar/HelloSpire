@@ -58,13 +58,14 @@ public static class Ledger
     /// Gilded Ledger's discount is applied here so it works on all twenty-odd Invest clauses.
     ///
     /// <paramref name="card"/> is the Invest clause's own card, when the caller has one to give --
-    /// if something has already cut that card's Energy cost to 0 for this play, the Invest Gold
-    /// cost is free too, same as InvestVar already shows on the card. Optional because Ledger has
-    /// no other user, but every real call site has a card in hand to pass.
+    /// if an effect has cut that card's Energy cost to 0 for this play, the Invest Gold cost is
+    /// free too, same as InvestVar already shows on the card. A card simply printed at 0 (Gold
+    /// Standard) does not qualify -- see InvestVar.IsForcedFree. Optional because Ledger has no
+    /// other user, but every real call site has a card in hand to pass.
     /// </summary>
     public static async Task<bool> Invest(PlayerChoiceContext ctx, LabContext lab, int cost, CardModel? card = null)
     {
-        cost = card != null && card.EnergyCost.GetAmountToSpend() == 0
+        cost = card != null && InvestVar.IsForcedFree(card)
             ? 0
             : Math.Max(1, cost - AlchemistHooks.InvestDiscount(lab));
 
