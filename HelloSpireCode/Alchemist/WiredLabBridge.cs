@@ -164,6 +164,24 @@ public sealed class WiredLabBridge : ILabBridge
         return player.RunState.Rng.CombatPotionGeneration.NextItem(options).ToMutable();
     }
 
+    public IReadOnlyList<PotionModel> CombatPotionOptions(Player player, int count, PotionRarity? rarity = null)
+    {
+        // Same curation as RandomCombatPotion, sampled WITHOUT replacement so the offer is three
+        // different labels. Deterministic across clients: the pool order and the synced RNG are.
+        var pool = PotionFactory.GetPotionOptions(player, [])
+            .Where(p => p is not PhilosophersStone and not AurumTincture)
+            .Where(p => rarity == null || p.Rarity == rarity)
+            .ToList();
+        var picks = new List<PotionModel>();
+        while (picks.Count < count && pool.Count > 0)
+        {
+            var pick = player.RunState.Rng.CombatPotionGeneration.NextItem(pool);
+            pool.Remove(pick);
+            picks.Add(pick.ToMutable());
+        }
+        return picks;
+    }
+
     public PotionModel? NamedPotion(BasePotion which) => which switch
     {
         BasePotion.Block => ModelDb.Potion<BlockPotion>().ToMutable(),
@@ -173,6 +191,70 @@ public sealed class WiredLabBridge : ILabBridge
     };
 
     // -------------------------------------------------------------------------- choices
+    /// <summary>
+    /// Pick one of the offered Potions. Same multiplayer shape as Confirm: only the acting
+    /// player's client shows UI (LocalContext.IsMe), the chosen index is broadcast via
+    /// PlayerChoiceSynchronizer, and every other client resolves the same list entry.
+    /// </summary>
+    public async Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options)
+    {
+        if (options.Count == 0) return null;
+        if (options.Count == 1) return options[0];
+
+        var isLocal = LocalContext.IsMe(player) && RunManager.Instance.NetService.Type != NetGameType.Replay;
+        var choiceId = RunManager.Instance.PlayerChoiceSynchronizer.ReserveChoiceId(player);
+
+        await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
+        try
+        {
+            int picked;
+            if (!isLocal)
+            {
+                var remote = await RunManager.Instance.PlayerChoiceSynchronizer.WaitForRemoteChoice(player, choiceId);
+                picked = System.Math.Clamp(remote.AsIndex(), 0, options.Count - 1);
+            }
+            else
+            {
+                picked = await ShowPotionOptions(options);
+                RunManager.Instance.PlayerChoiceSynchronizer.SyncLocalChoice(player, choiceId, PlayerChoiceResult.FromIndex(picked));
+            }
+            return options[picked];
+        }
+        finally
+        {
+            await ctx.SignalPlayerChoiceEnded();
+        }
+    }
+
+    /// <summary>
+    /// The base game has no pick-one-of-N popup, so the choice is a Brew/Pass walk down the list:
+    /// each option's popup is headed by the Potion's own name, Brew takes it, Pass shows the next,
+    /// and the last option has no Pass button (the Gold is spent; something gets brewed). If the
+    /// modal layer is unavailable mid-walk, the current option is taken -- never a hang.
+    /// </summary>
+    private static async Task<int> ShowPotionOptions(IReadOnlyList<PotionModel> options)
+    {
+        for (var i = 0; i < options.Count; i++)
+        {
+            if (NModalContainer.Instance == null || NModalContainer.Instance.OpenModal != null) return i;
+            var popup = NGenericPopup.Create();
+            if (popup == null) return i; // TestMode, or the popup scene failed to load.
+
+            var last = i == options.Count - 1;
+            var body = new LocString("cards", last
+                ? "HELLOSPIRE-ALCHEMIST_BREW_CHOICE_LAST.body"
+                : "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.body");
+            body.Add("Remaining", (decimal)(options.Count - 1 - i));
+            var brew = new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.brew");
+            var pass = last ? null : new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.pass");
+
+            NModalContainer.Instance.Add(popup);
+            if (await popup.WaitForConfirmation(body, options[i].Title, pass, brew)) return i;
+        }
+        return options.Count - 1;
+    }
+
+
     public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from) =>
         Task.FromResult<PotionModel?>(from.Count > 0 ? from[0] : null);
 

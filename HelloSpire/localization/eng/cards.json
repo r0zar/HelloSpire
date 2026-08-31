@@ -559,5 +559,9 @@
   "HELLOSPIRE-POWDER_BURN.title": "Powder Burn",
   "HELLOSPIRE-POWDER_BURN.description": "Exhaust your hand.\n[gold]Load[/gold] 1 random [gold]Round[/gold] for each card Exhausted.\nDraw {Cards:diff()} cards.",
   "HELLOSPIRE-DRY_FIRE.title": "Dry Fire",
-  "HELLOSPIRE-DRY_FIRE.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw {DryFirePower} card."
+  "HELLOSPIRE-DRY_FIRE.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw {DryFirePower} card.",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.body": "Brew this Potion? Pass to browse {Remaining} more.",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE_LAST.body": "The last ingredients on the shelf. This Potion is brewed.",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.brew": "Brew",
+  "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.pass": "Pass"
 }

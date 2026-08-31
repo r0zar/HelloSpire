@@ -102,6 +102,13 @@ public interface ILabBridge
     PotionModel? RandomCombatPotion(Player player, PotionRarity? rarity = null);
 
     /// <summary>
+    /// Up to <paramref name="count"/> DISTINCT random Potions from the curated Combat Potion pool.
+    /// Drawn from the synced RNG, so every client computes the same list -- only a chosen index
+    /// ever needs to cross the network.
+    /// </summary>
+    IReadOnlyList<PotionModel> CombatPotionOptions(Player player, int count, PotionRarity? rarity = null);
+
+    /// <summary>
     /// One of the handful of base-game Potions the Alchemist Brews by name.
     ///
     /// An enum rather than a <c>Type</c> so that no card file has to reference a base-game potion
@@ -111,6 +118,9 @@ public interface ILabBridge
     PotionModel? NamedPotion(BasePotion which);
 
     // -------------------------------------------------------------------------- choices
+
+    /// <summary>Ask the player to pick one of the offered Potions. Buy Ingredients.</summary>
+    Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options);
 
     /// <summary>Ask the player to pick one held Potion, or null if they hold none.</summary>
     Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from);
@@ -229,6 +239,18 @@ public sealed class UnwiredLabBridge : ILabBridge
     public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from)
     {
         Report("choosing a Potion");
+        return Task.FromResult<PotionModel?>(null);
+    }
+
+    public IReadOnlyList<PotionModel> CombatPotionOptions(Player player, int count, PotionRarity? rarity = null)
+    {
+        Report("listing Potion options");
+        return [];
+    }
+
+    public Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options)
+    {
+        Report("choosing a Potion option");
         return Task.FromResult<PotionModel?>(null);
     }
 

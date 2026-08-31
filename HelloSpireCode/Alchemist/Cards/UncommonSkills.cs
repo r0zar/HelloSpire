@@ -71,9 +71,7 @@ public sealed class BuyIngredients() : AlchemistCard(0, CardType.Skill, CardRari
     {
         if (!await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue)) return;
 
-        // The design offers a choice of three. Until the bridge can present one, the pick is a
-        // straight random draw from the same curated pool — the Gold still bought a Potion.
-        if (await Belt.BrewRandom(ctx, Lab) != null)
+        if (await Belt.BrewChoice(ctx, Lab) != null)
             await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.GoldToPotion);
     }
 

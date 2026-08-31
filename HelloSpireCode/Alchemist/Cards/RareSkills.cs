@@ -282,7 +282,7 @@ public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRari
 /// </summary>
 public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Render", 6m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Render", 4m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -310,7 +310,7 @@ public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity
 public sealed class EquivalentExchange() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Render", 3m), new EnergyVar(2), new CardsVar(2)];
+        [new DynamicVar("Render", 2m), new EnergyVar(2), new CardsVar(2)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -336,7 +336,7 @@ public sealed class EquivalentExchange() : AlchemistCard(1, CardType.Skill, Card
 /// </summary>
 public sealed class TransmuteFlesh() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Render", 5m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Render", 3m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 

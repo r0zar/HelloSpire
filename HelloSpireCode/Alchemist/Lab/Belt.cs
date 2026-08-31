@@ -54,6 +54,15 @@ public static class Belt
         return placed;
     }
 
+    /// <summary>Offer a choice of distinct random Combat Potions and Brew the pick. Buy Ingredients.</summary>
+    public static async Task<PotionModel?> BrewChoice(PlayerChoiceContext ctx, LabContext lab,
+        int count = 3, PotionRarity? rarity = PotionRarity.Common)
+    {
+        var options = LabBridge.Current.CombatPotionOptions(lab.Player, count, rarity);
+        var chosen = await LabBridge.Current.ChoosePotionOption(ctx, lab.Player, options);
+        return await Brew(ctx, lab, chosen);
+    }
+
     /// <summary>Brew a random Potion from the curated Combat Potion pool.</summary>
     public static Task<PotionModel?> BrewRandom(PlayerChoiceContext ctx, LabContext lab,
         PotionRarity? rarity = PotionRarity.Common) =>
