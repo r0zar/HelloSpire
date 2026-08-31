@@ -107,7 +107,7 @@ Effects show base values; this table is regenerated from code + localization.
 | Holy Avenger | 0 | Skill | Double your Spirit. Exhaust. |
 | Holy Wrath | X | Attack | Trigger the effects of all your Seals X times. Retain. |
 | Lay on Hands | 1 | Skill | Heal a player {Heal} HP plus your Spirit. Exhaust. **MP** |
-| Retribution Aura | 2 | Power | Whenever ANY player is attacked, the attacker takes {Thorns} damage. **MP** |
+| Retribution Aura | 2 | Power | ALL players gain {Thorns} Thorns. **MP** |
 | Sacred Oath | 1 | Skill | Gain {Amount} Strength and {Amount} Spirit. Shuffle a Geas into your draw pile. |
 | Sanctified Wrath | 2 | Power | At the start of your turn, gain {Energy} Energy and lose 2 HP. |
 | Seal of the Crusader | 1 | Power | Your Attacks deal {Amount} additional damage. Judgment: gain 1 Strength. |

@@ -362,7 +362,7 @@
   "HELLOSPIRE-BLESSING_OF_KINGS.title": "Blessing of Kings",
   "HELLOSPIRE-BLESSING_OF_KINGS.description": "A player gains {Amount:diff()} [gold]Strength[/gold] and {Amount:diff()} [gold]Dexterity[/gold].",
   "HELLOSPIRE-RETRIBUTION_AURA.title": "Retribution Aura",
-  "HELLOSPIRE-RETRIBUTION_AURA.description": "Whenever ANY player is attacked, the attacker takes {Thorns:diff()} damage.",
+  "HELLOSPIRE-RETRIBUTION_AURA.description": "ALL players gain {Thorns:diff()} [gold]Thorns[/gold].",
   "HELLOSPIRE-DIVINE_SACRIFICE.title": "Divine Sacrifice",
   "HELLOSPIRE-DIVINE_SACRIFICE.description": "ALL OTHER players gain {Buffer:diff()} [gold]Buffer[/gold].",
   "HELLOSPIRE-TYRS_DELIVERANCE.title": "Tyr's Deliverance",
