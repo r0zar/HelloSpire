@@ -1,14 +1,16 @@
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// While active: each hit of your Attacks procs Amount extra damage. Judged: deal 5 -- small, because Judgment
+/// Gaining it grants Amount Strength. Judged: deal 5 -- small, because Judgment
 /// now fires every Seal you have and each one is priced for the stack. The starter Seal, granted by the Holy Book --
 /// the Defect's Cracked Core shape: passive trickle, real evoke.
 /// </summary>
@@ -17,17 +19,18 @@ public sealed class SealOfRighteousnessPower : SealPower
     public const decimal JudgeDamage = 5m;
 
     /// <summary>
-    /// A real on-hit proc, not a damage add: each hit of an Attack lands, then the seal strikes
-    /// separately for Amount. Multi-hit Attacks proc per hit. The proc itself is Unpowered, so it
-    /// is not an Attack and cannot trigger itself.
+    /// Gaining the seal grants real Strength -- an additive-damage passive was Strength wearing a
+    /// seal skin, and an on-hit proc sprays 1s on every attack. Same mirror pattern as the game's
+    /// TemporaryStrengthPower, minus the end-of-turn take-back: the Strength is kept.
     /// </summary>
-    public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
-        DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
+    public override async Task BeforeApplied(Creature target, decimal amount, Creature? applier, CardModel? cardSource) =>
+        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), target, amount, applier, cardSource, silent: true);
+
+    public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power,
+        decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (PassivesDisabled || dealer != Owner || target == Owner || target.IsDead ||
-            !props.IsPoweredAttack()) return;
-        Flash();
-        await CreatureCmd.Damage(choiceContext, [target], Amount, ValueProp.Unpowered, Owner);
+        if (power != this || amount == Amount) return;
+        await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, amount, applier, cardSource, silent: true);
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
