@@ -152,8 +152,39 @@ public sealed class WiredLabBridge : ILabBridge
     public Task Discard(PlayerChoiceContext ctx, Player player, PotionModel potion) =>
         PotionCmd.Discard(potion);
 
+    /// <summary>
+    /// The real, weaker Volatile potions Common-rarity combat generation actually hands out (see
+    /// VolatileCommonPotions.cs). Alchemize deliberately bypasses this -- it asks for
+    /// <c>rarity: null</c> specifically to reach the full, unrestricted pool below, since it
+    /// Procures a real, non-Volatile Potion.
+    /// </summary>
+    private static IReadOnlyList<PotionModel> VolatileCommonPool() =>
+    [
+        ModelDb.Potion<VolatileAttackPotion>(),
+        ModelDb.Potion<VolatileBlockPotion>(),
+        ModelDb.Potion<VolatileColorlessPotion>(),
+        ModelDb.Potion<VolatileDexterityPotion>(),
+        ModelDb.Potion<VolatileEnergyPotion>(),
+        ModelDb.Potion<VolatileExplosiveAmpoule>(),
+        ModelDb.Potion<VolatileFirePotion>(),
+        ModelDb.Potion<VolatileFlexPotion>(),
+        ModelDb.Potion<VolatilePowerPotion>(),
+        ModelDb.Potion<VolatileSkillPotion>(),
+        ModelDb.Potion<VolatileSpeedPotion>(),
+        ModelDb.Potion<VolatileStrengthPotion>(),
+        ModelDb.Potion<VolatileSwiftPotion>(),
+        ModelDb.Potion<VolatileVulnerablePotion>(),
+        ModelDb.Potion<VolatileWeakPotion>(),
+    ];
+
     public PotionModel? RandomCombatPotion(Player player, PotionRarity? rarity = null)
     {
+        if (rarity == PotionRarity.Common)
+        {
+            var commons = VolatileCommonPool();
+            return commons.Count == 0 ? null : player.RunState.Rng.CombatPotionGeneration.NextItem(commons).ToMutable();
+        }
+
         // Curated per design/alchemist.md: nothing whose value outlives the fight. The Stone is
         // non-Brewable by rule; Aurum Tincture makes real Gold.
         var options = PotionFactory.GetPotionOptions(player, [])
@@ -168,10 +199,10 @@ public sealed class WiredLabBridge : ILabBridge
     {
         // Same curation as RandomCombatPotion, sampled WITHOUT replacement so the offer is three
         // different labels. Deterministic across clients: the pool order and the synced RNG are.
-        var pool = PotionFactory.GetPotionOptions(player, [])
-            .Where(p => p is not PhilosophersStone and not AurumTincture)
-            .Where(p => rarity == null || p.Rarity == rarity)
-            .ToList();
+        IEnumerable<PotionModel> source = rarity == PotionRarity.Common
+            ? VolatileCommonPool()
+            : PotionFactory.GetPotionOptions(player, []).Where(p => p is not PhilosophersStone and not AurumTincture);
+        var pool = source.Where(p => rarity == null || p.Rarity == rarity).ToList();
         var picks = new List<PotionModel>();
         while (picks.Count < count && pool.Count > 0)
         {
@@ -188,9 +219,9 @@ public sealed class WiredLabBridge : ILabBridge
 
     public PotionModel? NamedPotion(BasePotion which) => which switch
     {
-        BasePotion.Block => ModelDb.Potion<BlockPotion>().ToMutable(),
-        BasePotion.ExplosiveAmpoule => ModelDb.Potion<ExplosiveAmpoule>().ToMutable(),
-        BasePotion.Energy => ModelDb.Potion<EnergyPotion>().ToMutable(),
+        BasePotion.Block => ModelDb.Potion<VolatileBlockPotion>().ToMutable(),
+        BasePotion.ExplosiveAmpoule => ModelDb.Potion<VolatileExplosiveAmpoule>().ToMutable(),
+        BasePotion.Energy => ModelDb.Potion<VolatileEnergyPotion>().ToMutable(),
         _ => null,
     };
 
