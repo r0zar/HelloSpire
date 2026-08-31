@@ -11,11 +11,12 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>A player gains 1 Energy at the start of their next turn. Fuel for a friend.</summary>
+/// <summary>A player gains 2 Energy at the start of their next turn. Fuel for a friend --
+/// spending 1 now to hand an ally 2 is a real gift, not an energy sidestep.</summary>
 public sealed class BlessingOfWisdom() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
