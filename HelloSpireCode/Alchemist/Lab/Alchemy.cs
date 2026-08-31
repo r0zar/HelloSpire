@@ -76,7 +76,9 @@ public static class Alchemy
         var candidates = OtherCardsInHand(lab);
         if (candidates.Count == 0) return null;
 
-        var index = lab.Player.RunState.Rng.CombatTargets.NextInt(0, candidates.Count - 1);
+        // NextInt's upper bound is exclusive; Count - 1 here would make the last candidate
+        // unreachable.
+        var index = lab.Player.RunState.Rng.CombatTargets.NextInt(0, candidates.Count);
         var chosen = candidates[Math.Clamp(index, 0, candidates.Count - 1)];
 
         await Exhaust(ctx, lab, chosen);

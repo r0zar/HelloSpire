@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Characters;
+using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -89,8 +90,14 @@ public sealed class WiredLabBridge : ILabBridge
     public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from) =>
         Task.FromResult<PotionModel?>(from.Count > 0 ? from[0] : null);
 
-    public Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from) =>
-        CardSelectCmd.FromChooseACardScreen(ctx, from, player);
+    public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from)
+    {
+        // FromChooseACardScreen only supports 3 or fewer cards (throws otherwise -- confirmed via
+        // a real in-game AggregateException on Salvage Reagents with a bigger hand). FromHand is
+        // the documented "simple hand selection, no bespoke UI" primitive and has no such limit.
+        var chosen = await CardSelectCmd.FromHand(ctx, player, new CardSelectorPrefs(), card => from.Contains(card), null!);
+        return chosen.FirstOrDefault();
+    }
 
     // -------------------------------------------------------------------------- hand and piles
     public IReadOnlyList<CardModel> Hand(Player player) =>
