@@ -305,7 +305,7 @@
   "HELLOSPIRE-RECKONING.title": "Reckoning",
   "HELLOSPIRE-RECKONING.description": "Deal {Damage:diff()} damage to ALL enemies twice.",
   "HELLOSPIRE-RETRIBUTION.title": "Retribution",
-  "HELLOSPIRE-RETRIBUTION.description": "The first time each turn an enemy attacks you, gain {Strength:diff()} [gold]Strength[/gold].",
+  "HELLOSPIRE-RETRIBUTION.description": "Lose [blue]{Spirit:diff()}[/blue] [gold]Spirit[/gold].\nAt the start of your turn, gain [blue]{Energy}[/blue] [gold]Energy[/gold].",
   "HELLOSPIRE-BLESSED_RECOVERY.title": "Blessed Recovery",
   "HELLOSPIRE-BLESSED_RECOVERY.description": "Gain [blue]{Spirit:diff()}[/blue] [gold]Spirit[/gold], then heal a player {Heal} HP.\n[gold]Tithe[/gold]: draw a card.",
   "HELLOSPIRE-REDEMPTION.title": "Redemption",
