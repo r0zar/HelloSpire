@@ -221,7 +221,7 @@
   "HELLOSPIRE-DEVOTION.title": "Devotion",
   "HELLOSPIRE-DEVOTION.description": "Gain [blue]{Spirit:diff()}[/blue] [gold]Spirit[/gold].\n[gold]Tithe[/gold]: gain 2 Block.",
   "HELLOSPIRE-DIVINE_STORM.title": "Divine Storm",
-  "HELLOSPIRE-DIVINE_STORM.description": "Deal {Damage:diff()} damage to ALL enemies twice.",
+  "HELLOSPIRE-DIVINE_STORM.description": "Deal {Damage:diff()} damage to ALL enemies.",
   "HELLOSPIRE-BLADE_OF_JUSTICE.title": "Blade of Justice",
   "HELLOSPIRE-BLADE_OF_JUSTICE.description": "Deal {Damage:diff()} damage.",
   "HELLOSPIRE-SEAL_OF_COMMAND.title": "Seal of Command",
