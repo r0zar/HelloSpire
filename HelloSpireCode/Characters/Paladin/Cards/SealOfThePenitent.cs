@@ -18,6 +18,6 @@ public sealed class SealOfThePenitent() : SealCard(1, CardRarity.Common, 2m)
         if (enemy != null)
             await CreatureCmd.Damage(ctx, [enemy], amount, ValueProp.Unpowered, Owner.Creature);
         await PaladinEffects.DiscardChosen(ctx, Owner, 1, this);
-        await Seals.Grant<SealOfThePenitentPower>(ctx, Owner, amount, this);
+        await Seals.Grant<SealOfThePenitentPower>(ctx, Owner, 1m, this);
     }
 }

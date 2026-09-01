@@ -21,6 +21,6 @@ public sealed class SealOfCommand() : SealCard(1, CardRarity.Uncommon, 1m)
             await PowerCmd.Apply<WeakPower>(ctx, enemy, amount, Owner.Creature, this);
             await PowerCmd.Apply<VulnerablePower>(ctx, enemy, amount, Owner.Creature, this);
         }
-        await Seals.Grant<SealOfCommandPower>(ctx, Owner, amount, this);
+        await Seals.Grant<SealOfCommandPower>(ctx, Owner, 1m, this);
     }
 }

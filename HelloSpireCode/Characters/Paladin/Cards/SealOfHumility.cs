@@ -17,6 +17,6 @@ public sealed class SealOfHumility() : SealCard(1, CardRarity.Common, 3m)
     protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
     {
         await CreatureCmd.GainBlock(Owner.Creature, amount, ValueProp.Move, null);
-        await Seals.Grant<SealOfHumilityPower>(ctx, Owner, amount, this);
+        await Seals.Grant<SealOfHumilityPower>(ctx, Owner, 1m, this);
     }
 }

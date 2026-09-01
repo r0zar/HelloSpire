@@ -12,18 +12,24 @@ using MegaCrit.Sts2.Core.Models;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// A Seal is a banked charge: casting one adds it to what you hold (seals STACK -- casting a
-/// second copy of the same seal strengthens its aura). Some seals pay an effect up front, some
-/// carry an aura while armed. Judging unleashes EVERY armed seal's payoff, then consumes them
-/// all -- the bank-versus-cash decision is the whole game. A seal-less Judge still counts as
-/// judging (IJudgeTrigger powers fire); it simply has no bank to cash.
+/// A Seal is a banked charge: casting one pays an immediate effect and adds a charge to the
+/// bank. Seals STACK -- a duplicate cast pays its effect again and adds another charge to the
+/// same power. Judging unleashes EVERY banked charge's payoff, then consumes the whole bank --
+/// the bank-versus-cash decision is the whole game. A seal-less Judge still counts as judging
+/// (IJudgeTrigger powers fire); it simply has no bank to cash.
 /// </summary>
 public abstract class SealPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    /// <summary>This Seal's judge payoff. Runs once per judge instance; the seal is consumed after.</summary>
+    /// <summary>
+    /// How many times this seal has been cast into the current bank. Each cast is a charge;
+    /// the judge payoff fires once per charge. Reset by consumption (the power is removed).
+    /// </summary>
+    public int Charges;
+
+    /// <summary>This Seal's judge payoff. Runs once per charge per judge instance; the seal is consumed after.</summary>
     public abstract Task OnJudged(PlayerChoiceContext ctx, Creature target);
 
     /// <summary>Chained Gauntlet: armed auras off, judge payoffs untouched.</summary>
@@ -47,12 +53,16 @@ public static class Seals
         creature.GetPowerInstances<SealPower>().FirstOrDefault();
 
     /// <summary>
-    /// Bank a seal. Seals stack: a new seal joins the bank; a second copy of the same seal
-    /// merges into its power (Counter stacking) and strengthens the aura.
+    /// Bank a seal: apply (or grow) its power and add a charge. Every charge fires its
+    /// payoff on judge, so duplicate casts bank duplicate verdicts.
     /// </summary>
-    public static Task Grant<T>(PlayerChoiceContext ctx, Player p, decimal amount, CardModel? source = null)
-        where T : SealPower =>
-        PowerCmd.Apply<T>(ctx, p.Creature, amount, p.Creature, source);
+    public static async Task Grant<T>(PlayerChoiceContext ctx, Player p, decimal amount, CardModel? source = null)
+        where T : SealPower
+    {
+        await PowerCmd.Apply<T>(ctx, p.Creature, amount, p.Creature, source);
+        var banked = p.Creature.GetPowerInstances<T>().FirstOrDefault();
+        if (banked != null) banked.Charges++;
+    }
 
     /// <summary>
     /// Judge a target N times. Avenging Wrath doubles the instance count. Each instance fires
@@ -68,10 +78,11 @@ public static class Seals
         for (var i = 0; i < instances; i++)
         {
             foreach (var seal in bank)
-            {
-                seal.Flash();
-                await seal.OnJudged(ctx, target);
-            }
+                for (var charge = 0; charge < seal.Charges; charge++)
+                {
+                    seal.Flash();
+                    await seal.OnJudged(ctx, target);
+                }
             foreach (var trigger in creature.Powers.OfType<IJudgeTrigger>().ToList())
             {
                 (trigger as HelloSpirePower)?.Flash();
@@ -97,10 +108,11 @@ public static class Seals
             foreach (var target in targets)
             {
                 foreach (var seal in bank)
-                {
-                    seal.Flash();
-                    await seal.OnJudged(ctx, target);
-                }
+                    for (var charge = 0; charge < seal.Charges; charge++)
+                    {
+                        seal.Flash();
+                        await seal.OnJudged(ctx, target);
+                    }
                 foreach (var trigger in creature.Powers.OfType<IJudgeTrigger>().ToList())
                 {
                     (trigger as HelloSpirePower)?.Flash();

@@ -15,6 +15,6 @@ public sealed class SealOfFortitude() : SealCard(1, CardRarity.Common, 2m)
     protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
     {
         await PowerCmd.Apply<PlatingPower>(ctx, Owner.Creature, amount, Owner.Creature, this);
-        await Seals.Grant<SealOfFortitudePower>(ctx, Owner, amount, this);
+        await Seals.Grant<SealOfFortitudePower>(ctx, Owner, 1m, this);
     }
 }

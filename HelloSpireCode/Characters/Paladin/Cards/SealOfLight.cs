@@ -14,6 +14,6 @@ public sealed class SealOfLight() : SealCard(1, CardRarity.Uncommon, 1m)
     protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
     {
         await Spirit.Gain(ctx, Owner, (int)amount, this);
-        await Seals.Grant<SealOfLightPower>(ctx, Owner, amount, this);
+        await Seals.Grant<SealOfLightPower>(ctx, Owner, 1m, this);
     }
 }
