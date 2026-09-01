@@ -584,7 +584,7 @@
   "HELLOSPIRE-HOLY_SHOCK.title": "Holy Shock",
   "HELLOSPIRE-HOLY_SHOCK.description": "Heal a player {Heal:diff()} HP.\n[gold]Tithe[/gold]: deal {Heal:diff()} damage to a random enemy.",
   "HELLOSPIRE-ALMS.title": "Alms",
-  "HELLOSPIRE-ALMS.description": "Gain {Block:diff()} Block.\nDiscard a card.",
+  "HELLOSPIRE-ALMS.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\nDiscard a card.",
   "HELLOSPIRE-CONSULT_THE_SCRIPTURES.title": "Consult the Scriptures",
   "HELLOSPIRE-CONSULT_THE_SCRIPTURES.description": "Put a card from your discard pile into your hand.\n[gold]Tithe[/gold]: draw a card.",
   "HELLOSPIRE-BLESSING_OF_STONE.title": "Blessing of Stone",
