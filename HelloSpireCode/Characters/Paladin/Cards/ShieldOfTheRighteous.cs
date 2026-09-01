@@ -11,7 +11,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>Gain 5 Block, then Judge. Defense that keeps the engine turning.</summary>
-public sealed class ShieldOfTheRighteous() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class ShieldOfTheRighteous() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
 {
     public override bool GainsBlock => true;
     protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(5m, ValueProp.Move)];

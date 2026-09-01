@@ -1,32 +1,26 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// Sits on an ENEMY: the vow-maker's Attacks against it deal +Amount.
+/// Whenever you Judge an enemy, draw a card and gain Amount Plating. All three lanes in one
+/// vow: the Ret verb pays out card flow and armor, per judge instance.
 /// </summary>
-public sealed class VowOfEnmityPower : HelloSpirePower
+public sealed class VowOfEnmityPower : HelloSpirePower, IJudgeTrigger
 {
-    public override PowerType Type => PowerType.Debuff;
+    public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props,
-        Creature? dealer, CardModel? cardSource)
+    public async Task OnJudgeInstance(PlayerChoiceContext ctx, Creature target)
     {
-        if (target != Owner || dealer == null || dealer != Applier || !props.IsPoweredAttack()) return 0m;
-        return Amount;
+        if (Owner.Player is not { } player) return;
+        await CardPileCmd.Draw(ctx, 1, player);
+        await PowerCmd.Apply<PlatingPower>(ctx, Owner, Amount, Owner, null);
     }
 }

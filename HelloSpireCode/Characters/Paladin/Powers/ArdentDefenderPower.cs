@@ -1,12 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
@@ -15,26 +10,21 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>First time each turn an enemy attacks you: heal Amount plus Spirit.</summary>
+/// <summary>
+/// Whenever an enemy attacks you, gain Amount Plating. The defender hardens under fire:
+/// multi-hit enemies feed it, and every stack feeds Shield Bash. (Was a per-turn heal --
+/// unbounded healing, the exact thing the candle-clock forbids.)
+/// </summary>
 public sealed class ArdentDefenderPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    private bool _usedThisTurn;
-
-    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
-    {
-        if (player.Creature == Owner) _usedThisTurn = false;
-        await Task.CompletedTask;
-    }
-
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
-        if (_usedThisTurn || target != Owner || dealer == null || !props.IsPoweredAttack()) return;
-        _usedThisTurn = true;
+        if (target != Owner || dealer == null || dealer.Side == Owner.Side || !props.IsPoweredAttack()) return;
         Flash();
-        if (Owner.Player is { } player) await Spirit.Heal(player, Amount);
+        await PowerCmd.Apply<PlatingPower>(choiceContext, Owner, Amount, Owner, null);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
@@ -79,6 +80,35 @@ public static class Seals
                 await trigger.OnJudgeInstance(ctx, target);
             }
         }
+
+        if (seal != null)
+            await PowerCmd.Remove(seal);
+    }
+
+    /// <summary>
+    /// Judge EACH of the given targets once (Tribunal, Thunderous Smite): the held seal's payoff
+    /// and every IJudgeTrigger fire per target, and the seal is consumed once at the end.
+    /// </summary>
+    public static async Task JudgeEach(PlayerChoiceContext ctx, Player p, IReadOnlyList<Creature> targets)
+    {
+        var creature = p.Creature;
+        var passes = creature.HasPower<AvengingWrathPower>() ? 2 : 1;
+        var seal = Active(creature);
+
+        for (var i = 0; i < passes; i++)
+            foreach (var target in targets)
+            {
+                if (seal != null)
+                {
+                    seal.Flash();
+                    await seal.OnJudged(ctx, target);
+                }
+                foreach (var trigger in creature.Powers.OfType<IJudgeTrigger>().ToList())
+                {
+                    (trigger as HelloSpirePower)?.Flash();
+                    await trigger.OnJudgeInstance(ctx, target);
+                }
+            }
 
         if (seal != null)
             await PowerCmd.Remove(seal);

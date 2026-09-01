@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -16,28 +17,21 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 /// </summary>
 public static class PaladinEffects
 {
-    /// <summary>The hand, minus the card that is asking (it may still be mid-resolution).</summary>
-    public static IReadOnlyList<CardModel> Hand(Player player, CardModel? excluding = null) =>
-        PileType.Hand.GetPile(player).Cards.Where(c => c != excluding).ToList();
-
     /// <summary>
-    /// Ask the player to choose and discard <paramref name="count"/> cards, one at a time.
-    /// Discarding fewer is fine when the hand runs dry -- the effect already happened
-    /// (effect first, discard as trailing cost).
+    /// Ask the player to choose and discard <paramref name="count"/> cards from hand, on the
+    /// game's own discard-selection screen (the Acrobatics/Dagger Throw path -- NOT the
+    /// choose-a-card popup, which hard-caps at three cards and threw on a full hand).
+    /// Discarding fewer is fine when the hand runs dry: effect first, discard as trailing cost.
     /// </summary>
-    public static async Task DiscardChosen(PlayerChoiceContext ctx, Player player, int count, CardModel? excluding = null)
+    public static async Task DiscardChosen(PlayerChoiceContext ctx, Player player, int count, AbstractModel source)
     {
-        for (var i = 0; i < count; i++)
-        {
-            var hand = Hand(player, excluding);
-            if (hand.Count == 0) return;
-            var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, hand, player);
-            if (chosen == null) return;
+        var chosen = (await CardSelectCmd.FromHandForDiscard(ctx, player,
+            new CardSelectorPrefs(CardSelectorPrefs.DiscardSelectionPrompt, count), null, source)).ToList();
+        if (chosen.Count > 0)
             await CardCmd.Discard(ctx, chosen);
-        }
     }
 
-    /// <summary>The living player creature with the lowest current HP -- "the most wounded player".</summary>
+    /// <summary>The living player creature with the lowest HP fraction -- "the most wounded player".</summary>
     public static Creature MostWounded(Creature self)
     {
         var players = self.CombatState.PlayerCreatures.Where(c => c.IsAlive).ToList();

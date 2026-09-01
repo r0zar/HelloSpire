@@ -1,20 +1,20 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 6 to ALL enemies and apply 1 Weak. Scour the field.</summary>
+/// <summary>
+/// Deal 8 to ALL enemies. Draw a card, then discard a card. Ashes to ashes: the sweep cycles --
+/// digs a candle or a judge, fires a Tithe face, feeds the Penitent seal.
+/// </summary>
 public sealed class WakeOfAshes() : PaladinCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -23,8 +23,8 @@ public sealed class WakeOfAshes() : PaladinCard(2, CardType.Attack, CardRarity.U
             .WithHitFx("vfx/vfx_attack_slash")
             .SpawningHitVfxOnEachCreature()
             .Execute(choiceContext);
-        foreach (var enemy in CombatState.HittableEnemies.ToList())
-            await PowerCmd.Apply<WeakPower>(choiceContext, enemy, 1m, Owner.Creature, this);
+        await CardPileCmd.Draw(choiceContext, 1, Owner);
+        await PaladinEffects.DiscardChosen(choiceContext, Owner, 1, this);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);

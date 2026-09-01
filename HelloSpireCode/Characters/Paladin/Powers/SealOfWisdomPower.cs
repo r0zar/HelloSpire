@@ -37,6 +37,6 @@ public sealed class SealOfWisdomPower : SealPower
     {
         if (Owner.Player is not { } player) return;
         await CardPileCmd.Draw(ctx, JudgeDraw, player);
-        await PaladinEffects.DiscardChosen(ctx, player, JudgeDiscard);
+        await PaladinEffects.DiscardChosen(ctx, player, JudgeDiscard, this);
     }
 }

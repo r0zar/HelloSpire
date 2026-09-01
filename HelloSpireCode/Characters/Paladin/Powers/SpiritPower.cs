@@ -35,13 +35,14 @@ public static class Spirit
         if (p.Relics.OfType<Relics.LibramOfWrath>().Any()) return;
         await PowerCmd.Apply<SpiritPower>(ctx, p.Creature, n, p.Creature, source);
 
-        // Aura of Mercy: the bearer's Spirit gains pulse the whole team, flat -- adding Spirit on
-        // top here would double-dip the very stat being gained.
+        // Aura of Mercy: mercy softens the blow before it lands -- the bearer's Spirit gains
+        // shave that much Strength off ALL enemies until end of turn. Loop-proof (no heal),
+        // and every Spirit engine becomes party protection.
         if (n > 0 && p.Creature.GetPower<AuraOfMercyPower>() is { } aura && p.Creature.CombatState is { } state)
         {
             aura.Flash();
-            foreach (var ally in state.PlayerCreatures.Where(c => c.IsAlive))
-                await CreatureCmd.Heal(ally, n);
+            foreach (var enemy in state.HittableEnemies.ToList())
+                await PowerCmd.Apply<HumblingShacklesPower>(ctx, enemy, n, p.Creature, null);
         }
     }
 

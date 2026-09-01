@@ -9,21 +9,22 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Lose 4 HP, gain 2 Energy. The Bloodletting slot, as self-mortification: HP is fuel, and this
-/// is the one class that can heal the toll back. Upgrade: 3 Energy.
+/// Lose 4 HP, gain 2 Spirit. Exhaust. Blood for faith -- the aggressive Spirit ramp, and the
+/// one class that can heal the toll back. Spirit-gain Exhausts, per the rule.
 /// </summary>
-public sealed class Penance() : PaladinCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
+public sealed class Penance() : PaladinCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new HpLossVar(4m), new EnergyVar(2)];
+        [new HpLossVar(4m), new DynamicVar("Spirit", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await CreatureCmd.Damage(choiceContext, Owner.Creature, DynamicVars.HpLoss.BaseValue,
             ValueProp.Unblockable | ValueProp.Unpowered | ValueProp.Move, this);
-        await PlayerCmd.GainEnergy(DynamicVars["Energy"].BaseValue, Owner);
+        await Spirit.Gain(choiceContext, Owner, (int)DynamicVars["Spirit"].BaseValue, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Energy"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars["Spirit"].UpgradeValueBy(1m);
 }
