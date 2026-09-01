@@ -39,7 +39,7 @@ public class Alchemist : PlaceholderCharacterModel
         ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
         ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
         ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
-        ModelDb.Card<Alchemist_.Cards.PyricFormula>(),
+        ModelDb.Card<Alchemist_.Cards.Transmute>(),
         ModelDb.Card<Alchemist_.Cards.AegisFormula>()
     ];
 

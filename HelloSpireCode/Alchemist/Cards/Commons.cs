@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The 20 commons: 8 Attacks, 11 Skills, 1 Power.
+// The 21 commons: 8 Attacks, 12 Skills, 1 Power.
 //
 // The backbone, and deliberately unexciting. Almost every one of them reads a board state the
 // character controls -- did you drink something this turn, is the belt empty, did you Brew or
@@ -203,6 +203,29 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
 }
 
 // ---------------------------------------------------------------------------- Skills
+
+/// <summary>
+/// Brew an Explosive Ampoule.
+///
+/// Formerly one of the starting ten, promoted to a real Common now that Transmute teaches the
+/// opening instead. Note what it teaches by being a Skill that deals no damage: the Alchemist's
+/// damage arrives one step later than everyone else's, and holding it is a choice.
+/// </summary>
+public sealed class PyricFormula() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+{
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.ExplosiveAmpoule));
+    }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+}
 
 /// <summary>Infuse Unstable Concoction. The class's defining conversion, at its cheapest and plainest.</summary>
 public sealed class Transmute() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
