@@ -28,5 +28,11 @@
   "HELLOSPIRE-TRANSFORM.title": "Transform",
   "HELLOSPIRE-TRANSFORM.description": "Consuming a card (Exhaust), a Potion (Distill), Gold (Invest) or Max HP (Render) specifically to produce a different kind of value. Playing a card for Energy is not a Transform.",
   "HELLOSPIRE-THE_POTION_BELT.title": "The Potion Belt",
-  "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat."
+  "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat.",
+  "HELLOSPIRE-SEAL.title": "Seal",
+  "HELLOSPIRE-SEAL.description": "A held stance. You can hold only one Seal at a time; casting a new Seal (or the held one again) replaces it fresh. Judging fires the held Seal's Judge effect, then consumes the Seal.",
+  "HELLOSPIRE-JUDGE.title": "Judge",
+  "HELLOSPIRE-JUDGE.description": "Fire your held Seal's Judge effect, then consume the Seal. Judge X times fires it X times before consuming. Judging with no Seal held still counts as Judging for powers that care, but has no Seal effect.",
+  "HELLOSPIRE-TITHE.title": "Tithe",
+  "HELLOSPIRE-TITHE.description": "When you discard this card, its Tithe effect triggers and the card stays in your discard pile. A Tithe never Exhausts -- only the card's true cast does."
 }

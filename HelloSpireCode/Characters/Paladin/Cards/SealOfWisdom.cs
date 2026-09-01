@@ -1,22 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Grants Seal OfWisdom.</summary>
-public sealed class SealOfWisdom() : PaladinCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+/// <summary>Seal. While held: first Attack each turn draws Amount. Judge: draw 2, discard 1.</summary>
+public sealed class SealOfWisdom() : SealCard(1, CardRarity.Uncommon, 1m)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 1m)];
-
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay) =>
-        await Seals.Grant<SealOfWisdomPower>(choiceContext, Owner, DynamicVars["Amount"].BaseValue, this);
-
-    protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
+    protected override Task Arm(PlayerChoiceContext ctx, decimal amount) =>
+        Seals.Grant<SealOfWisdomPower>(ctx, Owner, amount, this);
 }

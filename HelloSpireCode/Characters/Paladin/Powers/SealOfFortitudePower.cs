@@ -9,20 +9,20 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The Ret rare seal. While held: gain Amount Strength at the start of your turn (kept -- the
-/// ramp is the point of holding it). Judge: deal 20 -- the hammer blow.
+/// The Prot seal. While held: gain Amount Plating at the start of your turn.
+/// Judge: gain 10 Block -- the armor engine with an emergency wall attached.
 /// </summary>
-public sealed class SealOfTheCrusaderPower : SealPower
+public sealed class SealOfFortitudePower : SealPower
 {
-    public const decimal JudgeDamage = 20m;
+    public const decimal JudgeBlock = 10m;
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (PassivesDisabled || player.Creature != Owner) return;
         Flash();
-        await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, Amount, Owner, null);
+        await PowerCmd.Apply<PlatingPower>(choiceContext, Owner, Amount, Owner, null);
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
-        await CreatureCmd.Damage(ctx, [target], JudgeDamage, ValueProp.Unpowered, Owner);
+        await CreatureCmd.GainBlock(Owner, JudgeBlock, ValueProp.Unpowered, null);
 }

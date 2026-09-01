@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -9,35 +7,25 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The healer Seal, drafted: your first Attack each turn heals Amount (Burning Blood weight -- the
-/// per-attack version out-healed it badly and rewarded stalling). Judged: gain 1 Spirit --
-/// devotion deepens. The exception to judgments-are-offensive, by design.
+/// The big Holy engine. While held: gain Amount Spirit at the start of your turn.
+/// Judge: draw 3, discard 2 -- the deep dig that finds the heal and pays Tithe faces on the way.
 /// </summary>
 public sealed class SealOfLightPower : SealPower
 {
-    /// <summary>Spirit granted per Judgment. 1 by default; an upgraded card raises it to 2.</summary>
-    public int JudgeSpirit = 1;
-
-    private bool _usedThisTurn;
+    public const int JudgeDraw = 3;
+    public const int JudgeDiscard = 2;
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
-        if (player.Creature == Owner) _usedThisTurn = false;
-        await Task.CompletedTask;
-    }
-
-    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        if (PassivesDisabled || _usedThisTurn || cardPlay.Card.Owner?.Creature != Owner ||
-            cardPlay.Card.Type != CardType.Attack) return;
-        _usedThisTurn = true;
+        if (PassivesDisabled || player.Creature != Owner) return;
         Flash();
-        await Spirit.Heal(cardPlay.Card.Owner!, Amount);
+        await Spirit.Gain(choiceContext, player, (int)Amount);
     }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
         if (Owner.Player is not { } player) return;
-        await Spirit.Gain(ctx, player, JudgeSpirit);
+        await CardPileCmd.Draw(ctx, JudgeDraw, player);
+        await PaladinEffects.DiscardChosen(ctx, player, JudgeDiscard);
     }
 }

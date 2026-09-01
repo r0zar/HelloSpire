@@ -1,22 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Grants Seal OfCommand.</summary>
-public sealed class SealOfCommand() : PaladinCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+/// <summary>Seal. While held: your debuffs get +Amount stacks. Judge: 2 Weak + 2 Vulnerable.</summary>
+public sealed class SealOfCommand() : SealCard(1, CardRarity.Uncommon, 1m)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 2m)];
-
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay) =>
-        await Seals.Grant<SealOfCommandPower>(choiceContext, Owner, DynamicVars["Amount"].BaseValue, this);
-
-    protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
+    protected override Task Arm(PlayerChoiceContext ctx, decimal amount) =>
+        Seals.Grant<SealOfCommandPower>(ctx, Owner, amount, this);
 }

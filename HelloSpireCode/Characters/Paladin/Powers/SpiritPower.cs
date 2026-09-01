@@ -55,7 +55,10 @@ public static class Spirit
     /// </summary>
     public static async Task Heal(Player healer, Creature target, decimal baseAmount)
     {
-        await CreatureCmd.Heal(target, baseAmount + Of(healer));
+        // Seal of Humility: while held, every heal restores Amount more -- the Holy analog of
+        // Righteousness's attack bonus, read here because this funnel is where heals live.
+        var humility = Seals.Active(healer.Creature) is SealOfHumilityPower h ? h.HealBonus : 0m;
+        await CreatureCmd.Heal(target, baseAmount + Of(healer) + humility);
         if (target.CombatState is not { } state) return;
         foreach (var bearer in state.PlayerCreatures)
         {

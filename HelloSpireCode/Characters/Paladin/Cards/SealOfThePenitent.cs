@@ -4,9 +4,9 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Seal. While held: +Amount Thorns. Judge: ALL enemies -5 Str for one turn. The emergency.</summary>
-public sealed class SealOfTheMartyr() : SealCard(1, CardRarity.Rare, 3m)
+/// <summary>Seal. While held: discards ping Amount at a random enemy. Judge: 6 to ALL. The Tithe seal.</summary>
+public sealed class SealOfThePenitent() : SealCard(1, CardRarity.Common, 2m)
 {
     protected override Task Arm(PlayerChoiceContext ctx, decimal amount) =>
-        Seals.Grant<SealOfTheMartyrPower>(ctx, Owner, amount, this);
+        Seals.Grant<SealOfThePenitentPower>(ctx, Owner, amount, this);
 }

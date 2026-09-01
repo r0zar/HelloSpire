@@ -64,5 +64,8 @@
   "HELLOSPIRE-SANGUINE_CIRCUIT.flavor": "The body remembers what it paid for.",
   "HELLOSPIRE-GILDED_LEDGER.title": "Gilded Ledger",
   "HELLOSPIRE-GILDED_LEDGER.description": "[gold]Invest[/gold] costs are reduced by 2 [gold]Gold[/gold], minimum 1. Merchant prices are 10% higher.",
-  "HELLOSPIRE-GILDED_LEDGER.flavor": "Wholesale rates for the trade. Retail for everyone else."
+  "HELLOSPIRE-GILDED_LEDGER.flavor": "Wholesale rates for the trade. Retail for everyone else.",
+  "HELLOSPIRE-CONSECRATED_PLATE.title": "Consecrated Plate",
+  "HELLOSPIRE-CONSECRATED_PLATE.description": "At the start of each combat, gain [blue]{Plating}[/blue] [gold]Plating[/gold].",
+  "HELLOSPIRE-CONSECRATED_PLATE.flavor": "The armor was blessed before it was forged. The order of operations matters."
 }

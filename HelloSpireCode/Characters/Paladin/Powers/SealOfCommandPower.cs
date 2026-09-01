@@ -1,46 +1,33 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The aggro Seal: first Attack each turn applies 1 Vulnerable; Judged, apply Amount Debilitate.
+/// The debuff seal. While held: debuffs you apply to enemies get +Amount stacks.
+/// Judge: apply 2 Weak and 2 Vulnerable -- Censure's judge stacks the bomb.
 /// </summary>
 public sealed class SealOfCommandPower : SealPower
 {
-    private bool _usedThisTurn;
+    public const decimal JudgeWeak = 2m;
+    public const decimal JudgeVulnerable = 2m;
 
-    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
+    public override decimal ModifyPowerAmountGivenAdditive(PowerModel power, Creature giver,
+        decimal amount, Creature? target, CardModel? cardSource)
     {
-        if (player.Creature == Owner) _usedThisTurn = false;
-        await Task.CompletedTask;
+        if (PassivesDisabled || giver != Owner || target == null || target.Side == Owner.Side) return 0m;
+        if (power.Type != PowerType.Debuff) return 0m;
+        return Amount;
     }
 
-    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
-        if (PassivesDisabled || _usedThisTurn || cardPlay.Card.Owner?.Creature != Owner ||
-            cardPlay.Card.Type != CardType.Attack) return;
-
-        // Single-target attacks carry their target on the CardPlay; AoE attacks (AllEnemies)
-        // carry null and hit everything, so the debuff lands on everything they hit.
-        List<Creature> targets = [];
-        if (cardPlay.Target is { IsDead: false } single) targets.Add(single);
-        else if (cardPlay.Card.TargetType == TargetType.AllEnemies && Owner.CombatState is { } state)
-            targets.AddRange(state.HittableEnemies);
-        if (targets.Count == 0) return;
-
-        _usedThisTurn = true;
-        Flash();
-        foreach (var target in targets)
-            await PowerCmd.Apply<VulnerablePower>(choiceContext, target, 1m, Owner, null);
+        await PowerCmd.Apply<WeakPower>(ctx, target, JudgeWeak, Owner, null);
+        await PowerCmd.Apply<VulnerablePower>(ctx, target, JudgeVulnerable, Owner, null);
     }
-
-    public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
-        await PowerCmd.Apply<DebilitatePower>(ctx, target, Amount, Owner, null);
 }
