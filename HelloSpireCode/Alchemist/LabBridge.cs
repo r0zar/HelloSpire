@@ -17,7 +17,10 @@ public enum BasePotion
     ExplosiveAmpoule,
 
     /// <summary>Gain 2 Energy.</summary>
-    Energy
+    Energy,
+
+    /// <summary>Apply 2 Vulnerable. Cinnabar Edge.</summary>
+    Vulnerable
 }
 
 /// <summary>

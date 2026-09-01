@@ -121,6 +121,7 @@ public sealed class WiredLabBridge : ILabBridge
         BasePotion.Block => ModelDb.Potion<VolatileBlockPotion>().ToMutable(),
         BasePotion.ExplosiveAmpoule => ModelDb.Potion<VolatileExplosiveAmpoule>().ToMutable(),
         BasePotion.Energy => ModelDb.Potion<VolatileEnergyPotion>().ToMutable(),
+        BasePotion.Vulnerable => ModelDb.Potion<VolatileVulnerablePotion>().ToMutable(),
         _ => null,
     };
 
