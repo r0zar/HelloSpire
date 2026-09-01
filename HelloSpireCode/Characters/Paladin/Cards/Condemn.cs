@@ -11,12 +11,13 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 5, apply 1 Weak. The Paladin's Clothesline, at half price.</summary>
-public sealed class Absolve() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+/// <summary>
+/// Deal 6. Apply 1 Vulnerable. Tithe: gain 5 Block. Replaces Absolve -- condemned to judgment,
+/// or pitched as a shield.
+/// </summary>
+public sealed class Condemn() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(5m, ValueProp.Move), new DynamicVar("Weak", 1m)];
-
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
 
     public override bool HasTithe => true;
@@ -28,20 +29,11 @@ public sealed class Absolve() : PaladinCard(1, CardType.Attack, CardRarity.Commo
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
         if (!cardPlay.Target.IsDead)
-            await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target,
-                DynamicVars["Weak"].BaseValue, Owner.Creature, this);
+            await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, 1m, Owner.Creature, this);
     }
 
-    protected override async Task OnTithe(PlayerChoiceContext ctx)
-    {
-        var enemy = PaladinEffects.RandomEnemy(Owner);
-        if (enemy == null) return;
-        await CreatureCmd.Damage(ctx, [enemy], 2m, ValueProp.Unpowered, Owner.Creature);
-    }
+    protected override async Task OnTithe(PlayerChoiceContext ctx) =>
+        await CreatureCmd.GainBlock(Owner.Creature, 5m, ValueProp.Unpowered, null);
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["Weak"].UpgradeValueBy(1m);
-    }
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }

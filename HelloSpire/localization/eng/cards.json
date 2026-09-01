@@ -602,5 +602,7 @@
   "HELLOSPIRE-LAST_RITES.title": "Last Rites",
   "HELLOSPIRE-LAST_RITES.description": "Deal {Damage:diff()} + [gold]Spirit[/gold] damage X times.\nEach hit deals 2 more for every healing card you have [gold]Exhausted[/gold] this combat.",
   "HELLOSPIRE-HEALING_WORD.title": "Healing Word",
-  "HELLOSPIRE-HEALING_WORD.description": "Heal a player {Heal:diff()} HP.\nDiscard a card.\n[gold]Tithe[/gold]: gain 1 [gold]Spirit[/gold]."
+  "HELLOSPIRE-HEALING_WORD.description": "Heal a player {Heal:diff()} HP.\nDiscard a card.\n[gold]Tithe[/gold]: gain 1 [gold]Spirit[/gold].",
+  "HELLOSPIRE-CONDEMN.title": "Condemn",
+  "HELLOSPIRE-CONDEMN.description": "Deal {Damage:diff()} damage.\nApply 1 [gold]Vulnerable[/gold].\n[gold]Tithe[/gold]: gain 5 Block."
 }
