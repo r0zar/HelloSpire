@@ -1,12 +1,10 @@
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
-using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Alchemist.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -15,19 +13,20 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // The 20 commons: 8 Attacks, 11 Skills, 1 Power.
 //
 // The backbone, and deliberately unexciting. Almost every one of them reads a board state the
-// character controls — did you drink something this turn, is the belt empty, did you make money —
-// so that the commons teach the payoff conditions the uncommons and rares are built on, without
-// any of them being exciting enough to want in every deck.
+// character controls -- did you drink something this turn, is the belt empty, did you Brew or
+// Exhaust or Distill -- so that the commons teach the payoff conditions the uncommons and rares
+// are built on, without any of them being exciting enough to want in every deck. Most either
+// Infuse Unstable Concoction with a bonus, or apply Poison as a delayed second half of the hit.
 
 // ---------------------------------------------------------------------------- Attacks
 
-/// <summary>Deal damage, then feed a random Discard card into the belt.</summary>
+/// <summary>Deal damage, and Infuse Unstable Concoction if you've already used a Potion this turn.</summary>
 public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile), Tip(AlchemistTips.Transform)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -35,147 +34,136 @@ public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.C
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        var discarded = LabBridge.Current.DiscardPile(Owner);
-        if (discarded.Count == 0) return;
-
-        var index = Owner.RunState.Rng.CombatTargets.NextInt(0, discarded.Count);
-        var card = discarded[Math.Clamp(index, 0, discarded.Count - 1)];
-
-        await Alchemy.Exhaust(ctx, Lab, card);
-        if (await Belt.BrewRandom(ctx, Lab) != null)
-            await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.CardToPotion);
+        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
+            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>X Energy, X hits at a random enemy each. No target selection -- the randomness is the point.</summary>
-public sealed class GlassShard() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.Self)
+/// <summary>Hit a random enemy, and Infuse Unstable Concoction if the belt has room.</summary>
+public sealed class GlassShard() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.Self)
 {
-    protected override bool HasEnergyCostX => true;
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(5m, ValueProp.Move)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        var hits = ResolveEnergyXValue();
-
-        for (var i = 0; i < hits; i++)
-        {
-            var target = AlchemistEffects.RandomEnemy(Lab);
-            if (target == null) break;
-
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(target).Execute(ctx);
-        }
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
-}
-
-/// <summary>Vulnerable or Weak, picked at random, applied to everything.</summary>
-public sealed class ScatterFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(9m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<VulnerablePower>(), HoverTipFactory.FromPower<WeakPower>()];
+        [Tip(AlchemistTips.ThePotionBelt), Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var amount = DynamicVars["Amount"].BaseValue;
-        var applyVulnerable = Owner.RunState.Rng.CombatTargets.NextInt(0, 2) == 0;
+        var target = AlchemistEffects.RandomEnemy(Lab);
+        if (target == null) return;
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(target).Execute(ctx);
+
+        if (Belt.EmptySlots(Lab) > 0)
+            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+}
+
+/// <summary>Damage to ALL, and Poison to ALL if you've already used a Potion this turn.</summary>
+public sealed class ScatterFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(5m, ValueProp.Move), new DynamicVar("Poison", 2m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        var usedPotion = (AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0;
 
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
         {
-            if (applyVulnerable) await AlchemistEffects.ApplyVulnerable(ctx, Lab, enemy, amount);
-            else await AlchemistEffects.ApplyWeak(ctx, Lab, enemy, amount);
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(enemy).Execute(ctx);
+            if (usedPotion) await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, DynamicVars["Poison"].BaseValue);
         }
-    }
-
-    protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
-}
-
-/// <summary>Heavier damage, and a kill pays out a Volatile Potion.</summary>
-public sealed class GildedScalpel() : AlchemistCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(12m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-
-        if (play.Target.CurrentHp <= 0)
-            await Belt.BrewRandom(ctx, Lab);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
-}
-
-/// <summary>Big damage, bigger for three Gold. The card that teaches Invest.</summary>
-public sealed class PyricBurst() : AlchemistCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new DamageVar(16m, ValueProp.Move),
-        new DamageVar("Bonus", 6m, ValueProp.Move),
-        new InvestVar(3m)
-    ];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Invest)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        var paid = await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this);
-        var bonus = paid ? DynamicVars["Bonus"].BaseValue : 0m;
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
-}
-
-/// <summary>Free damage, and a card back if the last card you played was a Skill.</summary>
-public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(3m, ValueProp.Move), new CardsVar(1)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-
-        if (AlchemistEffects.Peek(Lab)?.PreviousCardType == CardType.Skill)
-            await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage; feed it a card from your Hand for more. Transform: card into damage.</summary>
-public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+/// <summary>Deal damage, then apply Poison if you've Brewed a Potion this turn.</summary>
+public sealed class ToxicScalpel() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 6m, ValueProp.Move)];
+        [new DamageVar(8m, ValueProp.Move), new DynamicVar("Poison", 2m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Transform)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var bonus = await Alchemy.ExhaustOne(ctx, Lab) ? DynamicVars["Bonus"].BaseValue : 0m;
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
+        if ((AlchemistEffects.Peek(Lab)?.BrewedThisTurn ?? 0) > 0)
+            await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+}
+
+/// <summary>Big damage, and Infuse more into Unstable Concoction.</summary>
+public sealed class PyricBurst() : AlchemistCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(16m, ValueProp.Move), new DamageVar("Bonus", 6m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
+        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
+}
+
+/// <summary>Free damage, and Infuse Unstable Concoction if a Potion Slot became empty this turn.</summary>
+public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(4m, ValueProp.Move), new DamageVar("Bonus", 5m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
+
+        if ((AlchemistEffects.Peek(Lab)?.SlotsEmptiedThisTurn ?? 0) > 0)
+            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
+}
+
+/// <summary>Deal damage, and Infuse Unstable Concoction if you've already Exhausted a card this turn.</summary>
+public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 5m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
+
+        if ((AlchemistEffects.Peek(Lab)?.CardsExhaustedThisTurn ?? 0) > 0)
+            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade()
@@ -185,18 +173,18 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
     }
 }
 
-/// <summary>Deal damage; two Gold buys a Weak. The cheapest Invest in the set.</summary>
+/// <summary>Deal damage and apply Poison; a Potion already used this turn also buys Weak.</summary>
 public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(7m, ValueProp.Move),
-        new PowerVar<WeakPower>(1m),
-        new InvestVar(2m)
+        new DynamicVar("Poison", 2m),
+        new PowerVar<WeakPower>(1m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Invest), HoverTipFactory.FromPower<WeakPower>()];
+        [HoverTipFactory.FromPower<PoisonPower>(), HoverTipFactory.FromPower<WeakPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -205,7 +193,9 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this))
+        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
+
+        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
             await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
     }
 
@@ -214,51 +204,49 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
 
 // ---------------------------------------------------------------------------- Skills
 
-/// <summary>Exhaust a card, gain Gold. The class's defining conversion, at its cheapest.</summary>
+/// <summary>Exhaust another card, and Infuse Unstable Concoction. The class's defining conversion, at its cheapest.</summary>
 public sealed class Transmute() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Gold", 5m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Bonus", 6m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Transform)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
 
-        await Ledger.GainGold(ctx, Lab, DynamicVars["Gold"].IntValue);
-        await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.CardToGold);
+        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Gold"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
 }
 
-/// <summary>Transmute's small cousin: less Gold, some Block, and free.</summary>
+/// <summary>Transmute's small cousin: less into Unstable Concoction, some real Block, and free.</summary>
 public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(4m, ValueProp.Move), new DynamicVar("Gold", 2m)];
+        [new BlockVar(4m, ValueProp.Move), new BlockVar("Bonus", 3m, ValueProp.Move)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Transform)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
-        await Ledger.GainGold(ctx, Lab, DynamicVars["Gold"].IntValue);
-        await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.CardToGold);
+        Belt.Infuse(Lab, block: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(2m);
-        DynamicVars["Gold"].UpgradeValueBy(1m);
+        DynamicVars["Bonus"].UpgradeValueBy(1m);
     }
 }
 
@@ -268,14 +256,12 @@ public sealed class PocketFormula() : AlchemistCard(1, CardType.Skill, CardRarit
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile), Tip(AlchemistTips.Transform)];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-
-        if (await Belt.BrewRandom(ctx, Lab) != null)
-            await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.CardToPotion);
+        await Belt.BrewRandom(ctx, Lab);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -302,48 +288,48 @@ public sealed class GlassApron() : AlchemistCard(1, CardType.Skill, CardRarity.C
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Block, more if you drank something this turn.</summary>
+/// <summary>Block, and Infuse Unstable Concoction if you've already used a Potion this turn.</summary>
 public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(8m, ValueProp.Move), new BlockVar("Bonus", 3m, ValueProp.Move)];
+        [new BlockVar(8m, ValueProp.Move), new BlockVar("Bonus", 4m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var bonus = (AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0
-            ? DynamicVars["Bonus"].BaseValue
-            : 0m;
+        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
 
-        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue + bonus);
+        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
+            Belt.Infuse(Lab, block: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Pour a Potion out for cards. Transform: Potion into tempo, at zero cost.</summary>
+/// <summary>Pour a Potion out for cards and a little Unstable Concoction.</summary>
 public sealed class Dilute() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2), new DynamicVar("Energy", 2m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Transform)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
 
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
-        await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.PotionToTempo);
+        Belt.Infuse(Lab, energy: DynamicVars["Energy"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
 }
 
-/// <summary>Block, and more Block if you feed it a card.</summary>
+/// <summary>Block, and Infuse Unstable Concoction if you've already Exhausted another card this turn.</summary>
 public sealed class RecycleGlass() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
@@ -351,12 +337,14 @@ public sealed class RecycleGlass() : AlchemistCard(1, CardType.Skill, CardRarity
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new BlockVar(5m, ValueProp.Move), new BlockVar("Bonus", 5m, ValueProp.Move)];
 
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
 
-        if (await Alchemy.ExhaustOne(ctx, Lab))
-            await AlchemistEffects.GainBlock(Lab, DynamicVars["Bonus"].BaseValue);
+        if ((AlchemistEffects.Peek(Lab)?.CardsExhaustedThisTurn ?? 0) > 0)
+            Belt.Infuse(Lab, block: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade()
@@ -366,57 +354,63 @@ public sealed class RecycleGlass() : AlchemistCard(1, CardType.Skill, CardRarity
     }
 }
 
-/// <summary>Four Gold for an Energy. The exchange rate the whole Investor deck is measured against.</summary>
-public sealed class CoinPurse() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
+/// <summary>A little Energy into Unstable Concoction, free.</summary>
+public sealed class EnergyFlask() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new EnergyVar(1), new InvestVar(4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 1m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Invest), EnergyHoverTip];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    protected override Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (await Ledger.Invest(ctx, Lab, DynamicVars["Invest"].IntValue, this))
-            await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
+        Belt.Infuse(Lab, energy: DynamicVars["Energy"].BaseValue);
+        return Task.CompletedTask;
     }
 
-    protected override void OnUpgrade() => DynamicVars["Invest"].UpgradeValueBy(-1m);
+    protected override void OnUpgrade() => DynamicVars["Energy"].UpgradeValueBy(1m);
 }
 
-/// <summary>Block, and Brew a Volatile Weak Potion.</summary>
-public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+/// <summary>Apply Weak and Poison, and Block if you've already used a Potion this turn.</summary>
+public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
 {
     public override bool GainsBlock => true;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(4m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new PowerVar<WeakPower>(2m), new DynamicVar("Poison", 2m), new BlockVar(4m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<WeakPower>(), HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
-        await Belt.Brew(ctx, Lab, ModelDb.Potion<VolatileWeakPotion>().ToMutable());
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
+        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
+
+        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
+            await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
+    protected override void OnUpgrade() => DynamicVars["WeakPower"].UpgradeValueBy(1m);
 }
 
-/// <summary>Dig, and get paid a little for having already spent.</summary>
+/// <summary>Dig, and get paid a little Block for having already Distilled this turn.</summary>
 public sealed class MarketSense() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new CardsVar(2), new BlockVar(3m, ValueProp.Move)];
+        [new CardsVar(2), new BlockVar(4m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
         await Alchemy.DiscardOne(ctx, Lab);
 
-        if (Ledger.SpentThisTurn(Lab))
+        if ((AlchemistEffects.Peek(Lab)?.DistilledThisTurn ?? 0) > 0)
             await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
     }
 
@@ -447,7 +441,7 @@ public sealed class ExtraVial() : AlchemistCard(1, CardType.Skill, CardRarity.Co
 
 // ---------------------------------------------------------------------------- Power
 
-/// <summary>The first Potion you drink each turn also throws a little heat.</summary>
+/// <summary>The first Potion you drink each turn also throws a little heat, and poisons it.</summary>
 public sealed class ResidualHeat() : AlchemistCard(1, CardType.Power, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ResidualHeatPower>(3m)];

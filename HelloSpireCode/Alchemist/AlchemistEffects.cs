@@ -59,6 +59,12 @@ public static class AlchemistEffects
         await PowerCmd.Apply<VulnerablePower>(ctx, target, amount, lab.Self, lab.Card);
     }
 
+    public static async Task ApplyPoison(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount)
+    {
+        if (amount <= 0) return;
+        await PowerCmd.Apply<PoisonPower>(ctx, target, amount, lab.Self, lab.Card);
+    }
+
     public static async Task GainStrength(PlayerChoiceContext ctx, LabContext lab, decimal amount)
     {
         if (amount <= 0) return;

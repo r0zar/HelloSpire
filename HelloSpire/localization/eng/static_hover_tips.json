@@ -30,5 +30,9 @@
   "HELLOSPIRE-TRANSFORM.title": "Transform",
   "HELLOSPIRE-TRANSFORM.description": "Consuming a card (Exhaust), a Potion (Distill), Gold (Invest) or Max HP (Render) specifically to produce a different kind of value. Playing a card for Energy is not a Transform.",
   "HELLOSPIRE-THE_POTION_BELT.title": "The Potion Belt",
-  "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat; those Slots hold only Volatile Potions."
+  "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat; those Slots hold only Volatile Potions.",
+  "HELLOSPIRE-INFUSE.title": "Infuse",
+  "HELLOSPIRE-INFUSE.description": "Add a stored Damage, Poison, Block or Energy value to your Unstable Concoction, if you're holding one. Does nothing if you aren't.",
+  "HELLOSPIRE-UNLEASH.title": "Unleash",
+  "HELLOSPIRE-UNLEASH.description": "Use your Unstable Concoction. Everything Infused into it resolves at once, on whatever it's used on."
 }

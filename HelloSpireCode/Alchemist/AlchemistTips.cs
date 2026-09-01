@@ -35,4 +35,10 @@ public static class AlchemistTips
 
     /// <summary>The Potion belt: how many Slots you have and what is in them.</summary>
     [CustomEnum] public static StaticHoverTip ThePotionBelt;
+
+    /// <summary>Add a stored effect to Unstable Concoction.</summary>
+    [CustomEnum] public static StaticHoverTip Infuse;
+
+    /// <summary>Use Unstable Concoction, resolving everything Infused into it.</summary>
+    [CustomEnum] public static StaticHoverTip Unleash;
 }

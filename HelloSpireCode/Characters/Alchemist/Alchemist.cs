@@ -5,7 +5,6 @@ using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Relics;
 
 using Alchemist_ = HelloSpire.HelloSpireCode.Alchemist;
 
@@ -45,7 +44,7 @@ public class Alchemist : PlaceholderCharacterModel
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
-        [ModelDb.Relic<PotionBelt>()];
+        [ModelDb.Relic<Alchemist_.Relics.AlchemicalSatchel>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<AlchemistCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<AlchemistRelicPool>();

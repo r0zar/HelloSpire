@@ -60,7 +60,7 @@ internal static class HideVolatilePotionsFromShopsAndRewardsPatch
     [HarmonyLib.HarmonyPrefix]
     private static void BeforeCreate(ref IEnumerable<PotionModel>? blacklist)
     {
-        blacklist = (blacklist ?? []).Concat(ModelDb.AllPotions.Where(p => p is VolatileCommonPotion));
+        blacklist = (blacklist ?? []).Concat(ModelDb.AllPotions.Where(p => p is VolatileCommonPotion or UnstableConcoction));
     }
 }
 

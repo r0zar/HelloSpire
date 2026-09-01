@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using HelloSpire.HelloSpireCode.Alchemist;
+using HelloSpire.HelloSpireCode.Alchemist.Potions;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 
 /// <summary>What a Distill actually consumed. Essence Distillation branches on the rarity.</summary>
@@ -243,6 +244,24 @@ public static class Belt
             await LabBridge.Current.Discard(ctx, lab.Player, potion);
 
         bench.Volatile.Clear();
+    }
+
+    // ------------------------------------------------------------------ Unstable Concoction
+
+    /// <summary>
+    /// Add to whatever Unstable Concoction is currently held, if any. Silent no-op otherwise -- the belt
+    /// was full when Alchemical Satchel tried to Brew one, or it's already been used this combat --
+    /// same "a full belt is not an error" rule Brew itself follows.
+    /// </summary>
+    public static void Infuse(LabContext lab, decimal damage = 0, decimal block = 0,
+        decimal poison = 0, decimal energy = 0)
+    {
+        if (Held(lab).OfType<UnstableConcoction>().FirstOrDefault() is not { } mixture) return;
+
+        if (damage > 0) mixture.DynamicVars.Damage.BaseValue += damage;
+        if (block > 0) mixture.DynamicVars.Block.BaseValue += block;
+        if (poison > 0) mixture.DynamicVars["Poison"].BaseValue += poison;
+        if (energy > 0) mixture.DynamicVars["Energy"].BaseValue += energy;
     }
 
     private static async Task NotifySlotEmptied(PlayerChoiceContext ctx, LabContext lab)

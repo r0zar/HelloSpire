@@ -13,6 +13,8 @@
   "HELLOSPIRE-PANACEA_OF_PLENTY.description": "Fill all empty Potion Slots with random [gold]Volatile[/gold] Common Combat Potions.",
   "HELLOSPIRE-PHILOSOPHERS_STONE.title": "Philosopher's Stone",
   "HELLOSPIRE-PHILOSOPHERS_STONE.description": "Deal 20 damage to ALL enemies. Gain 20 [gold]Block[/gold], 2 [gold]Energy[/gold], 2 [gold]Strength[/gold] and 2 [gold]Dexterity[/gold]. Draw 3 cards.",
+  "HELLOSPIRE-UNSTABLE_CONCOCTION.title": "Unstable Concoction",
+  "HELLOSPIRE-UNSTABLE_CONCOCTION.description": "Deal {Damage} damage. Apply {Poison} [gold]Poison[/gold]. Gain {Block} [gold]Block[/gold] and {Energy} [gold]Energy[/gold]. [gold]Infuse[/gold] this before using it.",
   "HELLOSPIRE-VOLATILE_ATTACK_POTION.title": "Volatile Attack Potion",
   "HELLOSPIRE-VOLATILE_ATTACK_POTION.description": "Choose 1 of 2 Attack cards to add to your hand. It costs 0 this turn.",
   "HELLOSPIRE-VOLATILE_BLOCK_POTION.title": "Volatile Block Potion",

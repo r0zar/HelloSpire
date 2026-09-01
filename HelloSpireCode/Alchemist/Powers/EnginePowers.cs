@@ -45,7 +45,7 @@ public abstract class AlchemistEnginePower : HelloSpirePower
         Task.CompletedTask;
 }
 
-/// <summary>The first Potion you drink each turn throws a little heat at somebody.</summary>
+/// <summary>The first Potion you drink each turn throws a little heat at somebody, and poisons it.</summary>
 public sealed class ResidualHeatPower : AlchemistEnginePower, IPotionUseListener
 {
     public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
@@ -58,6 +58,7 @@ public sealed class ResidualHeatPower : AlchemistEnginePower, IPotionUseListener
 
         Flash();
         await CreatureCmd.Damage(ctx, target, Amount, ValueProp.Unpowered, Owner, null);
+        await AlchemistEffects.ApplyPoison(ctx, lab, target, 1m);
     }
 }
 
