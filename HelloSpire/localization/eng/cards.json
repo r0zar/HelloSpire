@@ -608,5 +608,5 @@
   "HELLOSPIRE-PRAYER.title": "Prayer",
   "HELLOSPIRE-PRAYER.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card.",
   "HELLOSPIRE-SMITE.title": "Smite",
-  "HELLOSPIRE-SMITE.description": "Deal [red]{Damage:diff()}[/red] damage.\nApply [red]{Weak:diff()}[/red] [gold]Weak[/gold]."
+  "HELLOSPIRE-SMITE.description": "Deal {Damage:diff()} damage.\nApply {Weak:diff()} [gold]Weak[/gold]."
 }
