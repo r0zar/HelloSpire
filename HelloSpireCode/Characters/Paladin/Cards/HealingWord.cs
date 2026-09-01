@@ -14,7 +14,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// the set's one Spirit-granting Tithe -- a deliberate amendment to the no-Spirit-on-faces
 /// law, at drip rate.
 /// </summary>
-public sealed class HealingWord() : PaladinCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer), IHealingCard
+public sealed class HealingWord() : PaladinCard(0, CardType.Skill, CardRarity.Common, TargetType.AnyPlayer), IHealingCard
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(4m)];

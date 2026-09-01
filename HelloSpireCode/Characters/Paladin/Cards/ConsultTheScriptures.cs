@@ -15,7 +15,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// pitch a card for its face, then consult it back for the true cast -- or retrieve the
 /// seal you spent. Any card, no restriction. Upgrade: costs 0.
 /// </summary>
-public sealed class ConsultTheScriptures() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+public sealed class ConsultTheScriptures() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
 
