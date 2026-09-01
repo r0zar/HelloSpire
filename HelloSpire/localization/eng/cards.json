@@ -570,7 +570,7 @@
   "HELLOSPIRE-SEAL_OF_HUMILITY.title": "Seal of Humility",
   "HELLOSPIRE-SEAL_OF_HUMILITY.description": "Gain {Amount:diff()} Block.\nNext time you [gold]Judge[/gold], the enemy loses 3 [gold]Strength[/gold] this turn.",
   "HELLOSPIRE-SEAL_OF_THE_PENITENT.title": "Seal of the Penitent",
-  "HELLOSPIRE-SEAL_OF_THE_PENITENT.description": "Deal {Amount:diff()} damage to a random enemy. Discard a card.\nNext time you [gold]Judge[/gold], deal 6 damage to ALL enemies.",
+  "HELLOSPIRE-SEAL_OF_THE_PENITENT.description": "Gain [blue]{Amount:diff()}[/blue] [gold]Block[/gold]. Discard 1 card.\nNext time you [gold]Judge[/gold], return a random card from your discard pile to your hand.",
   "HELLOSPIRE-TRIBUNAL.title": "Tribunal",
   "HELLOSPIRE-TRIBUNAL.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Judge[/gold] each enemy.",
   "HELLOSPIRE-CHASTISE.title": "Chastise",

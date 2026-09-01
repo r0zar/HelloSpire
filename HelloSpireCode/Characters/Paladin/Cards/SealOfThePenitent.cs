@@ -7,16 +7,17 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal Amount to a random enemy, discard a card, bank the seal. Judge: deal 6 to ALL.
-/// The Tithe seal: the discard fires faces and feeds every discard payoff on the way in.
+/// Gain Amount Block. Discard a card. Bank the seal. Judge: return a random card from your
+/// discard pile to your hand. The confession loop: penance now, absolution at judgment --
+/// tithe a heal for its face, then judge it back for the true cast.
 /// </summary>
-public sealed class SealOfThePenitent() : SealCard(1, CardRarity.Common, 2m)
+public sealed class SealOfThePenitent() : SealCard(1, CardRarity.Common, 3m)
 {
+    public override bool GainsBlock => true;
+
     protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
     {
-        var enemy = PaladinEffects.RandomEnemy(Owner);
-        if (enemy != null)
-            await CreatureCmd.Damage(ctx, [enemy], amount, ValueProp.Unpowered, Owner.Creature);
+        await CreatureCmd.GainBlock(Owner.Creature, amount, ValueProp.Move, null);
         await PaladinEffects.DiscardChosen(ctx, Owner, 1, this);
         await Seals.Grant<SealOfThePenitentPower>(ctx, Owner, 1m, this);
     }
