@@ -8,7 +8,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 5 to ALL enemies. The plain common sweep; multi-hit AoE is Reckoning’s job.</summary>
+/// <summary>Deal 5 to ALL enemies and apply 1 Weak. The tank's sweep: clear the chaff, sap the pack.</summary>
 public sealed class DivineStorm() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(5m, ValueProp.Move)];
@@ -20,6 +20,8 @@ public sealed class DivineStorm() : PaladinCard(1, CardType.Attack, CardRarity.C
             .WithHitFx("vfx/vfx_attack_slash")
             .SpawningHitVfxOnEachCreature()
             .Execute(choiceContext);
+        foreach (var enemy in System.Linq.Enumerable.ToList(CombatState.HittableEnemies))
+            await PowerCmd.Apply<MegaCrit.Sts2.Core.Models.Powers.WeakPower>(choiceContext, enemy, 1m, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
