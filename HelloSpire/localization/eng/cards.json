@@ -396,8 +396,6 @@
   "HELLOSPIRE-GLASS_SHARD.description": "Deal {Damage:diff()} damage to a random enemy.",
   "HELLOSPIRE-SCATTER_FLASK.title": "Scatter Flask",
   "HELLOSPIRE-SCATTER_FLASK.description": "Apply {Poison:diff()} [gold]Poison[/gold] to ALL enemies.",
-  "HELLOSPIRE-TOXIC_SCALPEL.title": "Toxic Scalpel",
-  "HELLOSPIRE-TOXIC_SCALPEL.description": "Deal {Damage:diff()} damage. Apply {Poison:diff()} [gold]Poison[/gold].",
   "HELLOSPIRE-CAUSTIC_FLASK.title": "Caustic Flask",
   "HELLOSPIRE-CAUSTIC_FLASK.description": "Deal {Damage:diff()} damage. [gold]Brew[/gold] a Poison Potion. Add a Volatile Residue to your discard pile.",
   "HELLOSPIRE-VOLATILE_STRIKE.title": "Volatile Strike",

@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The 23 commons: 10 Attacks, 11 Skills, 2 Powers.
+// The 22 commons: 9 Attacks, 11 Skills, 2 Powers.
 //
 // Deliberately unexciting, and deliberately proactive -- almost none of them ask "did you do X
 // this turn" anymore. Most either Brew a specific Volatile Potion by name (so the deck teaches
@@ -38,7 +38,7 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
 }
 
 /// <summary>Deal damage, and Brew a Volatile Vulnerable Potion.</summary>
-public sealed class CinnabarEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class CinnabarEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
 
@@ -66,25 +66,6 @@ public sealed class GlassShard() : AlchemistCard(1, CardType.Attack, CardRarity.
         if (target == null) return;
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(target).Execute(ctx);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
-}
-
-/// <summary>Deal damage, then apply Poison.</summary>
-public sealed class ToxicScalpel() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(7m, ValueProp.Move), new DynamicVar("Poison", 3m)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -150,7 +131,7 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
 }
 
 /// <summary>Deal damage, and Brew a Poison Potion.</summary>
-public sealed class CausticFlask() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class CausticFlask() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
 
@@ -184,7 +165,7 @@ public sealed class VolatileStrike() : AlchemistCard(1, CardType.Attack, CardRar
 }
 
 /// <summary>Deal a lot of damage, and Brew a Volatile Fire Potion.</summary>
-public sealed class Firebrand() : AlchemistCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class Firebrand() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7m, ValueProp.Move)];
 

@@ -14,7 +14,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // this turn."
 
 /// <summary>Damage scaling with a full belt. Full Belt's headline card.</summary>
-public sealed class BottleBarrage() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class BottleBarrage() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerPotion", 4m, ValueProp.Move)];
 
