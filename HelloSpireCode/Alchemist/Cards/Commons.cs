@@ -130,7 +130,7 @@ public sealed class FlaskToss() : AlchemistCard(2, CardType.Attack, CardRarity.U
 public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 5m, ValueProp.Move)];
+        [new DamageVar(7m, ValueProp.Move), new DamageVar("Bonus", 3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
@@ -144,8 +144,8 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["Bonus"].UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(1m);
+        DynamicVars["Bonus"].UpgradeValueBy(2m);
     }
 }
 
