@@ -18,6 +18,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
+using HelloSpire.HelloSpireCode.Extensions;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
 
@@ -65,7 +66,7 @@ internal static class HideVolatilePotionsFromShopsAndRewardsPatch
 }
 
 /// <summary>
-/// Weaker Volatile counterparts of the 15 real Common Potions in the Alchemist's combat pool (see
+/// Weaker Volatile counterparts of the Common Potions in the Alchemist's combat pool (see
 /// WiredLabBridge.RandomCombatPotion/CombatPotionOptions/NamedPotion). Every OnUse below is ported
 /// from the real class, decompiled from sts2.dll, at a reduced value -- Volatile Vulnerable
 /// Potion's 2 Vulnerable (vs. the real one's 3) is the case that surfaced this file; the rest
@@ -73,6 +74,10 @@ internal static class HideVolatilePotionsFromShopsAndRewardsPatch
 /// proposed numbers where they map onto a potion that actually exists in this game's pool, and an
 /// equivalent reduction (3 card choices -> 2) for the four card-generation Commons ChatGPT's table
 /// never covered.
+///
+/// Volatile Poison Potion is the one exception: there is no real vanilla Poison Potion to
+/// decompile, so it copies the Alchemist's own bespoke <see cref="PoisonPotion"/>
+/// (AlchemistPotions.cs) instead, at the same reduced-value rule.
 ///
 /// CustomPackedImagePath points each one at the REAL vanilla potion's own sprite -- confirmed via
 /// sts2.dll (ImageHelper.GetImagePath resolves a vanilla potion's Id.Entry, e.g. "vulnerable_potion",
@@ -303,6 +308,21 @@ public sealed class VolatileVulnerablePotion : VolatileCommonPotion
         PotionModel.AssertValidForTargetedPotion(target);
         NCombatRoom.Instance?.PlaySplashVfx(target, new Color("fd2155"));
         await PowerCmd.Apply<VulnerablePower>(ctx, target, DynamicVars.Vulnerable.BaseValue, Owner.Creature, null);
+    }
+}
+
+public sealed class VolatilePoisonPotion : VolatileCommonPotion
+{
+    public override TargetType TargetType => TargetType.AnyEnemy;
+    public override string? CustomPackedImagePath => "poison_potion.png".PotionImagePath();
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 4m)];
+    public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
+
+    protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
+    {
+        PotionModel.AssertValidForTargetedPotion(target);
+        await PowerCmd.Apply<PoisonPower>(ctx, target, DynamicVars["Poison"].BaseValue, Owner.Creature, null);
     }
 }
 

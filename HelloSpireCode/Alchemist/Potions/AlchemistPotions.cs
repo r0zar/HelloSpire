@@ -44,6 +44,19 @@ public sealed class AurumTincture : AlchemistPotion
     }
 }
 
+/// <summary>Apply a big chunk of Poison.</summary>
+public sealed class PoisonPotion : AlchemistPotion
+{
+    public override PotionRarity Rarity => PotionRarity.Common;
+    public override TargetType TargetType => TargetType.AnyEnemy;
+
+    protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
+    {
+        if (target == null) return;
+        await AlchemistEffects.ApplyPoison(ctx, Lab, target, 6m);
+    }
+}
+
 /// <summary>One saved Rare Potion becomes a full belt of combat tools.</summary>
 public sealed class PanaceaOfPlenty : AlchemistPotion
 {

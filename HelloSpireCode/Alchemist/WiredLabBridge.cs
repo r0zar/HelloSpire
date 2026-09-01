@@ -66,6 +66,7 @@ public sealed class WiredLabBridge : ILabBridge
         ModelDb.Potion<VolatileExplosiveAmpoule>(),
         ModelDb.Potion<VolatileFirePotion>(),
         ModelDb.Potion<VolatileFlexPotion>(),
+        ModelDb.Potion<VolatilePoisonPotion>(),
         ModelDb.Potion<VolatilePowerPotion>(),
         ModelDb.Potion<VolatileSkillPotion>(),
         ModelDb.Potion<VolatileSpeedPotion>(),
