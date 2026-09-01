@@ -15,12 +15,10 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // Crucible), Brew (Brewing Engine), Distill (Distillation Mastery), Status (Volatile Laboratory),
 // and the class's one non-Volatile trophy (The Great Work).
 
-/// <summary>Whenever you Infuse a lot in one turn, gain a little Energy. Makes cashing in Unstable
-/// Concoction across several cards even better.</summary>
-public sealed class Accumulation() : AlchemistCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+/// <summary>Whenever you Infuse, draw a card.</summary>
+public sealed class Accumulation() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Energy", 1m), new DynamicVar("Threshold", 15m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<AccumulationPower>()];
@@ -28,13 +26,11 @@ public sealed class Accumulation() : AlchemistCard(1, CardType.Power, CardRarity
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var power = await PowerCmd.Apply<AccumulationPower>(ctx, Owner.Creature,
-            DynamicVars["Energy"].BaseValue, Owner.Creature, this);
-
-        if (power != null) power.Threshold = DynamicVars["Threshold"].BaseValue;
+        await PowerCmd.Apply<AccumulationPower>(ctx, Owner.Creature,
+            DynamicVars.Cards.BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Threshold"].UpgradeValueBy(-5m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>The first Potion each combat resolves twice and is consumed once.</summary>

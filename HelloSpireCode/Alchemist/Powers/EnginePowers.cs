@@ -202,20 +202,13 @@ public sealed class VolatileLaboratoryPower : AlchemistEnginePower, IStatusCreat
     }
 }
 
-/// <summary>Whenever you Infuse a lot in one turn, gain a little Energy. Once per turn.</summary>
+/// <summary>Whenever you Infuse, draw a card.</summary>
 public sealed class AccumulationPower : AlchemistEnginePower, IInfuseListener
 {
-    /// <summary>The per-turn threshold. Set by the card; 15 base.</summary>
-    public decimal Threshold { get; set; } = 15m;
-
     public async Task OnInfused(PlayerChoiceContext ctx, LabContext lab, decimal amount)
     {
-        if (UsedThisTurn) return;
-        if ((AlchemistEffects.Peek(lab)?.InfusedThisTurn ?? 0m) < Threshold) return;
-        UsedThisTurn = true;
-
         Flash();
-        await AlchemistEffects.GainEnergy(lab, Amount);
+        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
     }
 }
 

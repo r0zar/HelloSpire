@@ -539,7 +539,7 @@
   "HELLOSPIRE-THE_GREAT_WORK.title": "The Great Work",
   "HELLOSPIRE-THE_GREAT_WORK.description": "[gold]Brew[/gold] a Philosopher's Stone. It is not [gold]Volatile[/gold].",
   "HELLOSPIRE-ACCUMULATION.title": "Accumulation",
-  "HELLOSPIRE-ACCUMULATION.description": "Whenever you [gold]Infuse[/gold] a lot in one turn, gain {Energy:diff()} [gold]Energy[/gold].",
+  "HELLOSPIRE-ACCUMULATION.description": "Whenever you [gold]Infuse[/gold], draw a card.",
   "HELLOSPIRE-ETERNAL_CRUCIBLE.title": "Crucible Form",
   "HELLOSPIRE-ETERNAL_CRUCIBLE.description": "The first Potion you use each combat resolves twice and is consumed once.",
   "HELLOSPIRE-BREWING_ENGINE.title": "Brewing Engine",

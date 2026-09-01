@@ -290,9 +290,6 @@ public static class Belt
         if (vulnerable > 0) mixture.DynamicVars["Vulnerable"].BaseValue += vulnerable;
 
         var total = damage + block + poison + energy + vulnerable;
-        var bench = AlchemistEffects.Peek(lab);
-        if (bench != null) bench.InfusedThisTurn += total;
-
         await AlchemistHooks.NotifyInfused(ctx, lab, total);
     }
 
