@@ -517,7 +517,7 @@
   "HELLOSPIRE-GRAND_COMBUSTION.title": "Grand Combustion",
   "HELLOSPIRE-GRAND_COMBUSTION.description": "[gold]Distill[/gold] every Potion you hold. Deal {Damage:diff()} damage, plus {PerPotion:diff()} per Potion Distilled, to ALL enemies. Apply {Poison:diff()} [gold]Poison[/gold] per Potion Distilled.",
   "HELLOSPIRE-OVERDOSE.title": "Overdose",
-  "HELLOSPIRE-OVERDOSE.description": "Apply {Poison:diff()} [gold]Poison[/gold]. [gold]Infuse[/gold] {Bonus:diff()} Damage. Add a Volatile Reagent to your discard pile.",
+  "HELLOSPIRE-OVERDOSE.description": "Apply {Poison:diff()} [gold]Poison[/gold]. [gold]Infuse[/gold] {Bonus:diff()} Poison. Add a Volatile Reagent to your discard pile. Exhaust.",
   "HELLOSPIRE-CATALYTIC_EXPLOSION.title": "Catalytic Explosion",
   "HELLOSPIRE-CATALYTIC_EXPLOSION.description": "Deal {Damage:diff()} damage. [gold]Infuse[/gold] {PerType:diff()} Damage for each different Potion type you've used this combat.",
   "HELLOSPIRE-ALCHEMIZE.title": "Alchemize",

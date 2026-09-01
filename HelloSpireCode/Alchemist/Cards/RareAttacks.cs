@@ -10,14 +10,14 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Attacks 1-8. The class's damage ceiling -- every one of them either Infuses Unstable
+// Rare Attacks 1-7. The class's damage ceiling -- every one of them either Infuses Unstable
 // Concoction, applies a lot of Poison, or scales off board state built up over the whole fight.
 
 /// <summary>Deal damage, and Infuse a lot more into Unstable Concoction.</summary>
-public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class PhilosophersFlame() : AlchemistCard(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(20m, ValueProp.Move), new DamageVar("Bonus", 15m, ValueProp.Move)];
+        [new DamageVar(20m, ValueProp.Move), new DamageVar("Bonus", 20m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
@@ -169,27 +169,6 @@ public sealed class GrandCombustion() : AlchemistCard(3, CardType.Attack, CardRa
         DynamicVars.Damage.UpgradeValueBy(4m);
         DynamicVars["PerPotion"].UpgradeValueBy(1m);
     }
-}
-
-/// <summary>A big dose of Poison, a big dose of Infuse, and a Volatile Reagent besides.</summary>
-public sealed class Overdose() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Poison", 10m), new DamageVar("Bonus", 10m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<PoisonPower>(), Tip(AlchemistTips.Infuse)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
-        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Discard);
-    }
-
-    protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(2m);
 }
 
 /// <summary>Deal damage, and Infuse Unstable Concoction for every different Potion type you've used this fight.</summary>

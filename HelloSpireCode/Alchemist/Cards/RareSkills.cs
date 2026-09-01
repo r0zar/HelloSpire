@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Skills 1-8. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
+// Rare Skills 1-9. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
 // Potion access, plus the two "empty your Hand" capstones (Heavy Transmute, Perfect Solvent).
 
 /// <summary>
@@ -167,4 +167,27 @@ public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity
         await LabBridge.Current.GainSlots(Owner, 1);
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+}
+
+/// <summary>A big dose of Poison, a big dose of Poison Infuse, and a Volatile Reagent besides.</summary>
+public sealed class Overdose() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
+{
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Poison", 10m), new DynamicVar("Bonus", 10m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<PoisonPower>(), Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
+        await Belt.Infuse(ctx, Lab, poison: DynamicVars["Bonus"].BaseValue);
+        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Discard);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(2m);
 }
