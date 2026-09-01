@@ -202,31 +202,3 @@ public sealed class BottledTimePower : HelloSpirePower
     }
 }
 
-/// <summary>
-/// The next Skill played is played twice. Catalytic Wash's payload.
-///
-/// Not a custom hack: the base game already has a first-class hook for "play this card N times"
-/// (CardModel.GeneratePlayCount -> AbstractModel.ModifyCardPlayCount, decompiled from sts2.dll),
-/// which the base game's own OneTwoPunchPower uses for "your next Attack is played twice" -- this
-/// is that same mechanism, gated on Skill instead of Attack. ModifyCardPlayCount and
-/// AfterModifyingCardPlayCount run in the same play, back to back, so decrementing in the latter
-/// spends the stack for the exact card that just got doubled, never a later one.
-/// </summary>
-public sealed class SkillReplayPower : HelloSpirePower
-{
-    public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    public override int ModifyCardPlayCount(CardModel card, Creature? target, int playCount)
-    {
-        if (card.Owner.Creature != Owner || card.Type != CardType.Skill) return playCount;
-        return playCount + 1;
-    }
-
-    public override async Task AfterModifyingCardPlayCount(CardModel card) => await PowerCmd.Decrement(this);
-
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext ctx, CombatSide side, IEnumerable<Creature> participants)
-    {
-        if (participants.Contains(Owner)) await PowerCmd.Remove(this);
-    }
-}

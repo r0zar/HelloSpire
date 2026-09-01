@@ -27,8 +27,8 @@ public class Alchemist : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 68;
 
-    // The teaching ten: Strikes, Defends, and the two Formulas -- one system at a time
-    // (design/alchemist.md, Starting kit). Gold deliberately absent from turn one.
+    // The teaching ten: Strikes, Defends, Aegis Formula (Brew) and Infusion (Infuse) -- the two
+    // mechanics this class is built around, both taught from turn one.
     public override IEnumerable<CardModel> StartingDeck =>
     [
         ModelDb.Card<Alchemist_.Cards.StrikeAlchemist>(),

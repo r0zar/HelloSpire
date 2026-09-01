@@ -165,20 +165,6 @@ public sealed class ToxicCulturePower : AlchemistEnginePower, IBrewListener
     }
 }
 
-/// <summary>The first Potion each turn also draws and Infuses Poison. Turns the belt into a second hand.</summary>
-public sealed class ReactiveMixturePower : AlchemistEnginePower, IPotionUseListener
-{
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
-    {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
-        Flash();
-        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-        await Belt.Infuse(ctx, lab, poison: 2m);
-    }
-}
-
 /// <summary>
 /// The first Slot emptied each turn is worth Block, and a little Infuse besides.
 ///
@@ -271,23 +257,6 @@ public sealed class BrewingEnginePower : AlchemistEnginePower, IBrewListener
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
         await AlchemistEffects.GainBlock(lab, Block);
-    }
-}
-
-/// <summary>The first Exhaust each turn draws a card and Infuses Damage.</summary>
-public sealed class ConservationOfMatterPower : AlchemistEnginePower, IExhaustListener
-{
-    /// <summary>Damage Infused alongside the draw. Set by the card; 3 base, 4 upgraded.</summary>
-    public decimal Infuse { get; set; } = 3m;
-
-    public async Task OnExhausted(PlayerChoiceContext ctx, LabContext lab)
-    {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
-        Flash();
-        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-        await Belt.Infuse(ctx, lab, damage: Infuse);
     }
 }
 

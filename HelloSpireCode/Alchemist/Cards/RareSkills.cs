@@ -1,22 +1,17 @@
-using MegaCrit.Sts2.Core.CardSelection;
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
-using HelloSpire.HelloSpireCode.Alchemist.Potions;
-using HelloSpire.HelloSpireCode.Alchemist.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Skills 8-20. Almost every one of these Infuses Unstable Concoction or applies Poison on top
-// of an effect that used to cost Gold or Max HP -- the top of the curve is now built entirely out
-// of the same Potion/Distill/Exhaust verbs the rest of the class already teaches.
+// Rare Skills 1-8. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
+// Potion access, plus the two "empty your Hand" capstones (Heavy Transmute, Perfect Solvent).
 
 /// <summary>
 /// Brew a real Rare Potion.
@@ -40,7 +35,7 @@ public sealed class Alchemize() : AlchemistCard(1, CardType.Skill, CardRarity.Ra
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Melt the entire rest of your Hand into Master Brew.</summary>
+/// <summary>Melt the entire rest of your Hand into Unstable Concoction.</summary>
 public sealed class HeavyTransmute() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerCard", 6m, ValueProp.Move)];
@@ -63,7 +58,7 @@ public sealed class HeavyTransmute() : AlchemistCard(1, CardType.Skill, CardRari
 /// <summary>Fill the belt, and Infuse for every Potion that landed. The Brewer's capstone.</summary>
 public sealed class MagnumOpus() : AlchemistCard(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerPotion", 5m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerPotion", 4m, ValueProp.Move)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -94,12 +89,9 @@ public sealed class Masterwork() : AlchemistCard(2, CardType.Skill, CardRarity.R
 /// <summary>Pour a Potion out; the better the Potion, the better the return.</summary>
 public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("Bonus", 5m, ValueProp.Move)];
-
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Infuse)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -114,12 +106,7 @@ public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, Car
         };
 
         await AlchemistEffects.Draw(ctx, Lab, cards);
-
-        if (result.Rarity == PotionRarity.Rare)
-            await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
-
-    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
 }
 
 /// <summary>The next Potion this turn is not consumed. The best line in the class, and it knows it.</summary>
@@ -141,40 +128,14 @@ public sealed class BottledTime() : AlchemistCard(1, CardType.Skill, CardRarity.
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Energy and cards, free, plus a healthy Infuse. The emergency button.</summary>
-public sealed class GoldStandard() : AlchemistCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new EnergyVar(1), new CardsVar(2), new DynamicVar("Energy", 6m)];
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [EnergyHoverTip, Tip(AlchemistTips.Infuse)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
-        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
-        await Belt.Infuse(ctx, Lab, energy: DynamicVars["Energy"].BaseValue);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
-}
-
-/// <summary>Every other card in Hand becomes Block, cards, and Infuse. The Exhaust deck's capstone.</summary>
+/// <summary>Every other card in Hand becomes Block and cards. The Exhaust deck's capstone.</summary>
 public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new BlockVar("PerCard", 5m, ValueProp.Move),
-        new BlockVar("Infuse", 4m, ValueProp.Move)
-    ];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar("PerCard", 5m, ValueProp.Move)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -183,7 +144,6 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars["PerCard"].BaseValue * burned);
         await AlchemistEffects.Draw(ctx, Lab, burned);
-        await Belt.Infuse(ctx, Lab, block: DynamicVars["Infuse"].BaseValue * burned);
     }
 
     protected override void OnUpgrade() => DynamicVars["PerCard"].UpgradeValueBy(1m);
@@ -192,8 +152,8 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 /// <summary>
 /// A real, permanent, unrestricted Potion Slot -- no cost gate, just the Energy and the Exhaust.
 ///
-/// Deliberately asymmetric with Extra Vial and Bandolier: cheap slots are temporary and can only
-/// hold Volatile Potions; this is the one path to a real one.
+/// Deliberately asymmetric with Extra Vial: cheap slots are temporary and can only hold Volatile
+/// Potions; this is the one path to a real one.
 /// </summary>
 public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
@@ -207,95 +167,4 @@ public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity
         await LabBridge.Current.GainSlots(Owner, 1);
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
-}
-
-/// <summary>Copy a card in Hand, free for the turn, and Infuse a little Damage besides.</summary>
-public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("Bonus", 8m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        var candidates = Alchemy.OtherCardsInHand(Lab);
-        if (candidates.Count == 0) return;
-
-        var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this,
-            CardSelectorPrefs.TransformSelectionPrompt);
-        if (chosen == null) return;
-
-        await Alchemy.Create(ctx, Lab, chosen.CreateClone());
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
-    }
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
-}
-
-/// <summary>
-/// Brew the Philosopher's Stone, and Infuse a big chunk of Damage besides.
-///
-/// The only source of the Stone, and the Stone is not Volatile — so it survives the fight and can
-/// be hoarded for a boss.
-/// </summary>
-public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("Bonus", 15m, ValueProp.Move)];
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>().ToMutable(), volatilePotion: false);
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
-    }
-
-    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(3m);
-}
-
-/// <summary>Energy and cards, and a healthy Infuse. Free.</summary>
-public sealed class EquivalentExchange() : AlchemistCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new EnergyVar(2), new CardsVar(2), new DamageVar("Bonus", 5m, ValueProp.Move)];
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [EnergyHoverTip, Tip(AlchemistTips.Infuse)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
-        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
-}
-
-/// <summary>
-/// Permanently Upgrade a card in Hand, and apply Poison on the way out.
-///
-/// Masterwork's little cousin, with a debuff riding along since there's no cost left to gate it.
-/// </summary>
-public sealed class TransmuteFlesh() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 5m)];
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-        if (Alchemy.OtherCardsInHand(Lab).Count == 0) return;
-
-        await Alchemy.UpgradeOnePermanently(ctx, Lab);
-        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
-    }
-
-    protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(2m);
 }

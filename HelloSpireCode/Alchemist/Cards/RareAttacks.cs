@@ -10,14 +10,14 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Attacks 1-7. The class's damage ceiling, and every one of them either Infuses Unstable
-// Concoction, applies Poison, or scales off board state built up over the whole fight.
+// Rare Attacks 1-8. The class's damage ceiling -- every one of them either Infuses Unstable
+// Concoction, applies a lot of Poison, or scales off board state built up over the whole fight.
 
 /// <summary>Deal damage, and Infuse a lot more into Unstable Concoction.</summary>
 public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(20m, ValueProp.Move), new DamageVar("Bonus", 20m, ValueProp.Move)];
+        [new DamageVar(20m, ValueProp.Move), new DamageVar("Bonus", 15m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
@@ -36,59 +36,18 @@ public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, Card
     }
 }
 
-/// <summary>Damage to ALL, more and Poisoned the more Potions you've used this turn.</summary>
+/// <summary>Damage to ALL, more for every Potion in your Belt.</summary>
 public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new DamageVar(10m, ValueProp.Move),
-        new DamageVar("PerPotion", 4m, ValueProp.Move),
-        new DynamicVar("Poison", 1m)
-    ];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
+        [new DamageVar(10m, ValueProp.Move), new DamageVar("PerPotion", 3m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var used = AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0;
-        var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * used;
+        var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * Belt.Held(Lab).Count;
 
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
-        {
             await DamageCmd.Attack(damage).FromCard(this).Targeting(enemy).Execute(ctx);
-            for (var i = 0; i < used; i++)
-                await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, DynamicVars["Poison"].BaseValue);
-        }
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
-}
-
-/// <summary>
-/// Damage for every Potion you've already Distilled this fight.
-///
-/// The Distillation deck's finisher, uncapped: a long fight CAN turn it into a one-card kill --
-/// that is the payoff.
-/// </summary>
-public sealed class RefinedNeedle() : AlchemistCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new DamageVar(5m, ValueProp.Move),
-        new DamageVar("PerPotion", 2m, ValueProp.Move)
-    ];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        var distilled = AlchemistEffects.Peek(Lab)?.DistilledThisCombat ?? 0;
-        var bonus = DynamicVars["PerPotion"].BaseValue * distilled;
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
-            .FromCard(this).Targeting(play.Target).Execute(ctx);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -155,13 +114,12 @@ public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, Card
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
-/// <summary>Kill something and Brew a Rare Potion for it, plus a little Infuse.</summary>
+/// <summary>Kill something and Brew a Rare Potion for it.</summary>
 public sealed class GildedExecution() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(18m, ValueProp.Move), new DamageVar("Bonus", 10m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(18m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -170,42 +128,36 @@ public sealed class GildedExecution() : AlchemistCard(2, CardType.Attack, CardRa
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         if (play.Target.CurrentHp <= 0)
-        {
             await Belt.BrewRandom(ctx, Lab, PotionRarity.Rare);
-            await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
-        }
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(5m);
-        DynamicVars["Bonus"].UpgradeValueBy(5m);
-    }
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(5m);
 }
 
 /// <summary>
 /// Empty the whole belt into the room.
 ///
-/// The Distillation deck's finisher: as much of what you were saving as you're willing to give up
-/// becomes damage and Poison, right now.
+/// The Distillation deck's finisher: everything you were saving becomes damage and Poison to
+/// every enemy, right now -- no partial version, no choice, the whole belt goes.
 /// </summary>
 public sealed class GrandCombustion() : AlchemistCard(3, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(18m, ValueProp.Move),
-        new DamageVar("PerPotion", 6m, ValueProp.Move),
+        new DamageVar(16m, ValueProp.Move),
+        new DamageVar("PerPotion", 8m, ValueProp.Move),
         new DynamicVar("Poison", 2m)
     ];
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var poured = await Belt.DistillAny(ctx, Lab, Belt.Held(Lab).Count);
+        var poured = 0;
+        foreach (var potion in Belt.Held(Lab).ToList())
+            if ((await Belt.Distill(ctx, Lab, potion)).Distilled) poured++;
+
         var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * poured;
         var poison = DynamicVars["Poison"].BaseValue * poured;
 
@@ -221,4 +173,46 @@ public sealed class GrandCombustion() : AlchemistCard(3, CardType.Attack, CardRa
         DynamicVars.Damage.UpgradeValueBy(4m);
         DynamicVars["PerPotion"].UpgradeValueBy(1m);
     }
+}
+
+/// <summary>A big dose of Poison, a big dose of Infuse, and a Volatile Reagent besides.</summary>
+public sealed class Overdose() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Poison", 10m), new DamageVar("Bonus", 10m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<PoisonPower>(), Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Discard);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(2m);
+}
+
+/// <summary>Deal damage, and Infuse Unstable Concoction for every different Potion type you've used this fight.</summary>
+public sealed class CatalyticExplosion() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(12m, ValueProp.Move), new DamageVar("PerType", 5m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
+
+        var types = AlchemistEffects.Peek(Lab)?.UsedThisCombat.Select(p => p.GetType()).Distinct().Count() ?? 0;
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["PerType"].BaseValue * types);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }

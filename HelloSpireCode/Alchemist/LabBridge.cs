@@ -156,7 +156,7 @@ public interface ILabBridge
     /// <summary>A random card from a pool, for the creation cards. Null when the pool is unavailable.</summary>
     CardModel? RandomCard(Player player, CardRarity? rarity = null, CardType? type = null);
 
-    /// <summary>Create a card into Hand. Commission and the creation engines.</summary>
+    /// <summary>Create a card into Hand. Homunculus Assault and the other creation engines.</summary>
     Task CreateInHand(PlayerChoiceContext ctx, Player player, CardModel card, bool costsZeroThisTurn);
 
     /// <summary>
