@@ -74,8 +74,6 @@ public sealed class Infusion() : AlchemistCard(1, CardType.Skill, CardRarity.Bas
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Bonus", 6m)];
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
