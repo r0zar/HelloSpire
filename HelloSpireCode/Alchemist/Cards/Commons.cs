@@ -342,14 +342,15 @@ public sealed class ContaminatedSample() : AlchemistCard(0, CardType.Skill, Card
     }
 }
 
-/// <summary>Exhaust a card, draw two. The Solvent Flask potion's card-shaped twin.</summary>
+/// <summary>Brew a Volatile Speed Potion, then Exhaust.</summary>
 public sealed class SolventFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
-        await AlchemistEffects.Draw(ctx, Lab, 2);
-    }
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Speed));
 }
 
 // ---------------------------------------------------------------------------- Powers

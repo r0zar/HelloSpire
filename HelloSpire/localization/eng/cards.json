@@ -421,7 +421,7 @@
   "HELLOSPIRE-CONTAMINATED_SAMPLE.title": "Contaminated Sample",
   "HELLOSPIRE-CONTAMINATED_SAMPLE.description": "Add a Volatile Reagent to your draw pile. Gain 1 [gold]Energy[/gold].",
   "HELLOSPIRE-SOLVENT_FLASK.title": "Solvent Flask",
-  "HELLOSPIRE-SOLVENT_FLASK.description": "Exhaust a card in your hand. Draw 2 cards.",
+  "HELLOSPIRE-SOLVENT_FLASK.description": "[gold]Brew[/gold] a Speed Potion. Exhaust.",
   "HELLOSPIRE-ENERGY_FLASK.title": "Energy Flask",
   "HELLOSPIRE-ENERGY_FLASK.description": "[gold]Brew[/gold] an Energy Potion.",
   "HELLOSPIRE-BITTER_SOLVENT.title": "Bitter Solvent",
