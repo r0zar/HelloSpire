@@ -295,7 +295,7 @@
   "HELLOSPIRE-EYE_FOR_AN_EYE.title": "Eye for an Eye",
   "HELLOSPIRE-EYE_FOR_AN_EYE.description": "Gain {Block:diff()} [gold]Block[/gold]. This turn, enemies that attack you take {Thorns:diff()} damage.",
   "HELLOSPIRE-HOLY_SHIELD.title": "Holy Shield",
-  "HELLOSPIRE-HOLY_SHIELD.description": "At the start of your turn, gain Block equal to your [gold]Spirit[/gold].",
+  "HELLOSPIRE-HOLY_SHIELD.description": "Whenever a card gains you Block, it gains Block equal to your [gold]Spirit[/gold].",
   "HELLOSPIRE-CONSECRATED_GROUND.title": "Consecrated Ground",
   "HELLOSPIRE-CONSECRATED_GROUND.description": "Gain {Thorns:diff()} [gold]Thorns[/gold].",
   "HELLOSPIRE-WAKE_OF_ASHES.title": "Wake of Ashes",

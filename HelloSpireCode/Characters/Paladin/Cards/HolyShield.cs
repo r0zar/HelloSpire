@@ -6,8 +6,8 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// At the start of your turn, gain Block equal to your Spirit. The Holy wall -- the lane's
-/// heal-scaling stat doubles as its defense. Upgrade: costs 1.
+/// Your Block cards gain extra Block equal to your Spirit. The Holy fusion: the heal stat
+/// amplifies the lane's Block cards -- Dexterity that prays. Upgrade: costs 1.
 /// </summary>
 public sealed class HolyShield() : PaladinCard(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
