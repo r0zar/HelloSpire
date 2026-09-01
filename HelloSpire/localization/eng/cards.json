@@ -608,5 +608,5 @@
   "HELLOSPIRE-BLINDING_LIGHT.title": "Blinding Light",
   "HELLOSPIRE-BLINDING_LIGHT.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Weak[/gold] to ALL enemies.",
   "HELLOSPIRE-PRAYER.title": "Prayer",
-  "HELLOSPIRE-PRAYER.description": "Gain [blue]{Plating}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card."
+  "HELLOSPIRE-PRAYER.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card."
 }

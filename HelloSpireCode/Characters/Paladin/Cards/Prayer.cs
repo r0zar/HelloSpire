@@ -10,7 +10,9 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
 /// Gain 1 Plating. Draw a card, then discard a card. The starter teacher (was Benediction):
-/// armor-always plus the draw-discard rhythm every lane speaks. Upgrade: costs 0.
+/// armor-always plus the draw-discard rhythm every lane speaks. Upgrade: 2 Plating -- the
+/// cost stays 1 so free Tithe-triggering never comes standard in every deck; Alms is the
+/// opt-in free discard.
 /// </summary>
 public sealed class Prayer() : PaladinCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
@@ -25,5 +27,5 @@ public sealed class Prayer() : PaladinCard(1, CardType.Skill, CardRarity.Basic, 
         await PaladinEffects.DiscardChosen(choiceContext, Owner, 1, this);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => DynamicVars["Plating"].UpgradeValueBy(1m);
 }
