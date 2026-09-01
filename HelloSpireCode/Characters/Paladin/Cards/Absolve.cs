@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -16,6 +17,10 @@ public sealed class Absolve() : PaladinCard(1, CardType.Attack, CardRarity.Commo
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(5m, ValueProp.Move), new DynamicVar("Weak", 1m)];
 
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
+
+    public override bool HasTithe => true;
+
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
@@ -25,6 +30,13 @@ public sealed class Absolve() : PaladinCard(1, CardType.Attack, CardRarity.Commo
         if (!cardPlay.Target.IsDead)
             await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target,
                 DynamicVars["Weak"].BaseValue, Owner.Creature, this);
+    }
+
+    protected override async Task OnTithe(PlayerChoiceContext ctx)
+    {
+        var enemy = PaladinEffects.RandomEnemy(Owner);
+        if (enemy == null) return;
+        await CreatureCmd.Damage(ctx, [enemy], 2m, ValueProp.Unpowered, Owner.Creature);
     }
 
     protected override void OnUpgrade()

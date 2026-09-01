@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 
@@ -14,6 +15,10 @@ public sealed class BlessingOfStone() : PaladinCard(1, CardType.Skill, CardRarit
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Plating", 3m)];
 
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
+
+    public override bool HasTithe => true;
+
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var target = TargetOrOwner(cardPlay);
@@ -21,6 +26,9 @@ public sealed class BlessingOfStone() : PaladinCard(1, CardType.Skill, CardRarit
         await PowerCmd.Apply<PlatingPower>(choiceContext, target,
             DynamicVars["Plating"].BaseValue, Owner.Creature, this);
     }
+
+    protected override async Task OnTithe(PlayerChoiceContext ctx) =>
+        await PowerCmd.Apply<PlatingPower>(ctx, Owner.Creature, 1m, Owner.Creature, this);
 
     protected override void OnUpgrade() => DynamicVars["Plating"].UpgradeValueBy(1m);
 }
