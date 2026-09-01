@@ -11,7 +11,7 @@ using MegaCrit.Sts2.Core.Models;
 namespace HelloSpire.HelloSpireCode.Alchemist.Relics;
 
 /// <summary>
-/// The starter: at the start of each combat, Brew an Unstable Concoction -- it starts at 6 base
+/// The starter: at the start of each combat, Brew an Unstable Concoction -- it starts at 3 base
 /// Damage (its own <see cref="UnstableConcoction"/> default), ready for the turn's cards to Infuse
 /// further.
 ///

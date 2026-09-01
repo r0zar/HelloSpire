@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
 
 /// <summary>
-/// The Alchemist's unique Potion: Brewed at 6 base Damage by Alchemical Satchel at the start of
+/// The Alchemist's unique Potion: Brewed at 3 base Damage by Alchemical Satchel at the start of
 /// every combat, then built up over the turn by every card that Infuses it, and used exactly like
 /// any other Potion once you're ready to cash it in -- whoever it's used on takes the stored
 /// Damage and Poison, and the stored Block and Energy come back to you.
@@ -27,7 +27,7 @@ public sealed class UnstableConcoction : AlchemistPotion
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(6m, ValueProp.Unpowered),
+        new DamageVar(3m, ValueProp.Unpowered),
         new BlockVar(0m, ValueProp.Unpowered),
         new DynamicVar("Poison", 0m),
         new DynamicVar("Energy", 0m)
