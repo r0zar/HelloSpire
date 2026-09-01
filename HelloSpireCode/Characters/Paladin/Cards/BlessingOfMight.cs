@@ -9,12 +9,12 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// A player gains 1 Strength, free. Exhaust -- permanent stats compound, so the true cast
-/// is once. No face: the small clean blessing.
+/// A player gains 1 Strength, free, no Exhaust -- the small clean blessing that comes back
+/// every reshuffle. (The perma-stat-Exhausts law is waived here by design: 1 Str per deck
+/// cycle at the cost of a card slot is the fair rate.)
 /// </summary>
 public sealed class BlessingOfMight() : PaladinCard(0, CardType.Skill, CardRarity.Common, TargetType.AnyPlayer)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Strength", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
