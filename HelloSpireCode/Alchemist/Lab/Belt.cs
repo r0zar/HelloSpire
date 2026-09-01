@@ -1,4 +1,5 @@
 using System.Linq;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -75,6 +76,11 @@ public static class Belt
                 bench.BrewBonusMultiplier = 1m;
             }
         }
+
+        // Any Attack that Brews leaves a Volatile Residue behind in the discard pile -- a passive
+        // tax on the Brew-and-hit cards, not something any one card grants itself.
+        if (lab.Card?.Type == CardType.Attack)
+            await Alchemy.CreateVolatileResidue(ctx, lab, PileType.Discard);
 
         await AlchemistHooks.NotifyBrewed(ctx, lab, placed);
         return placed;

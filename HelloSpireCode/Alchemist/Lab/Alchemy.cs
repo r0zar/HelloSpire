@@ -133,6 +133,17 @@ public static class Alchemy
         await AlchemistHooks.NotifyStatusCreated(ctx, lab);
     }
 
+    /// <summary>
+    /// Create a Volatile Residue (Status, Unplayable) and add it directly to a pile. Only ever
+    /// called from <see cref="Belt.Brew"/>, automatically, when the Brewing card is an Attack --
+    /// no card creates this one directly.
+    /// </summary>
+    public static async Task CreateVolatileResidue(PlayerChoiceContext ctx, LabContext lab, PileType pile)
+    {
+        await LabBridge.Current.CreateStatusInPile(ctx, lab.Player, ModelDb.Card<VolatileResidue>(), pile);
+        await AlchemistHooks.NotifyStatusCreated(ctx, lab);
+    }
+
     public static async Task<bool> DiscardOne(PlayerChoiceContext ctx, LabContext lab)
     {
         var candidates = OtherCardsInHand(lab);

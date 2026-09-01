@@ -382,6 +382,8 @@
   "HELLOSPIRE-DEFEND_ALCHEMIST.description": "Gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-VOLATILE_REAGENT.title": "Volatile Reagent",
   "HELLOSPIRE-VOLATILE_REAGENT.description": "Unstable byproduct of a Brew. Unplayable.",
+  "HELLOSPIRE-VOLATILE_RESIDUE.title": "Volatile Residue",
+  "HELLOSPIRE-VOLATILE_RESIDUE.description": "Unstable byproduct of an Attack that Brewed. Unplayable.",
   "HELLOSPIRE-PYRIC_FORMULA.title": "Pyric Formula",
   "HELLOSPIRE-PYRIC_FORMULA.description": "[gold]Brew[/gold] an Explosive Ampoule.",
   "HELLOSPIRE-AEGIS_FORMULA.title": "Aegis Formula",
