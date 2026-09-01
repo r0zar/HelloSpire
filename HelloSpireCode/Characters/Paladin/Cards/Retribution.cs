@@ -21,9 +21,8 @@ public sealed class Retribution() : PaladinCard(1, CardType.Power, CardRarity.Un
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        var loss = Math.Min(Spirit.Of(Owner), (int)DynamicVars["Spirit"].BaseValue);
-        if (loss > 0)
-            await PowerCmd.Apply<SpiritPower>(choiceContext, Owner.Creature, -loss, Owner.Creature, this);
+        // True debt: the loss lands in full, going below zero if it must. The light dims.
+        await Spirit.Gain(choiceContext, Owner, -(int)DynamicVars["Spirit"].BaseValue, this);
         await PowerCmd.Apply<RetributionPower>(choiceContext, Owner.Creature,
             DynamicVars["Energy"].BaseValue, Owner.Creature, this);
     }

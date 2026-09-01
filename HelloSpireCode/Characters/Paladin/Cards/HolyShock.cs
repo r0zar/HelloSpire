@@ -33,8 +33,9 @@ public sealed class HolyShock() : PaladinCard(1, CardType.Skill, CardRarity.Comm
     {
         var enemy = PaladinEffects.RandomEnemy(Owner);
         if (enemy == null) return;
-        await CreatureCmd.Damage(ctx, [enemy], DynamicVars.Heal.BaseValue + Spirit.Of(Owner),
-            ValueProp.Unpowered, Owner.Creature);
+        var damage = DynamicVars.Heal.BaseValue + Spirit.Of(Owner);
+        if (damage <= 0) return; // Spirit debt can dim the shock to nothing
+        await CreatureCmd.Damage(ctx, [enemy], damage, ValueProp.Unpowered, Owner.Creature);
     }
 
     protected override void OnUpgrade() => DynamicVars.Heal.UpgradeValueBy(3m);

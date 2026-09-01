@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
@@ -24,25 +25,65 @@ public sealed class SpiritPower : HelloSpirePower
     public override PowerStackType StackType => PowerStackType.Counter;
 }
 
+/// <summary>
+/// Spirit in the red: the light dimmed. Effective Spirit = SpiritPower - SpiritDebtPower, so
+/// while in debt, heals restore less. Spirit gains pay the debt down before banking any Spirit.
+/// A separate debuff power because the engine removes a Counter power at zero -- it cannot
+/// itself hold a negative number.
+/// </summary>
+public sealed class SpiritDebtPower : HelloSpirePower
+{
+    public override PowerType Type => PowerType.Debuff;
+    public override PowerStackType StackType => PowerStackType.Counter;
+}
+
 /// <summary>Helpers so cards read as design language: Spirit.Of, Spirit.Gain, Spirit.Heal.</summary>
 public static class Spirit
 {
-    public static int Of(Player p) => p.Creature.GetPowerAmount<SpiritPower>();
+    /// <summary>Effective Spirit: banked minus debt. Can be negative.</summary>
+    public static int Of(Player p) =>
+        p.Creature.GetPowerAmount<SpiritPower>() - p.Creature.GetPowerAmount<SpiritDebtPower>();
 
     public static async Task Gain(PlayerChoiceContext ctx, Player p, int n, CardModel? source = null)
     {
-        // Libram of Wrath: fuel bought with the heal identity -- no Spirit while held.
-        if (p.Relics.OfType<Relics.LibramOfWrath>().Any()) return;
-        await PowerCmd.Apply<SpiritPower>(ctx, p.Creature, n, p.Creature, source);
+        if (n == 0) return;
 
-        // Aura of Mercy: mercy softens the blow before it lands -- the bearer's Spirit gains
-        // shave that much Strength off ALL enemies until end of turn. Loop-proof (no heal),
-        // and every Spirit engine becomes party protection.
-        if (n > 0 && p.Creature.GetPower<AuraOfMercyPower>() is { } aura && p.Creature.CombatState is { } state)
+        if (n > 0)
         {
-            aura.Flash();
-            foreach (var enemy in state.HittableEnemies.ToList())
-                await PowerCmd.Apply<HumblingShacklesPower>(ctx, enemy, n, p.Creature, null);
+            // Libram of Wrath: fuel bought with the heal identity -- no Spirit while held.
+            // (Losses still land: the Libram spares you nothing.)
+            if (p.Relics.OfType<Relics.LibramOfWrath>().Any()) return;
+
+            // Gains pay down debt first; only the remainder banks as Spirit.
+            var debt = p.Creature.GetPowerAmount<SpiritDebtPower>();
+            var payment = Math.Min(debt, n);
+            if (payment > 0)
+                await PowerCmd.Apply<SpiritDebtPower>(ctx, p.Creature, -payment, p.Creature, source);
+            var remainder = n - payment;
+            if (remainder > 0)
+                await PowerCmd.Apply<SpiritPower>(ctx, p.Creature, remainder, p.Creature, source);
+
+            // Aura of Mercy: mercy softens the blow before it lands -- the bearer's Spirit gains
+            // shave that much Strength off ALL enemies until end of turn. Loop-proof (no heal),
+            // and every Spirit engine becomes party protection.
+            if (p.Creature.GetPower<AuraOfMercyPower>() is { } aura && p.Creature.CombatState is { } state)
+            {
+                aura.Flash();
+                foreach (var enemy in state.HittableEnemies.ToList())
+                    await PowerCmd.Apply<HumblingShacklesPower>(ctx, enemy, n, p.Creature, null);
+            }
+        }
+        else
+        {
+            // Losses drain banked Spirit first; anything beyond that becomes debt. The light dims.
+            var loss = -n;
+            var banked = p.Creature.GetPowerAmount<SpiritPower>();
+            var taken = Math.Min(banked, loss);
+            if (taken > 0)
+                await PowerCmd.Apply<SpiritPower>(ctx, p.Creature, -taken, p.Creature, source);
+            var debt = loss - taken;
+            if (debt > 0)
+                await PowerCmd.Apply<SpiritDebtPower>(ctx, p.Creature, debt, p.Creature, source);
         }
     }
 
@@ -51,12 +92,13 @@ public static class Spirit
         Heal(healer, healer.Creature, baseAmount);
 
     /// <summary>
-    /// Heal any target with the caster's Spirit added -- the ally-heal form. Also the funnel
-    /// where Beacon of Light rides: any other player bearing the Beacon heals its Amount too.
+    /// Heal any target with the caster's Spirit added -- the ally-heal form (Spirit debt reduces
+    /// it, floored at zero). Also the funnel where Beacon of Light rides: any other player
+    /// bearing the Beacon heals its Amount too.
     /// </summary>
     public static async Task Heal(Player healer, Creature target, decimal baseAmount)
     {
-        await CreatureCmd.Heal(target, baseAmount + Of(healer));
+        await CreatureCmd.Heal(target, Math.Max(0m, baseAmount + Of(healer)));
         if (target.CombatState is not { } state) return;
         foreach (var bearer in state.PlayerCreatures)
         {

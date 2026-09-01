@@ -214,5 +214,8 @@
   "HELLOSPIRE-AURA_OF_DEVOTION_POWER.smartDescription": "ALL players gain [blue]{Amount}[/blue] [gold]Plating[/gold] at the start of your turn.",
   "HELLOSPIRE-ZEAL_NEXT_TURN_POWER.title": "Blessed Zeal",
   "HELLOSPIRE-ZEAL_NEXT_TURN_POWER.description": "At the start of your next turn, gain [gold]Strength[/gold].",
-  "HELLOSPIRE-ZEAL_NEXT_TURN_POWER.smartDescription": "At the start of your next turn, gain [blue]{Amount}[/blue] [gold]Strength[/gold]."
+  "HELLOSPIRE-ZEAL_NEXT_TURN_POWER.smartDescription": "At the start of your next turn, gain [blue]{Amount}[/blue] [gold]Strength[/gold].",
+  "HELLOSPIRE-SPIRIT_DEBT_POWER.title": "Spirit Debt",
+  "HELLOSPIRE-SPIRIT_DEBT_POWER.description": "Your effective [gold]Spirit[/gold] is reduced: healing restores that much less. [gold]Spirit[/gold] gains pay this down before banking.",
+  "HELLOSPIRE-SPIRIT_DEBT_POWER.smartDescription": "Your effective [gold]Spirit[/gold] is reduced by [blue]{Amount}[/blue]: healing restores that much less. [gold]Spirit[/gold] gains pay this down before banking."
 }

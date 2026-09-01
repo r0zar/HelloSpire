@@ -21,6 +21,7 @@ public sealed class HolyShieldPower : HelloSpirePower
     {
         if (cardSource == null || cardSource.Owner?.Creature != Owner) return 0m;
         if (!props.IsPoweredCardOrMonsterMoveBlock()) return 0m;
-        return Owner.Player is { } player ? Spirit.Of(player) : 0m;
+        // Spirit debt silences the amp rather than shrinking Block below its printed value.
+        return Owner.Player is { } player ? System.Math.Max(0, Spirit.Of(player)) : 0m;
     }
 }
