@@ -417,7 +417,7 @@
   "HELLOSPIRE-COIN_PURSE.title": "Coin Purse",
   "HELLOSPIRE-COIN_PURSE.description": "[gold]Invest[/gold] {Invest:diff()}: gain {Energy:energyIcons()}.",
   "HELLOSPIRE-BITTER_SOLVENT.title": "Bitter Solvent",
-  "HELLOSPIRE-BITTER_SOLVENT.description": "Apply {WeakPower:diff()} [gold]Weak[/gold]. If you used a Potion this turn, gain {Block} [gold]Block[/gold].",
+  "HELLOSPIRE-BITTER_SOLVENT.description": "Gain {Block:diff()} [gold]Block[/gold]. [gold]Brew[/gold] a [gold]Volatile[/gold] Weak Potion.",
   "HELLOSPIRE-MARKET_SENSE.title": "Market Sense",
   "HELLOSPIRE-MARKET_SENSE.description": "Draw {Cards:diff()} cards, then discard 1. If you spent [gold]Gold[/gold] this turn, gain {Block} [gold]Block[/gold].",
   "HELLOSPIRE-EXTRA_VIAL.title": "Extra Vial",

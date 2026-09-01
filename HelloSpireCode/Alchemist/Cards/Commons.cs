@@ -1,10 +1,12 @@
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
+using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Alchemist.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -383,27 +385,22 @@ public sealed class CoinPurse() : AlchemistCard(0, CardType.Skill, CardRarity.Co
     protected override void OnUpgrade() => DynamicVars["Invest"].UpgradeValueBy(-1m);
 }
 
-/// <summary>Weak, plus Block if you drank something. The control common.</summary>
-public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+/// <summary>Block, and Brew a Volatile Weak Potion.</summary>
+public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<WeakPower>(2m), new BlockVar(4m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(4m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WeakPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
-
-        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
-            await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
+        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
+        await Belt.Brew(ctx, Lab, ModelDb.Potion<VolatileWeakPotion>().ToMutable());
     }
 
-    protected override void OnUpgrade() => DynamicVars["WeakPower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
 /// <summary>Dig, and get paid a little for having already spent.</summary>
