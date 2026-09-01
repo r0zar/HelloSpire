@@ -600,5 +600,7 @@
   "HELLOSPIRE-AURA_OF_DEVOTION.title": "Aura of Devotion",
   "HELLOSPIRE-AURA_OF_DEVOTION.description": "ALL players gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold] at the start of your turn.",
   "HELLOSPIRE-LAST_RITES.title": "Last Rites",
-  "HELLOSPIRE-LAST_RITES.description": "Deal {Damage:diff()} + [gold]Spirit[/gold] damage X times.\nEach hit deals 2 more for every healing card you have [gold]Exhausted[/gold] this combat."
+  "HELLOSPIRE-LAST_RITES.description": "Deal {Damage:diff()} + [gold]Spirit[/gold] damage X times.\nEach hit deals 2 more for every healing card you have [gold]Exhausted[/gold] this combat.",
+  "HELLOSPIRE-HEALING_WORD.title": "Healing Word",
+  "HELLOSPIRE-HEALING_WORD.description": "Heal a player {Heal:diff()} HP.\nDiscard a card.\n[gold]Tithe[/gold]: gain 1 [gold]Spirit[/gold]."
 }

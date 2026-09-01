@@ -5,34 +5,33 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Lose 4 HP, gain 2 Spirit. Exhaust. Blood for faith -- the aggressive Spirit ramp, and the
-/// one class that can heal the toll back. Spirit-gain Exhausts, per the rule.
+/// Heal a player 4 + Spirit. Discard a card. Exhaust. Tithe: gain 1 Spirit.
+/// The classic quick heal (replaces Penance): free, costs a card from hand, and its face is
+/// the set's one Spirit-granting Tithe -- a deliberate amendment to the no-Spirit-on-faces
+/// law, at drip rate.
 /// </summary>
-public sealed class Penance() : PaladinCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class HealingWord() : PaladinCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer), IHealingCard
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new HpLossVar(4m), new DynamicVar("Spirit", 2m)];
-
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(4m)];
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
 
     public override bool HasTithe => true;
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await CreatureCmd.Damage(choiceContext, Owner.Creature, DynamicVars.HpLoss.BaseValue,
-            ValueProp.Unblockable | ValueProp.Unpowered | ValueProp.Move, this);
-        await Spirit.Gain(choiceContext, Owner, (int)DynamicVars["Spirit"].BaseValue, this);
+        await Spirit.Heal(Owner, target, DynamicVars.Heal.BaseValue);
+        await PaladinEffects.DiscardChosen(choiceContext, Owner, 1, this);
     }
 
     protected override async Task OnTithe(PlayerChoiceContext ctx) =>
-        await CreatureCmd.GainBlock(Owner.Creature, 2m, ValueProp.Unpowered, null);
+        await Spirit.Gain(ctx, Owner, 1, this);
 
-    protected override void OnUpgrade() => DynamicVars["Spirit"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars.Heal.UpgradeValueBy(3m);
 }
