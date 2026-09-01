@@ -331,7 +331,7 @@
   "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS.title": "Guardian of Ancient Kings",
   "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS.description": "Gain [blue]{Buffer:diff()}[/blue] [gold]Buffer[/gold].\n[gold]Tithe[/gold]: gain 3 Block.",
   "HELLOSPIRE-ARDENT_DEFENDER.title": "Ardent Defender",
-  "HELLOSPIRE-ARDENT_DEFENDER.description": "Whenever an enemy attacks you, gain [gold]Plating[/gold].",
+  "HELLOSPIRE-ARDENT_DEFENDER.description": "Whenever an enemy attacks you, gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].",
   "HELLOSPIRE-HALLOWED_GROUND.title": "Hallowed Ground",
   "HELLOSPIRE-HALLOWED_GROUND.description": "At the start of your turn, deal {Amount:diff()} damage to ALL enemies and gain {Amount:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-CRUSADE.title": "Crusade",
