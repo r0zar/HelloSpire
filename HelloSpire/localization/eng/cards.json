@@ -401,7 +401,7 @@
   "HELLOSPIRE-COPPER_SHOT.title": "Copper Shot",
   "HELLOSPIRE-COPPER_SHOT.description": "Deal {Damage:diff()} damage. Apply {Poison:diff()} [gold]Poison[/gold]. If you used a Potion this turn, apply {WeakPower} [gold]Weak[/gold].",
   "HELLOSPIRE-TRANSMUTE.title": "Transmute",
-  "HELLOSPIRE-TRANSMUTE.description": "Exhaust another card in your hand: [gold]Infuse[/gold] {Bonus:diff()} Damage.",
+  "HELLOSPIRE-TRANSMUTE.description": "[gold]Infuse[/gold] {Bonus:diff()} Damage.",
   "HELLOSPIRE-SALVAGE_REAGENTS.title": "Salvage Reagents",
   "HELLOSPIRE-SALVAGE_REAGENTS.description": "Exhaust another card in your hand: gain {Block:diff()} [gold]Block[/gold] and [gold]Infuse[/gold] {Bonus:diff()} Block.",
   "HELLOSPIRE-POCKET_FORMULA.title": "Pocket Formula",

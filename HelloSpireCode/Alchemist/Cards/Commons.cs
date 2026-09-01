@@ -204,7 +204,7 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
 
 // ---------------------------------------------------------------------------- Skills
 
-/// <summary>Exhaust another card, and Infuse Unstable Concoction. The class's defining conversion, at its cheapest.</summary>
+/// <summary>Infuse Unstable Concoction. The class's defining conversion, at its cheapest and plainest.</summary>
 public sealed class Transmute() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Bonus", 6m)];
@@ -213,11 +213,10 @@ public sealed class Transmute() : AlchemistCard(1, CardType.Skill, CardRarity.Co
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    protected override Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
-
         Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        return Task.CompletedTask;
     }
 
     protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
