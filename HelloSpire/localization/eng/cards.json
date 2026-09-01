@@ -399,7 +399,7 @@
   "HELLOSPIRE-CRUCIBLE_BLOW.title": "Crucible Blow",
   "HELLOSPIRE-CRUCIBLE_BLOW.description": "Deal {Damage:diff()} damage. [gold]Infuse[/gold] {Bonus:diff()} Damage.",
   "HELLOSPIRE-COPPER_SHOT.title": "Copper Shot",
-  "HELLOSPIRE-COPPER_SHOT.description": "Deal {Damage:diff()} damage. Apply {Poison:diff()} [gold]Poison[/gold] and {WeakPower} [gold]Weak[/gold].",
+  "HELLOSPIRE-COPPER_SHOT.description": "Deal {Damage:diff()} damage. Apply {WeakPower} [gold]Weak[/gold].",
   "HELLOSPIRE-TRANSMUTE.title": "Transmute",
   "HELLOSPIRE-TRANSMUTE.description": "[gold]Infuse[/gold] {Bonus:diff()} Damage.",
   "HELLOSPIRE-SALVAGE_REAGENTS.title": "Salvage Reagents",

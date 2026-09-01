@@ -165,18 +165,16 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
     }
 }
 
-/// <summary>Deal damage, apply Poison, and apply Weak.</summary>
+/// <summary>Deal damage and apply Weak.</summary>
 public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(7m, ValueProp.Move),
-        new DynamicVar("Poison", 2m),
         new PowerVar<WeakPower>(1m)
     ];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<PoisonPower>(), HoverTipFactory.FromPower<WeakPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WeakPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -185,7 +183,6 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
         await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
     }
 
