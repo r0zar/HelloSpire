@@ -38,7 +38,7 @@ public class Paladin : PlaceholderCharacterModel
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<Judgment>(),
-        ModelDb.Card<Benediction>(),
+        ModelDb.Card<Prayer>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<ConsecratedPlate>()];

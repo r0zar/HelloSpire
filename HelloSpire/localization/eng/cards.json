@@ -606,5 +606,7 @@
   "HELLOSPIRE-CONDEMN.title": "Condemn",
   "HELLOSPIRE-CONDEMN.description": "Deal {Damage:diff()} damage.\nApply 1 [gold]Vulnerable[/gold].\n[gold]Tithe[/gold]: gain 5 Block.",
   "HELLOSPIRE-BLINDING_LIGHT.title": "Blinding Light",
-  "HELLOSPIRE-BLINDING_LIGHT.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Weak[/gold] to ALL enemies."
+  "HELLOSPIRE-BLINDING_LIGHT.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Weak[/gold] to ALL enemies.",
+  "HELLOSPIRE-PRAYER.title": "Prayer",
+  "HELLOSPIRE-PRAYER.description": "Gain [blue]{Plating}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card."
 }
