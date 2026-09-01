@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Gold;
 using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Potions;
@@ -26,120 +25,16 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 
 /// <summary>
 /// The real ILabBridge: every operation the quarantine declared, implemented against the game's
-/// actual APIs (PotionCmd/PotionFactory for the belt, PlayerCmd for Gold, CreatureCmd.LoseMaxHp
-/// for Render, CardSelectCmd for choices, CardCmd/CardPileCmd for the piles).
+/// actual APIs (PotionCmd/PotionFactory for the belt, CardSelectCmd for choices, CardCmd/
+/// CardPileCmd for the piles).
 ///
 /// ChoosePotion and ChoosePotionOption share one real UI (PotionPickerPopup) and the same
-/// multiplayer-sync shape as Confirm -- see ChoosePotionFrom. Pressure Burst surfaced this: it
-/// used to silently take the first held Potion with no popup at all, which read as "the card did
-/// nothing" even though it had picked something.
+/// multiplayer-sync shape as any other player choice here -- see ChoosePotionFrom. Pressure Burst
+/// surfaced this: it used to silently take the first held Potion with no popup at all, which read
+/// as "the card did nothing" even though it had picked something.
 /// </summary>
 public sealed class WiredLabBridge : ILabBridge
 {
-    // -------------------------------------------------------------------------- Gold
-    public int Gold(Player player) => player.Gold;
-
-    public Task GainGold(Player player, int amount) => PlayerCmd.GainGold(amount, player);
-
-    /// <summary>
-    /// Invest is mandatory, not a Pay/Decline prompt: pay automatically if the player can afford
-    /// it, otherwise return false without spending anything. No popup -- Gold is a recoverable run
-    /// resource (Compound Interest, a future run's income), unlike Render's Max HP, so there is no
-    /// decision here worth interrupting the player for.
-    ///
-    /// Caller already discounted: Ledger.Invest applies AlchemistHooks.InvestDiscount before
-    /// calling this, so doing it again here would double-apply the same discount. Confirmed live
-    /// as a real bug while removing the prompt -- Gilded Ledger's discount was being subtracted
-    /// twice, undercharging every Invest clause in the class.
-    /// </summary>
-    public async Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        if (player.Gold < cost) return false;
-
-        await PlayerCmd.LoseGold(cost, player, GoldLossType.Spent);
-        return true;
-    }
-
-    // -------------------------------------------------------------------------- Max HP
-    public async Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        if (player.Creature == null || player.Creature.MaxHp - cost <= 0) return false;
-
-        if (!await Confirm(ctx, player, "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.header", "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body", cost))
-            return false;
-
-        await CreatureCmd.LoseMaxHp(ctx, player.Creature, cost, isFromCard: true);
-        return true;
-    }
-
-    /// <summary>
-    /// The Pay/Decline primitive shared by Invest and Render.
-    ///
-    /// There is no card- or combat-scoped confirmation dialog in the base game — Invest/Render
-    /// have no vanilla precedent at all. What does exist, and is what every menu-level confirmation
-    /// in the base game (reset settings, delete profile, abandon run, disconnect...) is built on,
-    /// is <see cref="NGenericPopup"/> + <see cref="NModalContainer"/>: create the popup, add it to
-    /// the single global modal layer, await its Yes/No result. This is the exact call sequence
-    /// decompiled from NResetGameplayButton.ResetSettingsAfterConfirmation in sts2.dll. The Yes/No
-    /// button labels reuse the base game's own "Confirm"/"Cancel" loc keys (main_menu_ui,
-    /// GENERIC_POPUP.confirm/cancel) rather than minting new ones.
-    ///
-    /// Multiplayer: a card's OnPlay runs on every connected client to keep game state
-    /// deterministic, not just the client of the player who played it (confirmed via a real
-    /// in-game report of the Invest prompt popping up for every player at once). The fix, mirrored
-    /// exactly from CardSelectCmd.FromHand (decompiled from sts2.dll): only the player's own client
-    /// shows the popup (gated by LocalContext.IsMe, the same check FromHand uses), and the answer
-    /// is broadcast to every other client via PlayerChoiceSynchronizer so their simulation reaches
-    /// the same Gold/Max-HP state without ever showing them a popup of their own. ReserveChoiceId
-    /// is called unconditionally, before branching, because it also has to stay in lock-step across
-    /// clients -- exactly how FromHand calls it.
-    /// </summary>
-    private static async Task<bool> Confirm(PlayerChoiceContext ctx, Player player, string headerKey, string bodyKey, int cost)
-    {
-        var isLocal = LocalContext.IsMe(player) && RunManager.Instance.NetService.Type != NetGameType.Replay;
-        var choiceId = RunManager.Instance.PlayerChoiceSynchronizer.ReserveChoiceId(player);
-
-        await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
-        try
-        {
-            if (!isLocal)
-            {
-                var remote = await RunManager.Instance.PlayerChoiceSynchronizer.WaitForRemoteChoice(player, choiceId);
-                return remote.AsIndex() == 1;
-            }
-
-            var answer = await ShowPopup(headerKey, bodyKey, cost);
-            RunManager.Instance.PlayerChoiceSynchronizer.SyncLocalChoice(player, choiceId, PlayerChoiceResult.FromIndex(answer ? 1 : 0));
-            return answer;
-        }
-        finally
-        {
-            await ctx.SignalPlayerChoiceEnded();
-        }
-    }
-
-    /// <summary>The actual local popup, split out so Confirm can gate it behind LocalContext.IsMe.</summary>
-    private static async Task<bool> ShowPopup(string headerKey, string bodyKey, int cost)
-    {
-        // No modal layer, or one is already up: there is no safe way to ask, so Decline. This can
-        // only make the bridge more conservative than intended, never less — it can never cause an
-        // unasked-for Gold/Max HP spend.
-        if (NModalContainer.Instance == null || NModalContainer.Instance.OpenModal != null)
-            return false;
-
-        var popup = NGenericPopup.Create();
-        if (popup == null) return false; // TestMode, or the popup scene failed to load.
-
-        var header = new LocString("cards", headerKey);
-        var body = new LocString("cards", bodyKey);
-        body.Add("Cost", (decimal)cost);
-        var yes = new LocString("main_menu_ui", "GENERIC_POPUP.confirm");
-        var no = new LocString("main_menu_ui", "GENERIC_POPUP.cancel");
-
-        NModalContainer.Instance.Add(popup);
-        return await popup.WaitForConfirmation(body, header, no, yes);
-    }
-
     // -------------------------------------------------------------------------- the belt
     public IReadOnlyList<PotionModel> Held(Player player) => player.Potions.ToList();
 
@@ -189,7 +84,8 @@ public sealed class WiredLabBridge : ILabBridge
         }
 
         // Curated per design/alchemist.md: nothing whose value outlives the fight. The Stone is
-        // non-Brewable by rule; Aurum Tincture makes real Gold.
+        // non-Brewable by rule; Aurum Tincture is excluded because its Poison payload assumes it
+        // was deliberately bought or found, not handed out for free by a random Brew.
         var options = PotionFactory.GetPotionOptions(player, [])
             .Where(p => p is not PhilosophersStone and not AurumTincture)
             .Where(p => rarity == null || p.Rarity == rarity)
@@ -378,17 +274,5 @@ public sealed class WiredLabBridge : ILabBridge
         if (card.IsUpgradable) CardCmd.Upgrade(card, CardPreviewStyle.None);
         if (card.CloneOf is { IsUpgradable: true } original) CardCmd.Upgrade(original, CardPreviewStyle.None);
         return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// RunState.CloneCard (decompiled from sts2.dll -- the same call real relics like LavaLamp,
-    /// SilverCrucible and the Egg relics use to hand the player a run-scoped copy of a card) clones
-    /// the card and registers it with the run in one step; CardPileCmd.Add(..., PileType.Deck) is
-    /// what actually places it in the deck pile, mirroring PaelsTooth's own combat-end sequence.
-    /// </summary>
-    public async Task CreatePermanently(Player player, CardModel card)
-    {
-        var clone = player.RunState.CloneCard(card);
-        CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(clone, PileType.Deck));
     }
 }

@@ -12,7 +12,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 //
 // Between them they teach one system and only one. The belt has space, cards put Potions in it,
 // Potions cost no Energy to drink, and a Brewed Potion is gone at the end of the fight whether you
-// used it or not. Gold is deliberately absent until the first card reward.
+// used it or not. Infuse, Unleash and Poison are deliberately absent until the first card reward.
 
 /// <summary>Deal damage.</summary>
 public sealed class StrikeAlchemist() : AlchemistCard(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)

@@ -13,53 +13,62 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // Brewing, Exhausting, Investing, drinking, or emptying a slot. None of them changes what you do;
 // they change what it is worth.
 
-/// <summary>Gain Potency. The Brewer's only scaling stat.</summary>
+/// <summary>Gain Potency, and Infuse a little Damage besides. The Brewer's only scaling stat.</summary>
 public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new PowerVar<PotencyPower>(2m), new DamageVar("Bonus", 3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Potency), Tip(AlchemistTips.Volatile), HoverTipFactory.FromPower<PotencyPower>()];
+        [Tip(AlchemistTips.Potency), Tip(AlchemistTips.Volatile), Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<PotencyPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
+        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
 }
 
-/// <summary>The first Brew each turn is worth Block. Makes a setup turn less of a hole.</summary>
+/// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a hole.</summary>
 public sealed class HeatBath() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<HeatBathPower>(4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new PowerVar<HeatBathPower>(2m), new BlockVar("Infuse", 3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<HeatBathPower>()];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<HeatBathPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<HeatBathPower>(ctx, Owner.Creature,
+        var power = await PowerCmd.Apply<HeatBathPower>(ctx, Owner.Creature,
             DynamicVars["HeatBathPower"].BaseValue, Owner.Creature, this);
+
+        if (power != null) power.BlockInfuse = DynamicVars["Infuse"].BaseValue;
     }
 
-    protected override void OnUpgrade() => DynamicVars["HeatBathPower"].UpgradeValueBy(2m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars["HeatBathPower"].UpgradeValueBy(1m);
+        DynamicVars["Infuse"].UpgradeValueBy(1m);
+    }
 }
 
 /// <summary>
-/// The first Exhaust each turn mints a Gold, three times a fight.
+/// The first Exhaust each turn Infuses Damage into Unstable Concoction, three times a fight.
 ///
-/// The cap is not a nerf, it is the design. An uncapped in-combat Gold trigger makes stalling the
-/// correct play, and a deckbuilder where the best line is "do nothing for four turns" is broken.
+/// The cap is not a nerf, it is the design. An uncapped in-combat Exhaust trigger makes stalling
+/// the correct play, and a deckbuilder where the best line is "do nothing for four turns" is broken.
 /// </summary>
 public sealed class CoinPress() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<CoinPressPower>(1m), new DynamicVar("Triggers", 3m)];
+        [new PowerVar<CoinPressPower>(4m), new DynamicVar("Triggers", 3m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<CoinPressPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<CoinPressPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -74,13 +83,13 @@ public sealed class CoinPress() : AlchemistCard(1, CardType.Power, CardRarity.Un
     protected override void OnUpgrade() => DynamicVars["Triggers"].UpgradeValueBy(1m);
 }
 
-/// <summary>Spending Gold buys Block on the way past.</summary>
+/// <summary>Distilling buys Block on the way past.</summary>
 public sealed class MerchantsInstinct() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<MerchantsInstinctPower>(3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Invest), HoverTipFactory.FromPower<MerchantsInstinctPower>()];
+        [Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<MerchantsInstinctPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {

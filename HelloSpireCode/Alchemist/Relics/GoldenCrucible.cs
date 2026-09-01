@@ -1,25 +1,20 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
-using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Merchant;
-using MegaCrit.Sts2.Core.Entities.Players;
-using MegaCrit.Sts2.Core.Entities.Potions;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Rooms;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Relics;
 
-/// <summary>Every in-combat Gold gain yields 3 more. The Transmutation deck compounds.</summary>
-public sealed class GoldenCrucible : Characters.AlchemistRelic, IGoldModifier
+/// <summary>Whenever you Distill a Potion, Infuse 3 Damage into Unstable Concoction.</summary>
+public sealed class GoldenCrucible : Characters.AlchemistRelic, IDistillListener
 {
     public override RelicRarity Rarity => RelicRarity.Rare;
 
-    public int ModifyGoldGain(LabContext lab, int amount)
+    public Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         Flash();
-        return 3;
+        Belt.Infuse(lab, damage: 3m);
+        return Task.CompletedTask;
     }
 }

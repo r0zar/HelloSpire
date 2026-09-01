@@ -58,7 +58,11 @@ public static class Belt
             return null;
         }
 
-        if (bench != null) bench.BrewedThisTurn++;
+        if (bench != null)
+        {
+            bench.BrewedThisTurn++;
+            bench.BrewedThisCombat++;
+        }
 
         await AlchemistHooks.NotifyBrewed(ctx, lab, placed);
         return placed;
@@ -130,6 +134,7 @@ public static class Belt
         {
             bench.Volatile.Remove(potion);
             bench.DistilledThisTurn++;
+            bench.DistilledThisCombat++;
         }
 
         await NotifySlotEmptied(ctx, lab);

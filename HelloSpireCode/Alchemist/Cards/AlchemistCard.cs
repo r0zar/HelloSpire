@@ -9,7 +9,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 /// Base for every Alchemist card.
 ///
 /// Adds two conveniences on top of the mod's card base: implicit access to the bench this card is
-/// being played from, and a short way to attach the Brew / Distill / Invest / Render hover tips
+/// being played from, and a short way to attach the Brew / Distill / Infuse / Unleash hover tips
 /// that carry the character's vocabulary.
 /// </summary>
 public abstract class AlchemistCard(int cost, CardType type, CardRarity rarity, TargetType target)

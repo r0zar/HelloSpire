@@ -30,20 +30,16 @@ public sealed class SolventFlask : AlchemistPotion
     }
 }
 
-/// <summary>
-/// Fifteen Gold and an Energy.
-///
-/// Excluded from random Brew, because it makes real Gold — the curated Combat Potion pool must
-/// never produce anything whose value outlives the fight. Still a legitimate shop or reward
-/// Potion, and still fine from Alchemize.
-/// </summary>
+/// <summary>Heavy Poison to everything, and an Energy to spend it with.</summary>
 public sealed class AurumTincture : AlchemistPotion
 {
     public override PotionRarity Rarity => PotionRarity.Uncommon;
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
-        await Ledger.GainGold(ctx, Lab, 15);
+        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+            await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, 8m);
+
         await AlchemistEffects.GainEnergy(Lab, 1m);
     }
 }

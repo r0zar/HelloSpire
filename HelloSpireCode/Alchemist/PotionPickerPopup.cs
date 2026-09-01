@@ -17,10 +17,10 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// (one Potion shown, a different one brewed); a single popup with its own backstop has no
 /// second act to race.
 ///
-/// The pick is mandatory by design in most callers -- the Gold is already spent, or the card has
-/// already committed to Distilling one -- so there is no cancel by default. Grand Combustion is
-/// the one caller that genuinely offers "however many you like": passing allowStop adds a "Done"
-/// button that resolves the pick as null instead.
+/// The pick is mandatory by design in most callers -- the card has already committed to Brewing
+/// or Distilling one -- so there is no cancel by default. Grand Combustion is the one caller that
+/// genuinely offers "however many you like": passing allowStop adds a "Done" button that resolves
+/// the pick as null instead.
 /// </summary>
 public static class PotionPickerPopup
 {

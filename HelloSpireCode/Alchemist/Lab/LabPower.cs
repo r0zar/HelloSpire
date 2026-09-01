@@ -21,8 +21,8 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 /// cylinder is one — powers are created per creature, they are wiped when combat ends, and they
 /// already have somewhere to live on screen.
 ///
-/// Nothing mutates this directly. <see cref="Belt"/> owns the Potion half and <see cref="Ledger"/>
-/// owns the Gold half, which is where the rules actually live.
+/// Nothing mutates this directly. <see cref="Belt"/> owns the Potion, Distill and Unstable
+/// Concoction rules -- where they actually live.
 /// </summary>
 public sealed class LabPower : HelloSpirePower
 {
@@ -63,18 +63,13 @@ public sealed class LabPower : HelloSpirePower
     public int BrewedThisTurn { get; set; }
     public int DistilledThisTurn { get; set; }
 
-    // ------------------------------------------------------------------ Gold
+    /// <summary>Never reset -- Catalyst Needle reads it.</summary>
+    public int BrewedThisCombat { get; set; }
 
-    /// <summary>Gold this bench has generated during this combat.</summary>
-    public int GoldGainedThisCombat { get; set; }
+    /// <summary>Never reset -- Alembic Blade and Refined Needle read it.</summary>
+    public int DistilledThisCombat { get; set; }
 
-    /// <summary>Gold Invested during this combat. Midas Needle and Compound Interest read it.</summary>
-    public int GoldSpentThisCombat { get; set; }
-
-    public int GoldGainedThisTurn { get; set; }
-    public int GoldSpentThisTurn { get; set; }
-
-    // ------------------------------------------------------------------ Transform bookkeeping
+    // ------------------------------------------------------------------ other bookkeeping
 
     /// <summary>Cards Exhausted this turn, by any means. Cinnabar Edge and the Exhaust engines read it.</summary>
     public int CardsExhaustedThisTurn { get; set; }
@@ -93,11 +88,7 @@ public sealed class LabPower : HelloSpirePower
     /// <summary>The type of the most recently played card, including the one currently resolving.</summary>
     public CardType? LastCardType { get; set; }
 
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new DynamicVar("Held", 0m),
-        new DynamicVar("Gold", 0m)
-    ];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Held", 0m)];
 
     /// <summary>Everything that resets between the owner's turns.</summary>
     public override Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)
@@ -108,8 +99,6 @@ public sealed class LabPower : HelloSpirePower
         SlotsEmptiedThisTurn = 0;
         BrewedThisTurn = 0;
         DistilledThisTurn = 0;
-        GoldGainedThisTurn = 0;
-        GoldSpentThisTurn = 0;
         CardsExhaustedThisTurn = 0;
         CardsCreatedThisTurn = 0;
 

@@ -23,68 +23,25 @@ public enum BasePotion
 /// <summary>
 /// The quarantine.
 ///
-/// The Alchemist needs four things from the base game that this repository has no working example
-/// of: reading and spending **Gold**, writing to and reading the **Potion belt**, reducing
-/// **Max HP**, and putting a **choice** in front of the player. The Gunslinger needed none of them
-/// — its cylinder is a custom Power and it deliberately makes its choices from board state rather
-/// than from a menu (see PerfectReload) — so there is no precedent in this codebase to copy, and
-/// the exact signatures have not been read out of sts2.dll yet.
+/// The Alchemist needs things from the base game that this repository has no working example of:
+/// writing to and reading the **Potion belt**, and putting a **choice** in front of the player.
+/// The Gunslinger needed neither — its cylinder is a custom Power and it deliberately makes its
+/// choices from board state rather than from a menu (see PerfectReload) — so there is no precedent
+/// in this codebase to copy.
 ///
-/// Rather than scatter guesses across ninety cards, every one of those operations is declared here
+/// Rather than scatter guesses across eighty cards, every one of those operations is declared here
 /// and nowhere else. The default implementation below is deliberately inert: the mod compiles,
-/// loads and plays, the Alchemist's damage/Block/draw/Power effects all work, and the four
-/// unverified systems no-op with a log line instead of doing something wrong.
+/// loads and plays, the Alchemist's damage/Block/draw/Power effects all work, and the belt/choice
+/// operations no-op with a log line instead of doing something wrong.
 ///
 /// **To finish the character, implement <see cref="ILabBridge"/> against the real API and assign
 /// <see cref="Current"/> during mod initialization.** Nothing else needs to change.
 ///
-/// Two of the defaults are load-bearing safety decisions, not placeholders to rush past:
-///
-/// - <see cref="OfferInvest"/> and <see cref="OfferRender"/> both return **false** here. For
-///   Render that still means Decline — Max HP is permanent, so auto-paying without asking would
-///   spend the player's run behind their back. Invest is no longer a Decline at all: it is
-///   mandatory once the bridge is wired, paid automatically whenever affordable, and this stub's
-///   false is standing in for "cannot afford it" rather than a choice. Every Invest and Render
-///   card is specified to resolve its base effect in full either way, so a missing payment never
-///   leaves a card dead. A card that is weaker than designed is a bug; a card that quietly empties
-///   the player's purse is a much worse one.
-/// - <see cref="Brew"/> returning null is the same state as a full belt, which the design already
-///   defines: the card resolves, the Potion is lost.
-///
-/// TODO(Phase 3): read the Potion, Gold, Max HP and player-choice APIs out of sts2.dll and ship a
-/// real implementation. Until then the Alchemist is a playable but incomplete character, and that
-/// is stated on the tin rather than hidden.
+/// <see cref="Brew"/> returning null is the same state as a full belt, which the design already
+/// defines: the card resolves, the Potion is lost.
 /// </summary>
 public interface ILabBridge
 {
-    // -------------------------------------------------------------------------- Gold
-
-    /// <summary>The player's actual, persistent Gold.</summary>
-    int Gold(Player player);
-
-    /// <summary>Add real Gold to the run total. Transmute and friends.</summary>
-    Task GainGold(Player player, int amount);
-
-    /// <summary>
-    /// Invest is mandatory, not optional: pay the Gold automatically -- no Pay/Decline prompt --
-    /// and return true, or return false without spending anything when the player holds less than
-    /// <paramref name="cost"/>. Unlike Render, there is no reason to ask; Gold is recoverable
-    /// (Compound Interest, a future run's income) in a way Max HP never is.
-    /// </summary>
-    Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost);
-
-    // -------------------------------------------------------------------------- Max HP
-
-    /// <summary>
-    /// Ask the player to Render. Pay reduces Max HP (and current HP) by <paramref name="cost"/>
-    /// and returns true. Must return false without prompting when paying would take Max HP to
-    /// zero or below.
-    ///
-    /// There is no counterpart to this. Render is one-way by design — see design/alchemist.md,
-    /// Override 1. Do not add a GainMaxHp here.
-    /// </summary>
-    Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost);
-
     // -------------------------------------------------------------------------- the belt
 
     /// <summary>Potions the player is currently holding, in slot order.</summary>
@@ -183,12 +140,6 @@ public interface ILabBridge
 
     /// <summary>Upgrade a card permanently, for the rest of the run. Masterwork and Transmute Flesh.</summary>
     Task UpgradePermanently(Player player, CardModel card);
-
-    /// <summary>
-    /// Clone a card at run scope and add the clone straight to the deck -- a real, permanent
-    /// addition, not a combat-only one. Homunculus Pact.
-    /// </summary>
-    Task CreatePermanently(Player player, CardModel card);
 }
 
 /// <summary>
@@ -203,30 +154,6 @@ public sealed class UnwiredLabBridge : ILabBridge
     {
         if (!_reported.Add(what)) return;
         MainFile.Logger.Info($"[Alchemist] {what} is not wired up yet; see LabBridge. Effect skipped.");
-    }
-
-    public int Gold(Player player)
-    {
-        Report("reading Gold");
-        return 0;
-    }
-
-    public Task GainGold(Player player, int amount)
-    {
-        Report("gaining Gold");
-        return Task.CompletedTask;
-    }
-
-    public Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        Report("Invest");
-        return Task.FromResult(false); // Cannot pay. Never spend the player's Gold when unwired.
-    }
-
-    public Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        Report("Render");
-        return Task.FromResult(false); // Decline. Max HP is permanent; never take it unasked.
     }
 
     public IReadOnlyList<PotionModel> Held(Player player)
@@ -352,12 +279,6 @@ public sealed class UnwiredLabBridge : ILabBridge
     public Task UpgradePermanently(Player player, CardModel card)
     {
         Report("Upgrading permanently");
-        return Task.CompletedTask;
-    }
-
-    public Task CreatePermanently(Player player, CardModel card)
-    {
-        Report("Creating a card permanently");
         return Task.CompletedTask;
     }
 }

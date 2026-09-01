@@ -148,13 +148,6 @@ public static class Alchemy
         if (bench != null) bench.CardsCreatedThisTurn++;
     }
 
-    /// <summary>
-    /// Permanently add a card to the deck, not just this combat's Hand -- a real, lasting card,
-    /// same weight class as UpgradeOnePermanently. Homunculus Pact.
-    /// </summary>
-    public static async Task CreatePermanently(LabContext lab, CardModel card) =>
-        await LabBridge.Current.CreatePermanently(lab.Player, card);
-
     /// <summary>Let the player pick a card in Hand and Upgrade it for this combat.</summary>
     public static async Task<bool> UpgradeOneForCombat(PlayerChoiceContext ctx, LabContext lab)
     {

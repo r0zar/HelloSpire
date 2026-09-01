@@ -1,4 +1,5 @@
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
+using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Powers;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -8,7 +9,6 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Rooms;
 using HelloSpire.HelloSpireCode.Alchemist;
 using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Powers;
@@ -62,24 +62,28 @@ public sealed class ResidualHeatPower : AlchemistEnginePower, IPotionUseListener
     }
 }
 
-/// <summary>The first Brew each turn is worth a little Block. Makes a setup turn less of a gap.</summary>
+/// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a gap.</summary>
 public sealed class HeatBathPower : AlchemistEnginePower, IBrewListener
 {
+    /// <summary>Block Infused into Unstable Concoction. Set by the card; 3 base, 4 upgraded.</summary>
+    public decimal BlockInfuse { get; set; } = 3m;
+
     public async Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         if (UsedThisTurn) return;
         UsedThisTurn = true;
 
         Flash();
-        await AlchemistEffects.GainBlock(lab, Amount);
+        await AlchemistEffects.GainPotency(ctx, lab, Amount);
+        Belt.Infuse(lab, block: BlockInfuse);
     }
 }
 
 /// <summary>
-/// The first Exhaust each turn mints a Gold, up to a hard per-combat cap.
+/// The first Exhaust each turn Infuses Damage, up to a hard per-combat cap.
 ///
-/// The cap is the whole design. An uncapped Gold trigger makes stalling a fight the correct play,
-/// which is the failure mode the Gold guardrails exist to prevent.
+/// The cap is the whole design. An uncapped trigger makes stalling a fight the correct play,
+/// which is the guardrail exists to prevent, regardless of what currency it pays out in.
 /// </summary>
 public sealed class CoinPressPower : AlchemistEnginePower, IExhaustListener
 {
@@ -93,21 +97,21 @@ public sealed class CoinPressPower : AlchemistEnginePower, IExhaustListener
         TriggersLeft--;
 
         Flash();
-        await Ledger.GainGold(ctx, lab, (int)Amount);
+        Belt.Infuse(lab, damage: Amount);
     }
 }
 
-/// <summary>Spending Gold buys Block on the way past. The Investor deck's defence.</summary>
-public sealed class MerchantsInstinctPower : AlchemistEnginePower, IInvestListener
+/// <summary>Distilling buys Block on the way past. The Distillation deck's defence.</summary>
+public sealed class MerchantsInstinctPower : AlchemistEnginePower, IDistillListener
 {
-    public async Task OnInvested(PlayerChoiceContext ctx, LabContext lab, int cost)
+    public async Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         Flash();
         await AlchemistEffects.GainBlock(lab, Amount);
     }
 }
 
-/// <summary>The first Potion each turn also draws. Turns the belt into a second hand.</summary>
+/// <summary>The first Potion each turn also draws and Infuses Poison. Turns the belt into a second hand.</summary>
 public sealed class ReactiveMixturePower : AlchemistEnginePower, IPotionUseListener
 {
     public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
@@ -117,11 +121,12 @@ public sealed class ReactiveMixturePower : AlchemistEnginePower, IPotionUseListe
 
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
+        Belt.Infuse(lab, poison: 2m);
     }
 }
 
 /// <summary>
-/// The first Slot emptied each turn is worth Block.
+/// The first Slot emptied each turn is worth Block, and a little Infuse besides.
 ///
 /// Fires on Distill as well as on drinking, which is the point — it is the Empty Belt archetype's
 /// engine, and Distilling is that archetype's fastest way to empty the belt.
@@ -135,6 +140,7 @@ public sealed class ClosedSystemPower : AlchemistEnginePower, ISlotEmptiedListen
 
         Flash();
         await AlchemistEffects.GainBlock(lab, Amount);
+        Belt.Infuse(lab, block: 2m);
     }
 }
 
@@ -146,71 +152,78 @@ public sealed class ClosedSystemPower : AlchemistEnginePower, ISlotEmptiedListen
 /// </summary>
 public sealed class RefinersEyePower : AlchemistEnginePower;
 
-/// <summary>Some of what you Invested comes back when the fight ends.</summary>
-public sealed class CompoundInterestPower : AlchemistEnginePower
+/// <summary>Whenever you Unleash Unstable Concoction, gain a little Energy.</summary>
+public sealed class CompoundInterestPower : AlchemistEnginePower, IPotionUseListener
 {
-    /// <summary>Percentage of Invested Gold returned. 25 base, 33 upgraded.</summary>
-    public int Percent { get; set; } = 25;
-
-    public override async Task AfterCombatEnd(CombatRoom room)
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
-        if (Lab is not { } lab) return;
-
-        var refund = Ledger.SpentThisCombat(lab) * Percent / 100;
-        if (refund <= 0) return;
+        if (potion is not UnstableConcoction) return;
 
         Flash();
-        await Ledger.GainGold(new ThrowingPlayerChoiceContext(), lab, refund);
+        await AlchemistEffects.GainEnergy(lab, Amount);
     }
 }
 
 /// <summary>
-/// The first Potion each turn resolves twice and is consumed once.
+/// The first Potion each combat resolves twice and is consumed once.
 ///
 /// The actual double-resolution is claimed and performed by PotionUsePatch's prefix, before the
 /// Potion's own effect runs -- not here. IPotionUseListener.OnPotionUsed (what every other engine
 /// in this file reacts through) only fires AFTER a Potion has already resolved once, which is one
-/// step too late to make it resolve a second time. TryClaim is the once-per-turn latch;
-/// PotionUsePatch calls it and, if it succeeds, adds the Potion to LabPower.DoubleActivate --
-/// the same one-shot mechanism Pressure Burst uses to mark a chosen Potion.
+/// step too late to make it resolve a second time. TryClaim is the once-per-COMBAT latch (unlike
+/// every other engine here, which resets every turn) -- PotionUsePatch calls it and, if it
+/// succeeds, adds the Potion to LabPower.DoubleActivate, the same one-shot mechanism Pressure
+/// Burst used to mark a chosen Potion.
 /// </summary>
 public sealed class EternalCruciblePower : AlchemistEnginePower
 {
+    private bool _usedThisCombat;
+
     public bool TryClaim()
     {
-        if (UsedThisTurn) return false;
-        UsedThisTurn = true;
+        if (_usedThisCombat) return false;
+        _usedThisCombat = true;
         Flash();
         return true;
     }
 }
 
-/// <summary>Every time you gain Gold, draw a card. No once-per-turn latch -- it really is every time.</summary>
-public sealed class GoldenEnginePower : AlchemistEnginePower, IGoldListener
+/// <summary>The first Potion you Brew each turn draws a card and grants Block.</summary>
+public sealed class BrewingEnginePower : AlchemistEnginePower, IBrewListener
 {
-    public async Task OnGoldGained(PlayerChoiceContext ctx, LabContext lab, int amount)
+    /// <summary>Block granted alongside the draw. Set by the card; 3 base, 4 upgraded.</summary>
+    public decimal Block { get; set; } = 3m;
+
+    public async Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
+        if (UsedThisTurn) return;
+        UsedThisTurn = true;
+
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
+        await AlchemistEffects.GainBlock(lab, Block);
     }
 }
 
-/// <summary>The first Exhaust each turn Brews a Volatile Potion (or more, once upgraded).</summary>
+/// <summary>The first Exhaust each turn draws a card and Infuses Damage.</summary>
 public sealed class ConservationOfMatterPower : AlchemistEnginePower, IExhaustListener
 {
+    /// <summary>Damage Infused alongside the draw. Set by the card; 3 base, 4 upgraded.</summary>
+    public decimal Infuse { get; set; } = 3m;
+
     public async Task OnExhausted(PlayerChoiceContext ctx, LabContext lab)
     {
         if (UsedThisTurn) return;
         UsedThisTurn = true;
 
         Flash();
-        for (var i = 0; i < (int)Amount; i++)
-            await Belt.BrewRandom(ctx, lab);
+        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
+        Belt.Infuse(lab, damage: Infuse);
     }
 }
 
 /// <summary>
-/// Distilling makes the next Volatile Potion stronger.
+/// Distilling makes the next Volatile Potion stronger, and Infuses a little Poison besides.
 ///
 /// The Brewer archetype's only real scaling axis — without it, that deck is a pile of one-shot
 /// consumables with no way to grow.
@@ -221,5 +234,6 @@ public sealed class DistillationMasteryPower : AlchemistEnginePower, IDistillLis
     {
         Flash();
         await AlchemistEffects.GainPotency(ctx, lab, Amount);
+        Belt.Infuse(lab, poison: 2m);
     }
 }
