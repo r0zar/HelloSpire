@@ -120,7 +120,7 @@ public sealed class VolatileLaboratory() : AlchemistCard(1, CardType.Power, Card
 /// <summary>Gain Potency. The class's plainest scaling stat, made permanent.</summary>
 public sealed class PotentMixture() : AlchemistCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
@@ -131,7 +131,7 @@ public sealed class PotentMixture() : AlchemistCard(1, CardType.Power, CardRarit
         await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(2m);
 }
 
 /// <summary>

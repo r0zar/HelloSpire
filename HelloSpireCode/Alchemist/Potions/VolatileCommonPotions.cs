@@ -95,7 +95,7 @@ internal static class HideVolatilePotionsFromShopsAndRewardsPatch
 /// in its own OnUse at its own rate: Poison/Speed/Flex add it 1:1 (and start from a higher base of
 /// 3 to make that worthwhile), Weak/Vulnerable/Strength/Dexterity/Swift/Energy add one extra point
 /// per 3 Potency, and the four card-generation potions (Attack/Colorless/Power/Skill) offer one
-/// extra card choice per 3 Potency instead of a numeric bonus.
+/// extra card choice per 3 Potency instead of a numeric bonus, capped at 4 choices total.
 ///
 /// CustomPackedImagePath points each one at the REAL vanilla potion's own sprite -- confirmed via
 /// sts2.dll (ImageHelper.GetImagePath resolves a vanilla potion's Id.Entry, e.g. "vulnerable_potion",
@@ -110,7 +110,7 @@ public sealed class VolatileAttackPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
-        var count = 1 + Potency / 3;
+        var count = Math.Min(4, 1 + Potency / 3);
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
             .Where(c => c.Type == CardType.Attack), count, Owner.RunState.Rng.CombatCardGeneration).ToList();
@@ -143,7 +143,7 @@ public sealed class VolatileColorlessPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
-        var count = 1 + Potency / 3;
+        var count = Math.Min(4, 1 + Potency / 3);
         var cards = CardFactory.GetDistinctForCombat(Owner,
             ModelDb.CardPool<ColorlessCardPool>().GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint),
             count, Owner.RunState.Rng.CombatCardGeneration).ToList();
@@ -245,7 +245,7 @@ public sealed class VolatilePowerPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
-        var count = 1 + Potency / 3;
+        var count = Math.Min(4, 1 + Potency / 3);
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
             .Where(c => c.Type == CardType.Power), count, Owner.RunState.Rng.CombatCardGeneration).ToList();
@@ -263,7 +263,7 @@ public sealed class VolatileSkillPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
-        var count = 1 + Potency / 3;
+        var count = Math.Min(4, 1 + Potency / 3);
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
             .Where(c => c.Type == CardType.Skill), count, Owner.RunState.Rng.CombatCardGeneration).ToList();
