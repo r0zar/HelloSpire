@@ -267,7 +267,7 @@
   "HELLOSPIRE-LAY_ON_HANDS.title": "Lay on Hands",
   "HELLOSPIRE-LAY_ON_HANDS.description": "Heal a player {Heal:diff()} HP.\n[gold]Tithe[/gold]: draw a card.",
   "HELLOSPIRE-BLESSING_OF_MIGHT.title": "Blessing of Might",
-  "HELLOSPIRE-BLESSING_OF_MIGHT.description": "A player gains [blue]{Strength:diff()}[/blue] [gold]Strength[/gold].\n[gold]Tithe[/gold]: gain 2 Block.",
+  "HELLOSPIRE-BLESSING_OF_MIGHT.description": "A player gains [blue]{Strength:diff()}[/blue] [gold]Strength[/gold].",
   "HELLOSPIRE-BLESSING_OF_SACRIFICE.title": "Blessing of Sacrifice",
   "HELLOSPIRE-BLESSING_OF_SACRIFICE.description": "A player gains {Block:diff()} Block.\nDiscard a card.",
   "HELLOSPIRE-CIRCLE_OF_HEALING.title": "Circle of Healing",
