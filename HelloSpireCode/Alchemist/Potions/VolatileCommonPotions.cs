@@ -94,7 +94,7 @@ public sealed class VolatileAttackPotion : VolatileCommonPotion
     {
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
-            .Where(c => c.Type == CardType.Attack), 2, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            .Where(c => c.Type == CardType.Attack), 1, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -107,7 +107,7 @@ public sealed class VolatileBlockPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyPlayer;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/block_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(9m, ValueProp.Unpowered)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Unpowered)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(StaticHoverTip.Block)];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -126,7 +126,7 @@ public sealed class VolatileColorlessPotion : VolatileCommonPotion
     {
         var cards = CardFactory.GetDistinctForCombat(Owner,
             ModelDb.CardPool<ColorlessCardPool>().GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint),
-            2, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            1, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -205,7 +205,7 @@ public sealed class VolatileFlexPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyPlayer;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/flex_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<StrengthPower>(3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<StrengthPower>(2m)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<StrengthPower>()];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -224,7 +224,7 @@ public sealed class VolatilePowerPotion : VolatileCommonPotion
     {
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
-            .Where(c => c.Type == CardType.Power), 2, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            .Where(c => c.Type == CardType.Power), 1, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -241,7 +241,7 @@ public sealed class VolatileSkillPotion : VolatileCommonPotion
     {
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
-            .Where(c => c.Type == CardType.Skill), 2, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            .Where(c => c.Type == CardType.Skill), 1, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -254,7 +254,7 @@ public sealed class VolatileSpeedPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyPlayer;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/speed_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DexterityPower>(3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DexterityPower>(2m)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<DexterityPower>()];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -285,7 +285,7 @@ public sealed class VolatileSwiftPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyPlayer;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/swift_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1)];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
@@ -300,7 +300,7 @@ public sealed class VolatileVulnerablePotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyEnemy;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/vulnerable_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<VulnerablePower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<VulnerablePower>(1m)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<VulnerablePower>()];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -316,7 +316,7 @@ public sealed class VolatilePoisonPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyEnemy;
     public override string? CustomPackedImagePath => "poison_potion.png".PotionImagePath();
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 3m)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -331,7 +331,7 @@ public sealed class VolatileWeakPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyEnemy;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/weak_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<WeakPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<WeakPower>(1m)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WeakPower>()];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
