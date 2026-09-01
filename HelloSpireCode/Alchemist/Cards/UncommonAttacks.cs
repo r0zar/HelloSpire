@@ -159,7 +159,7 @@ public sealed class BlackMarketBlade() : AlchemistCard(1, CardType.Attack, CardR
 /// </summary>
 public sealed class VolatileCompound() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy), IPotionUseListener
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(18m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(14m, ValueProp.Move)];
 
     public Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
