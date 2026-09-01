@@ -56,11 +56,10 @@ public sealed class PanaceaOfPlenty : AlchemistPotion
 /// <summary>
 /// The Great Work made real. One source only.
 ///
-/// Non-Brewable: no random Brew, no Alchemize, no Panacea may ever produce it. The Great Work is
-/// the only way it exists, which is what six permanent Max HP is buying — not a strong effect, a
-/// unique object that survives the fight and can be carried to a boss.
-///
-/// TODO(Phase 3): the Combat Potion pool must exclude this explicitly once the bridge is wired.
+/// Non-Brewable: no random Brew, no Alchemize, no Panacea may ever produce it —
+/// <see cref="WiredLabBridge"/>'s Combat Potion pool excludes it explicitly. The Great Work is the
+/// only way it exists: not a strong effect on its own, a unique object that survives the fight
+/// (Brewed non-Volatile) and can be carried to a boss.
 /// </summary>
 public sealed class PhilosophersStone : AlchemistPotion
 {
