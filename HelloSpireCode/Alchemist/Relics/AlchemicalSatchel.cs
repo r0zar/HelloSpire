@@ -11,8 +11,9 @@ using MegaCrit.Sts2.Core.Models;
 namespace HelloSpire.HelloSpireCode.Alchemist.Relics;
 
 /// <summary>
-/// The starter: at the start of each combat, Brew a Unstable Concoction -- empty, ready for the turn's
-/// cards to Infuse.
+/// The starter: at the start of each combat, Brew an Unstable Concoction -- it starts at 6 base
+/// Damage (its own <see cref="UnstableConcoction"/> default), ready for the turn's cards to Infuse
+/// further.
 ///
 /// Same shape as PortableAlembic's own turn-1 Brew, just of a fixed Potion instead of a random
 /// one. Unstable Concoction is Volatile, so exactly one exists per combat: it's gone by the time this
