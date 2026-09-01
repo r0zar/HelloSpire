@@ -20,7 +20,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
 // ---------------------------------------------------------------------------- Attacks
 
-/// <summary>Deal damage, and Infuse Unstable Concoction if you've already used a Potion this turn.</summary>
+/// <summary>Deal damage, and Infuse Unstable Concoction.</summary>
 public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -34,14 +34,13 @@ public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.C
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Hit a random enemy, and Infuse Unstable Concoction if the belt has room.</summary>
+/// <summary>Hit a random enemy, and Infuse Unstable Concoction.</summary>
 public sealed class GlassShard() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -57,14 +56,13 @@ public sealed class GlassShard() : AlchemistCard(1, CardType.Attack, CardRarity.
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(target).Execute(ctx);
 
-        if (Belt.EmptySlots(Lab) > 0)
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Damage to ALL, and Poison to ALL if you've already used a Potion this turn.</summary>
+/// <summary>Damage and Poison to ALL.</summary>
 public sealed class ScatterFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -74,26 +72,23 @@ public sealed class ScatterFlask() : AlchemistCard(1, CardType.Skill, CardRarity
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var usedPotion = (AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0;
-
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(enemy).Execute(ctx);
-            if (usedPotion) await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, DynamicVars["Poison"].BaseValue);
+            await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, DynamicVars["Poison"].BaseValue);
         }
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage, then apply Poison if you've Brewed a Potion this turn.</summary>
+/// <summary>Deal damage, then apply Poison.</summary>
 public sealed class ToxicScalpel() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(8m, ValueProp.Move), new DynamicVar("Poison", 2m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<PoisonPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -101,8 +96,7 @@ public sealed class ToxicScalpel() : AlchemistCard(1, CardType.Attack, CardRarit
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if ((AlchemistEffects.Peek(Lab)?.BrewedThisTurn ?? 0) > 0)
-            await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
+        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -127,7 +121,7 @@ public sealed class PyricBurst() : AlchemistCard(2, CardType.Attack, CardRarity.
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
-/// <summary>Free damage, and Infuse Unstable Concoction if a Potion Slot became empty this turn.</summary>
+/// <summary>Free damage, and Infuse Unstable Concoction.</summary>
 public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -141,14 +135,13 @@ public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if ((AlchemistEffects.Peek(Lab)?.SlotsEmptiedThisTurn ?? 0) > 0)
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage, and Infuse Unstable Concoction if you've already Exhausted a card this turn.</summary>
+/// <summary>Deal damage, and Infuse Unstable Concoction.</summary>
 public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -162,8 +155,7 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if ((AlchemistEffects.Peek(Lab)?.CardsExhaustedThisTurn ?? 0) > 0)
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade()
@@ -173,7 +165,7 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
     }
 }
 
-/// <summary>Deal damage and apply Poison; a Potion already used this turn also buys Weak.</summary>
+/// <summary>Deal damage, apply Poison, and apply Weak.</summary>
 public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -194,9 +186,7 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
             .FromCard(this).Targeting(play.Target).Execute(ctx);
 
         await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
-
-        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
-            await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
+        await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
