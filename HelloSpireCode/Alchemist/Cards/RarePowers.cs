@@ -117,6 +117,23 @@ public sealed class VolatileLaboratory() : AlchemistCard(1, CardType.Power, Card
     protected override void OnUpgrade() => DynamicVars["VolatileLaboratoryPower"].UpgradeValueBy(1m);
 }
 
+/// <summary>Gain Potency. The class's plainest scaling stat, made permanent.</summary>
+public sealed class PotentMixture() : AlchemistCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(2m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
+}
+
 /// <summary>
 /// Brew the Philosopher's Stone.
 ///

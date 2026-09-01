@@ -270,3 +270,20 @@ public sealed class ReagentRecovery() : AlchemistCard(1, CardType.Skill, CardRar
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(2m);
 }
+
+/// <summary>Gain Potency, and Distill a Potion. The class's plainest scaling stat, paid for directly.</summary>
+public sealed class PotentDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(2m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Potency), Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<PotencyPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
+        await Belt.Distill(ctx, Lab);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
+}
