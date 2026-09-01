@@ -192,7 +192,7 @@ public sealed class VolatileExplosiveAmpoule : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AllEnemies;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/explosive_ampoule.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7m, ValueProp.Unpowered)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Unpowered)];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
@@ -211,7 +211,7 @@ public sealed class VolatileFirePotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyEnemy;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/fire_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(12m, ValueProp.Unpowered)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Unpowered)];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
