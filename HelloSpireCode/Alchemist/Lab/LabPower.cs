@@ -2,6 +2,7 @@ using System.Linq;
 using HelloSpire.HelloSpireCode.Powers;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -81,8 +82,16 @@ public sealed class LabPower : HelloSpirePower
     /// <summary>Cards created into Hand this turn. Reactive Slash reads it.</summary>
     public int CardsCreatedThisTurn { get; set; }
 
-    /// <summary>Skill cards played this turn, by any means. Set by SkillPlayTrackerPatch. QuickSilver reads it.</summary>
-    public int SkillsPlayedThisTurn { get; set; }
+    /// <summary>
+    /// The type of the card played immediately before whichever one is currently resolving -- null
+    /// before any card has been played this combat. Set by LastCardTypeTrackerPatch, which stashes
+    /// the old <see cref="LastCardType"/> here before overwriting it with the new play, so a card
+    /// reading this during its own OnPlay sees the card before it, not itself. QuickSilver reads it.
+    /// </summary>
+    public CardType? PreviousCardType { get; set; }
+
+    /// <summary>The type of the most recently played card, including the one currently resolving.</summary>
+    public CardType? LastCardType { get; set; }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -103,7 +112,6 @@ public sealed class LabPower : HelloSpirePower
         GoldSpentThisTurn = 0;
         CardsExhaustedThisTurn = 0;
         CardsCreatedThisTurn = 0;
-        SkillsPlayedThisTurn = 0;
 
         return Task.CompletedTask;
     }

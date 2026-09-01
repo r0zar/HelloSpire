@@ -395,7 +395,7 @@
   "HELLOSPIRE-PYRIC_BURST.title": "Pyric Burst",
   "HELLOSPIRE-PYRIC_BURST.description": "Deal {Damage:diff()} damage. [gold]Invest[/gold] {Invest:diff()}: deal {Bonus:diff()} more.",
   "HELLOSPIRE-QUICK_SILVER.title": "Quick Silver",
-  "HELLOSPIRE-QUICK_SILVER.description": "Deal {Damage:diff()} damage. If you played a Skill this turn, draw {Cards} card.",
+  "HELLOSPIRE-QUICK_SILVER.description": "Deal {Damage:diff()} damage. If the last card you played was a Skill, draw {Cards} card.",
   "HELLOSPIRE-CRUCIBLE_BLOW.title": "Crucible Blow",
   "HELLOSPIRE-CRUCIBLE_BLOW.description": "Deal {Damage:diff()} damage. You may Exhaust another card: deal {Bonus:diff()} more.",
   "HELLOSPIRE-COPPER_SHOT.title": "Copper Shot",

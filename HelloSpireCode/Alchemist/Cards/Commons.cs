@@ -139,7 +139,7 @@ public sealed class PyricBurst() : AlchemistCard(2, CardType.Attack, CardRarity.
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
-/// <summary>Free damage, and a card back if you already played a Skill this turn.</summary>
+/// <summary>Free damage, and a card back if the last card you played was a Skill.</summary>
 public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -151,7 +151,7 @@ public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if ((AlchemistEffects.Peek(Lab)?.SkillsPlayedThisTurn ?? 0) > 0)
+        if (AlchemistEffects.Peek(Lab)?.PreviousCardType == CardType.Skill)
             await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
     }
 
