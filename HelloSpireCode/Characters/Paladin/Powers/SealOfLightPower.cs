@@ -1,23 +1,26 @@
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The Holy seal, armed: no passive (the Spirit was paid on cast).
-/// Judge: draw 3, discard 2 -- the deep dig that finds the heal and pays Tithe faces on the way.
+/// The Holy seal, banked: a pure judge charge.
+/// Judge: relight a candle -- a random healing card returns from the Exhaust pile to your hand.
+/// Not a heal (no loops); it extends the candle-clock, the most Holy thing a judge can buy.
 /// </summary>
 public sealed class SealOfLightPower : SealPower
 {
-    public const int JudgeDraw = 3;
-    public const int JudgeDiscard = 2;
-
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
         if (Owner.Player is not { } player) return;
-        await CardPileCmd.Draw(ctx, JudgeDraw, player);
-        await PaladinEffects.DiscardChosen(ctx, player, JudgeDiscard, this);
+        var candles = PileType.Exhaust.GetPile(player).Cards.Where(c => c is IHealingCard).ToList();
+        if (candles.Count == 0) return;
+        Flash();
+        var card = player.RunState.Rng.CombatCardGeneration.NextItem(candles);
+        await CardPileCmd.Add(card, PileType.Hand.GetPile(player));
     }
 }
