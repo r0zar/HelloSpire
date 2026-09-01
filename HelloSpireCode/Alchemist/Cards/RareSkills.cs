@@ -111,7 +111,7 @@ public sealed class Masterwork() : AlchemistCard(2, CardType.Skill, CardRarity.R
 }
 
 /// <summary>Pour a Potion out for a flat Energy-and-card return.</summary>
-public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(2), new CardsVar(1)];
 
@@ -242,7 +242,7 @@ public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity
 // If a fifth card ever wants to call Ledger.Render, that is the signal the mechanic is drifting
 // from an event into a template. Four is the number.
 
-/// <summary>Render 4 Max HP to copy a card in your Hand, free for the turn.</summary>
+/// <summary>Render 4 Max HP to permanently copy a card in your Hand.</summary>
 public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Render", 4m)];
@@ -261,7 +261,7 @@ public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRari
 
         if (!await Ledger.Render(ctx, Lab, DynamicVars["Render"].IntValue)) return;
 
-        await Alchemy.Create(ctx, Lab, chosen.CreateClone());
+        await Alchemy.CreatePermanently(Lab, chosen);
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.MaxHpToCard);
     }
 
@@ -302,14 +302,15 @@ public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity
 /// worth of healing you will never get back, spent on one turn — correct exactly when that turn
 /// is the difference between finishing the fight and not.
 /// </summary>
-public sealed class EquivalentExchange() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class EquivalentExchange() : AlchemistCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Render", 2m), new EnergyVar(2), new CardsVar(2)];
+        [new DynamicVar("Render", 2m), new EnergyVar(2), new CardsVar(2), new PowerVar<PotencyPower>(2m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Render), EnergyHoverTip];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Render), EnergyHoverTip, HoverTipFactory.FromPower<PotencyPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -317,6 +318,7 @@ public sealed class EquivalentExchange() : AlchemistCard(1, CardType.Skill, Card
 
         await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
+        await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["Render"].UpgradeValueBy(-1m);

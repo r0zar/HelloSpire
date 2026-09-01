@@ -13,21 +13,21 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // card into Gold, card into Potion, Potion into tempo, Gold into Potion, Gold into a card, Gold
 // into an Upgrade. This is the tier where the archetypes actually take shape.
 
-/// <summary>Pour a Potion out for two Energy. The Distillation deck's engine.</summary>
+/// <summary>Pour a Potion out for Potency. The Distillation deck's engine.</summary>
 public sealed class DistillationColumn() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(2)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(2m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Transform), EnergyHoverTip];
+        [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Transform), HoverTipFactory.FromPower<PotencyPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
 
-        await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
+        await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
         await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.PotionToTempo);
     }
 
@@ -302,22 +302,24 @@ public sealed class CostOfKnowledge() : AlchemistCard(0, CardType.Skill, CardRar
     protected override void OnUpgrade() => DynamicVars["Invest"].UpgradeValueBy(-1m);
 }
 
-/// <summary>Trade two dead cards for two live ones. The Exhaust deck's filter.</summary>
+/// <summary>Distill a Potion: the next Skill you play is played twice.</summary>
 public sealed class CatalyticWash() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Max", 2m), new CardsVar(0)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<SkillReplayPower>(1m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Transform)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Transform), HoverTipFactory.FromPower<SkillReplayPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var exhausted = await Alchemy.ExhaustUpTo(ctx, Lab, DynamicVars["Max"].IntValue);
+        if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
 
-        await AlchemistEffects.Draw(ctx, Lab, exhausted + DynamicVars.Cards.IntValue);
+        await PowerCmd.Apply<SkillReplayPower>(ctx, Owner.Creature,
+            DynamicVars["SkillReplayPower"].BaseValue, Owner.Creature, this);
+        await AlchemistHooks.NotifyTransformed(ctx, Lab, TransformVector.PotionToTempo);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Bury a card, dig two more, and take some Block for having drunk something.</summary>

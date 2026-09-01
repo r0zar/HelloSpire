@@ -379,4 +379,16 @@ public sealed class WiredLabBridge : ILabBridge
         if (card.CloneOf is { IsUpgradable: true } original) CardCmd.Upgrade(original, CardPreviewStyle.None);
         return Task.CompletedTask;
     }
+
+    /// <summary>
+    /// RunState.CloneCard (decompiled from sts2.dll -- the same call real relics like LavaLamp,
+    /// SilverCrucible and the Egg relics use to hand the player a run-scoped copy of a card) clones
+    /// the card and registers it with the run in one step; CardPileCmd.Add(..., PileType.Deck) is
+    /// what actually places it in the deck pile, mirroring PaelsTooth's own combat-end sequence.
+    /// </summary>
+    public async Task CreatePermanently(Player player, CardModel card)
+    {
+        var clone = player.RunState.CloneCard(card);
+        CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(clone, PileType.Deck));
+    }
 }
