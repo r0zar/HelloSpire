@@ -40,7 +40,7 @@ public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, Card
 public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(10m, ValueProp.Move), new DamageVar("PerPotion", 3m, ValueProp.Move)];
+        [new DamageVar(14m, ValueProp.Move), new DamageVar("PerPotion", 3m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -91,13 +91,11 @@ public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, Car
     }
 }
 
-/// <summary>Damage, and two free Attacks and a little Infuse to follow it.</summary>
+/// <summary>Damage, and two free Attacks to follow it.</summary>
 public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(14m, ValueProp.Move), new CardsVar(2), new DamageVar("Bonus", 8m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+        [new DamageVar(14m, ValueProp.Move), new CardsVar(2)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -107,8 +105,6 @@ public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, Card
 
         for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
             await Alchemy.Create(ctx, Lab, LabBridge.Current.RandomCard(Owner, type: CardType.Attack));
-
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
