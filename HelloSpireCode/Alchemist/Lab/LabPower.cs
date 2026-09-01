@@ -76,7 +76,7 @@ public sealed class LabPower : HelloSpirePower
     public decimal BrewBonusMultiplier { get; set; } = 1m;
 
     /// <summary>
-    /// Total Infused this turn, across every call. Compound Interest's "15 or more in one turn"
+    /// Total Infused this turn, across every call. Accumulation's "15 or more in one turn"
     /// reads this; Concentrate reads a single call's amount instead and never touches this field.
     /// </summary>
     public decimal InfusedThisTurn { get; set; }

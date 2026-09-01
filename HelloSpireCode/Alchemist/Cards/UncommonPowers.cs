@@ -32,63 +32,63 @@ public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.
 }
 
 /// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a hole.</summary>
-public sealed class HeatBath() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public sealed class ThermalBuffer() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<HeatBathPower>(2m), new BlockVar("Infuse", 3m, ValueProp.Move)];
+        [new PowerVar<ThermalBufferPower>(2m), new BlockVar("Infuse", 3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<HeatBathPower>()];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<ThermalBufferPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var power = await PowerCmd.Apply<HeatBathPower>(ctx, Owner.Creature,
-            DynamicVars["HeatBathPower"].BaseValue, Owner.Creature, this);
+        var power = await PowerCmd.Apply<ThermalBufferPower>(ctx, Owner.Creature,
+            DynamicVars["ThermalBufferPower"].BaseValue, Owner.Creature, this);
 
         if (power != null) power.BlockInfuse = DynamicVars["Infuse"].BaseValue;
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["HeatBathPower"].UpgradeValueBy(1m);
+        DynamicVars["ThermalBufferPower"].UpgradeValueBy(1m);
         DynamicVars["Infuse"].UpgradeValueBy(1m);
     }
 }
 
 /// <summary>The first card you Exhaust each turn Infuses Unstable Concoction.</summary>
-public sealed class CoinPress() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public sealed class ReagentPress() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<CoinPressPower>(4m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ReagentPressPower>(4m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<CoinPressPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<ReagentPressPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<CoinPressPower>(ctx, Owner.Creature,
-            DynamicVars["CoinPressPower"].BaseValue, Owner.Creature, this);
+        await PowerCmd.Apply<ReagentPressPower>(ctx, Owner.Creature,
+            DynamicVars["ReagentPressPower"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["CoinPressPower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars["ReagentPressPower"].UpgradeValueBy(1m);
 }
 
 /// <summary>Distilling buys Block on the way past.</summary>
-public sealed class MerchantsInstinct() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public sealed class EfficientDistillation() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<MerchantsInstinctPower>(3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<EfficientDistillationPower>(3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<MerchantsInstinctPower>()];
+        [Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<EfficientDistillationPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<MerchantsInstinctPower>(ctx, Owner.Creature,
-            DynamicVars["MerchantsInstinctPower"].BaseValue, Owner.Creature, this);
+        await PowerCmd.Apply<EfficientDistillationPower>(ctx, Owner.Creature,
+            DynamicVars["EfficientDistillationPower"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["MerchantsInstinctPower"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars["EfficientDistillationPower"].UpgradeValueBy(2m);
 }
 
 /// <summary>The first Potion you use each turn also draws a card.</summary>

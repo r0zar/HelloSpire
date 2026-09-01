@@ -11,24 +11,24 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Powers 1-6. One engine per pillar: Infuse (Compound Interest), Potion-use (Eternal
+// Rare Powers 1-6. One engine per pillar: Infuse (Accumulation), Potion-use (Eternal
 // Crucible), Brew (Brewing Engine), Distill (Distillation Mastery), Status (Volatile Laboratory),
 // and the class's one non-Volatile trophy (The Great Work).
 
 /// <summary>Whenever you Infuse a lot in one turn, gain a little Energy. Makes cashing in Unstable
 /// Concoction across several cards even better.</summary>
-public sealed class CompoundInterest() : AlchemistCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+public sealed class Accumulation() : AlchemistCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Energy", 1m), new DynamicVar("Threshold", 15m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<CompoundInterestPower>()];
+        [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<AccumulationPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var power = await PowerCmd.Apply<CompoundInterestPower>(ctx, Owner.Creature,
+        var power = await PowerCmd.Apply<AccumulationPower>(ctx, Owner.Creature,
             DynamicVars["Energy"].BaseValue, Owner.Creature, this);
 
         if (power != null) power.Threshold = DynamicVars["Threshold"].BaseValue;

@@ -89,7 +89,7 @@ public sealed class BrewingHabitPower : AlchemistEnginePower, IBrewListener
 }
 
 /// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a gap.</summary>
-public sealed class HeatBathPower : AlchemistEnginePower, IBrewListener
+public sealed class ThermalBufferPower : AlchemistEnginePower, IBrewListener
 {
     /// <summary>Block Infused into Unstable Concoction. Set by the card; 3 base, 4 upgraded.</summary>
     public decimal BlockInfuse { get; set; } = 3m;
@@ -111,7 +111,7 @@ public sealed class HeatBathPower : AlchemistEnginePower, IBrewListener
 /// The cap is the whole design. An uncapped trigger makes stalling a fight the correct play,
 /// which is the guardrail exists to prevent, regardless of what currency it pays out in.
 /// </summary>
-public sealed class CoinPressPower : AlchemistEnginePower, IExhaustListener
+public sealed class ReagentPressPower : AlchemistEnginePower, IExhaustListener
 {
     /// <summary>Triggers remaining this combat. Set by the card; 3 base, 4 upgraded.</summary>
     public int TriggersLeft { get; set; } = 3;
@@ -128,7 +128,7 @@ public sealed class CoinPressPower : AlchemistEnginePower, IExhaustListener
 }
 
 /// <summary>Distilling buys Block on the way past. The Distillation deck's defence.</summary>
-public sealed class MerchantsInstinctPower : AlchemistEnginePower, IDistillListener
+public sealed class EfficientDistillationPower : AlchemistEnginePower, IDistillListener
 {
     public async Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
@@ -203,7 +203,7 @@ public sealed class VolatileLaboratoryPower : AlchemistEnginePower, IStatusCreat
 }
 
 /// <summary>Whenever you Infuse a lot in one turn, gain a little Energy. Once per turn.</summary>
-public sealed class CompoundInterestPower : AlchemistEnginePower, IInfuseListener
+public sealed class AccumulationPower : AlchemistEnginePower, IInfuseListener
 {
     /// <summary>The per-turn threshold. Set by the card; 15 base.</summary>
     public decimal Threshold { get; set; } = 15m;

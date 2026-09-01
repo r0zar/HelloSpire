@@ -5,7 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 namespace HelloSpire.HelloSpireCode.Alchemist;
 
-/// <summary>Reacts to a Potion being Brewed. Ceramic Retort, Heat Bath.</summary>
+/// <summary>Reacts to a Potion being Brewed. Ceramic Retort, Thermal Buffer.</summary>
 public interface IBrewListener
 {
     Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion);
@@ -34,7 +34,7 @@ public interface ISlotEmptiedListener
     Task OnSlotEmptied(PlayerChoiceContext ctx, LabContext lab);
 }
 
-/// <summary>Reacts to a card being Exhausted. Coin Press, Conservation of Matter.</summary>
+/// <summary>Reacts to a card being Exhausted. Reagent Press.</summary>
 public interface IExhaustListener
 {
     Task OnExhausted(PlayerChoiceContext ctx, LabContext lab);
