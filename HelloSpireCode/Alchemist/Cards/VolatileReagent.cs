@@ -1,18 +1,20 @@
+using BaseLib.Abstracts;
+using BaseLib.Extensions;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models.CardPools;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
 /// <summary>
-/// Junk: unstable byproduct of a Brew gone slightly wrong. Unplayable, does nothing on its own --
-/// its entire purpose is to be Exhausted (Smelt the Weak, Solvent Strike, Reagent Recovery,
-/// Alchemy.ExhaustJunk/ExhaustJunkFromDiscard already treat any CardType.Status as junk with no
-/// changes needed) or simply clog a draw. Same shape as the mod's one other Status card,
-/// the Paladin's Geas.
+/// A free Colorless card born from an unstable Brew. Gain 1 Energy, no strings attached -- Pooled
+/// as Colorless rather than as an Alchemist card, since gaining Energy has nothing to do with the
+/// Belt.
 /// </summary>
-public sealed class VolatileReagent() : AlchemistCard(-1, CardType.Status, CardRarity.Status, TargetType.None)
+[Pool(typeof(ColorlessCardPool))]
+public sealed class VolatileReagent() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Unplayable];
-
-    protected override Task OnPlay(PlayerChoiceContext ctx, CardPlay play) => Task.CompletedTask;
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+        await AlchemistEffects.GainEnergy(Lab, 1m);
 }

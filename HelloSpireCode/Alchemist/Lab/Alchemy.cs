@@ -124,8 +124,8 @@ public static class Alchemy
     }
 
     /// <summary>
-    /// Create a Volatile Reagent (Status, Unplayable) and add it directly to a pile. Volatile
-    /// Strike, Contaminated Blade, Contaminated Sample, False Bottom, Overdose.
+    /// Create a Volatile Reagent (a free Colorless "Gain 1 Energy" card) and add it directly to a
+    /// pile. Volatile Strike, Contaminated Blade, Contaminated Sample, False Bottom, Overdose.
     /// </summary>
     public static async Task CreateVolatileReagent(PlayerChoiceContext ctx, LabContext lab, PileType pile)
     {

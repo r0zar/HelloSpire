@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The 22 commons: 9 Attacks, 11 Skills, 2 Powers.
+// The 21 commons: 10 Attacks, 9 Skills, 2 Powers.
 //
 // Deliberately unexciting, and deliberately proactive -- almost none of them ask "did you do X
 // this turn" anymore. Most either Brew a specific Volatile Potion by name (so the deck teaches
@@ -191,7 +191,7 @@ public sealed class CoagulatingAgent() : AlchemistCard(1, CardType.Skill, CardRa
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(7m, ValueProp.Move), new DynamicVar("Poison", 2m)];
+        [new BlockVar(7m, ValueProp.Move), new DynamicVar("Poison", 3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
@@ -206,24 +206,28 @@ public sealed class CoagulatingAgent() : AlchemistCard(1, CardType.Skill, CardRa
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Poison every enemy.</summary>
-public sealed class ScatterFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+/// <summary>Deal damage and Poison every enemy.</summary>
+public sealed class ScatterFlask() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(3m, ValueProp.Move), new DynamicVar("Poison", 2m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
+        {
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(enemy).Execute(ctx);
             await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, DynamicVars["Poison"].BaseValue);
+        }
     }
 
-    protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
 /// <summary>Brew a Volatile Energy Potion.</summary>
-public sealed class EnergyFlask() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
+public sealed class EnergyFlask() : AlchemistCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -294,24 +298,11 @@ public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRar
     }
 }
 
-/// <summary>Gain Block.</summary>
-public sealed class GlassApron() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
-{
-    public override bool GainsBlock => true;
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Move)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
-        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
-
-    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
-}
-
 /// <summary>Apply Poison and Weak.</summary>
 public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Poison", 2m), new PowerVar<WeakPower>(1m)];
+        [new DynamicVar("Poison", 3m), new PowerVar<WeakPower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<PoisonPower>(), HoverTipFactory.FromPower<WeakPower>()];
@@ -327,22 +318,18 @@ public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(1m);
 }
 
-/// <summary>Gain Block, and Brew a Dexterity Potion.</summary>
+/// <summary>Brew a Strength Potion and a Dexterity Potion.</summary>
 public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    public override bool GainsBlock => true;
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Move)];
-
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
+        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Strength));
         await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Dexterity));
     }
 
-    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Leave a Volatile Reagent in the draw pile, and gain a little Energy.</summary>
