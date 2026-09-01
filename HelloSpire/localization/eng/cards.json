@@ -574,7 +574,7 @@
   "HELLOSPIRE-TRIBUNAL.title": "Tribunal",
   "HELLOSPIRE-TRIBUNAL.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Judge[/gold] each enemy.",
   "HELLOSPIRE-CHASTISE.title": "Chastise",
-  "HELLOSPIRE-CHASTISE.description": "Deal {Damage:diff()} damage.\nApply 2 [gold]Weak[/gold].",
+  "HELLOSPIRE-CHASTISE.description": "Deal {Damage:diff()} damage.\nApply 2 [gold]Weak[/gold].\n[gold]Tithe[/gold]: apply 1 [gold]Weak[/gold] to a random enemy.",
   "HELLOSPIRE-SHIELD_BASH.title": "Shield Bash",
   "HELLOSPIRE-SHIELD_BASH.description": "Deal damage equal to your [gold]Plating[/gold] plus your Block.",
   "HELLOSPIRE-ZEALOUS_OFFERING.title": "Zealous Offering",
