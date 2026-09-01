@@ -10,19 +10,25 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Gain 8 Block that is not removed at the start of your next turn (real BlurPower).
-/// Brace persistence: makes Block-payoff cards honest despite Plating's end-of-turn timing.
+/// Gain 2 Plating and 5 Block. The wall that regrows -- Blur identity retired in favor of
+/// the lane's own persistence mechanic.
 /// </summary>
 public sealed class Bulwark() : PaladinCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override bool GainsBlock => true;
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new BlockVar(5m, ValueProp.Move), new DynamicVar("Plating", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await PowerCmd.Apply<PlatingPower>(choiceContext, Owner.Creature,
+            DynamicVars["Plating"].BaseValue, Owner.Creature, this);
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
-        await PowerCmd.Apply<BlurPower>(choiceContext, Owner.Creature, 1m, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(4m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars.Block.UpgradeValueBy(3m);
+        DynamicVars["Plating"].UpgradeValueBy(1m);
+    }
 }
