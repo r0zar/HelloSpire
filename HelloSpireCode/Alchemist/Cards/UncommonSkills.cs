@@ -113,8 +113,7 @@ public sealed class GildedGuard() : AlchemistCard(1, CardType.Skill, CardRarity.
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new BlockVar(7m, ValueProp.Move),
-        new BlockVar("PerPotion", 2m, ValueProp.Move),
-        new DynamicVar("Max", 6m)
+        new BlockVar("PerPotion", 2m, ValueProp.Move)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
@@ -124,7 +123,7 @@ public sealed class GildedGuard() : AlchemistCard(1, CardType.Skill, CardRarity.
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
 
         var used = AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0;
-        var bonus = Math.Min(DynamicVars["PerPotion"].BaseValue * used, DynamicVars["Max"].BaseValue);
+        var bonus = DynamicVars["PerPotion"].BaseValue * used;
         Belt.Infuse(Lab, block: bonus);
     }
 

@@ -43,15 +43,14 @@ public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRari
     [
         new DamageVar(10m, ValueProp.Move),
         new DamageVar("PerPotion", 4m, ValueProp.Move),
-        new DynamicVar("Poison", 1m),
-        new DynamicVar("Max", 3m)
+        new DynamicVar("Poison", 1m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var used = Math.Min((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0), DynamicVars["Max"].IntValue);
+        var used = AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0;
         var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * used;
 
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
@@ -68,16 +67,15 @@ public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRari
 /// <summary>
 /// Damage for every Potion you've already Distilled this fight.
 ///
-/// The Distillation deck's finisher. Uncapped in spirit, capped in practice: a long fight CAN turn
-/// it into a one-card kill -- that is the payoff.
+/// The Distillation deck's finisher, uncapped: a long fight CAN turn it into a one-card kill --
+/// that is the payoff.
 /// </summary>
 public sealed class RefinedNeedle() : AlchemistCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(5m, ValueProp.Move),
-        new DamageVar("PerPotion", 2m, ValueProp.Move),
-        new DynamicVar("Max", 30m)
+        new DamageVar("PerPotion", 2m, ValueProp.Move)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill)];
@@ -87,7 +85,7 @@ public sealed class RefinedNeedle() : AlchemistCard(1, CardType.Attack, CardRari
         ArgumentNullException.ThrowIfNull(play.Target);
 
         var distilled = AlchemistEffects.Peek(Lab)?.DistilledThisCombat ?? 0;
-        var bonus = Math.Min(DynamicVars["PerPotion"].BaseValue * distilled, DynamicVars["Max"].BaseValue);
+        var bonus = DynamicVars["PerPotion"].BaseValue * distilled;
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
             .FromCard(this).Targeting(play.Target).Execute(ctx);

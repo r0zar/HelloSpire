@@ -163,7 +163,7 @@ public sealed class GoldStandard() : AlchemistCard(0, CardType.Skill, CardRarity
     protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
 }
 
-/// <summary>Three dead cards become Block, cards, and Infuse. The Exhaust deck's capstone.</summary>
+/// <summary>Every other card in Hand becomes Block, cards, and Infuse. The Exhaust deck's capstone.</summary>
 public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override bool GainsBlock => true;
@@ -171,8 +171,7 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new BlockVar("PerCard", 5m, ValueProp.Move),
-        new BlockVar("Infuse", 4m, ValueProp.Move),
-        new DynamicVar("Max", 3m)
+        new BlockVar("Infuse", 4m, ValueProp.Move)
     ];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
@@ -181,7 +180,7 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var burned = await Alchemy.ExhaustUpTo(ctx, Lab, DynamicVars["Max"].IntValue);
+        var burned = (await Alchemy.ExhaustAllOther(ctx, Lab)).Count;
         if (burned == 0) return;
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars["PerCard"].BaseValue * burned);

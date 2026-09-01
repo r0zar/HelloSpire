@@ -134,8 +134,7 @@ public sealed class AlembicBlade() : AlchemistCard(1, CardType.Attack, CardRarit
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(8m, ValueProp.Move),
-        new DamageVar("PerPotion", 3m, ValueProp.Move),
-        new DynamicVar("Max", 9m)
+        new DamageVar("PerPotion", 3m, ValueProp.Move)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Infuse)];
@@ -147,7 +146,7 @@ public sealed class AlembicBlade() : AlchemistCard(1, CardType.Attack, CardRarit
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         var distilled = AlchemistEffects.Peek(Lab)?.DistilledThisCombat ?? 0;
-        var bonus = Math.Min(DynamicVars["PerPotion"].BaseValue * distilled, DynamicVars["Max"].BaseValue);
+        var bonus = DynamicVars["PerPotion"].BaseValue * distilled;
         Belt.Infuse(Lab, damage: bonus);
     }
 
@@ -202,8 +201,7 @@ public sealed class CatalystNeedle() : AlchemistCard(1, CardType.Attack, CardRar
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(7m, ValueProp.Move),
-        new DamageVar("PerPotion", 1m, ValueProp.Move),
-        new DynamicVar("Max", 10m)
+        new DamageVar("PerPotion", 1m, ValueProp.Move)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
@@ -213,7 +211,7 @@ public sealed class CatalystNeedle() : AlchemistCard(1, CardType.Attack, CardRar
         ArgumentNullException.ThrowIfNull(play.Target);
 
         var brewed = AlchemistEffects.Peek(Lab)?.BrewedThisCombat ?? 0;
-        var bonus = Math.Min(DynamicVars["PerPotion"].BaseValue * brewed, DynamicVars["Max"].BaseValue);
+        var bonus = DynamicVars["PerPotion"].BaseValue * brewed;
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
