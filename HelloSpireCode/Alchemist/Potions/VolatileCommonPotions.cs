@@ -18,6 +18,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
+using HelloSpire.HelloSpireCode.Alchemist.Lab;
 using HelloSpire.HelloSpireCode.Extensions;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
@@ -45,6 +46,16 @@ public abstract class VolatileCommonPotion : BaseLib.Abstracts.CustomPotionModel
 {
     public override PotionRarity Rarity => PotionRarity.Common;
     public override PotionUsage Usage => PotionUsage.CombatOnly;
+
+    protected LabContext Lab => LabContext.From(Owner);
+
+    /// <summary>
+    /// Potency's raw value if this instance is currently Volatile-tracked, else 0 -- same gate
+    /// Belt.PotencyBonus already enforces for the Damage/Block potions PotionUsePatch bumps
+    /// automatically. Every potion in this file that isn't Damage/Block-shaped reads this directly
+    /// in its own OnUse instead, since each one scales Potency at its own rate.
+    /// </summary>
+    protected int Potency => Belt.PotencyBonus(Lab, this);
 }
 
 /// <summary>
@@ -79,6 +90,13 @@ internal static class HideVolatilePotionsFromShopsAndRewardsPatch
 /// decompile, so it copies the Alchemist's own bespoke <see cref="PoisonPotion"/>
 /// (AlchemistPotions.cs) instead, at the same reduced-value rule.
 ///
+/// Potency scales every one of these, not just the Damage/Block-shaped ones PotionUsePatch bumps
+/// automatically -- each potion reads the base class's <see cref="VolatileCommonPotion.Potency"/>
+/// in its own OnUse at its own rate: Poison/Speed/Flex add it 1:1 (and start from a higher base of
+/// 3 to make that worthwhile), Weak/Vulnerable/Strength/Dexterity/Swift/Energy add one extra point
+/// per 3 Potency, and the four card-generation potions (Attack/Colorless/Power/Skill) offer one
+/// extra card choice per 3 Potency instead of a numeric bonus.
+///
 /// CustomPackedImagePath points each one at the REAL vanilla potion's own sprite -- confirmed via
 /// sts2.dll (ImageHelper.GetImagePath resolves a vanilla potion's Id.Entry, e.g. "vulnerable_potion",
 /// to exactly "res://images/atlases/potion_atlas.sprites/vulnerable_potion.tres") -- rather than
@@ -92,9 +110,10 @@ public sealed class VolatileAttackPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
+        var count = 1 + Potency / 3;
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
-            .Where(c => c.Type == CardType.Attack), 1, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            .Where(c => c.Type == CardType.Attack), count, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -124,9 +143,10 @@ public sealed class VolatileColorlessPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
+        var count = 1 + Potency / 3;
         var cards = CardFactory.GetDistinctForCombat(Owner,
             ModelDb.CardPool<ColorlessCardPool>().GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint),
-            1, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            count, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -145,7 +165,8 @@ public sealed class VolatileDexterityPotion : VolatileCommonPotion
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
         PotionModel.AssertValidForTargetedPotion(target);
-        await PowerCmd.Apply<DexterityPower>(ctx, target, DynamicVars.Dexterity.BaseValue, Owner.Creature, null);
+        var amount = DynamicVars.Dexterity.BaseValue + Potency / 3;
+        await PowerCmd.Apply<DexterityPower>(ctx, target, amount, Owner.Creature, null);
     }
 }
 
@@ -161,7 +182,8 @@ public sealed class VolatileEnergyPotion : VolatileCommonPotion
     {
         PotionModel.AssertValidForTargetedPotion(target);
         NCombatRoom.Instance?.PlaySplashVfx(target, new Color("f2e35c"));
-        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, target.Player);
+        var energy = DynamicVars.Energy.BaseValue + Potency / 3;
+        await PlayerCmd.GainEnergy(energy, target.Player);
     }
 }
 
@@ -205,13 +227,14 @@ public sealed class VolatileFlexPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyPlayer;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/flex_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<StrengthPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<StrengthPower>(3m)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<StrengthPower>()];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
         PotionModel.AssertValidForTargetedPotion(target);
-        await PowerCmd.Apply<FlexPotionPower>(ctx, target, DynamicVars.Strength.BaseValue, Owner.Creature, null);
+        var amount = DynamicVars.Strength.BaseValue + Potency;
+        await PowerCmd.Apply<FlexPotionPower>(ctx, target, amount, Owner.Creature, null);
     }
 }
 
@@ -222,9 +245,10 @@ public sealed class VolatilePowerPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
+        var count = 1 + Potency / 3;
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
-            .Where(c => c.Type == CardType.Power), 1, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            .Where(c => c.Type == CardType.Power), count, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -239,9 +263,10 @@ public sealed class VolatileSkillPotion : VolatileCommonPotion
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
+        var count = 1 + Potency / 3;
         var cards = CardFactory.GetDistinctForCombat(Owner, Owner.Character.CardPool
             .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
-            .Where(c => c.Type == CardType.Skill), 1, Owner.RunState.Rng.CombatCardGeneration).ToList();
+            .Where(c => c.Type == CardType.Skill), count, Owner.RunState.Rng.CombatCardGeneration).ToList();
         var chosen = await CardSelectCmd.FromChooseACardScreen(ctx, cards, Owner, canSkip: true);
         if (chosen == null) return;
         chosen.SetToFreeThisTurn();
@@ -254,13 +279,14 @@ public sealed class VolatileSpeedPotion : VolatileCommonPotion
     public override TargetType TargetType => TargetType.AnyPlayer;
     public override string? CustomPackedImagePath => "res://images/atlases/potion_atlas.sprites/speed_potion.tres";
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DexterityPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DexterityPower>(3m)];
     public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<DexterityPower>()];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
         PotionModel.AssertValidForTargetedPotion(target);
-        await PowerCmd.Apply<SpeedPotionPower>(ctx, target, DynamicVars.Dexterity.BaseValue, Owner.Creature, null);
+        var amount = DynamicVars.Dexterity.BaseValue + Potency;
+        await PowerCmd.Apply<SpeedPotionPower>(ctx, target, amount, Owner.Creature, null);
     }
 }
 
@@ -276,7 +302,8 @@ public sealed class VolatileStrengthPotion : VolatileCommonPotion
     {
         PotionModel.AssertValidForTargetedPotion(target);
         NCombatRoom.Instance?.PlaySplashVfx(target, new Color("fd2155"));
-        await PowerCmd.Apply<StrengthPower>(ctx, target, DynamicVars.Strength.BaseValue, Owner.Creature, null);
+        var amount = DynamicVars.Strength.BaseValue + Potency / 3;
+        await PowerCmd.Apply<StrengthPower>(ctx, target, amount, Owner.Creature, null);
     }
 }
 
@@ -291,7 +318,8 @@ public sealed class VolatileSwiftPotion : VolatileCommonPotion
     {
         PotionModel.AssertValidForTargetedPotion(target);
         NCombatRoom.Instance?.PlaySplashVfx(target, new Color("45e6d0"));
-        await CardPileCmd.Draw(ctx, DynamicVars.Cards.BaseValue, target.Player);
+        var cards = DynamicVars.Cards.BaseValue + Potency / 3;
+        await CardPileCmd.Draw(ctx, cards, target.Player);
     }
 }
 
@@ -307,7 +335,8 @@ public sealed class VolatileVulnerablePotion : VolatileCommonPotion
     {
         PotionModel.AssertValidForTargetedPotion(target);
         NCombatRoom.Instance?.PlaySplashVfx(target, new Color("fd2155"));
-        await PowerCmd.Apply<VulnerablePower>(ctx, target, DynamicVars.Vulnerable.BaseValue, Owner.Creature, null);
+        var amount = DynamicVars.Vulnerable.BaseValue + Potency / 3;
+        await PowerCmd.Apply<VulnerablePower>(ctx, target, amount, Owner.Creature, null);
     }
 }
 
@@ -322,7 +351,8 @@ public sealed class VolatilePoisonPotion : VolatileCommonPotion
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
         PotionModel.AssertValidForTargetedPotion(target);
-        await PowerCmd.Apply<PoisonPower>(ctx, target, DynamicVars["Poison"].BaseValue, Owner.Creature, null);
+        var amount = DynamicVars["Poison"].BaseValue + Potency;
+        await PowerCmd.Apply<PoisonPower>(ctx, target, amount, Owner.Creature, null);
     }
 }
 
@@ -338,6 +368,7 @@ public sealed class VolatileWeakPotion : VolatileCommonPotion
     {
         PotionModel.AssertValidForTargetedPotion(target);
         NCombatRoom.Instance?.PlaySplashVfx(target, new Color("94f882"));
-        await PowerCmd.Apply<WeakPower>(ctx, target, DynamicVars.Weak.BaseValue, Owner.Creature, null);
+        var amount = DynamicVars.Weak.BaseValue + Potency / 3;
+        await PowerCmd.Apply<WeakPower>(ctx, target, amount, Owner.Creature, null);
     }
 }
