@@ -12,9 +12,10 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
 /// Deal 8. Judge. The class signature: never dead (a clean 8 with no seal held), the payoff
-/// arrives when a seal is. Upgrade: deal 12.
+/// arrives when a seal is. Common, not Basic -- judging is drafted into, never free (Smite
+/// holds the starter slot). Upgrade: deal 12.
 /// </summary>
-public sealed class Judgment() : PaladinCard(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
+public sealed class Judgment() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move)];
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Judge)];

@@ -211,7 +211,7 @@
   "HELLOSPIRE-HAMMER_OF_WRATH.title": "Hammer of Wrath",
   "HELLOSPIRE-HAMMER_OF_WRATH.description": "Deal {Damage:diff()} damage.\n[gold]Tithe[/gold]: deal 3 damage to a random enemy.",
   "HELLOSPIRE-AVENGERS_SHIELD.title": "Avenger's Shield",
-  "HELLOSPIRE-AVENGERS_SHIELD.description": "Deal {Damage:diff()} damage.\nGain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].",
+  "HELLOSPIRE-AVENGERS_SHIELD.description": "Deal {Damage:diff()} damage.\nGain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\n[gold]Judge[/gold].",
   "HELLOSPIRE-HOLY_LIGHT.title": "Holy Light",
   "HELLOSPIRE-HOLY_LIGHT.description": "Heal a player {Heal:diff()} HP.\n[gold]Tithe[/gold]: deal 8 damage to a random enemy.",
   "HELLOSPIRE-FLASH_OF_LIGHT.title": "Flash of Light",
@@ -608,5 +608,7 @@
   "HELLOSPIRE-BLINDING_LIGHT.title": "Blinding Light",
   "HELLOSPIRE-BLINDING_LIGHT.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Weak[/gold] to ALL enemies.",
   "HELLOSPIRE-PRAYER.title": "Prayer",
-  "HELLOSPIRE-PRAYER.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card."
+  "HELLOSPIRE-PRAYER.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card.",
+  "HELLOSPIRE-SMITE.title": "Smite",
+  "HELLOSPIRE-SMITE.description": "Deal [red]{Damage:diff()}[/red] damage.\nApply [red]{Weak:diff()}[/red] [gold]Weak[/gold]."
 }

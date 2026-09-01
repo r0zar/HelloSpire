@@ -24,9 +24,9 @@ public class Paladin : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 75;
 
-    // The starter: 4 Strike / 4 Defend / 1 Judgment / 1 Benediction. No heal in the kit --
-    // the deck teaches tanky (Plating) + card rhythm (draw/discard); seals are opt-in from
-    // the draft. See design/paladin-rework-2026-08-31.md.
+    // The starter: 4 Strike / 4 Defend / 1 Smite / 1 Prayer. No heal, no Judge in the kit --
+    // the deck teaches tanky (Weak + Plating) + card rhythm (draw/discard); seals AND judging
+    // are opt-in from the draft. See design/paladin-rework-2026-08-31.md.
     public override IEnumerable<CardModel> StartingDeck =>
     [
         ModelDb.Card<StrikePaladin>(),
@@ -37,7 +37,7 @@ public class Paladin : PlaceholderCharacterModel
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<DefendPaladin>(),
-        ModelDb.Card<Judgment>(),
+        ModelDb.Card<Smite>(),
         ModelDb.Card<Prayer>(),
     ];
 

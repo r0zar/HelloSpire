@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -12,16 +11,14 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 8. Gain 2 Plating. Judge. The whack that armors -- the Prot rhythm card: swing, the
-/// wall regrows behind you, and the shield procs the verdict (Prot's drafted judge now that
-/// Judgment left the starter).
+/// Deal 6. Apply 1 Weak. The starter attack (replaces Judgment in the kit): Neutralize's
+/// proven shape at 1 energy -- hit things and they hit back softer, the tank identity from
+/// turn one. Judging is drafted, never free.
 /// </summary>
-public sealed class AvengersShield() : PaladinCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class Smite() : PaladinCard(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DynamicVar("Plating", 2m)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Judge)];
+        [new DamageVar(6m, ValueProp.Move), new DynamicVar("Weak", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -29,14 +26,14 @@ public sealed class AvengersShield() : PaladinCard(2, CardType.Attack, CardRarit
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(choiceContext);
-        await PowerCmd.Apply<PlatingPower>(choiceContext, Owner.Creature,
-            DynamicVars["Plating"].BaseValue, Owner.Creature, this);
-        await Seals.Judge(choiceContext, Owner, cardPlay.Target);
+        if (!cardPlay.Target.IsDead)
+            await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target,
+                DynamicVars["Weak"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars["Plating"].UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(2m);
+        DynamicVars["Weak"].UpgradeValueBy(1m);
     }
 }
