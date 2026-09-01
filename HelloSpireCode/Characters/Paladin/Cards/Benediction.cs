@@ -9,12 +9,12 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Gain 2 Plating. Draw a card, then discard a card. The starter teacher: armor-always plus
-/// the draw-discard rhythm every lane speaks. Upgrade: 3 Plating.
+/// Gain 1 Plating. Draw a card, then discard a card. The starter teacher: armor-always plus
+/// the draw-discard rhythm every lane speaks. Upgrade: 2 Plating.
 /// </summary>
 public sealed class Benediction() : PaladinCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Plating", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Plating", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
