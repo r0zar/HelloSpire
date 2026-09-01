@@ -191,7 +191,7 @@ public sealed class FlashPowder() : AlchemistCard(1, CardType.Attack, CardRarity
     [
         new DamageVar(6m, ValueProp.Move),
         new DamageVar("Bonus", 5m, ValueProp.Move),
-        new InvestVar(4m)
+        new InvestVar(5m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Invest)];
@@ -216,23 +216,27 @@ public sealed class FlashPowder() : AlchemistCard(1, CardType.Attack, CardRarity
     }
 }
 
-/// <summary>Damage that grows with how much you have earned this fight. Uncapped: let it run.</summary>
+/// <summary>Damage, and a little Gold.</summary>
 public sealed class AuricNeedle() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(7m, ValueProp.Move)];
+        [new DamageVar(7m, ValueProp.Move), new DynamicVar("Gold", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var bonus = Ledger.GainedThisCombat(Lab);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
+
+        await Ledger.GainGold(ctx, Lab, DynamicVars["Gold"].IntValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars.Damage.UpgradeValueBy(2m);
+        DynamicVars["Gold"].UpgradeValueBy(1m);
+    }
 }
 
 /// <summary>Two hits, three if you poured something out this turn.</summary>

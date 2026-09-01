@@ -65,7 +65,7 @@ public sealed class LabPower : HelloSpirePower
 
     // ------------------------------------------------------------------ Gold
 
-    /// <summary>Gold this bench has generated during this combat. Auric Needle scales off it.</summary>
+    /// <summary>Gold this bench has generated during this combat.</summary>
     public int GoldGainedThisCombat { get; set; }
 
     /// <summary>Gold Invested during this combat. Midas Needle and Compound Interest read it.</summary>

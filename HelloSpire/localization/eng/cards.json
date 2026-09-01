@@ -441,7 +441,7 @@
   "HELLOSPIRE-FLASH_POWDER.title": "Flash Powder",
   "HELLOSPIRE-FLASH_POWDER.description": "Deal {Damage:diff()} damage to ALL enemies. [gold]Invest[/gold] {Invest:diff()}: deal {Bonus:diff()} more to ALL.",
   "HELLOSPIRE-AURIC_NEEDLE.title": "Auric Needle",
-  "HELLOSPIRE-AURIC_NEEDLE.description": "Deal {Damage:diff()} damage, plus 1 for each [gold]Gold[/gold] gained this combat.",
+  "HELLOSPIRE-AURIC_NEEDLE.description": "Deal {Damage:diff()} damage. Gain {Gold:diff()} [gold]Gold[/gold].",
   "HELLOSPIRE-CORKSCREW.title": "Corkscrew",
   "HELLOSPIRE-CORKSCREW.description": "Deal {Damage:diff()} damage twice. If you [gold]Distilled[/gold] this turn, three times.",
   "HELLOSPIRE-REACTIVE_SLASH.title": "Reactive Slash",
