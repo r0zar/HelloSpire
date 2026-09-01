@@ -560,7 +560,7 @@
   "HELLOSPIRE-DRY_FIRE.description": "Whenever a chamber [gold]Clicks[/gold], [gold]Load[/gold] 1 [gold]Lead Round[/gold] and draw {DryFirePower} card.",
   "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header": "Choose a Potion to Brew",
   "HELLOSPIRE-SEAL_OF_LIGHT.title": "Seal of Light",
-  "HELLOSPIRE-SEAL_OF_LIGHT.description": "[gold]Seal[/gold]. While held: gain {Amount:diff()} [gold]Spirit[/gold] at the start of your turn.\n[gold]Judge[/gold]: draw 3 cards, then discard 2.",
+  "HELLOSPIRE-SEAL_OF_LIGHT.description": "[gold]Seal[/gold]. Gain {Amount:diff()} [gold]Spirit[/gold].\n[gold]Judge[/gold]: draw 3 cards, then discard 2.",
   "HELLOSPIRE-BENEDICTION.title": "Benediction",
   "HELLOSPIRE-BENEDICTION.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card.",
   "HELLOSPIRE-SEAL_OF_RIGHTEOUSNESS.title": "Seal of Righteousness",
