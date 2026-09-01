@@ -397,7 +397,7 @@
   "HELLOSPIRE-TOXIC_SCALPEL.title": "Toxic Scalpel",
   "HELLOSPIRE-TOXIC_SCALPEL.description": "Deal {Damage:diff()} damage. Apply {Poison:diff()} [gold]Poison[/gold].",
   "HELLOSPIRE-CAUSTIC_FLASK.title": "Caustic Flask",
-  "HELLOSPIRE-CAUSTIC_FLASK.description": "Deal {Damage:diff()} damage. Apply {Poison:diff()} [gold]Poison[/gold].",
+  "HELLOSPIRE-CAUSTIC_FLASK.description": "Deal {Damage:diff()} damage. [gold]Brew[/gold] a Poison Potion.",
   "HELLOSPIRE-VOLATILE_STRIKE.title": "Volatile Strike",
   "HELLOSPIRE-VOLATILE_STRIKE.description": "Deal {Damage:diff()} damage. Add a Volatile Reagent to your discard pile.",
   "HELLOSPIRE-FIREBRAND.title": "Firebrand",
