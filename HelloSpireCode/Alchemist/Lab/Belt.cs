@@ -1,3 +1,5 @@
+using System.Linq;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
@@ -30,9 +32,9 @@ public static class Belt
     /// <summary>
     /// Brew a Potion into the first empty slot.
     ///
-    /// Volatile unless the caller says otherwise — Alchemize Procures a real Potion, and The Great
-    /// Work's Philosopher's Stone is a trophy meant to survive the fight. Everything else vanishes
-    /// at combat end.
+    /// Volatile unless the caller says otherwise. The Great Work's Philosopher's Stone is the one
+    /// exception in the whole class — a trophy meant to survive the fight. Every other Brew,
+    /// Alchemize and Gilded Execution's real Rare Potions included, vanishes at combat end.
     ///
     /// A full belt is not an error. The card still resolved; the Potion is simply lost. That is a
     /// real cost the Brew-heavy hand is supposed to feel.
@@ -62,6 +64,16 @@ public static class Belt
         {
             bench.BrewedThisTurn++;
             bench.BrewedThisCombat++;
+
+            // Distillation Mastery's payload: the next successful Brew's whole effect is scaled,
+            // then the multiplier resets. Every declared DynamicVar counts, not just Damage/Block --
+            // "the Potion's effect increased by 50%" is meant to mean all of it.
+            if (bench.BrewBonusMultiplier != 1m)
+            {
+                foreach (var key in placed.DynamicVars.Keys.Cast<string>().ToList())
+                    placed.DynamicVars[key].BaseValue *= bench.BrewBonusMultiplier;
+                bench.BrewBonusMultiplier = 1m;
+            }
         }
 
         await AlchemistHooks.NotifyBrewed(ctx, lab, placed);
@@ -208,7 +220,7 @@ public static class Belt
     /// same patch's prefix, which bumps the Potion's damage and Block vars before OnUse computes
     /// with them; Bottled Time's save-a-Potion is handled there too, after this method runs.
     /// </summary>
-    public static async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public static async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
     {
         var bench = await AlchemistEffects.Bench(ctx, lab);
         if (bench != null)
@@ -219,7 +231,7 @@ public static class Belt
         }
 
         await NotifySlotEmptied(ctx, lab);
-        await AlchemistHooks.NotifyPotionUsed(ctx, lab, potion);
+        await AlchemistHooks.NotifyPotionUsed(ctx, lab, potion, target);
     }
 
     /// <summary>
@@ -258,8 +270,8 @@ public static class Belt
     /// was full when Alchemical Satchel tried to Brew one, or it's already been used this combat --
     /// same "a full belt is not an error" rule Brew itself follows.
     /// </summary>
-    public static void Infuse(LabContext lab, decimal damage = 0, decimal block = 0,
-        decimal poison = 0, decimal energy = 0)
+    public static async Task Infuse(PlayerChoiceContext ctx, LabContext lab, decimal damage = 0,
+        decimal block = 0, decimal poison = 0, decimal energy = 0)
     {
         if (Held(lab).OfType<UnstableConcoction>().FirstOrDefault() is not { } mixture) return;
 
@@ -267,6 +279,12 @@ public static class Belt
         if (block > 0) mixture.DynamicVars.Block.BaseValue += block;
         if (poison > 0) mixture.DynamicVars["Poison"].BaseValue += poison;
         if (energy > 0) mixture.DynamicVars["Energy"].BaseValue += energy;
+
+        var total = damage + block + poison + energy;
+        var bench = AlchemistEffects.Peek(lab);
+        if (bench != null) bench.InfusedThisTurn += total;
+
+        await AlchemistHooks.NotifyInfused(ctx, lab, total);
     }
 
     private static async Task NotifySlotEmptied(PlayerChoiceContext ctx, LabContext lab)

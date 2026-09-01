@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
 using HelloSpire.HelloSpireCode.Alchemist.Potions;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -12,7 +13,7 @@ public sealed class SanguineCircuit : Characters.AlchemistRelic, IPotionUseListe
 {
     public override RelicRarity Rarity => RelicRarity.Rare;
 
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
     {
         if (potion is not UnstableConcoction) return;
 

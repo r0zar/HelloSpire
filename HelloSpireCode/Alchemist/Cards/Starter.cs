@@ -8,8 +8,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The starting ten: four Strikes, four Defends, Transmute (a promoted Common -- see Commons.cs),
-// and Aegis Formula.
+// The starting ten: four Strikes, four Defends, Aegis Formula, and Infusion.
 //
 // Between them they teach one system and only one. The belt has space, cards put Potions in it,
 // Potions cost no Energy to drink, and a Brewed Potion is gone at the end of the fight whether you
@@ -49,9 +48,9 @@ public sealed class DefendAlchemist() : AlchemistCard(1, CardType.Skill, CardRar
 }
 
 /// <summary>
-/// Brew a Block Potion.
+/// Brew a Volatile Block Potion.
 ///
-/// The defensive half, and the reason the character survives Act 1 at 68 HP: 12 Block held in
+/// The defensive half, and the reason the character survives Act 1 at 68 HP: Block held in
 /// reserve, spendable on the turn it is needed rather than the turn it was drawn.
 /// </summary>
 public sealed class AegisFormula() : AlchemistCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
@@ -68,4 +67,21 @@ public sealed class AegisFormula() : AlchemistCard(1, CardType.Skill, CardRarity
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+}
+
+/// <summary>Infuse Unstable Concoction. The class's defining conversion, at its cheapest and plainest.</summary>
+public sealed class Infusion() : AlchemistCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Bonus", 6m)];
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
 }

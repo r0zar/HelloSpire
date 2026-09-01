@@ -162,7 +162,7 @@ internal static class PotionUsePatch
         var bottledTime = player!.Creature?.GetPower<BottledTimePower>();
         var claimed = bottledTime != null && await bottledTime.TryClaim(ctx);
 
-        await Belt.OnPotionUsed(ctx, lab, potion);
+        await Belt.OnPotionUsed(ctx, lab, potion, target);
 
         if (claimed)
         {

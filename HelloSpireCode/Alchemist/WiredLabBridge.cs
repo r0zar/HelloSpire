@@ -123,6 +123,13 @@ public sealed class WiredLabBridge : ILabBridge
         BasePotion.ExplosiveAmpoule => ModelDb.Potion<VolatileExplosiveAmpoule>().ToMutable(),
         BasePotion.Energy => ModelDb.Potion<VolatileEnergyPotion>().ToMutable(),
         BasePotion.Vulnerable => ModelDb.Potion<VolatileVulnerablePotion>().ToMutable(),
+        BasePotion.Weak => ModelDb.Potion<VolatileWeakPotion>().ToMutable(),
+        BasePotion.Speed => ModelDb.Potion<VolatileSpeedPotion>().ToMutable(),
+        BasePotion.Attack => ModelDb.Potion<VolatileAttackPotion>().ToMutable(),
+        BasePotion.Fire => ModelDb.Potion<VolatileFirePotion>().ToMutable(),
+        BasePotion.Strength => ModelDb.Potion<VolatileStrengthPotion>().ToMutable(),
+        BasePotion.Poison => ModelDb.Potion<VolatilePoisonPotion>().ToMutable(),
+        BasePotion.Dexterity => ModelDb.Potion<VolatileDexterityPotion>().ToMutable(),
         _ => null,
     };
 
@@ -262,6 +269,15 @@ public sealed class WiredLabBridge : ILabBridge
     {
         await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, player);
         if (costsZeroThisTurn) card.EnergyCost.SetThisTurnOrUntilPlayed(0);
+    }
+
+    public async Task CreateStatusInPile(PlayerChoiceContext ctx, Player player, CardModel canonicalCard, PileType pile)
+    {
+        // Same CombatState.CreateCard instantiation RandomCard uses above, and for the same reason:
+        // a Run-scoped card isn't registered with the active combat and throws the moment it's
+        // touched (Exhausted, played, etc.).
+        var card = player.Creature?.CombatState?.CreateCard(canonicalCard, player);
+        if (card != null) await CardPileCmd.AddGeneratedCardToCombat(card, pile, player);
     }
 
     public Task UpgradeForCombat(PlayerChoiceContext ctx, Player player, CardModel card)

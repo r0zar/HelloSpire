@@ -45,20 +45,46 @@ public abstract class AlchemistEnginePower : HelloSpirePower
         Task.CompletedTask;
 }
 
-/// <summary>The first Potion you drink each turn throws a little heat at somebody, and poisons it.</summary>
-public sealed class ResidualHeatPower : AlchemistEnginePower, IPotionUseListener
+/// <summary>The first Poison Potion you use each turn applies additional Poison to its target.</summary>
+public sealed class ResidualToxinsPower : AlchemistEnginePower, IPotionUseListener
 {
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
+    {
+        if (UsedThisTurn) return;
+        if (potion is not (PoisonPotion or VolatilePoisonPotion)) return;
+        if (target == null) return;
+        UsedThisTurn = true;
+
+        Flash();
+        await AlchemistEffects.ApplyPoison(ctx, lab, target, Amount);
+    }
+}
+
+/// <summary>Whenever you Infuse a lot in one action, gain Energy.</summary>
+public sealed class ConcentratePower : AlchemistEnginePower, IInfuseListener
+{
+    /// <summary>The single-call threshold. Set by the card; 10 base.</summary>
+    public decimal Threshold { get; set; } = 10m;
+
+    public async Task OnInfused(PlayerChoiceContext ctx, LabContext lab, decimal amount)
+    {
+        if (amount < Threshold) return;
+
+        Flash();
+        await AlchemistEffects.GainEnergy(lab, Amount);
+    }
+}
+
+/// <summary>The first time you Brew each turn, draw a card.</summary>
+public sealed class BrewingHabitPower : AlchemistEnginePower, IBrewListener
+{
+    public async Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         if (UsedThisTurn) return;
         UsedThisTurn = true;
 
-        var target = AlchemistEffects.RandomEnemy(lab);
-        if (target == null) return;
-
         Flash();
-        await CreatureCmd.Damage(ctx, target, Amount, ValueProp.Unpowered, Owner, null);
-        await AlchemistEffects.ApplyPoison(ctx, lab, target, 1m);
+        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
     }
 }
 
@@ -75,7 +101,7 @@ public sealed class HeatBathPower : AlchemistEnginePower, IBrewListener
 
         Flash();
         await AlchemistEffects.GainPotency(ctx, lab, Amount);
-        Belt.Infuse(lab, block: BlockInfuse);
+        await Belt.Infuse(ctx, lab, block: BlockInfuse);
     }
 }
 
@@ -97,7 +123,7 @@ public sealed class CoinPressPower : AlchemistEnginePower, IExhaustListener
         TriggersLeft--;
 
         Flash();
-        Belt.Infuse(lab, damage: Amount);
+        await Belt.Infuse(ctx, lab, damage: Amount);
     }
 }
 
@@ -111,17 +137,45 @@ public sealed class MerchantsInstinctPower : AlchemistEnginePower, IDistillListe
     }
 }
 
-/// <summary>The first Potion each turn also draws and Infuses Poison. Turns the belt into a second hand.</summary>
-public sealed class ReactiveMixturePower : AlchemistEnginePower, IPotionUseListener
+/// <summary>The first Potion you use each turn also draws a card.</summary>
+public sealed class ReactiveLaboratoryPower : AlchemistEnginePower, IPotionUseListener
 {
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
     {
         if (UsedThisTurn) return;
         UsedThisTurn = true;
 
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-        Belt.Infuse(lab, poison: 2m);
+    }
+}
+
+/// <summary>Whenever you Brew a Poison Potion, apply Poison to a random enemy.</summary>
+public sealed class ToxicCulturePower : AlchemistEnginePower, IBrewListener
+{
+    public async Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    {
+        if (potion is not (PoisonPotion or VolatilePoisonPotion)) return;
+
+        var target = AlchemistEffects.RandomEnemy(lab);
+        if (target == null) return;
+
+        Flash();
+        await AlchemistEffects.ApplyPoison(ctx, lab, target, Amount);
+    }
+}
+
+/// <summary>The first Potion each turn also draws and Infuses Poison. Turns the belt into a second hand.</summary>
+public sealed class ReactiveMixturePower : AlchemistEnginePower, IPotionUseListener
+{
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
+    {
+        if (UsedThisTurn) return;
+        UsedThisTurn = true;
+
+        Flash();
+        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
+        await Belt.Infuse(ctx, lab, poison: 2m);
     }
 }
 
@@ -140,7 +194,7 @@ public sealed class ClosedSystemPower : AlchemistEnginePower, ISlotEmptiedListen
 
         Flash();
         await AlchemistEffects.GainBlock(lab, Amount);
-        Belt.Infuse(lab, block: 2m);
+        await Belt.Infuse(ctx, lab, block: 2m);
     }
 }
 
@@ -152,12 +206,27 @@ public sealed class ClosedSystemPower : AlchemistEnginePower, ISlotEmptiedListen
 /// </summary>
 public sealed class RefinersEyePower : AlchemistEnginePower;
 
-/// <summary>Whenever you Unleash Unstable Concoction, gain a little Energy.</summary>
-public sealed class CompoundInterestPower : AlchemistEnginePower, IPotionUseListener
+/// <summary>Whenever you create a Status, Infuse Damage.</summary>
+public sealed class VolatileLaboratoryPower : AlchemistEnginePower, IStatusCreatedListener
 {
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnStatusCreated(PlayerChoiceContext ctx, LabContext lab)
     {
-        if (potion is not UnstableConcoction) return;
+        Flash();
+        await Belt.Infuse(ctx, lab, damage: Amount);
+    }
+}
+
+/// <summary>Whenever you Infuse a lot in one turn, gain a little Energy. Once per turn.</summary>
+public sealed class CompoundInterestPower : AlchemistEnginePower, IInfuseListener
+{
+    /// <summary>The per-turn threshold. Set by the card; 15 base.</summary>
+    public decimal Threshold { get; set; } = 15m;
+
+    public async Task OnInfused(PlayerChoiceContext ctx, LabContext lab, decimal amount)
+    {
+        if (UsedThisTurn) return;
+        if ((AlchemistEffects.Peek(lab)?.InfusedThisTurn ?? 0m) < Threshold) return;
+        UsedThisTurn = true;
 
         Flash();
         await AlchemistEffects.GainEnergy(lab, Amount);
@@ -218,22 +287,28 @@ public sealed class ConservationOfMatterPower : AlchemistEnginePower, IExhaustLi
 
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-        Belt.Infuse(lab, damage: Infuse);
+        await Belt.Infuse(ctx, lab, damage: Infuse);
     }
 }
 
 /// <summary>
-/// Distilling makes the next Volatile Potion stronger, and Infuses a little Poison besides.
+/// Distilling makes the next Potion you Brew stronger.
 ///
 /// The Brewer archetype's only real scaling axis — without it, that deck is a pile of one-shot
-/// consumables with no way to grow.
+/// consumables with no way to grow. The multiplier itself lives on LabPower
+/// (<see cref="LabPower.BrewBonusMultiplier"/>) and is consumed by <see cref="Belt.Brew"/>, since
+/// it has to apply generically to whatever gets Brewed next, not to anything this Power can see.
 /// </summary>
 public sealed class DistillationMasteryPower : AlchemistEnginePower, IDistillListener
 {
-    public async Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    /// <summary>The multiplier granted. Set by the card; 1.5 base.</summary>
+    public decimal Multiplier { get; set; } = 1.5m;
+
+    public Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         Flash();
-        await AlchemistEffects.GainPotency(ctx, lab, Amount);
-        Belt.Infuse(lab, poison: 2m);
+        var bench = AlchemistEffects.Peek(lab);
+        if (bench != null) bench.BrewBonusMultiplier = Multiplier;
+        return Task.CompletedTask;
     }
 }

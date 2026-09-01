@@ -124,7 +124,7 @@ public sealed class GildedGuard() : AlchemistCard(1, CardType.Skill, CardRarity.
 
         var used = AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0;
         var bonus = DynamicVars["PerPotion"].BaseValue * used;
-        Belt.Infuse(Lab, block: bonus);
+        await Belt.Infuse(ctx, Lab, block: bonus);
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
@@ -175,7 +175,7 @@ public sealed class SmeltTheWeak() : AlchemistCard(0, CardType.Skill, CardRarity
         if (!await Alchemy.ExhaustJunk(ctx, Lab)) return;
 
         await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
@@ -293,7 +293,7 @@ public sealed class FalseBottom() : AlchemistCard(1, CardType.Skill, CardRarity.
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
 
         if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
-            Belt.Infuse(Lab, block: DynamicVars["Bonus"].BaseValue);
+            await Belt.Infuse(ctx, Lab, block: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -315,7 +315,7 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
-        Belt.Infuse(Lab, block: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, block: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);

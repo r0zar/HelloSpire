@@ -20,7 +20,28 @@ public enum BasePotion
     Energy,
 
     /// <summary>Apply 2 Vulnerable. Cinnabar Edge.</summary>
-    Vulnerable
+    Vulnerable,
+
+    /// <summary>Apply 2 Weak. Copper Shot.</summary>
+    Weak,
+
+    /// <summary>Gain 3 Dexterity this turn. Quick Silver.</summary>
+    Speed,
+
+    /// <summary>Choose 1 of 2 Attack cards, free this turn. Flask Toss.</summary>
+    Attack,
+
+    /// <summary>Deal 12 damage. Firebrand.</summary>
+    Fire,
+
+    /// <summary>Gain 1 Strength. Steady Pour.</summary>
+    Strength,
+
+    /// <summary>Apply 4 Poison. Venomous Ampoule, Reactive Mixture.</summary>
+    Poison,
+
+    /// <summary>Gain 1 Dexterity. Steady Pour.</summary>
+    Dexterity
 }
 
 /// <summary>
@@ -137,6 +158,14 @@ public interface ILabBridge
 
     /// <summary>Create a card into Hand. Commission and the creation engines.</summary>
     Task CreateInHand(PlayerChoiceContext ctx, Player player, CardModel card, bool costsZeroThisTurn);
+
+    /// <summary>
+    /// Create a fresh instance of a canonical card (typically a Status, e.g. Volatile Reagent) and
+    /// add it directly to a pile other than Hand. Separate from <see cref="CreateInHand"/> because
+    /// that method takes an already-instantiated card; this one instantiates it too, the same way
+    /// <see cref="RandomCard"/> does internally.
+    /// </summary>
+    Task CreateStatusInPile(PlayerChoiceContext ctx, Player player, CardModel canonicalCard, PileType pile);
 
     /// <summary>Upgrade a card for this combat only.</summary>
     Task UpgradeForCombat(PlayerChoiceContext ctx, Player player, CardModel card);
@@ -270,6 +299,12 @@ public sealed class UnwiredLabBridge : ILabBridge
     public Task CreateInHand(PlayerChoiceContext ctx, Player player, CardModel card, bool costsZeroThisTurn)
     {
         Report("creating a card in Hand");
+        return Task.CompletedTask;
+    }
+
+    public Task CreateStatusInPile(PlayerChoiceContext ctx, Player player, CardModel canonicalCard, PileType pile)
+    {
+        Report("creating a Status card in a pile");
         return Task.CompletedTask;
     }
 

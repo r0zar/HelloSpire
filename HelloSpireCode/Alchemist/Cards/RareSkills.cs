@@ -19,11 +19,11 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // of the same Potion/Distill/Exhaust verbs the rest of the class already teaches.
 
 /// <summary>
-/// Procure a real, persistent Potion.
+/// Brew a real Rare Potion.
 ///
 /// The base game's Colorless card, adopted into this pool because the name and the mechanic are
-/// too exact to ignore. The major exception to the Volatile rule: this Potion survives combat,
-/// which is why it stays Rare and Exhausts.
+/// too exact to ignore. Volatile like every other Brew -- see <see cref="TheGreatWork"/> for the
+/// one Potion in the class that genuinely survives combat.
 /// </summary>
 public sealed class Alchemize() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
@@ -34,9 +34,7 @@ public sealed class Alchemize() : AlchemistCard(1, CardType.Skill, CardRarity.Ra
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-
-        // Not Volatile: Procured Potions are real inventory.
-        await Belt.Brew(ctx, Lab, LabBridge.Current.RandomCombatPotion(Owner, null), volatilePotion: false);
+        await Belt.BrewRandom(ctx, Lab, PotionRarity.Rare);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -56,7 +54,7 @@ public sealed class HeavyTransmute() : AlchemistCard(1, CardType.Skill, CardRari
         var burned = await Alchemy.ExhaustAllOther(ctx, Lab);
         if (burned.Count == 0) return;
 
-        Belt.Infuse(Lab, damage: DynamicVars["PerCard"].BaseValue * burned.Count);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["PerCard"].BaseValue * burned.Count);
     }
 
     protected override void OnUpgrade() => DynamicVars["PerCard"].UpgradeValueBy(1m);
@@ -76,7 +74,7 @@ public sealed class MagnumOpus() : AlchemistCard(3, CardType.Skill, CardRarity.R
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         var filled = await Belt.FillEmpty(ctx, Lab);
-        if (filled > 0) Belt.Infuse(Lab, damage: DynamicVars["PerPotion"].BaseValue * filled);
+        if (filled > 0) await Belt.Infuse(ctx, Lab, damage: DynamicVars["PerPotion"].BaseValue * filled);
     }
 
     protected override void OnUpgrade() => DynamicVars["PerPotion"].UpgradeValueBy(1m);
@@ -118,7 +116,7 @@ public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, Car
         await AlchemistEffects.Draw(ctx, Lab, cards);
 
         if (result.Rarity == PotionRarity.Rare)
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
@@ -157,7 +155,7 @@ public sealed class GoldStandard() : AlchemistCard(0, CardType.Skill, CardRarity
     {
         await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
-        Belt.Infuse(Lab, energy: DynamicVars["Energy"].BaseValue);
+        await Belt.Infuse(ctx, Lab, energy: DynamicVars["Energy"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
@@ -185,7 +183,7 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars["PerCard"].BaseValue * burned);
         await AlchemistEffects.Draw(ctx, Lab, burned);
-        Belt.Infuse(Lab, block: DynamicVars["Infuse"].BaseValue * burned);
+        await Belt.Infuse(ctx, Lab, block: DynamicVars["Infuse"].BaseValue * burned);
     }
 
     protected override void OnUpgrade() => DynamicVars["PerCard"].UpgradeValueBy(1m);
@@ -228,7 +226,7 @@ public sealed class HomunculusPact() : AlchemistCard(2, CardType.Skill, CardRari
         if (chosen == null) return;
 
         await Alchemy.Create(ctx, Lab, chosen.CreateClone());
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
@@ -251,7 +249,7 @@ public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>().ToMutable(), volatilePotion: false);
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(3m);
@@ -271,7 +269,7 @@ public sealed class EquivalentExchange() : AlchemistCard(0, CardType.Skill, Card
     {
         await AlchemistEffects.GainEnergy(Lab, DynamicVars.Energy.BaseValue);
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);

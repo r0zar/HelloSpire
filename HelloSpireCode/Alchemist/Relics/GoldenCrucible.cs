@@ -11,10 +11,9 @@ public sealed class GoldenCrucible : Characters.AlchemistRelic, IDistillListener
 {
     public override RelicRarity Rarity => RelicRarity.Rare;
 
-    public Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         Flash();
-        Belt.Infuse(lab, damage: 3m);
-        return Task.CompletedTask;
+        await Belt.Infuse(ctx, lab, damage: 3m);
     }
 }

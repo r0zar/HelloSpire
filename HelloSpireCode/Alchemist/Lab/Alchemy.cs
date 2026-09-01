@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 
 using HelloSpire.HelloSpireCode.Alchemist;
+using HelloSpire.HelloSpireCode.Alchemist.Cards;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
@@ -103,6 +104,33 @@ public static class Alchemy
 
         await Exhaust(ctx, lab, chosen);
         return true;
+    }
+
+    /// <summary>Exhaust a Status or non-Eternal Curse from the discard pile. Solvent Strike, Reagent Recovery.</summary>
+    public static async Task<bool> ExhaustJunkFromDiscard(PlayerChoiceContext ctx, LabContext lab)
+    {
+        var junk = LabBridge.Current.DiscardPile(lab.Player)
+            .Where(card => card.Type == CardType.Status ||
+                           (card.Type == CardType.Curse && !card.Keywords.Contains(CardKeyword.Eternal)))
+            .ToList();
+
+        if (junk.Count == 0) return false;
+
+        var chosen = junk.Count == 1 ? junk[0] : await LabBridge.Current.ChooseCard(ctx, lab.Player, junk, lab.Card);
+        if (chosen == null) return false;
+
+        await Exhaust(ctx, lab, chosen);
+        return true;
+    }
+
+    /// <summary>
+    /// Create a Volatile Reagent (Status, Unplayable) and add it directly to a pile. Volatile
+    /// Strike, Contaminated Blade, Contaminated Sample, False Bottom, Overdose.
+    /// </summary>
+    public static async Task CreateVolatileReagent(PlayerChoiceContext ctx, LabContext lab, PileType pile)
+    {
+        await LabBridge.Current.CreateStatusInPile(ctx, lab.Player, ModelDb.Card<VolatileReagent>(), pile);
+        await AlchemistHooks.NotifyStatusCreated(ctx, lab);
     }
 
     public static async Task<bool> DiscardOne(PlayerChoiceContext ctx, LabContext lab)

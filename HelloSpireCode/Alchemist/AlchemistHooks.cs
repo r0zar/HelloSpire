@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
@@ -16,10 +17,15 @@ public interface IDistillListener
     Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion);
 }
 
-/// <summary>Reacts to a Potion being used. Cork Stopper, Residual Heat, Reactive Mixture.</summary>
+/// <summary>
+/// Reacts to a Potion being used. Cork Stopper, Residual Toxins.
+///
+/// <paramref name="target"/> is whatever the Potion was used on -- null for a self-only Potion.
+/// Threaded through from PotionUsePatch, the only place in the mod this information exists.
+/// </summary>
 public interface IPotionUseListener
 {
-    Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion);
+    Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target);
 }
 
 /// <summary>Reacts to a Potion Slot becoming empty, by use or by Distill. Closed System.</summary>
@@ -32,6 +38,18 @@ public interface ISlotEmptiedListener
 public interface IExhaustListener
 {
     Task OnExhausted(PlayerChoiceContext ctx, LabContext lab);
+}
+
+/// <summary>Reacts to Unstable Concoction being Infused. Concentrate.</summary>
+public interface IInfuseListener
+{
+    Task OnInfused(PlayerChoiceContext ctx, LabContext lab, decimal amount);
+}
+
+/// <summary>Reacts to a Status card being created. Volatile Laboratory.</summary>
+public interface IStatusCreatedListener
+{
+    Task OnStatusCreated(PlayerChoiceContext ctx, LabContext lab);
 }
 
 /// <summary>
@@ -78,14 +96,20 @@ public static class AlchemistHooks
     public static Task NotifyDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion) =>
         Dispatch<IDistillListener>(lab, listener => listener.OnDistilled(ctx, lab, potion));
 
-    public static Task NotifyPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion) =>
-        Dispatch<IPotionUseListener>(lab, listener => listener.OnPotionUsed(ctx, lab, potion));
+    public static Task NotifyPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target) =>
+        Dispatch<IPotionUseListener>(lab, listener => listener.OnPotionUsed(ctx, lab, potion, target));
 
     public static Task NotifySlotEmptied(PlayerChoiceContext ctx, LabContext lab) =>
         Dispatch<ISlotEmptiedListener>(lab, listener => listener.OnSlotEmptied(ctx, lab));
 
     public static Task NotifyExhausted(PlayerChoiceContext ctx, LabContext lab) =>
         Dispatch<IExhaustListener>(lab, listener => listener.OnExhausted(ctx, lab));
+
+    public static Task NotifyInfused(PlayerChoiceContext ctx, LabContext lab, decimal amount) =>
+        Dispatch<IInfuseListener>(lab, listener => listener.OnInfused(ctx, lab, amount));
+
+    public static Task NotifyStatusCreated(PlayerChoiceContext ctx, LabContext lab) =>
+        Dispatch<IStatusCreatedListener>(lab, listener => listener.OnStatusCreated(ctx, lab));
 
     private static async Task Dispatch<T>(LabContext lab, Func<T, Task> notify) where T : class
     {

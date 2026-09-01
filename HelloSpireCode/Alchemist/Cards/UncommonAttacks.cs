@@ -48,7 +48,7 @@ public sealed class Shatterstock() : AlchemistCard(1, CardType.Attack, CardRarit
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         if ((await Belt.Distill(ctx, Lab)).Distilled)
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -70,7 +70,7 @@ public sealed class PressureBurst() : AlchemistCard(1, CardType.Attack, CardRari
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         if (Belt.IsFull(Lab))
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
 
         if ((AlchemistEffects.Peek(Lab)?.CardsExhaustedThisTurn ?? 0) > 0)
             await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
@@ -97,29 +97,10 @@ public sealed class EmptyBottle() : AlchemistCard(0, CardType.Attack, CardRarity
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue + bonus)
             .FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if (empty) Belt.Infuse(Lab, damage: DynamicVars["Infuse"].BaseValue);
+        if (empty) await Belt.Infuse(ctx, Lab, damage: DynamicVars["Infuse"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
-}
-
-/// <summary>Deal damage, and Brew a Vulnerable Potion.</summary>
-public sealed class CinnabarEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Vulnerable));
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
 /// <summary>Deal damage, and Infuse more the more you've Distilled this fight.</summary>
@@ -141,7 +122,7 @@ public sealed class AlembicBlade() : AlchemistCard(1, CardType.Attack, CardRarit
 
         var distilled = AlchemistEffects.Peek(Lab)?.DistilledThisCombat ?? 0;
         var bonus = DynamicVars["PerPotion"].BaseValue * distilled;
-        Belt.Infuse(Lab, damage: bonus);
+        await Belt.Infuse(ctx, Lab, damage: bonus);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -253,7 +234,7 @@ public sealed class ReactiveSlash() : AlchemistCard(1, CardType.Attack, CardRari
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         if ((AlchemistEffects.Peek(Lab)?.CardsCreatedThisTurn ?? 0) > 0)
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -278,7 +259,7 @@ public sealed class MercuryLance() : AlchemistCard(2, CardType.Attack, CardRarit
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
         await Alchemy.ExhaustRandomOther(ctx, Lab);
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(5m);

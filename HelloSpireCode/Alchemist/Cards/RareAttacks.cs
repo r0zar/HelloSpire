@@ -26,7 +26,7 @@ public sealed class PhilosophersFlame() : AlchemistCard(2, CardType.Attack, Card
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade()
@@ -122,7 +122,7 @@ public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, Car
         }
 
         await DamageCmd.Attack(damage).FromCard(this).Targeting(play.Target).Execute(ctx);
-        if (bonus > 0) Belt.Infuse(Lab, damage: bonus / 2m);
+        if (bonus > 0) await Belt.Infuse(ctx, Lab, damage: bonus / 2m);
     }
 
     protected override void OnUpgrade()
@@ -149,7 +149,7 @@ public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, Card
         for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
             await Alchemy.Create(ctx, Lab, LabBridge.Current.RandomCard(Owner, type: CardType.Attack));
 
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
@@ -172,7 +172,7 @@ public sealed class GildedExecution() : AlchemistCard(2, CardType.Attack, CardRa
         if (play.Target.CurrentHp <= 0)
         {
             await Belt.BrewRandom(ctx, Lab, PotionRarity.Rare);
-            Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
         }
     }
 

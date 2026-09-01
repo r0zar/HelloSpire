@@ -12,7 +12,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// </summary>
 public static class AlchemistTips
 {
-    /// <summary>Create a Potion in the first empty Potion Slot.</summary>
+    /// <summary>Create the Volatile version of a Potion in the first empty Potion Slot.</summary>
     [CustomEnum] public static StaticHoverTip Brew;
 
     /// <summary>A Potion that behaves normally but is removed at the end of combat.</summary>

@@ -26,7 +26,7 @@ public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
-        Belt.Infuse(Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);

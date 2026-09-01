@@ -69,6 +69,18 @@ public sealed class LabPower : HelloSpirePower
     /// <summary>Never reset -- Alembic Blade and Refined Needle read it.</summary>
     public int DistilledThisCombat { get; set; }
 
+    /// <summary>
+    /// Multiplies every DynamicVar on the next successfully Brewed Potion, then resets to 1.
+    /// Distillation Mastery's payload. Consumed by <see cref="Belt.Brew"/>.
+    /// </summary>
+    public decimal BrewBonusMultiplier { get; set; } = 1m;
+
+    /// <summary>
+    /// Total Infused this turn, across every call. Compound Interest's "15 or more in one turn"
+    /// reads this; Concentrate reads a single call's amount instead and never touches this field.
+    /// </summary>
+    public decimal InfusedThisTurn { get; set; }
+
     // ------------------------------------------------------------------ other bookkeeping
 
     /// <summary>Cards Exhausted this turn, by any means. Cinnabar Edge and the Exhaust engines read it.</summary>
@@ -101,6 +113,7 @@ public sealed class LabPower : HelloSpirePower
         DistilledThisTurn = 0;
         CardsExhaustedThisTurn = 0;
         CardsCreatedThisTurn = 0;
+        InfusedThisTurn = 0;
 
         return Task.CompletedTask;
     }

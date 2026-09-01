@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -11,7 +12,7 @@ public sealed class AlchemistsLedger : Characters.AlchemistRelic, IPotionUseList
 {
     public override RelicRarity Rarity => RelicRarity.Rare;
 
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
     {
         Flash();
         await AlchemistEffects.GainBlock(lab, 1m);
