@@ -25,11 +25,11 @@ public sealed class BlessingOfKings() : PaladinCard(2, CardType.Skill, CardRarit
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<StrengthPower>(choiceContext, cardPlay.Target,
+        await PowerCmd.Apply<StrengthPower>(choiceContext, target,
             DynamicVars["Amount"].BaseValue, Owner.Creature, this);
-        await PowerCmd.Apply<DexterityPower>(choiceContext, cardPlay.Target,
+        await PowerCmd.Apply<DexterityPower>(choiceContext, target,
             DynamicVars["Amount"].BaseValue, Owner.Creature, this);
     }
 

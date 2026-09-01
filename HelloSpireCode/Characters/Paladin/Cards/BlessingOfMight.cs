@@ -25,9 +25,9 @@ public sealed class BlessingOfMight() : PaladinCard(1, CardType.Skill, CardRarit
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<StrengthPower>(choiceContext, cardPlay.Target,
+        await PowerCmd.Apply<StrengthPower>(choiceContext, target,
             DynamicVars["Strength"].BaseValue, Owner.Creature, this);
     }
 

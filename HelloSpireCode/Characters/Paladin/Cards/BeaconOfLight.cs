@@ -22,9 +22,9 @@ public sealed class BeaconOfLight() : PaladinCard(1, CardType.Power, CardRarity.
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        await PowerCmd.Apply<BeaconOfLightPower>(choiceContext, cardPlay.Target,
+        await PowerCmd.Apply<BeaconOfLightPower>(choiceContext, target,
             DynamicVars["Heal"].BaseValue, Owner.Creature, this);
     }
 

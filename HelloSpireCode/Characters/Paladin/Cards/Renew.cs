@@ -25,9 +25,9 @@ public sealed class Renew() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<RegenPower>(choiceContext, cardPlay.Target,
+        await PowerCmd.Apply<RegenPower>(choiceContext, target,
             DynamicVars["Regen"].BaseValue, Owner.Creature, this);
     }
 

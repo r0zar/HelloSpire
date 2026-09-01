@@ -16,9 +16,9 @@ public sealed class BlessingOfSacrifice() : PaladinCard(1, CardType.Skill, CardR
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await CreatureCmd.GainBlock(cardPlay.Target, DynamicVars.Block, cardPlay);
+        await CreatureCmd.GainBlock(target, DynamicVars.Block, cardPlay);
         await PaladinEffects.DiscardChosen(choiceContext, Owner, 1, this);
     }
 

@@ -14,9 +14,9 @@ public sealed class BlessingOfWisdom() : PaladinCard(1, CardType.Skill, CardRari
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var receiver = cardPlay.Target.Player ?? Owner;
+        var receiver = target.Player ?? Owner;
         await CardPileCmd.Draw(choiceContext, 2, receiver);
         await PaladinEffects.DiscardChosen(choiceContext, receiver, 1, this);
     }

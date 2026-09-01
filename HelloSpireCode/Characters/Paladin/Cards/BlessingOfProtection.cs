@@ -17,9 +17,9 @@ public sealed class BlessingOfProtection() : PaladinCard(1, CardType.Skill, Card
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<BufferPower>(choiceContext, cardPlay.Target,
+        await PowerCmd.Apply<BufferPower>(choiceContext, target,
             DynamicVars["Buffer"].BaseValue, Owner.Creature, this);
     }
 

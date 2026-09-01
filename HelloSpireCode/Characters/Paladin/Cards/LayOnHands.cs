@@ -20,9 +20,9 @@ public sealed class LayOnHands() : PaladinCard(1, CardType.Skill, CardRarity.Rar
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await Spirit.Heal(Owner, cardPlay.Target, DynamicVars.Heal.BaseValue);
+        await Spirit.Heal(Owner, target, DynamicVars.Heal.BaseValue);
     }
 
     protected override async Task OnTithe(PlayerChoiceContext ctx) =>

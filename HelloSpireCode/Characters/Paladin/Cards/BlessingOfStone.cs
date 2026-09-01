@@ -16,9 +16,9 @@ public sealed class BlessingOfStone() : PaladinCard(1, CardType.Skill, CardRarit
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<PlatingPower>(choiceContext, cardPlay.Target,
+        await PowerCmd.Apply<PlatingPower>(choiceContext, target,
             DynamicVars["Plating"].BaseValue, Owner.Creature, this);
     }
 

@@ -23,9 +23,9 @@ public sealed class BlessingOfFaith() : PaladinCard(1, CardType.Skill, CardRarit
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await Spirit.Heal(Owner, cardPlay.Target, DynamicVars.Heal.BaseValue);
+        await Spirit.Heal(Owner, target, DynamicVars.Heal.BaseValue);
         await Spirit.Gain(choiceContext, Owner, 1, this);
     }
 
