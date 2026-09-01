@@ -12,8 +12,9 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// A player gains 2 Strength and 2 Dexterity. Exhaust. Tithe: gain 3 Block.
+/// A player gains 2 Strength and 2 Dexterity; you gain 2 Spirit. Exhaust. Tithe: gain 3 Block.
 /// The full coronation, once -- permanent stats compound, so the true cast is bounded.
+/// Spirit lands on the caster, per the Blessing of Faith precedent.
 /// </summary>
 public sealed class BlessingOfKings() : PaladinCard(2, CardType.Skill, CardRarity.Rare, TargetType.AnyPlayer)
 {
@@ -31,6 +32,7 @@ public sealed class BlessingOfKings() : PaladinCard(2, CardType.Skill, CardRarit
             DynamicVars["Amount"].BaseValue, Owner.Creature, this);
         await PowerCmd.Apply<DexterityPower>(choiceContext, target,
             DynamicVars["Amount"].BaseValue, Owner.Creature, this);
+        await Spirit.Gain(choiceContext, Owner, 2, this);
     }
 
     protected override async Task OnTithe(PlayerChoiceContext ctx) =>
