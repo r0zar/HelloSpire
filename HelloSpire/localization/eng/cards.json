@@ -417,7 +417,7 @@
   "HELLOSPIRE-POCKET_FORMULA.title": "Pocket Formula",
   "HELLOSPIRE-POCKET_FORMULA.description": "[gold]Brew[/gold] a random Common Combat Potion.",
   "HELLOSPIRE-STEADY_POUR.title": "Steady Pour",
-  "HELLOSPIRE-STEADY_POUR.description": "[gold]Brew[/gold] a Strength Potion and a Dexterity Potion.",
+  "HELLOSPIRE-STEADY_POUR.description": "[gold]Infuse[/gold] {Block:diff()} Block.",
   "HELLOSPIRE-CONTAMINATED_SAMPLE.title": "Contaminated Sample",
   "HELLOSPIRE-CONTAMINATED_SAMPLE.description": "Add a Volatile Reagent to your draw pile. Gain 1 [gold]Energy[/gold].",
   "HELLOSPIRE-SOLVENT_FLASK.title": "Solvent Flask",

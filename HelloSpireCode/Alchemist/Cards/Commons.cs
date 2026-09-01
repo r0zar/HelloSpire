@@ -318,18 +318,17 @@ public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(1m);
 }
 
-/// <summary>Brew a Strength Potion and a Dexterity Potion.</summary>
+/// <summary>Infuse Block into Unstable Concoction.</summary>
 public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Move)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Strength));
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Dexterity));
-    }
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+        await Belt.Infuse(ctx, Lab, block: DynamicVars.Block.BaseValue);
+
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
 /// <summary>Leave a Volatile Reagent in the draw pile, and gain a little Energy.</summary>
