@@ -357,7 +357,7 @@
   "HELLOSPIRE-DIVINE_HYMN.title": "Divine Hymn",
   "HELLOSPIRE-DIVINE_HYMN.description": "Heal ALL players {Heal:diff()} HP.\n[gold]Tithe[/gold]: ALL players gain 2 Block.",
   "HELLOSPIRE-BLESSING_OF_KINGS.title": "Blessing of Kings",
-  "HELLOSPIRE-BLESSING_OF_KINGS.description": "A player gains [blue]{Amount:diff()}[/blue] [gold]Strength[/gold] and [blue]{Amount:diff()}[/blue] [gold]Dexterity[/gold]. Gain 2 [gold]Spirit[/gold].\n[gold]Tithe[/gold]: gain 3 Block.",
+  "HELLOSPIRE-BLESSING_OF_KINGS.description": "A player gains [blue]{Amount:diff()}[/blue] [gold]Strength[/gold] and [blue]{Amount:diff()}[/blue] [gold]Dexterity[/gold]. Gain 2 [gold]Spirit[/gold].",
   "HELLOSPIRE-RETRIBUTION_AURA.title": "Retribution Aura",
   "HELLOSPIRE-RETRIBUTION_AURA.description": "ALL players gain {Thorns:diff()} [gold]Thorns[/gold].",
   "HELLOSPIRE-DIVINE_SACRIFICE.title": "Divine Sacrifice",
