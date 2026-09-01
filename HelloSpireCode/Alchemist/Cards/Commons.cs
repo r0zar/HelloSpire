@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The 21 commons: 10 Attacks, 9 Skills, 2 Powers.
+// The 22 commons: 10 Attacks, 10 Skills, 2 Powers.
 //
 // Deliberately unexciting, and deliberately proactive -- almost none of them ask "did you do X
 // this turn" anymore. Most either Brew a specific Volatile Potion by name (so the deck teaches
@@ -296,6 +296,25 @@ public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRar
         DynamicVars.Block.UpgradeValueBy(2m);
         DynamicVars["Bonus"].UpgradeValueBy(1m);
     }
+}
+
+/// <summary>Gain Block, and Infuse Vulnerable into Unstable Concoction.</summary>
+public sealed class GlassApron() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+{
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new BlockVar(8m, ValueProp.Move), new DynamicVar("Vulnerable", 1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
+        await Belt.Infuse(ctx, Lab, vulnerable: DynamicVars["Vulnerable"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
 /// <summary>Apply Poison and Weak.</summary>

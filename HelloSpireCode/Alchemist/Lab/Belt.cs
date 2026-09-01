@@ -279,7 +279,7 @@ public static class Belt
     /// same "a full belt is not an error" rule Brew itself follows.
     /// </summary>
     public static async Task Infuse(PlayerChoiceContext ctx, LabContext lab, decimal damage = 0,
-        decimal block = 0, decimal poison = 0, decimal energy = 0)
+        decimal block = 0, decimal poison = 0, decimal energy = 0, decimal vulnerable = 0)
     {
         if (Held(lab).OfType<UnstableConcoction>().FirstOrDefault() is not { } mixture) return;
 
@@ -287,8 +287,9 @@ public static class Belt
         if (block > 0) mixture.DynamicVars.Block.BaseValue += block;
         if (poison > 0) mixture.DynamicVars["Poison"].BaseValue += poison;
         if (energy > 0) mixture.DynamicVars["Energy"].BaseValue += energy;
+        if (vulnerable > 0) mixture.DynamicVars["Vulnerable"].BaseValue += vulnerable;
 
-        var total = damage + block + poison + energy;
+        var total = damage + block + poison + energy + vulnerable;
         var bench = AlchemistEffects.Peek(lab);
         if (bench != null) bench.InfusedThisTurn += total;
 

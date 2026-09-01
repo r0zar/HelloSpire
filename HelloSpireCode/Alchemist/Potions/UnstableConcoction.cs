@@ -30,7 +30,8 @@ public sealed class UnstableConcoction : AlchemistPotion
         new DamageVar(3m, ValueProp.Unpowered),
         new BlockVar(0m, ValueProp.Unpowered),
         new DynamicVar("Poison", 0m),
-        new DynamicVar("Energy", 0m)
+        new DynamicVar("Energy", 0m),
+        new DynamicVar("Vulnerable", 0m)
     ];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -39,12 +40,16 @@ public sealed class UnstableConcoction : AlchemistPotion
         var block = DynamicVars.Block.BaseValue;
         var poison = DynamicVars["Poison"].BaseValue;
         var energy = DynamicVars["Energy"].BaseValue;
+        var vulnerable = DynamicVars["Vulnerable"].BaseValue;
 
         if (damage > 0 && target != null)
             await CreatureCmd.Damage(ctx, target, damage, ValueProp.Unpowered, Owner.Creature, null);
 
         if (poison > 0 && target != null)
             await AlchemistEffects.ApplyPoison(ctx, Lab, target, poison);
+
+        if (vulnerable > 0 && target != null)
+            await AlchemistEffects.ApplyVulnerable(ctx, Lab, target, vulnerable);
 
         if (block > 0)
             await AlchemistEffects.GainBlock(Lab, block);

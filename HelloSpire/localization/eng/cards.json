@@ -424,6 +424,8 @@
   "HELLOSPIRE-SOLVENT_FLASK.description": "[gold]Brew[/gold] a Speed Potion. Exhaust.",
   "HELLOSPIRE-ENERGY_FLASK.title": "Energy Flask",
   "HELLOSPIRE-ENERGY_FLASK.description": "[gold]Brew[/gold] an Energy Potion.",
+  "HELLOSPIRE-GLASS_APRON.title": "Glass Apron",
+  "HELLOSPIRE-GLASS_APRON.description": "Gain {Block:diff()} [gold]Block[/gold]. [gold]Infuse[/gold] {Vulnerable:diff()} Vulnerable.",
   "HELLOSPIRE-BITTER_SOLVENT.title": "Bitter Solvent",
   "HELLOSPIRE-BITTER_SOLVENT.description": "Apply {Poison:diff()} [gold]Poison[/gold] and {WeakPower:diff()} [gold]Weak[/gold].",
   "HELLOSPIRE-RESIDUAL_TOXINS.title": "Residual Toxins",
