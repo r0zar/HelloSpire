@@ -221,7 +221,7 @@
   "HELLOSPIRE-DEVOTION.title": "Devotion",
   "HELLOSPIRE-DEVOTION.description": "Gain [blue]{Spirit:diff()}[/blue] [gold]Spirit[/gold].\n[gold]Tithe[/gold]: gain 2 Block.",
   "HELLOSPIRE-DIVINE_STORM.title": "Divine Storm",
-  "HELLOSPIRE-DIVINE_STORM.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Weak[/gold] to ALL enemies.",
+  "HELLOSPIRE-DIVINE_STORM.description": "Deal {Damage:diff()} damage to ALL enemies twice.",
   "HELLOSPIRE-BLADE_OF_JUSTICE.title": "Blade of Justice",
   "HELLOSPIRE-BLADE_OF_JUSTICE.description": "Deal {Damage:diff()} damage.",
   "HELLOSPIRE-SEAL_OF_COMMAND.title": "Seal of Command",
@@ -604,5 +604,7 @@
   "HELLOSPIRE-HEALING_WORD.title": "Healing Word",
   "HELLOSPIRE-HEALING_WORD.description": "Heal a player {Heal:diff()} HP.\nDiscard a card.\n[gold]Tithe[/gold]: gain 1 [gold]Spirit[/gold].",
   "HELLOSPIRE-CONDEMN.title": "Condemn",
-  "HELLOSPIRE-CONDEMN.description": "Deal {Damage:diff()} damage.\nApply 1 [gold]Vulnerable[/gold].\n[gold]Tithe[/gold]: gain 5 Block."
+  "HELLOSPIRE-CONDEMN.description": "Deal {Damage:diff()} damage.\nApply 1 [gold]Vulnerable[/gold].\n[gold]Tithe[/gold]: gain 5 Block.",
+  "HELLOSPIRE-BLINDING_LIGHT.title": "Blinding Light",
+  "HELLOSPIRE-BLINDING_LIGHT.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Weak[/gold] to ALL enemies."
 }
