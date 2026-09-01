@@ -65,6 +65,9 @@ export interface ParsedCard {
   target: string;
   targetSpan: Span;
 
+  /** "multiplayer" | "singleplayer" | "any" — from the MultiplayerConstraint override. */
+  mode: string;
+
   vars: CardVar[];
 }
 
@@ -108,10 +111,19 @@ export function parseCards(file: string, source: string): ParsedCard[] {
       summary: summaryAbove(source, declStart),
       line: source.slice(0, declStart).split("\n").length,
       ...ctor,
+      mode: parseMode(body),
       vars: parseVars(body, declStart),
     });
   }
   return cards;
+}
+
+/** The MultiplayerConstraint override, when the class body has one. */
+function parseMode(body: string): string {
+  const m = /CardMultiplayerConstraint\.(\w+)/.exec(body);
+  if (m?.[1] === "MultiplayerOnly") return "multiplayer";
+  if (m?.[1] === "SingleplayerOnly") return "singleplayer";
+  return "any";
 }
 
 /** The four positional constructor arguments, with their spans. */

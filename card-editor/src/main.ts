@@ -172,6 +172,12 @@ function renderControls(): void {
         ),
       ),
     );
+    controlsEl.appendChild(
+      group("mode", [
+        chip("singleplayer", f.modes.has("singleplayer"), () => toggle(f.modes, "singleplayer")),
+        chip("multiplayer only", f.modes.has("multiplayer"), () => toggle(f.modes, "multiplayer")),
+      ]),
+    );
   } else {
     controlsEl.appendChild(
       group(
