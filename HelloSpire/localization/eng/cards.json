@@ -433,7 +433,7 @@
   "HELLOSPIRE-EMPTY_BOTTLE.title": "Empty Bottle",
   "HELLOSPIRE-EMPTY_BOTTLE.description": "Deal {Damage:diff()} damage. If you hold no Potions, deal {Bonus:diff()} more and draw {Cards} card.",
   "HELLOSPIRE-CINNABAR_EDGE.title": "Cinnabar Edge",
-  "HELLOSPIRE-CINNABAR_EDGE.description": "Deal {Damage:diff()} damage. If you Exhausted a card this turn, apply {VulnerablePower} [gold]Vulnerable[/gold].",
+  "HELLOSPIRE-CINNABAR_EDGE.description": "Deal {Damage:diff()} damage. [gold]Brew[/gold] a [gold]Volatile[/gold] Vulnerable Potion.",
   "HELLOSPIRE-BLACK_MARKET_BLADE.title": "Black Market Blade",
   "HELLOSPIRE-BLACK_MARKET_BLADE.description": "Deal {Damage:diff()} damage. [gold]Invest[/gold] up to {MaxInvest}: deal {PerGold} more per Gold.",
   "HELLOSPIRE-VOLATILE_COMPOUND.title": "Volatile Compound",

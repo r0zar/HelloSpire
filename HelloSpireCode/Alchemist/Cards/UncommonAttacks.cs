@@ -99,22 +99,19 @@ public sealed class EmptyBottle() : AlchemistCard(0, CardType.Attack, CardRarity
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>The Exhaust deck's only source of Vulnerable.</summary>
+/// <summary>Deal damage, then Brew a Volatile Vulnerable Potion.</summary>
 public sealed class CinnabarEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(9m, ValueProp.Move), new PowerVar<VulnerablePower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<VulnerablePower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-
-        if ((AlchemistEffects.Peek(Lab)?.CardsExhaustedThisTurn ?? 0) > 0)
-            await AlchemistEffects.ApplyVulnerable(ctx, Lab, play.Target, DynamicVars["VulnerablePower"].BaseValue);
+        await Belt.Brew(ctx, Lab, ModelDb.Potion<VolatileVulnerablePotion>().ToMutable());
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
