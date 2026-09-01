@@ -10,7 +10,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// Gain Amount Thorns now, bank the seal. Judge: ALL enemies lose 5 Strength this turn.
 /// The Prot emergency: bleed while you hold, save the team when you cash.
 /// </summary>
-public sealed class SealOfTheMartyr() : SealCard(1, CardRarity.Rare, 3m)
+public sealed class SealOfTheMartyr() : SealCard(1, CardRarity.Rare, 2m)
 {
     protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
     {
