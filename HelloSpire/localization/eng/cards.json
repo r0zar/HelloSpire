@@ -586,7 +586,7 @@
   "HELLOSPIRE-ALMS.title": "Alms",
   "HELLOSPIRE-ALMS.description": "Gain {Block:diff()} Block.\nDiscard a card.",
   "HELLOSPIRE-CONSULT_THE_SCRIPTURES.title": "Consult the Scriptures",
-  "HELLOSPIRE-CONSULT_THE_SCRIPTURES.description": "Put a card from your draw pile into your hand.\n[gold]Tithe[/gold]: draw a card.",
+  "HELLOSPIRE-CONSULT_THE_SCRIPTURES.description": "Put a card from your discard pile into your hand.\n[gold]Tithe[/gold]: draw a card.",
   "HELLOSPIRE-BLESSING_OF_STONE.title": "Blessing of Stone",
   "HELLOSPIRE-BLESSING_OF_STONE.description": "A player gains [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\n[gold]Tithe[/gold]: gain 1 [gold]Plating[/gold].",
   "HELLOSPIRE-BLESSING_OF_FAITH.title": "Blessing of Faith",

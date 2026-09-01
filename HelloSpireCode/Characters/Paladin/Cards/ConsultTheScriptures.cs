@@ -11,8 +11,9 @@ using MegaCrit.Sts2.Core.Localization;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Put a card from your draw pile into your hand. The fisher: assembles seal-then-judge order,
-/// or digs the heal you need. Any card, no restriction. Upgrade: costs 0.
+/// Put a card from your discard pile into your hand. The fisher closes the Tithe loop:
+/// pitch a card for its face, then consult it back for the true cast -- or retrieve the
+/// seal you spent. Any card, no restriction. Upgrade: costs 0.
 /// </summary>
 public sealed class ConsultTheScriptures() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
@@ -23,9 +24,9 @@ public sealed class ConsultTheScriptures() : PaladinCard(1, CardType.Skill, Card
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var draw = PileType.Draw.GetPile(Owner);
-        if (draw.Cards.Count == 0) return;
-        var chosen = (await CardSelectCmd.FromCombatPile(choiceContext, draw, Owner,
+        var discard = PileType.Discard.GetPile(Owner);
+        if (discard.Cards.Count == 0) return;
+        var chosen = (await CardSelectCmd.FromCombatPile(choiceContext, discard, Owner,
             new CardSelectorPrefs(new LocString("card_selection", "HELLOSPIRE-TO_FETCH"), 1))).FirstOrDefault();
         if (chosen == null) return;
         await CardPileCmd.Add(chosen, PileType.Hand.GetPile(Owner));
