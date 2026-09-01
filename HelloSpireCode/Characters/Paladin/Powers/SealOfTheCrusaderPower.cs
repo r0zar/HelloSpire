@@ -1,27 +1,18 @@
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The Ret rare seal. While held: gain Amount Strength at the start of your turn (kept -- the
-/// ramp is the point of holding it). Judge: deal 20 -- the hammer blow.
+/// The Ret rare seal, armed: no passive (the Strength was paid on cast).
+/// Judge: deal 20 -- the hammer blow.
 /// </summary>
 public sealed class SealOfTheCrusaderPower : SealPower
 {
     public const decimal JudgeDamage = 20m;
-
-    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
-    {
-        if (PassivesDisabled || player.Creature != Owner) return;
-        Flash();
-        await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, Amount, Owner, null);
-    }
 
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target) =>
         await CreatureCmd.Damage(ctx, [target], JudgeDamage, ValueProp.Unpowered, Owner);

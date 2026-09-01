@@ -30,9 +30,9 @@
   "HELLOSPIRE-THE_POTION_BELT.title": "The Potion Belt",
   "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat.",
   "HELLOSPIRE-SEAL.title": "Seal",
-  "HELLOSPIRE-SEAL.description": "A held stance. You can hold only one Seal at a time; casting a new Seal (or the held one again) replaces it fresh. Judging fires the held Seal's Judge effect, then consumes the Seal.",
+  "HELLOSPIRE-SEAL.description": "A banked charge. Seals STACK: casting a seal adds it to what you hold, and a second copy of the same seal strengthens its effect. Judging unleashes every banked seal, then consumes them all.",
   "HELLOSPIRE-JUDGE.title": "Judge",
-  "HELLOSPIRE-JUDGE.description": "Fire your held Seal's Judge effect, then consume the Seal. Judge X times fires it X times before consuming. Judging with no Seal held still counts as Judging for powers that care, but has no Seal effect.",
+  "HELLOSPIRE-JUDGE.description": "Unleash EVERY banked Seal: each fires its Judge effect, then the whole bank is consumed. Judge X times fires each seal X times first. Judging with no Seals banked still counts as Judging for powers that care.",
   "HELLOSPIRE-TITHE.title": "Tithe",
   "HELLOSPIRE-TITHE.description": "When you discard this card, its Tithe effect triggers and the card stays in your discard pile. A Tithe never Exhausts -- only the card's true cast does."
 }
