@@ -13,15 +13,14 @@ using MegaCrit.Sts2.Core.Rooms;
 namespace HelloSpire.HelloSpireCode.Alchemist.Relics;
 
 /// <summary>
-/// The starter: at the start of each combat, Brew a random Common Combat Potion. Turn one always
-/// has something on the belt -- the Cracked Core shape, in glassware.
+/// At the start of each combat, Brew a random Common Combat Potion.
 ///
 /// Volatile like any other Brew: Belt.BrewRandom doesn't pass volatilePotion: false, so it inherits
 /// Belt.Brew's default. Vanishes at combat end if unused, same as anything else found or Brewed.
 /// </summary>
 public sealed class PortableAlembic : Characters.AlchemistRelic
 {
-    public override RelicRarity Rarity => RelicRarity.Starter;
+    public override RelicRarity Rarity => RelicRarity.Uncommon;
 
     public override async Task BeforeSideTurnStart(PlayerChoiceContext choiceContext, CombatSide side,
         IReadOnlyList<Creature> participants, ICombatState combatState)

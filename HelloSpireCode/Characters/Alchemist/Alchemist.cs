@@ -45,7 +45,7 @@ public class Alchemist : PlaceholderCharacterModel
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
-        [ModelDb.Relic<Alchemist_.Relics.PortableAlembic>()];
+        [ModelDb.Relic<PotionBelt>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<AlchemistCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<AlchemistRelicPool>();
