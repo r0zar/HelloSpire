@@ -65,6 +65,9 @@ export interface ParsedCard {
   target: string;
   targetSpan: Span;
 
+  /** EnergyCost.UpgradeBy delta in OnUpgrade (e.g. -1), or null when cost doesn't upgrade. */
+  costUpgrade: number | null;
+
   /** "multiplayer" | "singleplayer" | "any" — from the MultiplayerConstraint override. */
   mode: string;
 
@@ -111,11 +114,18 @@ export function parseCards(file: string, source: string): ParsedCard[] {
       summary: summaryAbove(source, declStart),
       line: source.slice(0, declStart).split("\n").length,
       ...ctor,
+      costUpgrade: parseCostUpgrade(body),
       mode: parseMode(body),
       vars: parseVars(body, declStart),
     });
   }
   return cards;
+}
+
+/** EnergyCost.UpgradeBy(n) in OnUpgrade — how the cost changes when upgraded. */
+function parseCostUpgrade(body: string): number | null {
+  const m = /EnergyCost\.UpgradeBy\((-?\d+)\)/.exec(body);
+  return m?.[1] !== undefined ? Number(m[1]) : null;
 }
 
 /** The MultiplayerConstraint override, when the class body has one. */
