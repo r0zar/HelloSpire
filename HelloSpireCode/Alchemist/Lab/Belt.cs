@@ -45,6 +45,13 @@ public static class Belt
     {
         if (potion == null) return null;
 
+        // Any Attack that Brews leaves a Volatile Residue behind in the discard pile -- a passive
+        // tax on the Brew-and-hit cards, not something any one card grants itself. Applies the
+        // moment the Attack is played, win or lose: a full belt still loses the Potion, but the
+        // card still resolved and the Residue still falls out.
+        if (lab.Card?.Type == CardType.Attack)
+            await Alchemy.CreateVolatileResidue(ctx, lab, PileType.Discard);
+
         // Marked Volatile BEFORE calling the bridge, not after: PotionCmd.TryToProcure (confirmed
         // via sts2.dll) places this exact instance into the belt and creates its NPotion visual
         // node synchronously, so VolatilePotionOutlinePatch's Reload() postfix fires and checks
@@ -76,11 +83,6 @@ public static class Belt
                 bench.BrewBonusMultiplier = 1m;
             }
         }
-
-        // Any Attack that Brews leaves a Volatile Residue behind in the discard pile -- a passive
-        // tax on the Brew-and-hit cards, not something any one card grants itself.
-        if (lab.Card?.Type == CardType.Attack)
-            await Alchemy.CreateVolatileResidue(ctx, lab, PileType.Discard);
 
         await AlchemistHooks.NotifyBrewed(ctx, lab, placed);
         return placed;
