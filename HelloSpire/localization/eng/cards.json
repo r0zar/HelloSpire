@@ -241,7 +241,7 @@
   "HELLOSPIRE-COMFORT.title": "Comfort",
   "HELLOSPIRE-COMFORT.description": "Heal a player {Heal:diff()} HP.\n[gold]Tithe[/gold]: gain 3 Block.",
   "HELLOSPIRE-DIVINE_PURPOSE.title": "Divine Purpose",
-  "HELLOSPIRE-DIVINE_PURPOSE.description": "Trigger the effects of all your [gold]Seals[/gold].\nDraw 1 card.",
+  "HELLOSPIRE-DIVINE_PURPOSE.description": "[gold]Judge[/gold].\nDraw 1 card.",
   "HELLOSPIRE-SHIELD_OF_THE_RIGHTEOUS.title": "Shield of the Righteous",
   "HELLOSPIRE-SHIELD_OF_THE_RIGHTEOUS.description": "Gain {Block:diff()} Block.\n[gold]Judge[/gold].\n[gold]Tithe[/gold]: gain 2 Block.",
   "HELLOSPIRE-DIVINE_FAVOR.title": "Divine Favor",
