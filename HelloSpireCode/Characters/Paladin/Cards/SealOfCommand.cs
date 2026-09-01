@@ -8,8 +8,8 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Apply Amount Weak to ALL enemies now, bank the seal. Judge: 2 Weak + 2 Vulnerable.
-/// The debuff seal commands the field on the way in.
+/// Apply Amount Weak and Amount Vulnerable to ALL enemies now, bank the seal.
+/// Judge: 2 Weak + 2 Vulnerable. The debuff seal commands the field on the way in.
 /// </summary>
 public sealed class SealOfCommand() : SealCard(1, CardRarity.Uncommon, 1m)
 {
@@ -17,7 +17,10 @@ public sealed class SealOfCommand() : SealCard(1, CardRarity.Uncommon, 1m)
     {
         var state = Owner.Creature.CombatState;
         foreach (var enemy in state.HittableEnemies.ToList())
+        {
             await PowerCmd.Apply<WeakPower>(ctx, enemy, amount, Owner.Creature, this);
+            await PowerCmd.Apply<VulnerablePower>(ctx, enemy, amount, Owner.Creature, this);
+        }
         await Seals.Grant<SealOfCommandPower>(ctx, Owner, amount, this);
     }
 }
