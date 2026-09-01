@@ -19,7 +19,8 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 public sealed class BlessingOfKings() : PaladinCard(2, CardType.Skill, CardRarity.Rare, TargetType.AnyPlayer)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Amount", 2m), new DynamicVar("Spirit", 2m)];
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var target = TargetOrOwner(cardPlay);
@@ -28,8 +29,12 @@ public sealed class BlessingOfKings() : PaladinCard(2, CardType.Skill, CardRarit
             DynamicVars["Amount"].BaseValue, Owner.Creature, this);
         await PowerCmd.Apply<DexterityPower>(choiceContext, target,
             DynamicVars["Amount"].BaseValue, Owner.Creature, this);
-        await Spirit.Gain(choiceContext, Owner, 2, this);
+        await Spirit.Gain(choiceContext, Owner, (int)DynamicVars["Spirit"].BaseValue, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars["Amount"].UpgradeValueBy(1m);
+        DynamicVars["Spirit"].UpgradeValueBy(1m);
+    }
 }
