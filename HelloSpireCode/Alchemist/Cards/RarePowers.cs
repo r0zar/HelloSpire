@@ -15,7 +15,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // Crucible), Brew (Brewing Engine), Distill (Distillation Mastery), Status (Volatile Laboratory),
 // and the class's one non-Volatile trophy (The Great Work).
 
-/// <summary>Whenever you Infuse, draw a card.</summary>
+/// <summary>Whenever you Infuse, draw a card for every 10 Infused.</summary>
 public sealed class Accumulation() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1)];

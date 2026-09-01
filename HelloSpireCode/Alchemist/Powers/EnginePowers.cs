@@ -202,13 +202,18 @@ public sealed class VolatileLaboratoryPower : AlchemistEnginePower, IStatusCreat
     }
 }
 
-/// <summary>Whenever you Infuse, draw a card.</summary>
+/// <summary>Whenever you Infuse, draw a card for every 10 Infused in that action.</summary>
 public sealed class AccumulationPower : AlchemistEnginePower, IInfuseListener
 {
+    private const decimal Threshold = 10m;
+
     public async Task OnInfused(PlayerChoiceContext ctx, LabContext lab, decimal amount)
     {
+        var draws = (int)(amount / Threshold) * (int)Amount;
+        if (draws <= 0) return;
+
         Flash();
-        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
+        await AlchemistEffects.Draw(ctx, lab, draws);
     }
 }
 
