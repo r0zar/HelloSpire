@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -12,8 +13,9 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 12. Apply 2 Weak. Tithe: apply 1 Weak to a random enemy. Retuned to the 2E-common
-/// band (Flatten 12, Predator 15, Cinder 18); the face makes discipline recur.
+/// Deal 12. Apply 2 Weak. Tithe: ALL enemies lose 1 Strength until end of turn. Retuned to
+/// the 2E-common band (Flatten 12, Predator 15, Cinder 18); the face is a recurring flicker
+/// of the class's Strength-down signature.
 /// </summary>
 public sealed class Chastise() : PaladinCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
@@ -33,9 +35,9 @@ public sealed class Chastise() : PaladinCard(2, CardType.Attack, CardRarity.Comm
 
     protected override async Task OnTithe(PlayerChoiceContext ctx)
     {
-        var enemy = PaladinEffects.RandomEnemy(Owner);
-        if (enemy == null) return;
-        await PowerCmd.Apply<WeakPower>(ctx, enemy, 1m, Owner.Creature, this);
+        if (Owner.Creature.CombatState is not { } state) return;
+        foreach (var enemy in state.HittableEnemies.ToList())
+            await PowerCmd.Apply<HumblingShacklesPower>(ctx, enemy, 1m, Owner.Creature, null);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
