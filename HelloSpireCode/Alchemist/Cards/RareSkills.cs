@@ -56,7 +56,7 @@ public sealed class HeavyTransmute() : AlchemistCard(1, CardType.Skill, CardRari
 }
 
 /// <summary>Fill the belt, and Infuse for every Potion that landed. The Brewer's capstone.</summary>
-public sealed class MagnumOpus() : AlchemistCard(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class MagnumOpus() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerPotion", 4m, ValueProp.Move)];
 
@@ -75,7 +75,7 @@ public sealed class MagnumOpus() : AlchemistCard(3, CardType.Skill, CardRarity.R
     protected override void OnUpgrade() => DynamicVars["PerPotion"].UpgradeValueBy(1m);
 }
 
-/// <summary>Gain Potency, and draw cards.</summary>
+/// <summary>Distill a Potion, for Potency and cards.</summary>
 public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
@@ -84,10 +84,12 @@ public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, Car
         [new PowerVar<PotencyPower>(2m), new CardsVar(2)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
+        [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
+        if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
+
         await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
     }
