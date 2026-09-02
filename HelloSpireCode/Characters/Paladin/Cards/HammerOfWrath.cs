@@ -10,10 +10,15 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 16. The clean big hit -- no conditions, per house style.</summary>
+/// <summary>
+/// Deal 18. Tithe: Judge a random enemy. The Ret uncommon reworked from a flavorless 16 +
+/// 3-chip face: execute-weight numbers on the swing, and the set's only judge-from-hand on
+/// the face -- pitch the hammer and the verdict still lands (cashes the seal bank; sealless
+/// it still fires the whenever-you-Judge powers). Upgrade: 24.
+/// </summary>
 public sealed class HammerOfWrath() : PaladinCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(16m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(18m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
 
@@ -31,8 +36,8 @@ public sealed class HammerOfWrath() : PaladinCard(2, CardType.Attack, CardRarity
     {
         var enemy = PaladinEffects.RandomEnemy(Owner);
         if (enemy == null) return;
-        await CreatureCmd.Damage(ctx, [enemy], 3m, ValueProp.Unpowered, Owner.Creature);
+        await Seals.Judge(ctx, Owner, enemy);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(5m);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(6m);
 }

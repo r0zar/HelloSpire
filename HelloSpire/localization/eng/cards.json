@@ -209,7 +209,7 @@
   "HELLOSPIRE-CRUSADER_STRIKE.title": "Crusader Strike",
   "HELLOSPIRE-CRUSADER_STRIKE.description": "Deal {Damage:diff()} damage.\nApply {Vulnerable:diff()} [gold]Vulnerable[/gold].",
   "HELLOSPIRE-HAMMER_OF_WRATH.title": "Hammer of Wrath",
-  "HELLOSPIRE-HAMMER_OF_WRATH.description": "Deal {Damage:diff()} damage.\n[gold]Tithe[/gold]: deal 3 damage to a random enemy.",
+  "HELLOSPIRE-HAMMER_OF_WRATH.description": "Deal {Damage:diff()} damage.\n[gold]Tithe[/gold]: [gold]Judge[/gold] a random enemy.",
   "HELLOSPIRE-AVENGERS_SHIELD.title": "Avenger's Shield",
   "HELLOSPIRE-AVENGERS_SHIELD.description": "Deal {Damage:diff()} damage.\nGain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\n[gold]Judge[/gold].",
   "HELLOSPIRE-HOLY_LIGHT.title": "Holy Light",
