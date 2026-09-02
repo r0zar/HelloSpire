@@ -9,106 +9,103 @@ using HelloSpire.HelloSpireCode.Alchemist.Lab;
 using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Powers 29-35. Each attaches a payout to a verb the character already uses every turn —
-// Brewing, Exhausting, Investing, drinking, or emptying a slot. None of them changes what you do;
-// they change what it is worth.
+// Uncommon Powers 1-9. Each attaches a payout to a verb the character already uses every turn --
+// Brewing, Distilling, Exhausting, drinking, Infusing, or emptying a slot. None of them changes
+// what you do; they change what it is worth.
 
-/// <summary>Gain Potency. The Brewer's only scaling stat.</summary>
+/// <summary>Whenever you Infuse a lot in one action, gain Energy.</summary>
 public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<PotencyPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ConcentratePower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
+        [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<ConcentratePower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
+        await PowerCmd.Apply<ConcentratePower>(ctx, Owner.Creature,
+            DynamicVars["ConcentratePower"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first Brew each turn is worth Block. Makes a setup turn less of a hole.</summary>
-public sealed class HeatBath() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<HeatBathPower>(4m)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<HeatBathPower>()];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<HeatBathPower>(ctx, Owner.Creature,
-            DynamicVars["HeatBathPower"].BaseValue, Owner.Creature, this);
-    }
-
-    protected override void OnUpgrade() => DynamicVars["HeatBathPower"].UpgradeValueBy(2m);
-}
-
-/// <summary>
-/// The first Exhaust each turn mints a Gold, three times a fight.
-///
-/// The cap is not a nerf, it is the design. An uncapped in-combat Gold trigger makes stalling the
-/// correct play, and a deckbuilder where the best line is "do nothing for four turns" is broken.
-/// </summary>
-public sealed class CoinPress() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+/// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a hole.</summary>
+public sealed class ThermalBuffer() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<CoinPressPower>(1m), new DynamicVar("Triggers", 3m)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<CoinPressPower>()];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-
-        var power = await PowerCmd.Apply<CoinPressPower>(ctx, Owner.Creature,
-            DynamicVars["CoinPressPower"].BaseValue, Owner.Creature, this);
-
-        if (power != null) power.TriggersLeft = DynamicVars["Triggers"].IntValue;
-    }
-
-    protected override void OnUpgrade() => DynamicVars["Triggers"].UpgradeValueBy(1m);
-}
-
-/// <summary>Spending Gold buys Block on the way past.</summary>
-public sealed class MerchantsInstinct() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<MerchantsInstinctPower>(3m)];
+        [new PowerVar<ThermalBufferPower>(2m), new BlockVar("Infuse", 3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Invest), HoverTipFactory.FromPower<MerchantsInstinctPower>()];
+        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<ThermalBufferPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<MerchantsInstinctPower>(ctx, Owner.Creature,
-            DynamicVars["MerchantsInstinctPower"].BaseValue, Owner.Creature, this);
+        var power = await PowerCmd.Apply<ThermalBufferPower>(ctx, Owner.Creature,
+            DynamicVars["ThermalBufferPower"].BaseValue, Owner.Creature, this);
+
+        if (power != null) power.BlockInfuse = DynamicVars["Infuse"].BaseValue;
     }
 
-    protected override void OnUpgrade() => DynamicVars["MerchantsInstinctPower"].UpgradeValueBy(2m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars["ThermalBufferPower"].UpgradeValueBy(1m);
+        DynamicVars["Infuse"].UpgradeValueBy(1m);
+    }
 }
 
-/// <summary>The first Potion each turn also draws. Turns the belt into a second hand.</summary>
-public sealed class ReactiveMixture() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+/// <summary>The first card you Exhaust each turn Infuses Unstable Concoction.</summary>
+public sealed class ReagentPress() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ReactiveMixturePower>(1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ReagentPressPower>(4m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<ReactiveMixturePower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<ReagentPressPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-
-        await PowerCmd.Apply<ReactiveMixturePower>(ctx, Owner.Creature,
-            DynamicVars["ReactiveMixturePower"].BaseValue, Owner.Creature, this);
+        await PowerCmd.Apply<ReagentPressPower>(ctx, Owner.Creature,
+            DynamicVars["ReagentPressPower"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["ReactiveMixturePower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars["ReagentPressPower"].UpgradeValueBy(1m);
+}
+
+/// <summary>Distilling buys Block on the way past.</summary>
+public sealed class EfficientDistillation() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<EfficientDistillationPower>(3m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<EfficientDistillationPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await PowerCmd.Apply<EfficientDistillationPower>(ctx, Owner.Creature,
+            DynamicVars["EfficientDistillationPower"].BaseValue, Owner.Creature, this);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["EfficientDistillationPower"].UpgradeValueBy(2m);
+}
+
+/// <summary>The first Potion you use each turn also draws a card.</summary>
+public sealed class ReactiveLaboratory() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ReactiveLaboratoryPower>(1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<ReactiveLaboratoryPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await PowerCmd.Apply<ReactiveLaboratoryPower>(ctx, Owner.Creature,
+            DynamicVars["ReactiveLaboratoryPower"].BaseValue, Owner.Creature, this);
+    }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>The first slot emptied each turn is worth Block, whether you drank it or poured it out.</summary>
@@ -129,7 +126,7 @@ public sealed class ClosedSystem() : AlchemistCard(1, CardType.Power, CardRarity
     protected override void OnUpgrade() => DynamicVars["ClosedSystemPower"].UpgradeValueBy(2m);
 }
 
-/// <summary>Everything you conjure this fight arrives Upgraded. The Gilded Scholar's engine.</summary>
+/// <summary>Everything you conjure this fight arrives Upgraded.</summary>
 public sealed class RefinersEye() : AlchemistCard(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<RefinersEyePower>(1m)];
@@ -144,4 +141,39 @@ public sealed class RefinersEye() : AlchemistCard(2, CardType.Power, CardRarity.
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+}
+
+/// <summary>Whenever you Brew a Poison Potion, apply Poison to a random enemy.</summary>
+public sealed class ToxicCulture() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ToxicCulturePower>(2m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<ToxicCulturePower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await PowerCmd.Apply<ToxicCulturePower>(ctx, Owner.Creature,
+            DynamicVars["ToxicCulturePower"].BaseValue, Owner.Creature, this);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["ToxicCulturePower"].UpgradeValueBy(1m);
+}
+
+/// <summary>Whenever you use a Potion, gain Strength this turn.</summary>
+public sealed class BottledFury() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<BottledFuryPower>(1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<BottledFuryPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await PowerCmd.Apply<BottledFuryPower>(ctx, Owner.Creature,
+            DynamicVars["BottledFuryPower"].BaseValue, Owner.Creature, this);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["BottledFuryPower"].UpgradeValueBy(1m);
 }

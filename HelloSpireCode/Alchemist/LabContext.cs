@@ -7,9 +7,9 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// <summary>
 /// Who is working the bench.
 ///
-/// Cards are the usual answer, but the Portable Alembic Brews at the start of combat and
+/// Cards are the usual answer, but the Alchemical Satchel Brews at the start of combat and
 /// Panacea of Plenty Brews from the potion bar — neither has a card to attribute the action to.
-/// Every Brew, Distill, Invest and Render takes one of these instead of a <see cref="CardModel"/>
+/// Every Brew, Distill and Infuse takes one of these instead of a <see cref="CardModel"/>
 /// so relics and potions are not second-class citizens.
 ///
 /// A card converts implicitly, so card code still reads <c>Belt.Brew(ctx, this, ...)</c>.

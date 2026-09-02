@@ -17,70 +17,59 @@ public enum BasePotion
     ExplosiveAmpoule,
 
     /// <summary>Gain 2 Energy.</summary>
-    Energy
+    Energy,
+
+    /// <summary>Apply 2 Vulnerable. Cinnabar Edge.</summary>
+    Vulnerable,
+
+    /// <summary>Apply 2 Weak. Copper Shot.</summary>
+    Weak,
+
+    /// <summary>Gain 3 Dexterity this turn. Quick Silver.</summary>
+    Speed,
+
+    /// <summary>Choose 1 of 2 Attack cards, free this turn. Flask Toss.</summary>
+    Attack,
+
+    /// <summary>Deal 12 damage. Firebrand.</summary>
+    Fire,
+
+    /// <summary>Gain 1 Strength. Steady Pour.</summary>
+    Strength,
+
+    /// <summary>Apply 4 Poison. Venomous Ampoule, Reactive Mixture.</summary>
+    Poison,
+
+    /// <summary>Gain 1 Dexterity. Steady Pour.</summary>
+    Dexterity,
+
+    /// <summary>Apply 3 Poison to ALL enemies. VolatilePoisonAmpoule -- not offered anywhere; a
+    /// future card naming it here would be the only way to Brew one.</summary>
+    PoisonAmpoule
 }
 
 /// <summary>
 /// The quarantine.
 ///
-/// The Alchemist needs four things from the base game that this repository has no working example
-/// of: reading and spending **Gold**, writing to and reading the **Potion belt**, reducing
-/// **Max HP**, and putting a **choice** in front of the player. The Gunslinger needed none of them
-/// — its cylinder is a custom Power and it deliberately makes its choices from board state rather
-/// than from a menu (see PerfectReload) — so there is no precedent in this codebase to copy, and
-/// the exact signatures have not been read out of sts2.dll yet.
+/// The Alchemist needs things from the base game that this repository has no working example of:
+/// writing to and reading the **Potion belt**, and putting a **choice** in front of the player.
+/// The Gunslinger needed neither — its cylinder is a custom Power and it deliberately makes its
+/// choices from board state rather than from a menu (see PerfectReload) — so there is no precedent
+/// in this codebase to copy.
 ///
-/// Rather than scatter guesses across ninety cards, every one of those operations is declared here
+/// Rather than scatter guesses across eighty cards, every one of those operations is declared here
 /// and nowhere else. The default implementation below is deliberately inert: the mod compiles,
-/// loads and plays, the Alchemist's damage/Block/draw/Power effects all work, and the four
-/// unverified systems no-op with a log line instead of doing something wrong.
+/// loads and plays, the Alchemist's damage/Block/draw/Power effects all work, and the belt/choice
+/// operations no-op with a log line instead of doing something wrong.
 ///
 /// **To finish the character, implement <see cref="ILabBridge"/> against the real API and assign
 /// <see cref="Current"/> during mod initialization.** Nothing else needs to change.
 ///
-/// Two of the defaults are load-bearing safety decisions, not placeholders to rush past:
-///
-/// - <see cref="OfferInvest"/> and <see cref="OfferRender"/> both return **false** — Decline.
-///   Gold is a persistent run resource and Max HP is permanent; auto-paying either one without
-///   asking would spend the player's run behind their back. Every Invest and Render card is
-///   specified to resolve its base effect in full on a Decline, so declining is always correct
-///   and never leaves a card dead. A card that is weaker than designed is a bug; a card that
-///   quietly empties the player's purse is a much worse one.
-/// - <see cref="Brew"/> returning null is the same state as a full belt, which the design already
-///   defines: the card resolves, the Potion is lost.
-///
-/// TODO(Phase 3): read the Potion, Gold, Max HP and player-choice APIs out of sts2.dll and ship a
-/// real implementation. Until then the Alchemist is a playable but incomplete character, and that
-/// is stated on the tin rather than hidden.
+/// <see cref="Brew"/> returning null is the same state as a full belt, which the design already
+/// defines: the card resolves, the Potion is lost.
 /// </summary>
 public interface ILabBridge
 {
-    // -------------------------------------------------------------------------- Gold
-
-    /// <summary>The player's actual, persistent Gold.</summary>
-    int Gold(Player player);
-
-    /// <summary>Add real Gold to the run total. Transmute and friends.</summary>
-    Task GainGold(Player player, int amount);
-
-    /// <summary>
-    /// Ask the player to Invest. Pay removes the Gold and returns true; Decline returns false.
-    /// Must return false without prompting when the player holds less than <paramref name="cost"/>.
-    /// </summary>
-    Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost);
-
-    // -------------------------------------------------------------------------- Max HP
-
-    /// <summary>
-    /// Ask the player to Render. Pay reduces Max HP (and current HP) by <paramref name="cost"/>
-    /// and returns true. Must return false without prompting when paying would take Max HP to
-    /// zero or below.
-    ///
-    /// There is no counterpart to this. Render is one-way by design — see design/alchemist.md,
-    /// Override 1. Do not add a GainMaxHp here.
-    /// </summary>
-    Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost);
-
     // -------------------------------------------------------------------------- the belt
 
     /// <summary>Potions the player is currently holding, in slot order.</summary>
@@ -129,7 +118,17 @@ public interface ILabBridge
     Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options);
 
     /// <summary>Ask the player to pick one held Potion, or null if they hold none.</summary>
-    Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from);
+    /// <param name="prompt">
+    /// The popup's title. Defaults to the generic "Choose a Potion to Brew" wording, which is
+    /// wrong for anything that isn't Brewing (Distill, Stabilize, Pressure Burst) -- pass a real
+    /// one for those.
+    /// </param>
+    /// <param name="allowStop">
+    /// Offer a "Done" option that returns null even though Potions are still held. Grand
+    /// Combustion's "Distill any number" reads this loop-by-loop; every other caller wants a
+    /// mandatory pick once it has committed to asking; leave this false for those.
+    /// </param>
+    Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false);
 
     /// <summary>
     /// Ask the player to pick one card from a set, typically their Hand.
@@ -146,6 +145,12 @@ public interface ILabBridge
     /// <summary>The player's current Hand, in order.</summary>
     IReadOnlyList<CardModel> Hand(Player player);
 
+    /// <summary>The player's current Discard pile, in order.</summary>
+    IReadOnlyList<CardModel> DiscardPile(Player player);
+
+    /// <summary>The player's current Exhaust pile, in order. Reconstitute reads it.</summary>
+    IReadOnlyList<CardModel> ExhaustPile(Player player);
+
     /// <summary>Exhaust a specific card from Hand.</summary>
     Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card);
 
@@ -155,16 +160,27 @@ public interface ILabBridge
     /// <summary>Put a card from Hand on the bottom of the Draw Pile. False Bottom.</summary>
     Task BottomOfDraw(PlayerChoiceContext ctx, Player player, CardModel card);
 
+    /// <summary>Move a card from anywhere -- Draw, Discard or Exhaust -- into Hand. Reconstitute.</summary>
+    Task ReturnToHand(PlayerChoiceContext ctx, Player player, CardModel card);
+
     /// <summary>A random card from a pool, for the creation cards. Null when the pool is unavailable.</summary>
     CardModel? RandomCard(Player player, CardRarity? rarity = null, CardType? type = null);
 
-    /// <summary>Create a card into Hand. Commission, Homunculus Pact and the creation engines.</summary>
+    /// <summary>Create a card into Hand. Homunculus Assault and the other creation engines.</summary>
     Task CreateInHand(PlayerChoiceContext ctx, Player player, CardModel card, bool costsZeroThisTurn);
+
+    /// <summary>
+    /// Create a fresh instance of a canonical card (typically a Status, e.g. Volatile Reagent) and
+    /// add it directly to a pile other than Hand. Separate from <see cref="CreateInHand"/> because
+    /// that method takes an already-instantiated card; this one instantiates it too, the same way
+    /// <see cref="RandomCard"/> does internally.
+    /// </summary>
+    Task CreateStatusInPile(PlayerChoiceContext ctx, Player player, CardModel canonicalCard, PileType pile);
 
     /// <summary>Upgrade a card for this combat only.</summary>
     Task UpgradeForCombat(PlayerChoiceContext ctx, Player player, CardModel card);
 
-    /// <summary>Upgrade a card permanently, for the rest of the run. Masterwork and Transmute Flesh.</summary>
+    /// <summary>Upgrade a card permanently, for the rest of the run. Currently unused.</summary>
     Task UpgradePermanently(Player player, CardModel card);
 }
 
@@ -180,30 +196,6 @@ public sealed class UnwiredLabBridge : ILabBridge
     {
         if (!_reported.Add(what)) return;
         MainFile.Logger.Info($"[Alchemist] {what} is not wired up yet; see LabBridge. Effect skipped.");
-    }
-
-    public int Gold(Player player)
-    {
-        Report("reading Gold");
-        return 0;
-    }
-
-    public Task GainGold(Player player, int amount)
-    {
-        Report("gaining Gold");
-        return Task.CompletedTask;
-    }
-
-    public Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        Report("Invest");
-        return Task.FromResult(false); // Decline. Never spend the player's Gold unasked.
-    }
-
-    public Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        Report("Render");
-        return Task.FromResult(false); // Decline. Max HP is permanent; never take it unasked.
     }
 
     public IReadOnlyList<PotionModel> Held(Player player)
@@ -242,7 +234,7 @@ public sealed class UnwiredLabBridge : ILabBridge
         return null;
     }
 
-    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from)
+    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false)
     {
         Report("choosing a Potion");
         return Task.FromResult<PotionModel?>(null);
@@ -284,6 +276,18 @@ public sealed class UnwiredLabBridge : ILabBridge
         return [];
     }
 
+    public IReadOnlyList<CardModel> DiscardPile(Player player)
+    {
+        Report("reading the Discard pile");
+        return [];
+    }
+
+    public IReadOnlyList<CardModel> ExhaustPile(Player player)
+    {
+        Report("reading the Exhaust pile");
+        return [];
+    }
+
     public Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card)
     {
         Report("Exhausting a chosen card");
@@ -302,6 +306,12 @@ public sealed class UnwiredLabBridge : ILabBridge
         return Task.CompletedTask;
     }
 
+    public Task ReturnToHand(PlayerChoiceContext ctx, Player player, CardModel card)
+    {
+        Report("returning a card to Hand");
+        return Task.CompletedTask;
+    }
+
     public CardModel? RandomCard(Player player, CardRarity? rarity = null, CardType? type = null)
     {
         Report("picking a random card");
@@ -311,6 +321,12 @@ public sealed class UnwiredLabBridge : ILabBridge
     public Task CreateInHand(PlayerChoiceContext ctx, Player player, CardModel card, bool costsZeroThisTurn)
     {
         Report("creating a card in Hand");
+        return Task.CompletedTask;
+    }
+
+    public Task CreateStatusInPile(PlayerChoiceContext ctx, Player player, CardModel canonicalCard, PileType pile)
+    {
+        Report("creating a Status card in a pile");
         return Task.CompletedTask;
     }
 

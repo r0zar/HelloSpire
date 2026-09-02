@@ -14,14 +14,14 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// Every game command the Alchemist issues funnels through here.
 ///
 /// Same contract as the Gunslinger's equivalent: exactly one file touches the base game's command
-/// signatures, so if the game changes <c>CreatureCmd.GainBlock</c> or how Gold is stored, ninety
-/// cards keep compiling and only this file needs a fix.
+/// signatures, so if the game changes <c>CreatureCmd.GainBlock</c> or how Potions are stored,
+/// ninety cards keep compiling and only this file needs a fix.
 ///
 /// That contract matters far more for this character than it did for the last one. The Gunslinger's
 /// cylinder is entirely self-contained — a custom Power holding six slots — so nothing it did
-/// needed base-game systems the mod had not already used. The Alchemist spends **Gold**, writes to
-/// the **Potion belt**, and reduces **Max HP**, and this repo has no working example of any of the
-/// three. See <see cref="Unverified"/>.
+/// needed base-game systems the mod had not already used. The Alchemist writes to the **Potion
+/// belt** and puts choices in front of the player, and this repo has no working example of either.
+/// See <see cref="Unverified"/>.
 /// </summary>
 public static class AlchemistEffects
 {
@@ -57,6 +57,13 @@ public static class AlchemistEffects
     {
         if (amount <= 0) return;
         await PowerCmd.Apply<VulnerablePower>(ctx, target, amount, lab.Self, lab.Card);
+    }
+
+    public static async Task ApplyPoison(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount)
+    {
+        if (amount <= 0) return;
+        await PowerCmd.Apply<PoisonPower>(ctx, target, amount, lab.Self, lab.Card);
+        await AlchemistHooks.NotifyPoisonApplied(ctx, lab, target, amount);
     }
 
     public static async Task GainStrength(PlayerChoiceContext ctx, LabContext lab, decimal amount)
@@ -112,7 +119,9 @@ public static class AlchemistEffects
         if (enemies.Count == 0) return null;
         if (enemies.Count == 1) return enemies[0];
 
-        var index = lab.Player.RunState.Rng.CombatTargets.NextInt(0, enemies.Count - 1);
+        // NextInt's upper bound is exclusive; Count - 1 here made the last enemy unreachable --
+        // the same off-by-one already found and fixed in Alchemy.ExhaustRandomOther.
+        var index = lab.Player.RunState.Rng.CombatTargets.NextInt(0, enemies.Count);
         return enemies[Math.Clamp(index, 0, enemies.Count - 1)];
     }
 

@@ -17,17 +17,29 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 /// (one Potion shown, a different one brewed); a single popup with its own backstop has no
 /// second act to race.
 ///
-/// The pick is mandatory by design -- the Gold is already spent -- so there is no cancel.
+/// The pick is mandatory by design in most callers -- the card has already committed to Brewing
+/// or Distilling one -- so there is no cancel by default. Grand Combustion is the one caller that
+/// genuinely offers "however many you like": passing allowStop adds a "Done" button that resolves
+/// the pick as null instead.
 /// </summary>
 public static class PotionPickerPopup
 {
-    /// <summary>Show the chooser. Null when there is no UI host (TestMode, headless).</summary>
-    public static Task<int>? TryShow(IReadOnlyList<PotionModel> options)
+    /// <summary>
+    /// Show the chooser. Null when there is no UI host (TestMode, headless).
+    /// </summary>
+    /// <param name="options">The Potions to offer.</param>
+    /// <param name="header">
+    /// The popup's title. Defaults to "Choose a Potion to Brew" (Buy Ingredients and friends);
+    /// callers choosing among ALREADY-HELD Potions for something other than Brewing (Distill,
+    /// Stabilize, Pressure Burst) must pass their own, or the popup lies about what it does.
+    /// </param>
+    /// <param name="allowStop">Add a "Done" button that resolves the pick as null.</param>
+    public static Task<int?>? TryShow(IReadOnlyList<PotionModel> options, LocString? header = null, bool allowStop = false)
     {
         var host = NModalContainer.Instance;
         if (host == null) return null;
 
-        var tcs = new TaskCompletionSource<int>();
+        var tcs = new TaskCompletionSource<int?>();
 
         var root = new Control { MouseFilter = Control.MouseFilterEnum.Stop };
         root.SetAnchorsPreset(Control.LayoutPreset.FullRect);
@@ -57,13 +69,13 @@ public static class PotionPickerPopup
         vbox.AddThemeConstantOverride("separation", 18);
         panel.AddChild(vbox);
 
-        var header = new Label
+        var headerLabel = new Label
         {
-            Text = new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header").GetFormattedText(),
+            Text = (header ?? new LocString("cards", "HELLOSPIRE-ALCHEMIST_BREW_CHOICE.header")).GetFormattedText(),
             HorizontalAlignment = HorizontalAlignment.Center,
         };
-        header.AddThemeFontSizeOverride("font_size", 30);
-        vbox.AddChild(header);
+        headerLabel.AddThemeFontSizeOverride("font_size", 30);
+        vbox.AddChild(headerLabel);
 
         var row = new HBoxContainer();
         row.AddThemeConstantOverride("separation", 20);
@@ -110,6 +122,21 @@ public static class PotionPickerPopup
             };
             row.AddChild(button);
             if (index == 0) button.CallDeferred("grab_focus");
+        }
+
+        if (allowStop)
+        {
+            var doneButton = new Button
+            {
+                Text = new LocString("cards", "HELLOSPIRE-ALCHEMIST_POTION_PICKER.done").GetFormattedText(),
+                CustomMinimumSize = new Vector2(0, 44),
+            };
+            doneButton.Pressed += () =>
+            {
+                root.QueueFree();
+                tcs.TrySetResult(null);
+            };
+            vbox.AddChild(doneButton);
         }
 
         host.AddChild(root);

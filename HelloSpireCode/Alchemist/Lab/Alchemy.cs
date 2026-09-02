@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 
 using HelloSpire.HelloSpireCode.Alchemist;
+using HelloSpire.HelloSpireCode.Alchemist.Cards;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
@@ -43,15 +44,18 @@ public static class Alchemy
         return true;
     }
 
-    /// <summary>Exhaust one named card and count it.</summary>
+    /// <summary>
+    /// Exhaust one named card. CardsExhaustedThisTurn and NotifyExhausted happen automatically
+    /// from here -- see LabPower.AfterCardExhausted, a real base-game hook that fires for every
+    /// Exhaust in combat, including cards that Exhaust themselves (Aegis Formula, Pocket Formula,
+    /// Stabilize, Pressure Burst, ...) and never call this method at all. Ensuring the bench
+    /// exists first matters: that hook can only dispatch to a LabPower already attached, not
+    /// create one on demand.
+    /// </summary>
     public static async Task Exhaust(PlayerChoiceContext ctx, LabContext lab, CardModel card)
     {
+        await AlchemistEffects.Bench(ctx, lab);
         await LabBridge.Current.Exhaust(ctx, lab.Player, card);
-
-        var bench = await AlchemistEffects.Bench(ctx, lab);
-        if (bench != null) bench.CardsExhaustedThisTurn++;
-
-        await AlchemistHooks.NotifyExhausted(ctx, lab);
     }
 
     /// <summary>Exhaust up to <paramref name="max"/> other cards. Returns how many actually went.</summary>
@@ -99,6 +103,59 @@ public static class Alchemy
         if (chosen == null) return false;
 
         await Exhaust(ctx, lab, chosen);
+        return true;
+    }
+
+    /// <summary>Exhaust a Status or non-Eternal Curse from the discard pile. Solvent Strike, Reagent Recovery.</summary>
+    public static async Task<bool> ExhaustJunkFromDiscard(PlayerChoiceContext ctx, LabContext lab)
+    {
+        var junk = LabBridge.Current.DiscardPile(lab.Player)
+            .Where(card => card.Type == CardType.Status ||
+                           (card.Type == CardType.Curse && !card.Keywords.Contains(CardKeyword.Eternal)))
+            .ToList();
+
+        if (junk.Count == 0) return false;
+
+        var chosen = junk.Count == 1 ? junk[0] : await LabBridge.Current.ChooseCard(ctx, lab.Player, junk, lab.Card);
+        if (chosen == null) return false;
+
+        await Exhaust(ctx, lab, chosen);
+        return true;
+    }
+
+    /// <summary>
+    /// Create a Volatile Reagent (a free Colorless "Gain 1 Energy" card) and add it directly to a
+    /// pile. Volatile Strike, Contaminated Blade, Contaminated Sample, False Bottom, Overdose.
+    /// </summary>
+    public static async Task CreateVolatileReagent(PlayerChoiceContext ctx, LabContext lab, PileType pile)
+    {
+        await LabBridge.Current.CreateStatusInPile(ctx, lab.Player, ModelDb.Card<VolatileReagent>(), pile);
+        await AlchemistHooks.NotifyStatusCreated(ctx, lab);
+    }
+
+    /// <summary>
+    /// Create a Volatile Residue (Status, Unplayable) and add it directly to a pile. Only ever
+    /// called from <see cref="Belt.Brew"/>, automatically, when the Brewing card is an Attack --
+    /// no card creates this one directly.
+    /// </summary>
+    public static async Task CreateVolatileResidue(PlayerChoiceContext ctx, LabContext lab, PileType pile)
+    {
+        await LabBridge.Current.CreateStatusInPile(ctx, lab.Player, ModelDb.Card<VolatileResidue>(), pile);
+        await AlchemistHooks.NotifyStatusCreated(ctx, lab);
+    }
+
+    /// <summary>Return a card from the Exhaust pile to Hand, chosen by the player. Reconstitute.</summary>
+    public static async Task<bool> ReturnFromExhaust(PlayerChoiceContext ctx, LabContext lab)
+    {
+        var candidates = LabBridge.Current.ExhaustPile(lab.Player);
+        if (candidates.Count == 0) return false;
+
+        var chosen = candidates.Count == 1
+            ? candidates[0]
+            : await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
+        if (chosen == null) return false;
+
+        await LabBridge.Current.ReturnToHand(ctx, lab.Player, chosen);
         return true;
     }
 
@@ -165,9 +222,8 @@ public static class Alchemy
     }
 
     /// <summary>
-    /// Permanently Upgrade one card in Hand, for the rest of the run. Masterwork and Transmute
-    /// Flesh — the two most expensive cards in the class, in the two currencies that do not
-    /// come back on their own.
+    /// Permanently Upgrade one card in Hand, for the rest of the run. Currently unused -- both
+    /// Masterwork and Transmute Flesh, the cards this was written for, have since been cut.
     /// </summary>
     public static async Task<bool> UpgradeOnePermanently(PlayerChoiceContext ctx, LabContext lab)
     {

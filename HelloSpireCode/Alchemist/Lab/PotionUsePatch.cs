@@ -1,9 +1,11 @@
 using System.Collections.Generic;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using System.Reflection;
 using System.Threading.Tasks;
 using HarmonyLib;
+using HelloSpire.HelloSpireCode.Alchemist.Powers;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
@@ -51,10 +53,12 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 internal static class PotionUsePatch
 {
     private static MethodInfo? _onUseWrapper;
+    private static MethodInfo? _onUse;
 
     private static bool Prepare()
     {
         _onUseWrapper ??= AccessTools.Method(typeof(PotionModel), nameof(PotionModel.OnUseWrapper));
+        _onUse ??= AccessTools.Method(typeof(PotionModel), "OnUse");
 
         if (_onUseWrapper == null)
         {
@@ -70,6 +74,9 @@ internal static class PotionUsePatch
             return false;
         }
 
+        if (_onUse == null)
+            MainFile.Logger.Info("PotionModel.OnUse not found; Pressure Burst's double-activate will not fire.");
+
         return true;
     }
 
@@ -79,7 +86,8 @@ internal static class PotionUsePatch
     /// Potency, applied at the last moment before the Potion's own effect computes: bump every
     /// damage/Block var by the bonus. Tracked per instance so the wrapper can restore the values
     /// after use -- a Potion saved from consumption (Bottled Time) must not keep the bump and
-    /// stack it on its next drink. Applies to EVERY Potion the Alchemist uses; Volatile is gone.
+    /// stack it on its next drink. Only Volatile Potions get anything here -- see
+    /// Belt.PotencyBonus, which zeroes out for anything found, bought or Procured.
     /// </summary>
     private static readonly Dictionary<PotionModel, int> _bumped = new();
 
@@ -88,30 +96,80 @@ internal static class PotionUsePatch
     {
         var player = __instance.Owner;
         if (player?.Character is not HelloSpire.HelloSpireCode.Characters.Alchemist) return;
-        var bonus = Belt.PotencyBonus(LabContext.From(player), __instance);
-        if (bonus <= 0) return;
-        foreach (var v in __instance.DynamicVars.Values)
-            if (v is DamageVar or BlockVar) v.BaseValue += bonus;
-        _bumped[__instance] = bonus;
+        var lab = LabContext.From(player);
+
+        var bonus = Belt.PotencyBonus(lab, __instance);
+        if (bonus > 0)
+        {
+            foreach (var v in __instance.DynamicVars.Values)
+                if (v is DamageVar or BlockVar) v.BaseValue += bonus;
+            _bumped[__instance] = bonus;
+        }
+
+        // Eternal Crucible: claimed here, before the Potion resolves even once, since
+        // IPotionUseListener.OnPotionUsed (everything else in this class reacts through) only
+        // fires afterward -- one step too late to make this exact use resolve a second time.
+        var bench = AlchemistEffects.Peek(lab);
+        var crucible = player.Creature?.GetPower<EternalCruciblePower>();
+        if (bench != null && crucible != null && crucible.TryClaim())
+            bench.DoubleActivate.Add(__instance);
     }
 
     [HarmonyPostfix]
-    private static void AfterOnUseWrapper(PotionModel __instance, PlayerChoiceContext choiceContext, ref Task __result)
+    private static void AfterOnUseWrapper(PotionModel __instance, PlayerChoiceContext choiceContext, Creature? target, ref Task __result)
     {
-        __result = RunThenNotify(__result, __instance, choiceContext);
+        __result = RunThenNotify(__result, __instance, choiceContext, target);
     }
 
-    /// <summary>Await the real potion use first, then notify — never the other way around.</summary>
-    private static async Task RunThenNotify(Task original, PotionModel potion, PlayerChoiceContext ctx)
+    /// <summary>
+    /// Await the real potion use first, then (for a Potion marked DoubleActivate -- Pressure
+    /// Burst's chosen target, or Eternal Crucible's once-per-turn claim) run its OnUse a second
+    /// time while Potency is still applied, then restore Potency and notify -- never any other
+    /// order.
+    ///
+    /// The second activation calls OnUse directly via reflection rather than OnUseWrapper again:
+    /// OnUseWrapper's own first line is RemoveBeforeUse(), which finds the Potion in its belt slot
+    /// and clears it (decompiled from sts2.dll) -- calling that twice on an instance already
+    /// removed the first time is untested and not worth the risk. OnUse is the actual numeric
+    /// effect with none of that bookkeeping, so re-running just it is the same "activate again"
+    /// without touching removal, animations or Hook.BeforePotionUsed a second time.
+    /// </summary>
+    private static async Task RunThenNotify(Task original, PotionModel potion, PlayerChoiceContext ctx, Creature? target)
     {
         await original;
+
+        var player = potion.Owner;
+        var isAlchemist = player?.Character is HelloSpire.HelloSpireCode.Characters.Alchemist;
+        var bench = isAlchemist ? AlchemistEffects.Peek(LabContext.From(player!)) : null;
+
+        if (isAlchemist && _onUse != null && bench != null && bench.DoubleActivate.Remove(potion))
+        {
+            if (_onUse.Invoke(potion, [ctx, target]) is Task second) await second;
+        }
 
         if (_bumped.Remove(potion, out var bonus))
             foreach (var v in potion.DynamicVars.Values)
                 if (v is DamageVar or BlockVar) v.BaseValue -= bonus;
-        var player = potion.Owner;
-        if (player?.Character is not HelloSpire.HelloSpireCode.Characters.Alchemist) return;
 
-        await Belt.OnPotionUsed(ctx, LabContext.From(player), potion);
+        if (!isAlchemist) return;
+        var lab = LabContext.From(player!);
+
+        // Bottled Time: capture Volatile status and spend the claim BEFORE Belt.OnPotionUsed
+        // clears bench.Volatile's tracking for this instance. The saved Potion still counts as
+        // "used" for everything else this turn -- Cork Stopper, Residual Heat, Reactive Mixture,
+        // PotionsUsedThisTurn -- only its physical removal from the belt is undone, afterward.
+        var wasVolatile = bench?.Volatile.Contains(potion) ?? false;
+        var bottledTime = player!.Creature?.GetPower<BottledTimePower>();
+        var claimed = bottledTime != null && await bottledTime.TryClaim(ctx);
+
+        await Belt.OnPotionUsed(ctx, lab, potion, target);
+
+        if (claimed)
+        {
+            // The game already removed this exact instance from its belt slot (RemoveBeforeUse,
+            // decompiled from sts2.dll) -- re-Procuring it would leave a dead Potion behind, so
+            // Brew a fresh copy instead.
+            await Belt.Brew(ctx, lab, potion.CanonicalInstance.ToMutable(), wasVolatile);
+        }
     }
 }

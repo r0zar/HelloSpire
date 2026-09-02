@@ -20,7 +20,7 @@ public sealed class CorkStopper : Characters.AlchemistRelic, IPotionUseListener
 
     private bool _usedThisCombat;
 
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
     {
         if (_usedThisCombat) return;
         _usedThisCombat = true;

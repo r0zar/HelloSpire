@@ -30,21 +30,46 @@ public sealed class SolventFlask : AlchemistPotion
     }
 }
 
-/// <summary>
-/// Fifteen Gold and an Energy.
-///
-/// Excluded from random Brew, because it makes real Gold — the curated Combat Potion pool must
-/// never produce anything whose value outlives the fight. Still a legitimate shop or reward
-/// Potion, and still fine from Alchemize.
-/// </summary>
+/// <summary>Heavy Poison to everything, and an Energy to spend it with.</summary>
 public sealed class AurumTincture : AlchemistPotion
 {
     public override PotionRarity Rarity => PotionRarity.Uncommon;
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
-        await Ledger.GainGold(ctx, Lab, 15);
+        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+            await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, 8m);
+
         await AlchemistEffects.GainEnergy(Lab, 1m);
+    }
+}
+
+/// <summary>Apply a big chunk of Poison.</summary>
+public sealed class PoisonPotion : AlchemistPotion
+{
+    public override PotionRarity Rarity => PotionRarity.Common;
+    public override TargetType TargetType => TargetType.AnyEnemy;
+
+    protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
+    {
+        if (target == null) return;
+        await AlchemistEffects.ApplyPoison(ctx, Lab, target, 6m);
+    }
+}
+
+/// <summary>
+/// Apply Poison to ALL enemies. Non-Brewable: no random Brew, no Alchemize, no Panacea may ever
+/// produce it, and it's kept out of shops and rewards -- same shape as The Great Work's
+/// Philosopher's Stone. Stabilizing a Volatile Poison Ampoule is the only way it exists.
+/// </summary>
+public sealed class PoisonAmpoule : AlchemistPotion
+{
+    public override PotionRarity Rarity => PotionRarity.Common;
+
+    protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
+    {
+        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+            await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, 5m);
     }
 }
 
@@ -60,11 +85,10 @@ public sealed class PanaceaOfPlenty : AlchemistPotion
 /// <summary>
 /// The Great Work made real. One source only.
 ///
-/// Non-Brewable: no random Brew, no Alchemize, no Panacea may ever produce it. The Great Work is
-/// the only way it exists, which is what six permanent Max HP is buying — not a strong effect, a
-/// unique object that survives the fight and can be carried to a boss.
-///
-/// TODO(Phase 3): the Combat Potion pool must exclude this explicitly once the bridge is wired.
+/// Non-Brewable: no random Brew, no Alchemize, no Panacea may ever produce it —
+/// <see cref="WiredLabBridge"/>'s Combat Potion pool excludes it explicitly. The Great Work is the
+/// only way it exists: not a strong effect on its own, a unique object that survives the fight
+/// (Brewed non-Volatile) and can be carried to a boss.
 /// </summary>
 public sealed class PhilosophersStone : AlchemistPotion
 {
