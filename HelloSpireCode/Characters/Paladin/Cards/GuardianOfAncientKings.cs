@@ -3,34 +3,25 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Gain 3 Buffer. Exhaust. Tithe: gain 3 Block. The kings answer once, mightily: three negated
-/// hits, then they rest. (Was Buffer-per-turn -- negating an attack every turn forever.)
+/// Power: whenever a card grants you Plating, gain 1 more. Was 3 Buffer + Exhaust -- retired
+/// from Buffer duty so Divine Shield stays the set's one true bubble. The Prot build-around:
+/// every cheap Plating common tithes an extra stone to the wall. Upgrade: costs 1.
 /// </summary>
-public sealed class GuardianOfAncientKings() : PaladinCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class GuardianOfAncientKings() : PaladinCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Buffer", 3m)];
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
-
-    public override bool HasTithe => true;
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Plating", 1m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        await PowerCmd.Apply<BufferPower>(choiceContext, Owner.Creature,
-            DynamicVars["Buffer"].BaseValue, Owner.Creature, this);
+        await PowerCmd.Apply<GuardianOfAncientKingsPower>(choiceContext, Owner.Creature,
+            DynamicVars["Plating"].BaseValue, Owner.Creature, this);
     }
 
-    protected override async Task OnTithe(PlayerChoiceContext ctx) =>
-        await CreatureCmd.GainBlock(Owner.Creature, 3m, ValueProp.Unpowered, null);
-
-    protected override void OnUpgrade() => DynamicVars["Buffer"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

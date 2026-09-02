@@ -329,7 +329,7 @@
   "HELLOSPIRE-DIVINE_SHIELD.title": "Divine Shield",
   "HELLOSPIRE-DIVINE_SHIELD.description": "Gain [blue]{Buffer:diff()}[/blue] [gold]Buffer[/gold].\n[gold]Tithe[/gold]: gain 3 Block.",
   "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS.title": "Guardian of Ancient Kings",
-  "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS.description": "Gain [blue]{Buffer:diff()}[/blue] [gold]Buffer[/gold].\n[gold]Tithe[/gold]: gain 3 Block.",
+  "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS.description": "Whenever a card grants you [gold]Plating[/gold], gain [blue]{Plating}[/blue] more.",
   "HELLOSPIRE-ARDENT_DEFENDER.title": "Ardent Defender",
   "HELLOSPIRE-ARDENT_DEFENDER.description": "Whenever an enemy attacks you, gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].",
   "HELLOSPIRE-HALLOWED_GROUND.title": "Hallowed Ground",
