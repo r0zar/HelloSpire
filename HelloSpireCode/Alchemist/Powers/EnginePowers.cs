@@ -243,20 +243,13 @@ public sealed class EternalCruciblePower : AlchemistEnginePower
     }
 }
 
-/// <summary>The first Potion you Brew each turn draws a card and grants Block.</summary>
+/// <summary>Whenever you Brew, draw a card.</summary>
 public sealed class BrewingEnginePower : AlchemistEnginePower, IBrewListener
 {
-    /// <summary>Block granted alongside the draw. Set by the card; 3 base, 4 upgraded.</summary>
-    public decimal Block { get; set; } = 3m;
-
     public async Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
         Flash();
         await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-        await AlchemistEffects.GainBlock(lab, Block);
     }
 }
 

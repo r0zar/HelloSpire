@@ -116,7 +116,7 @@ public sealed class FlashPowder() : AlchemistCard(1, CardType.Attack, CardRarity
 public sealed class PressureBurst() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(16m, ValueProp.Move), new DamageVar("Bonus", 8m, ValueProp.Move)];
+        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 8m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 

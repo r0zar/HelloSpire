@@ -156,7 +156,7 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
 /// <summary>Deal damage, and Brew a Poison Potion.</summary>
 public sealed class CausticFlask() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
 

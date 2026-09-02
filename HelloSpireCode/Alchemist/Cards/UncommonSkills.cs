@@ -107,7 +107,7 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
 /// <summary>Distill a Potion, and Infuse Unstable Concoction.</summary>
 public sealed class CatalyticWash() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("Bonus", 6m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("Bonus", 8m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Infuse)];
 

@@ -51,11 +51,10 @@ public sealed class EternalCrucible() : AlchemistCard(2, CardType.Power, CardRar
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first Potion you Brew each turn draws a card and grants Block.</summary>
+/// <summary>Whenever you Brew, draw a card.</summary>
 public sealed class BrewingEngine() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new CardsVar(1), new BlockVar("Block", 3m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<BrewingEnginePower>()];
@@ -63,10 +62,8 @@ public sealed class BrewingEngine() : AlchemistCard(2, CardType.Power, CardRarit
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var power = await PowerCmd.Apply<BrewingEnginePower>(ctx, Owner.Creature,
+        await PowerCmd.Apply<BrewingEnginePower>(ctx, Owner.Creature,
             DynamicVars.Cards.BaseValue, Owner.Creature, this);
-
-        if (power != null) power.Block = DynamicVars["Block"].BaseValue;
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);

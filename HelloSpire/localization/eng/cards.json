@@ -541,7 +541,7 @@
   "HELLOSPIRE-ETERNAL_CRUCIBLE.title": "Crucible Form",
   "HELLOSPIRE-ETERNAL_CRUCIBLE.description": "The first Potion you use each combat resolves twice and is consumed once.",
   "HELLOSPIRE-BREWING_ENGINE.title": "Brewing Engine",
-  "HELLOSPIRE-BREWING_ENGINE.description": "The first Potion you [gold]Brew[/gold] each turn draws {Cards:diff()} card and gives {Block:diff()} [gold]Block[/gold].",
+  "HELLOSPIRE-BREWING_ENGINE.description": "Whenever you [gold]Brew[/gold], draw {Cards:diff()} card.",
   "HELLOSPIRE-DISTILLATION_MASTERY.title": "Distillation Mastery",
   "HELLOSPIRE-DISTILLATION_MASTERY.description": "Whenever you [gold]Distill[/gold] a Potion, the next Potion you [gold]Brew[/gold] has its effect increased by {Bonus:diff()}%.",
   "HELLOSPIRE-VOLATILE_LABORATORY.title": "Volatile Laboratory",
