@@ -281,7 +281,7 @@
   "HELLOSPIRE-BLADE_OF_WRATH.title": "Blade of Wrath",
   "HELLOSPIRE-BLADE_OF_WRATH.description": "Deal {Damage:diff()} damage.\nLose {HpLoss:diff()} HP.",
   "HELLOSPIRE-RENEW.title": "Renew",
-  "HELLOSPIRE-RENEW.description": "A player gains [blue]{Regen:diff()}[/blue] [gold]Regen[/gold].\n[gold]Tithe[/gold]: gain 2 Block.",
+  "HELLOSPIRE-RENEW.description": "A player gains [blue]{Regen:diff()}[/blue] [gold]Regen[/gold].\n[gold]Tithe[/gold]: gain 1 Energy.",
   "HELLOSPIRE-SENTINEL.title": "Sentinel",
   "HELLOSPIRE-SENTINEL.description": "Gain {Block:diff()} [gold]Block[/gold].\nGain 1 [gold]Spirit[/gold].",
   "HELLOSPIRE-PRAYER_OF_MENDING.title": "Prayer of Mending",

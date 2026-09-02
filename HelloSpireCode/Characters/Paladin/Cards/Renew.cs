@@ -12,8 +12,9 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// A player gains 3 Regen. Exhaust. Tithe: gain 2 Block. Regen is healing, so the healing
-/// law applies in full.
+/// A player gains 3 Regen. Exhaust. Tithe: gain 1 Energy. Regen is healing, so the healing
+/// law applies in full. The face is the set's only energy Tithe -- renewal as refreshment
+/// (swapped from a 2-Block face, the most duplicated face in the set).
 /// </summary>
 public sealed class Renew() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer), IHealingCard
 {
@@ -32,7 +33,7 @@ public sealed class Renew() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon
     }
 
     protected override async Task OnTithe(PlayerChoiceContext ctx) =>
-        await CreatureCmd.GainBlock(Owner.Creature, 2m, ValueProp.Unpowered, null);
+        await PlayerCmd.GainEnergy(1m, Owner);
 
     protected override void OnUpgrade() => DynamicVars["Regen"].UpgradeValueBy(2m);
 }
