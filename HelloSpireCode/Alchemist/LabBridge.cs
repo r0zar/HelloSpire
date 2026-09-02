@@ -41,7 +41,11 @@ public enum BasePotion
     Poison,
 
     /// <summary>Gain 1 Dexterity. Steady Pour.</summary>
-    Dexterity
+    Dexterity,
+
+    /// <summary>Apply 3 Poison to ALL enemies. VolatilePoisonAmpoule -- not offered anywhere; a
+    /// future card naming it here would be the only way to Brew one.</summary>
+    PoisonAmpoule
 }
 
 /// <summary>

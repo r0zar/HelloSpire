@@ -59,12 +59,14 @@ public abstract class VolatileCommonPotion : BaseLib.Abstracts.CustomPotionModel
 }
 
 /// <summary>
-/// Keeps every VolatileCommonPotion out of shops and reward screens without needing a separate,
-/// unreachable pool (see the doc comment on <see cref="VolatileCommonPotion"/> for why that doesn't
-/// work). PotionFactory.CreateRandomPotionsOutOfCombat (decompiled from sts2.dll) is the sole
-/// general-purpose "give the player a random potion outside combat" entry point and already accepts
-/// a blacklist parameter for exactly this purpose; combat generation is untouched, since
-/// WiredLabBridge's own RandomCombatPotion/CombatPotionOptions never call this method at all.
+/// Keeps every VolatileCommonPotion, plus the real Poison Ampoule, out of shops and reward screens
+/// without needing a separate, unreachable pool (see the doc comment on
+/// <see cref="VolatileCommonPotion"/> for why that doesn't work). PotionFactory.
+/// CreateRandomPotionsOutOfCombat (decompiled from sts2.dll) is the sole general-purpose "give the
+/// player a random potion outside combat" entry point and already accepts a blacklist parameter for
+/// exactly this purpose; combat generation is untouched, since WiredLabBridge's own
+/// RandomCombatPotion/CombatPotionOptions never call this method at all -- those two are where
+/// Poison Ampoule's combat-side exclusion lives instead.
 /// </summary>
 [HarmonyLib.HarmonyPatch(typeof(PotionFactory), nameof(PotionFactory.CreateRandomPotionsOutOfCombat))]
 internal static class HideVolatilePotionsFromShopsAndRewardsPatch
@@ -72,7 +74,8 @@ internal static class HideVolatilePotionsFromShopsAndRewardsPatch
     [HarmonyLib.HarmonyPrefix]
     private static void BeforeCreate(ref IEnumerable<PotionModel>? blacklist)
     {
-        blacklist = (blacklist ?? []).Concat(ModelDb.AllPotions.Where(p => p is VolatileCommonPotion or UnstableConcoction));
+        blacklist = (blacklist ?? [])
+            .Concat(ModelDb.AllPotions.Where(p => p is VolatileCommonPotion or UnstableConcoction or PoisonAmpoule));
     }
 }
 
@@ -353,6 +356,27 @@ public sealed class VolatilePoisonPotion : VolatileCommonPotion
         PotionModel.AssertValidForTargetedPotion(target);
         var amount = DynamicVars["Poison"].BaseValue + Potency;
         await PowerCmd.Apply<PoisonPower>(ctx, target, amount, Owner.Creature, null);
+    }
+}
+
+/// <summary>
+/// Apply Poison to ALL enemies. The Volatile counterpart to the real <see cref="PoisonAmpoule"/>
+/// -- weaker, at Poison's usual 1:1 Potency scaling from a base of 3. Not offered anywhere, same as
+/// every VolatileCommonPotion; the only route in is a card naming BasePotion.PoisonAmpoule.
+/// </summary>
+public sealed class VolatilePoisonAmpoule : VolatileCommonPotion
+{
+    public override TargetType TargetType => TargetType.Self;
+    public override string? CustomPackedImagePath => "poison_potion.png".PotionImagePath();
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 3m)];
+    public override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
+
+    protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
+    {
+        var amount = DynamicVars["Poison"].BaseValue + Potency;
+        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+            await PowerCmd.Apply<PoisonPower>(ctx, enemy, amount, Owner.Creature, null);
     }
 }
 

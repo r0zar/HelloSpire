@@ -134,7 +134,7 @@ public sealed class PressureBurst() : AlchemistCard(2, CardType.Attack, CardRari
 /// <summary>Deal a lot of damage, and Exhaust a random other card.</summary>
 public sealed class MercuryLance() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(20m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(18m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -188,7 +188,7 @@ public sealed class SolventStrike() : AlchemistCard(1, CardType.Attack, CardRari
 }
 
 /// <summary>Deal damage, and Brew a Poison Potion.</summary>
-public sealed class VenomousAmpoule() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class VenomousAmpoule() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
 

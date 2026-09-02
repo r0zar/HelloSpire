@@ -1,16 +1,18 @@
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
+using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Skills 1-16. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison), plus
+// Uncommon Skills 1-18. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison), plus
 // the Belt's own utility (Extra Vial, Stabilize, Reconstitute) and the Status sub-theme's first
 // real payoff cards (False Bottom, Reagent Recovery).
 
@@ -99,6 +101,15 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
 
         if (chosen == null) return;
         bench.Volatile.Remove(chosen);
+
+        // Poison Ampoule is the one Volatile Potion Stabilize doesn't just keep as-is: it upgrades
+        // into the real, stronger version instead, since Stabilizing a Volatile Poison Ampoule is
+        // the real one's only source anywhere in the class.
+        if (chosen is VolatilePoisonAmpoule)
+        {
+            await LabBridge.Current.Discard(ctx, Owner, chosen);
+            await Belt.Brew(ctx, Lab, ModelDb.Potion<PoisonAmpoule>().ToMutable(), volatilePotion: false);
+        }
     }
 }
 
@@ -124,7 +135,7 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(6m, ValueProp.Move), new DynamicVar("Energy", 1m)];
+        [new BlockVar(9m, ValueProp.Move), new DynamicVar("Energy", 1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill)];
 
@@ -275,4 +286,42 @@ public sealed class SolventFlask() : AlchemistCard(1, CardType.Skill, CardRarity
         if (!await Alchemy.ExhaustJunk(ctx, Lab)) return;
         await AlchemistEffects.Draw(ctx, Lab, 2);
     }
+}
+
+/// <summary>Gain Block. If your Potion Belt is full, gain additional Block.</summary>
+public sealed class GlassApron() : AlchemistCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new BlockVar(13m, ValueProp.Move), new BlockVar("Bonus", 4m, ValueProp.Move)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        var block = DynamicVars.Block.BaseValue;
+        if (Belt.IsFull(Lab)) block += DynamicVars["Bonus"].BaseValue;
+
+        await AlchemistEffects.GainBlock(Lab, block);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
+}
+
+/// <summary>Gain Block, and Infuse Vulnerable into Unstable Concoction.</summary>
+public sealed class TaintedWard() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    public override bool GainsBlock => true;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new BlockVar(8m, ValueProp.Move), new DynamicVar("Vulnerable", 1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
+        await Belt.Infuse(ctx, Lab, vulnerable: DynamicVars["Vulnerable"].BaseValue);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }

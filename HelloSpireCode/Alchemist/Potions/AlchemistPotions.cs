@@ -57,6 +57,22 @@ public sealed class PoisonPotion : AlchemistPotion
     }
 }
 
+/// <summary>
+/// Apply Poison to ALL enemies. Non-Brewable: no random Brew, no Alchemize, no Panacea may ever
+/// produce it, and it's kept out of shops and rewards -- same shape as The Great Work's
+/// Philosopher's Stone. Stabilizing a Volatile Poison Ampoule is the only way it exists.
+/// </summary>
+public sealed class PoisonAmpoule : AlchemistPotion
+{
+    public override PotionRarity Rarity => PotionRarity.Common;
+
+    protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
+    {
+        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+            await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, 5m);
+    }
+}
+
 /// <summary>One saved Rare Potion becomes a full belt of combat tools.</summary>
 public sealed class PanaceaOfPlenty : AlchemistPotion
 {

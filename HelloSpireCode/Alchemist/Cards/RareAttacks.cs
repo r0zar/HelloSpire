@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Attacks 1-7. The class's damage ceiling -- every one of them either Infuses Unstable
+// Rare Attacks 1-6. The class's damage ceiling -- every one of them either Infuses Unstable
 // Concoction, applies a lot of Poison, or scales off board state built up over the whole fight.
 
 /// <summary>Deal damage, and Infuse a lot more into Unstable Concoction.</summary>
@@ -34,23 +34,6 @@ public sealed class PhilosophersFlame() : AlchemistCard(3, CardType.Attack, Card
         DynamicVars.Damage.UpgradeValueBy(4m);
         DynamicVars["Bonus"].UpgradeValueBy(4m);
     }
-}
-
-/// <summary>Damage to ALL, more for every Potion in your Belt.</summary>
-public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(14m, ValueProp.Move), new DamageVar("PerPotion", 3m, ValueProp.Move)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * Belt.Held(Lab).Count;
-
-        foreach (var enemy in AlchemistEffects.Enemies(Lab))
-            await DamageCmd.Attack(damage).FromCard(this).Targeting(enemy).Execute(ctx);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
 /// <summary>Feed it your most expensive card, for damage.</summary>

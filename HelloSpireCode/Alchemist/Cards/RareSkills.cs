@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Skills 1-8. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
+// Rare Skills 1-9. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
 // Potion access, plus the two "empty your Hand" capstones (Heavy Transmute, Perfect Solvent).
 
 /// <summary>
@@ -177,4 +177,31 @@ public sealed class Overdose() : AlchemistCard(2, CardType.Skill, CardRarity.Rar
     }
 
     protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(2m);
+}
+
+/// <summary>
+/// X cost. Brew a random Potion once for every point of Energy spent.
+///
+/// -2 is the real X-cost sentinel (confirmed via reflection against sts2.dll/BaseLib: CardModel's
+/// constructor takes a single canonicalEnergyCost int with no separate "costs X" flag, and
+/// CardEnergyCost's own constructor -- which does take an explicit costsX bool -- is what
+/// CustomCardModel must derive from that int; -2 is the classic-StS convention the same studio
+/// carried forward). EnergyCost.CapturedXValue is what the engine resolves the spend to at play
+/// time, same way any other card's cost is already paid before OnPlay runs -- no manual spend
+/// needed here.
+/// </summary>
+public sealed class ChainReaction() : AlchemistCard(-2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+{
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Bonus", 0m)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        var brews = EnergyCost.CapturedXValue + DynamicVars["Bonus"].IntValue;
+        for (var i = 0; i < brews; i++)
+            await Belt.BrewRandom(ctx, Lab);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(1m);
 }

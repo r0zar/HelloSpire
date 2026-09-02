@@ -86,9 +86,11 @@ public sealed class WiredLabBridge : ILabBridge
 
         // Curated per design/alchemist.md: nothing whose value outlives the fight. The Stone is
         // non-Brewable by rule; Aurum Tincture is excluded because its Poison payload assumes it
-        // was deliberately bought or found, not handed out for free by a random Brew.
+        // was deliberately bought or found, not handed out for free by a random Brew. Poison
+        // Ampoule is non-Brewable the same way the Stone is -- Stabilizing a Volatile Poison
+        // Ampoule is its only source.
         var options = PotionFactory.GetPotionOptions(player, [])
-            .Where(p => p is not PhilosophersStone and not AurumTincture)
+            .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule)
             .Where(p => rarity == null || p.Rarity == rarity)
             .ToList();
         if (options.Count == 0) return null;
@@ -101,7 +103,7 @@ public sealed class WiredLabBridge : ILabBridge
         // different labels. Deterministic across clients: the pool order and the synced RNG are.
         IEnumerable<PotionModel> source = rarity == PotionRarity.Common
             ? VolatileCommonPool()
-            : PotionFactory.GetPotionOptions(player, []).Where(p => p is not PhilosophersStone and not AurumTincture);
+            : PotionFactory.GetPotionOptions(player, []).Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule);
         var pool = source.Where(p => rarity == null || p.Rarity == rarity).ToList();
         var picks = new List<PotionModel>();
         while (picks.Count < count && pool.Count > 0)
@@ -130,6 +132,7 @@ public sealed class WiredLabBridge : ILabBridge
         BasePotion.Strength => ModelDb.Potion<VolatileStrengthPotion>().ToMutable(),
         BasePotion.Poison => ModelDb.Potion<VolatilePoisonPotion>().ToMutable(),
         BasePotion.Dexterity => ModelDb.Potion<VolatileDexterityPotion>().ToMutable(),
+        BasePotion.PoisonAmpoule => ModelDb.Potion<VolatilePoisonAmpoule>().ToMutable(),
         _ => null,
     };
 
