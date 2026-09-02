@@ -11,15 +11,15 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 12. Gain 2 Plating. The Prot common swing (replaces the Penitent slot): hit and
-/// harden, nothing to track. Sits in the 2E common band (Flatten 12 / Predator 15): 12 + 2
-/// Plating (~3 Block over its decay) ~= Predator's 15 raw, discounted for Plating's synergy
-/// premium. Upgrade: 16 and 3 Plating.
+/// Deal 14. Gain 2 Plating. The Prot common swing (replaces the Penitent slot): hit and
+/// harden, nothing to track. The 2E common band carries riders (Flatten 12 is free after an
+/// Osty attack; Predator is 15 + draw 2 next turn), so 14 + 2 Plating (~3 Block over its
+/// decay) is the honest rate, not 12. Upgrade: 18 and 3 Plating.
 /// </summary>
 public sealed class ShieldSlam() : PaladinCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(12m, ValueProp.Move), new DynamicVar("Plating", 2m)];
+        [new DamageVar(14m, ValueProp.Move), new DynamicVar("Plating", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
