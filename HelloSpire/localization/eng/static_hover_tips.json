@@ -34,5 +34,15 @@
   "HELLOSPIRE-JUDGE.title": "Judge",
   "HELLOSPIRE-JUDGE.description": "Unleash EVERY banked Seal charge: each fires its Judge effect, then the whole bank is consumed. Judge X times fires each charge X times first. Judging with no Seals banked still counts as Judging for powers that care.",
   "HELLOSPIRE-TITHE.title": "Tithe",
-  "HELLOSPIRE-TITHE.description": "When you discard this card, its Tithe effect triggers and the card stays in your discard pile. A Tithe never Exhausts -- only the card's true cast does."
+  "HELLOSPIRE-TITHE.description": "When you discard this card, its Tithe effect triggers and the card stays in your discard pile. A Tithe never Exhausts -- only the card's true cast does.",
+  "HELLOSPIRE-LEAD_ROUND.title": "Lead Round",
+  "HELLOSPIRE-HEAVY_ROUND.title": "Heavy Round",
+  "HELLOSPIRE-CRIPPLING_ROUND.title": "Crippling Round",
+  "HELLOSPIRE-PIERCING_ROUND.title": "Piercing Round",
+  "HELLOSPIRE-GUARD_ROUND.title": "Guard Round",
+  "HELLOSPIRE-SMOKE_ROUND.title": "Smoke Round",
+  "HELLOSPIRE-RENDING_ROUND.title": "Rending Round",
+  "HELLOSPIRE-BLACK_POWDER_ROUND.title": "Black Powder Round",
+  "HELLOSPIRE-DEAD_MANS_ROUND.title": "Dead Man’s Round",
+  "HELLOSPIRE-EMPTY_CHAMBER.title": "Empty Chamber"
 }
