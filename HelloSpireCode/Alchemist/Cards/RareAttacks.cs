@@ -53,13 +53,11 @@ public sealed class ChainReaction() : AlchemistCard(2, CardType.Attack, CardRari
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Feed it your most expensive card, for damage now and Infuse besides.</summary>
+/// <summary>Feed it your most expensive card, for damage.</summary>
 public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(10m, ValueProp.Move), new DamageVar("PerEnergy", 8m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -67,21 +65,18 @@ public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, Car
 
         var candidates = Alchemy.OtherCardsInHand(Lab);
         var damage = DynamicVars.Damage.BaseValue;
-        var bonus = 0m;
 
         if (candidates.Count > 0)
         {
             var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
             if (chosen != null)
             {
-                bonus = DynamicVars["PerEnergy"].BaseValue * Math.Max(0, chosen.EnergyCost.Canonical);
-                damage += bonus;
+                damage += DynamicVars["PerEnergy"].BaseValue * Math.Max(0, chosen.EnergyCost.Canonical);
                 await Alchemy.Exhaust(ctx, Lab, chosen);
             }
         }
 
         await DamageCmd.Attack(damage).FromCard(this).Targeting(play.Target).Execute(ctx);
-        if (bonus > 0) await Belt.Infuse(ctx, Lab, damage: bonus / 2m);
     }
 
     protected override void OnUpgrade()

@@ -176,7 +176,7 @@ public interface ILabBridge
     /// <summary>Upgrade a card for this combat only.</summary>
     Task UpgradeForCombat(PlayerChoiceContext ctx, Player player, CardModel card);
 
-    /// <summary>Upgrade a card permanently, for the rest of the run. Masterwork and Transmute Flesh.</summary>
+    /// <summary>Upgrade a card permanently, for the rest of the run. Currently unused.</summary>
     Task UpgradePermanently(Player player, CardModel card);
 }
 

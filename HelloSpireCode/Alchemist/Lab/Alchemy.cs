@@ -222,9 +222,8 @@ public static class Alchemy
     }
 
     /// <summary>
-    /// Permanently Upgrade one card in Hand, for the rest of the run. Masterwork and Transmute
-    /// Flesh — the two most expensive cards in the class, in the two currencies that do not
-    /// come back on their own.
+    /// Permanently Upgrade one card in Hand, for the rest of the run. Currently unused -- both
+    /// Masterwork and Transmute Flesh, the cards this was written for, have since been cut.
     /// </summary>
     public static async Task<bool> UpgradeOnePermanently(PlayerChoiceContext ctx, LabContext lab)
     {

@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Skills 1-9. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
+// Rare Skills 1-8. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
 // Potion access, plus the two "empty your Hand" capstones (Heavy Transmute, Perfect Solvent).
 
 /// <summary>
@@ -73,17 +73,6 @@ public sealed class MagnumOpus() : AlchemistCard(3, CardType.Skill, CardRarity.R
     }
 
     protected override void OnUpgrade() => DynamicVars["PerPotion"].UpgradeValueBy(1m);
-}
-
-/// <summary>Permanently Upgrade a card in Hand. The top of the class's Upgrade line, free of any cost gate.</summary>
-public sealed class Masterwork() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
-{
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
-        await Alchemy.UpgradeOnePermanently(ctx, Lab);
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Gain Potency, and draw cards.</summary>
