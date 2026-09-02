@@ -19,7 +19,7 @@ namespace HelloSpire.HelloSpireCode.Characters;
 ///
 /// The gun is the whole character. Ammunition has to be loaded before it can be spent, the order of
 /// the chambers is knowable and manipulable, and almost every card either fills the cylinder, spends
-/// it, or rearranges what is coming next. Everything else — Deadeye, Armor, Dodge, Weak — exists to
+/// it, or rearranges what is coming next. Everything else — Deadeye, Armor, Weak, Gadgets — exists to
 /// give the player something to do with the two or three chambers they can see ahead.
 /// </summary>
 public class Gunslinger : PlaceholderCharacterModel

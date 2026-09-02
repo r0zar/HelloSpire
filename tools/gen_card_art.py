@@ -7,8 +7,8 @@ apart in hand during testing instead of every one of them falling back to the
 single generic card.png, and to produce correctly-sized files that real art can
 later drop straight into.
 
-Filenames must be the card's class name, lowercased with nothing between the
-words -- that is what CustomCardModel.PortraitPath resolves to.
+Filenames must be the card's class name in snake_case -- that is what
+CustomCardModel.PortraitPath resolves to (Id.Entry lowercased).
 
 Usage:
     python tools/gen_card_art.py "Hand Me That" "Softened Up"
@@ -53,8 +53,19 @@ def font(size):
 
 
 def filename(title):
-    """'Hand Me That' -> 'handmethat', matching Id.Entry lowercased."""
-    return re.sub(r"[^a-z0-9]", "", title.lower())
+    """'Hand Me That' -> 'hand_me_that', matching Id.Entry lowercased.
+
+    CustomCardModel resolves art from Id.Entry.ToLowerInvariant(), and Id.Entry is the
+    class name in SCREAMING_SNAKE -- the same string the localization key is built from
+    (HELLOSPIRE-HAND_ME_THAT). So the stem carries the underscores.
+
+    This used to strip them, which produced files the game never looks for: a card with
+    'art' named handmethat.png silently falls back to the generic card.png, and the only
+    symptom is a line in the log. Cards named with a single word were unaffected, which is
+    why it went unnoticed.
+    """
+    words = re.findall(r"[a-z0-9]+", title.lower())
+    return "_".join(words)
 
 
 def wrap(draw, title, fnt, max_width):

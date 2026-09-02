@@ -5,7 +5,6 @@ using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Relics;
 
 using Alchemist_ = HelloSpire.HelloSpireCode.Alchemist;
 
@@ -28,8 +27,8 @@ public class Alchemist : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 68;
 
-    // The teaching ten: Strikes, Defends, and the two Formulas -- one system at a time
-    // (design/alchemist.md, Starting kit). Gold deliberately absent from turn one.
+    // The teaching ten: Strikes, Defends, Aegis Formula (Brew) and Infusion (Infuse) -- the two
+    // mechanics this class is built around, both taught from turn one.
     public override IEnumerable<CardModel> StartingDeck =>
     [
         ModelDb.Card<Alchemist_.Cards.StrikeAlchemist>(),
@@ -40,12 +39,12 @@ public class Alchemist : PlaceholderCharacterModel
         ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
         ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
         ModelDb.Card<Alchemist_.Cards.DefendAlchemist>(),
-        ModelDb.Card<Alchemist_.Cards.PyricFormula>(),
-        ModelDb.Card<Alchemist_.Cards.AegisFormula>()
+        ModelDb.Card<Alchemist_.Cards.AegisFormula>(),
+        ModelDb.Card<Alchemist_.Cards.Infusion>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
-        [ModelDb.Relic<Alchemist_.Relics.PortableAlembic>()];
+        [ModelDb.Relic<Alchemist_.Relics.AlchemicalSatchel>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<AlchemistCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<AlchemistRelicPool>();

@@ -8,7 +8,7 @@ any size and adjusted by editing a shape instead of repainting a bitmap.
 
 Two families, following what the rest of the pack already does:
 
-  * Keyword powers -- Cylinder, Deadeye, Armor, Dodge -- are flat glyphs on transparent,
+  * Keyword powers -- Cylinder, Deadeye, Armor -- are flat glyphs on transparent,
     the way the base game draws Strength and Dexterity and the way the Paladin's Spirit
     icon does. These four read as stats the character has, not as buffs it was granted.
   * Engine powers get the medallion disc the Alchemist's fifteen use: brown disc, brass
@@ -192,20 +192,6 @@ def glyph_armor():
     return shield(C, C - 4, 138, 168, STEEL, INK, 9) + band + rivets
 
 
-def glyph_dodge():
-    # Three tapered slipstream strokes and the shape that got out of the way.
-    lines = "".join(
-        path(f"M{C - 96 + i * 6:.2f},{C - 46 + i * 46:.2f} L{C - 6 + i * 10:.2f},{C - 62 + i * 46:.2f}",
-             "none", SMOKE_DK, 20)
-        + path(f"M{C - 92 + i * 6:.2f},{C - 46 + i * 46:.2f} L{C - 10 + i * 10:.2f},{C - 61 + i * 46:.2f}",
-               "none", SMOKE, 12)
-        for i in range(3)
-    )
-    ghost = circle(C + 62, C, 40, "none", SMOKE_DK, 10)
-    solid = circle(C + 62, C, 26, SMOKE, INK, 6)
-    return lines + ghost + solid
-
-
 # ------------------------------------------------------------------ engine powers
 # Medallion glyphs. Everything is drawn inside a radius of about 76.
 
@@ -327,6 +313,26 @@ def glyph_sure_hand():
     return posts + bar + bubble + cartridge(C, C - 54, 72, 26)
 
 
+def glyph_tinkers_kit():
+    # An open toolroll: a leather strap with three tools stood up in it.
+    roll = rect(C - 84, C + 14, 168, 52, 14, LEATHER, INK, 8)
+    lip = rect(C - 84, C + 8, 168, 16, 8, LEATHER_DK, INK, 5)
+    handles = "".join(
+        rect(C - 52 + i * 52 - 9, C - 62, 18, 74, 8, BRASS_LT if i == 1 else LEAD, INK, 6)
+        for i in range(3)
+    )
+    return handles + roll + lip
+
+
+def glyph_gadgeteer():
+    # A cog with a plate riveted over it: gadgets, turning into Armor.
+    teeth = ring_of(8, C, C, 68, lambda x, y, i: rect(x - 13, y - 13, 26, 26, 5, BRASS_DK, INK, 5))
+    cog = circle(C, C, 58, BRASS, INK, 8) + circle(C, C, 20, DISC_DARK, INK, 6)
+    plate = shield(C, C + 6, 84, 100, LEAD, INK, 7)
+    rivets = "".join(circle(C + dx, C - 22, 8, BRASS_LT, INK, 4) for dx in (-24, 24))
+    return teeth + cog + plate + rivets
+
+
 def glyph_untouchable():
     spark = star(C + 52, C - 52, 4, 46, 13, BRASS_LT, INK, 5)
     return shield(C - 10, C + 6, 112, 130, LEAD, INK, 7) + spark
@@ -441,7 +447,6 @@ KEYWORD_POWERS = {
     "cylinder": glyph_cylinder,
     "deadeye": glyph_deadeye,
     "armor": glyph_armor,
-    "dodge": glyph_dodge,
 }
 
 ENGINE_POWERS = {
@@ -460,7 +465,9 @@ ENGINE_POWERS = {
     "sixth_shot": glyph_sixth_shot,
     "smoke_and_lead": glyph_smoke_and_lead,
     "sure_hand": glyph_sure_hand,
+    "tinkers_kit": glyph_tinkers_kit,
     "untouchable": glyph_untouchable,
+    "gadgeteer": glyph_gadgeteer,
 }
 
 RELICS = {

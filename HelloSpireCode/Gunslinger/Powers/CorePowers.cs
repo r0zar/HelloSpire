@@ -24,10 +24,10 @@ namespace HelloSpire.HelloSpireCode.Gunslinger.Powers;
 /// because only the cylinder knows whether a shot was a Round or a Click, and a Click gets nothing.
 ///
 /// Expiry hangs off the *enemy* side's turn start, not the owner's, and that is deliberate.
-/// <see cref="DodgePower"/> clears at the owner's turn start because Dodge has to survive into
-/// the enemy's turn to do its job. Deadeye is the opposite: only the Gunslinger Fires, and only
-/// on its own turn, so the first moment nothing can use it any more is the moment the player's
-/// turn ends — which is exactly when the other side's turn starts.
+/// Defensive powers clear at the owner's turn start, because defence has to survive into the
+/// enemy's turn to do its job. Deadeye is the opposite: only the Gunslinger Fires, and only on
+/// its own turn, so the first moment nothing can use it any more is the moment the player's turn
+/// ends — which is exactly when the other side's turn starts.
 ///
 /// Clearing at the owner's turn start would also have been a trap. Bottomless Bandolier and
 /// Ride Together both hand out Deadeye from that same turn-start sweep, and nothing fixes the
@@ -97,37 +97,6 @@ public sealed class ArmorPower : HelloSpirePower
         // stale one from eating the first real hit of the next.
         AbsorbedPending = false;
         return Task.CompletedTask;
-    }
-}
-
-/// <summary>
-/// Dodge X: prevent all damage from the next X individual enemy Attack hits this turn.
-///
-/// It stops one hit, not a whole intent, and it does not survive the turn — reading the intent is
-/// the skill it rewards, which is why it is deliberately not Intangible.
-/// </summary>
-public sealed class DodgePower : HelloSpirePower
-{
-    public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    /// <summary>Raised by the damage patch when this Dodge really did eat a hit. See <see cref="ArmorPower"/>.</summary>
-    public bool PreventedPending { get; set; }
-
-    public override async Task BeforeDamageReceived(PlayerChoiceContext choiceContext, Creature target,
-        decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
-    {
-        if (target != Owner || cardSource != null || !PreventedPending) return;
-        PreventedPending = false;
-
-        await PowerCmd.ModifyAmount(choiceContext, this, -1m, null, null, false);
-    }
-
-    public override async Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)
-    {
-        PreventedPending = false;
-        if (side != Owner.Side) return;
-        await PowerCmd.Remove(this);
     }
 }
 

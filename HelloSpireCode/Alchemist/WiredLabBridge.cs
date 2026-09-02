@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Gold;
 using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Potions;
@@ -26,117 +25,16 @@ namespace HelloSpire.HelloSpireCode.Alchemist;
 
 /// <summary>
 /// The real ILabBridge: every operation the quarantine declared, implemented against the game's
-/// actual APIs (PotionCmd/PotionFactory for the belt, PlayerCmd for Gold, CreatureCmd.LoseMaxHp
-/// for Render, CardSelectCmd for choices, CardCmd/CardPileCmd for the piles).
+/// actual APIs (PotionCmd/PotionFactory for the belt, CardSelectCmd for choices, CardCmd/
+/// CardPileCmd for the piles).
 ///
-/// One remaining deliberate deviation, documented rather than hidden:
-/// - ChoosePotion takes the first held Potion rather than asking. The game has no potion-select
-///   UI to borrow; a real picker is the remaining polish item.
+/// ChoosePotion and ChoosePotionOption share one real UI (PotionPickerPopup) and the same
+/// multiplayer-sync shape as any other player choice here -- see ChoosePotionFrom. Pressure Burst
+/// surfaced this: it used to silently take the first held Potion with no popup at all, which read
+/// as "the card did nothing" even though it had picked something.
 /// </summary>
 public sealed class WiredLabBridge : ILabBridge
 {
-    // -------------------------------------------------------------------------- Gold
-    public int Gold(Player player) => player.Gold;
-
-    public Task GainGold(Player player, int amount) => PlayerCmd.GainGold(amount, player);
-
-    /// <summary>
-    /// Invest is a real Pay/Decline prompt, not a rubber stamp. The affordability check happens
-    /// before any UI is created: too poor means an automatic Decline, never a popup asking about
-    /// Gold the player doesn't have.
-    /// </summary>
-    public async Task<bool> OfferInvest(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        cost = System.Math.Max(1, cost - AlchemistHooks.InvestDiscount(LabContext.From(player)));
-        if (player.Gold < cost) return false;
-
-        if (!await Confirm(ctx, player, "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.header", "HELLOSPIRE-ALCHEMIST_INVEST_PROMPT.body", cost))
-            return false;
-
-        await PlayerCmd.LoseGold(cost, player, GoldLossType.Spent);
-        return true;
-    }
-
-    // -------------------------------------------------------------------------- Max HP
-    public async Task<bool> OfferRender(PlayerChoiceContext ctx, Player player, int cost)
-    {
-        if (player.Creature == null || player.Creature.MaxHp - cost <= 0) return false;
-
-        if (!await Confirm(ctx, player, "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.header", "HELLOSPIRE-ALCHEMIST_RENDER_PROMPT.body", cost))
-            return false;
-
-        await CreatureCmd.LoseMaxHp(ctx, player.Creature, cost, isFromCard: true);
-        return true;
-    }
-
-    /// <summary>
-    /// The Pay/Decline primitive shared by Invest and Render.
-    ///
-    /// There is no card- or combat-scoped confirmation dialog in the base game — Invest/Render
-    /// have no vanilla precedent at all. What does exist, and is what every menu-level confirmation
-    /// in the base game (reset settings, delete profile, abandon run, disconnect...) is built on,
-    /// is <see cref="NGenericPopup"/> + <see cref="NModalContainer"/>: create the popup, add it to
-    /// the single global modal layer, await its Yes/No result. This is the exact call sequence
-    /// decompiled from NResetGameplayButton.ResetSettingsAfterConfirmation in sts2.dll. The Yes/No
-    /// button labels reuse the base game's own "Confirm"/"Cancel" loc keys (main_menu_ui,
-    /// GENERIC_POPUP.confirm/cancel) rather than minting new ones.
-    ///
-    /// Multiplayer: a card's OnPlay runs on every connected client to keep game state
-    /// deterministic, not just the client of the player who played it (confirmed via a real
-    /// in-game report of the Invest prompt popping up for every player at once). The fix, mirrored
-    /// exactly from CardSelectCmd.FromHand (decompiled from sts2.dll): only the player's own client
-    /// shows the popup (gated by LocalContext.IsMe, the same check FromHand uses), and the answer
-    /// is broadcast to every other client via PlayerChoiceSynchronizer so their simulation reaches
-    /// the same Gold/Max-HP state without ever showing them a popup of their own. ReserveChoiceId
-    /// is called unconditionally, before branching, because it also has to stay in lock-step across
-    /// clients -- exactly how FromHand calls it.
-    /// </summary>
-    private static async Task<bool> Confirm(PlayerChoiceContext ctx, Player player, string headerKey, string bodyKey, int cost)
-    {
-        var isLocal = LocalContext.IsMe(player) && RunManager.Instance.NetService.Type != NetGameType.Replay;
-        var choiceId = RunManager.Instance.PlayerChoiceSynchronizer.ReserveChoiceId(player);
-
-        await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
-        try
-        {
-            if (!isLocal)
-            {
-                var remote = await RunManager.Instance.PlayerChoiceSynchronizer.WaitForRemoteChoice(player, choiceId);
-                return remote.AsIndex() == 1;
-            }
-
-            var answer = await ShowPopup(headerKey, bodyKey, cost);
-            RunManager.Instance.PlayerChoiceSynchronizer.SyncLocalChoice(player, choiceId, PlayerChoiceResult.FromIndex(answer ? 1 : 0));
-            return answer;
-        }
-        finally
-        {
-            await ctx.SignalPlayerChoiceEnded();
-        }
-    }
-
-    /// <summary>The actual local popup, split out so Confirm can gate it behind LocalContext.IsMe.</summary>
-    private static async Task<bool> ShowPopup(string headerKey, string bodyKey, int cost)
-    {
-        // No modal layer, or one is already up: there is no safe way to ask, so Decline. This can
-        // only make the bridge more conservative than intended, never less — it can never cause an
-        // unasked-for Gold/Max HP spend.
-        if (NModalContainer.Instance == null || NModalContainer.Instance.OpenModal != null)
-            return false;
-
-        var popup = NGenericPopup.Create();
-        if (popup == null) return false; // TestMode, or the popup scene failed to load.
-
-        var header = new LocString("cards", headerKey);
-        var body = new LocString("cards", bodyKey);
-        body.Add("Cost", (decimal)cost);
-        var yes = new LocString("main_menu_ui", "GENERIC_POPUP.confirm");
-        var no = new LocString("main_menu_ui", "GENERIC_POPUP.cancel");
-
-        NModalContainer.Instance.Add(popup);
-        return await popup.WaitForConfirmation(body, header, no, yes);
-    }
-
     // -------------------------------------------------------------------------- the belt
     public IReadOnlyList<PotionModel> Held(Player player) => player.Potions.ToList();
 
@@ -152,12 +50,47 @@ public sealed class WiredLabBridge : ILabBridge
     public Task Discard(PlayerChoiceContext ctx, Player player, PotionModel potion) =>
         PotionCmd.Discard(potion);
 
+    /// <summary>
+    /// The real, weaker Volatile potions Common-rarity combat generation actually hands out (see
+    /// VolatileCommonPotions.cs). Alchemize deliberately bypasses this -- it asks for
+    /// <c>rarity: null</c> specifically to reach the full, unrestricted pool below, since it
+    /// Procures a real, non-Volatile Potion.
+    /// </summary>
+    private static IReadOnlyList<PotionModel> VolatileCommonPool() =>
+    [
+        ModelDb.Potion<VolatileAttackPotion>(),
+        ModelDb.Potion<VolatileBlockPotion>(),
+        ModelDb.Potion<VolatileColorlessPotion>(),
+        ModelDb.Potion<VolatileDexterityPotion>(),
+        ModelDb.Potion<VolatileEnergyPotion>(),
+        ModelDb.Potion<VolatileExplosiveAmpoule>(),
+        ModelDb.Potion<VolatileFirePotion>(),
+        ModelDb.Potion<VolatileFlexPotion>(),
+        ModelDb.Potion<VolatilePoisonPotion>(),
+        ModelDb.Potion<VolatilePowerPotion>(),
+        ModelDb.Potion<VolatileSkillPotion>(),
+        ModelDb.Potion<VolatileSpeedPotion>(),
+        ModelDb.Potion<VolatileStrengthPotion>(),
+        ModelDb.Potion<VolatileSwiftPotion>(),
+        ModelDb.Potion<VolatileVulnerablePotion>(),
+        ModelDb.Potion<VolatileWeakPotion>(),
+    ];
+
     public PotionModel? RandomCombatPotion(Player player, PotionRarity? rarity = null)
     {
+        if (rarity == PotionRarity.Common)
+        {
+            var commons = VolatileCommonPool();
+            return commons.Count == 0 ? null : player.RunState.Rng.CombatPotionGeneration.NextItem(commons).ToMutable();
+        }
+
         // Curated per design/alchemist.md: nothing whose value outlives the fight. The Stone is
-        // non-Brewable by rule; Aurum Tincture makes real Gold.
+        // non-Brewable by rule; Aurum Tincture is excluded because its Poison payload assumes it
+        // was deliberately bought or found, not handed out for free by a random Brew. Poison
+        // Ampoule is non-Brewable the same way the Stone is -- Stabilizing a Volatile Poison
+        // Ampoule is its only source.
         var options = PotionFactory.GetPotionOptions(player, [])
-            .Where(p => p is not PhilosophersStone and not AurumTincture)
+            .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule)
             .Where(p => rarity == null || p.Rarity == rarity)
             .ToList();
         if (options.Count == 0) return null;
@@ -168,10 +101,10 @@ public sealed class WiredLabBridge : ILabBridge
     {
         // Same curation as RandomCombatPotion, sampled WITHOUT replacement so the offer is three
         // different labels. Deterministic across clients: the pool order and the synced RNG are.
-        var pool = PotionFactory.GetPotionOptions(player, [])
-            .Where(p => p is not PhilosophersStone and not AurumTincture)
-            .Where(p => rarity == null || p.Rarity == rarity)
-            .ToList();
+        IEnumerable<PotionModel> source = rarity == PotionRarity.Common
+            ? VolatileCommonPool()
+            : PotionFactory.GetPotionOptions(player, []).Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule);
+        var pool = source.Where(p => rarity == null || p.Rarity == rarity).ToList();
         var picks = new List<PotionModel>();
         while (picks.Count < count && pool.Count > 0)
         {
@@ -188,9 +121,18 @@ public sealed class WiredLabBridge : ILabBridge
 
     public PotionModel? NamedPotion(BasePotion which) => which switch
     {
-        BasePotion.Block => ModelDb.Potion<BlockPotion>().ToMutable(),
-        BasePotion.ExplosiveAmpoule => ModelDb.Potion<ExplosiveAmpoule>().ToMutable(),
-        BasePotion.Energy => ModelDb.Potion<EnergyPotion>().ToMutable(),
+        BasePotion.Block => ModelDb.Potion<VolatileBlockPotion>().ToMutable(),
+        BasePotion.ExplosiveAmpoule => ModelDb.Potion<VolatileExplosiveAmpoule>().ToMutable(),
+        BasePotion.Energy => ModelDb.Potion<VolatileEnergyPotion>().ToMutable(),
+        BasePotion.Vulnerable => ModelDb.Potion<VolatileVulnerablePotion>().ToMutable(),
+        BasePotion.Weak => ModelDb.Potion<VolatileWeakPotion>().ToMutable(),
+        BasePotion.Speed => ModelDb.Potion<VolatileSpeedPotion>().ToMutable(),
+        BasePotion.Attack => ModelDb.Potion<VolatileAttackPotion>().ToMutable(),
+        BasePotion.Fire => ModelDb.Potion<VolatileFirePotion>().ToMutable(),
+        BasePotion.Strength => ModelDb.Potion<VolatileStrengthPotion>().ToMutable(),
+        BasePotion.Poison => ModelDb.Potion<VolatilePoisonPotion>().ToMutable(),
+        BasePotion.Dexterity => ModelDb.Potion<VolatileDexterityPotion>().ToMutable(),
+        BasePotion.PoisonAmpoule => ModelDb.Potion<VolatilePoisonAmpoule>().ToMutable(),
         _ => null,
     };
 
@@ -200,10 +142,27 @@ public sealed class WiredLabBridge : ILabBridge
     /// player's client shows UI (LocalContext.IsMe), the chosen index is broadcast via
     /// PlayerChoiceSynchronizer, and every other client resolves the same list entry.
     /// </summary>
-    public async Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options)
+    public Task<PotionModel?> ChoosePotionOption(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options) =>
+        ChoosePotionFrom(ctx, player, options);
+
+    /// <summary>
+    /// Shared by ChoosePotionOption (offered Potions, e.g. Buy Ingredients) and ChoosePotion
+    /// (held Potions, e.g. Distill, Stabilize, Pressure Burst) -- same PotionPickerPopup UI and
+    /// the same multiplayer sync shape as Confirm: only the acting player's client shows it,
+    /// the chosen index is broadcast via PlayerChoiceSynchronizer, and every other client
+    /// resolves the same list entry.
+    ///
+    /// <paramref name="allowStop"/> offers a "Done" button alongside the Potions and skips the
+    /// options.Count == 1 auto-pick shortcut, so the player can stop even with exactly one Potion
+    /// left -- Grand Combustion's "distill any number" needs that; a mandatory single-Potion pick
+    /// (Distill, Stabilize, Pressure Burst) does not, and keeps the shortcut.
+    /// PlayerChoiceResult.FromIndex/AsIndexOrNull already represent "no index" over the network
+    /// (see CardReward's skip-the-reward case in sts2.dll), so a stop needs no sentinel value here.
+    /// </summary>
+    private async Task<PotionModel?> ChoosePotionFrom(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> options, LocString? header = null, bool allowStop = false)
     {
         if (options.Count == 0) return null;
-        if (options.Count == 1) return options[0];
+        if (!allowStop && options.Count == 1) return options[0];
 
         var isLocal = LocalContext.IsMe(player) && RunManager.Instance.NetService.Type != NetGameType.Replay;
         var choiceId = RunManager.Instance.PlayerChoiceSynchronizer.ReserveChoiceId(player);
@@ -211,18 +170,19 @@ public sealed class WiredLabBridge : ILabBridge
         await ctx.SignalPlayerChoiceBegun(PlayerChoiceOptions.None);
         try
         {
-            int picked;
+            int? picked;
             if (!isLocal)
             {
                 var remote = await RunManager.Instance.PlayerChoiceSynchronizer.WaitForRemoteChoice(player, choiceId);
-                picked = System.Math.Clamp(remote.AsIndex(), 0, options.Count - 1);
+                picked = remote.AsIndexOrNull();
+                if (picked.HasValue) picked = System.Math.Clamp(picked.Value, 0, options.Count - 1);
             }
             else
             {
-                picked = await ShowPotionOptions(options);
+                picked = await ShowPotionOptions(options, header, allowStop);
                 RunManager.Instance.PlayerChoiceSynchronizer.SyncLocalChoice(player, choiceId, PlayerChoiceResult.FromIndex(picked));
             }
-            return options[picked];
+            return picked.HasValue ? options[picked.Value] : null;
         }
         finally
         {
@@ -234,15 +194,15 @@ public sealed class WiredLabBridge : ILabBridge
     /// One popup, every option with its icon, click one -- PotionPickerPopup. No UI host
     /// (TestMode, headless) means no way to ask: take the first option, never hang.
     /// </summary>
-    private static async Task<int> ShowPotionOptions(IReadOnlyList<PotionModel> options)
+    private static async Task<int?> ShowPotionOptions(IReadOnlyList<PotionModel> options, LocString? header = null, bool allowStop = false)
     {
-        var picked = PotionPickerPopup.TryShow(options);
+        var picked = PotionPickerPopup.TryShow(options, header, allowStop);
         return picked == null ? 0 : await picked;
     }
 
 
-    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from) =>
-        Task.FromResult<PotionModel?>(from.Count > 0 ? from[0] : null);
+    public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false) =>
+        ChoosePotionFrom(ctx, player, from, prompt, allowStop);
 
     public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null)
     {
@@ -271,6 +231,12 @@ public sealed class WiredLabBridge : ILabBridge
     public IReadOnlyList<CardModel> Hand(Player player) =>
         PileType.Hand.GetPile(player).Cards.ToList();
 
+    public IReadOnlyList<CardModel> DiscardPile(Player player) =>
+        PileType.Discard.GetPile(player).Cards.ToList();
+
+    public IReadOnlyList<CardModel> ExhaustPile(Player player) =>
+        PileType.Exhaust.GetPile(player).Cards.ToList();
+
     public Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card) =>
         CardCmd.Exhaust(ctx, card);
 
@@ -279,6 +245,9 @@ public sealed class WiredLabBridge : ILabBridge
 
     public async Task BottomOfDraw(PlayerChoiceContext ctx, Player player, CardModel card) =>
         await CardPileCmd.Add(card, PileType.Draw, CardPilePosition.Bottom);
+
+    public async Task ReturnToHand(PlayerChoiceContext ctx, Player player, CardModel card) =>
+        await CardPileCmd.Add(card, PileType.Hand);
 
     public CardModel? RandomCard(Player player, CardRarity? rarity = null, CardType? type = null)
     {
@@ -309,6 +278,15 @@ public sealed class WiredLabBridge : ILabBridge
     {
         await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, player);
         if (costsZeroThisTurn) card.EnergyCost.SetThisTurnOrUntilPlayed(0);
+    }
+
+    public async Task CreateStatusInPile(PlayerChoiceContext ctx, Player player, CardModel canonicalCard, PileType pile)
+    {
+        // Same CombatState.CreateCard instantiation RandomCard uses above, and for the same reason:
+        // a Run-scoped card isn't registered with the active combat and throws the moment it's
+        // touched (Exhausted, played, etc.).
+        var card = player.Creature?.CombatState?.CreateCard(canonicalCard, player);
+        if (card != null) await CardPileCmd.AddGeneratedCardToCombat(card, pile, player);
     }
 
     public Task UpgradeForCombat(PlayerChoiceContext ctx, Player player, CardModel card)
