@@ -289,7 +289,7 @@
   "HELLOSPIRE-BULWARK.title": "Bulwark",
   "HELLOSPIRE-BULWARK.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold] and {Block:diff()} Block.",
   "HELLOSPIRE-BASTION.title": "Bastion",
-  "HELLOSPIRE-BASTION.description": "Gain Block equal to 4 plus your [gold]Plating[/gold].",
+  "HELLOSPIRE-BASTION.description": "Gain Block equal to 6 plus your [gold]Plating[/gold].",
   "HELLOSPIRE-EYE_FOR_AN_EYE.title": "Eye for an Eye",
   "HELLOSPIRE-EYE_FOR_AN_EYE.description": "Gain {Block:diff()} [gold]Block[/gold]. This turn, enemies that attack you take {Thorns:diff()} damage.",
   "HELLOSPIRE-HOLY_SHIELD.title": "Holy Shield",

@@ -15,7 +15,7 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// pack. (The WoW disorient, wearing the old Divine Storm art -- that name went to the
 /// ret whirlwind where it belongs.)
 /// </summary>
-public sealed class BlindingLight() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+public sealed class BlindingLight() : PaladinCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(5m, ValueProp.Move)];
 
