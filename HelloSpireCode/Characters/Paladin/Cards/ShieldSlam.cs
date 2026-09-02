@@ -11,15 +11,15 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 6. Gain 2 Plating. The Prot common swing (replaces the Penitent slot): hit and
-/// harden, nothing to track. Balanced against Ironclad's Iron Wave (1E: deal 5, 5 Block,
-/// upgrade 7/7): 2 Plating pays ~3 Block over its decay, so 6+2P ~= 9 delayed vs Iron Wave's
-/// 10 immediate -- the discount buys Plating's synergy premium; upgraded 8+3P matches 7/7.
+/// Deal 12. Gain 2 Plating. The Prot common swing (replaces the Penitent slot): hit and
+/// harden, nothing to track. Sits in the 2E common band (Flatten 12 / Predator 15): 12 + 2
+/// Plating (~3 Block over its decay) ~= Predator's 15 raw, discounted for Plating's synergy
+/// premium. Upgrade: 16 and 3 Plating.
 /// </summary>
-public sealed class ShieldSlam() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class ShieldSlam() : PaladinCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(6m, ValueProp.Move), new DynamicVar("Plating", 2m)];
+        [new DamageVar(12m, ValueProp.Move), new DynamicVar("Plating", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -33,7 +33,7 @@ public sealed class ShieldSlam() : PaladinCard(1, CardType.Attack, CardRarity.Co
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(2m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
         DynamicVars["Plating"].UpgradeValueBy(1m);
     }
 }
