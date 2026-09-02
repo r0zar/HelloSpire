@@ -471,7 +471,7 @@
   "HELLOSPIRE-TINCTURE_TRADE.title": "Tincture Trade",
   "HELLOSPIRE-TINCTURE_TRADE.description": "[gold]Distill[/gold] a Potion: gain {Block:diff()} [gold]Block[/gold] and {Energy} [gold]Energy[/gold].",
   "HELLOSPIRE-LIQUIDATE.title": "Liquidate",
-  "HELLOSPIRE-LIQUIDATE.description": "Exhaust a card: gain {Energy:diff()} [gold]Energy[/gold].",
+  "HELLOSPIRE-LIQUIDATE.description": "Add {Cards} Volatile Reagents to your hand.",
   "HELLOSPIRE-SMELT_THE_WEAK.title": "Smelt the Weak",
   "HELLOSPIRE-SMELT_THE_WEAK.description": "Exhaust a Status or Curse: gain 1 [gold]Energy[/gold] and [gold]Infuse[/gold] {Infuse:diff()} Damage.",
   "HELLOSPIRE-FALSE_BOTTOM.title": "False Bottom",

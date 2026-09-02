@@ -139,18 +139,18 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(2m);
 }
 
-/// <summary>Exhaust a card, for Energy.</summary>
+/// <summary>Add Volatile Reagents to your hand.</summary>
 public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
-        await AlchemistEffects.GainEnergy(Lab, DynamicVars["Energy"].BaseValue);
+        for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
+            await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Hand);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Energy"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
 }
 
 /// <summary>Exhaust a Status or Curse, for Energy and Infuse.</summary>
