@@ -53,6 +53,15 @@ public interface IStatusCreatedListener
 }
 
 /// <summary>
+/// Reacts to Poison being applied, regardless of source -- a card, a real Potion, a Volatile
+/// Potion, anything routed through AlchemistEffects.ApplyPoison. Residual Toxins.
+/// </summary>
+public interface IPoisonAppliedListener
+{
+    Task OnPoisonApplied(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount);
+}
+
+/// <summary>
 /// Dispatch for the Alchemist's own listener interfaces.
 ///
 /// Same shape and same reasoning as the Gunslinger's: the base game's hooks cover cards being
@@ -110,6 +119,9 @@ public static class AlchemistHooks
 
     public static Task NotifyStatusCreated(PlayerChoiceContext ctx, LabContext lab) =>
         Dispatch<IStatusCreatedListener>(lab, listener => listener.OnStatusCreated(ctx, lab));
+
+    public static Task NotifyPoisonApplied(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount) =>
+        Dispatch<IPoisonAppliedListener>(lab, listener => listener.OnPoisonApplied(ctx, lab, target, amount));
 
     private static async Task Dispatch<T>(LabContext lab, Func<T, Task> notify) where T : class
     {

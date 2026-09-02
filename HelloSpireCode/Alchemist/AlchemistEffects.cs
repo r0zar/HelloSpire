@@ -63,6 +63,7 @@ public static class AlchemistEffects
     {
         if (amount <= 0) return;
         await PowerCmd.Apply<PoisonPower>(ctx, target, amount, lab.Self, lab.Card);
+        await AlchemistHooks.NotifyPoisonApplied(ctx, lab, target, amount);
     }
 
     public static async Task GainStrength(PlayerChoiceContext ctx, LabContext lab, decimal amount)

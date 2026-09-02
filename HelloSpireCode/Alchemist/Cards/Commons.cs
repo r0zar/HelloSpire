@@ -233,7 +233,7 @@ public sealed class CoagulatingAgent() : AlchemistCard(1, CardType.Skill, CardRa
 public sealed class ScatterFlask() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(3m, ValueProp.Move), new DynamicVar("Poison", 2m)];
+        [new DamageVar(2m, ValueProp.Move), new DynamicVar("Poison", 3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
@@ -391,10 +391,10 @@ public sealed class ContaminatedSample() : AlchemistCard(0, CardType.Skill, Card
 
 // ---------------------------------------------------------------------------- Powers
 
-/// <summary>The first Poison Potion you use each turn applies additional Poison.</summary>
+/// <summary>The first time Poison is applied each turn applies additional Poison.</summary>
 public sealed class ResidualToxins() : AlchemistCard(1, CardType.Power, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ResidualToxinsPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ResidualToxinsPower>(3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<ResidualToxinsPower>()];
@@ -406,7 +406,7 @@ public sealed class ResidualToxins() : AlchemistCard(1, CardType.Power, CardRari
             DynamicVars["ResidualToxinsPower"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["ResidualToxinsPower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars["ResidualToxinsPower"].UpgradeValueBy(2m);
 }
 
 /// <summary>The first time you Brew each turn, draw a card.</summary>

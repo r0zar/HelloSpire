@@ -47,14 +47,12 @@ public abstract class AlchemistEnginePower : HelloSpirePower
         Task.CompletedTask;
 }
 
-/// <summary>The first Poison Potion you use each turn applies additional Poison to its target.</summary>
-public sealed class ResidualToxinsPower : AlchemistEnginePower, IPotionUseListener
+/// <summary>The first time Poison is applied each turn, regardless of source, apply additional Poison to the same target.</summary>
+public sealed class ResidualToxinsPower : AlchemistEnginePower, IPoisonAppliedListener
 {
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
+    public async Task OnPoisonApplied(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount)
     {
         if (UsedThisTurn) return;
-        if (potion is not (PoisonPotion or VolatilePoisonPotion)) return;
-        if (target == null) return;
         UsedThisTurn = true;
 
         Flash();

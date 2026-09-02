@@ -429,7 +429,7 @@
   "HELLOSPIRE-BITTER_SOLVENT.title": "Bitter Solvent",
   "HELLOSPIRE-BITTER_SOLVENT.description": "Apply {Poison:diff()} [gold]Poison[/gold] and {WeakPower:diff()} [gold]Weak[/gold].",
   "HELLOSPIRE-RESIDUAL_TOXINS.title": "Residual Toxins",
-  "HELLOSPIRE-RESIDUAL_TOXINS.description": "The first Poison Potion you use each turn applies {ResidualToxinsPower:diff()} additional [gold]Poison[/gold].",
+  "HELLOSPIRE-RESIDUAL_TOXINS.description": "The first time [gold]Poison[/gold] is applied each turn, apply {ResidualToxinsPower:diff()} additional [gold]Poison[/gold].",
   "HELLOSPIRE-BREWING_HABIT.title": "Brewing Habit",
   "HELLOSPIRE-BREWING_HABIT.description": "The first time you [gold]Brew[/gold] each turn, draw a card.",
   "HELLOSPIRE-BOTTLE_BARRAGE.title": "Bottle Barrage",
