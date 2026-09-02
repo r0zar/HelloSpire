@@ -22,11 +22,19 @@ public static class PaladinEffects
     /// game's own discard-selection screen (the Acrobatics/Dagger Throw path -- NOT the
     /// choose-a-card popup, which hard-caps at three cards and threw on a full hand).
     /// Discarding fewer is fine when the hand runs dry: effect first, discard as trailing cost.
+    /// Tithe cards glow gold on this screen the way Sly cards do in the base game -- the
+    /// engine's FromHandForDiscard hardcodes the Sly glow, so we set our own delegate
+    /// (Tithe OR the base Sly condition) and call FromHand directly.
     /// </summary>
     public static async Task DiscardChosen(PlayerChoiceContext ctx, Player player, int count, AbstractModel source)
     {
-        var chosen = (await CardSelectCmd.FromHandForDiscard(ctx, player,
-            new CardSelectorPrefs(CardSelectorPrefs.DiscardSelectionPrompt, count), null, source)).ToList();
+        var prefs = new CardSelectorPrefs(CardSelectorPrefs.DiscardSelectionPrompt, count)
+        {
+            ShouldGlowGold = c =>
+                c is PaladinCard { HasTithe: true } ||
+                (c.IsSlyThisTurn && (c.CanPlay(out var reason, out _) || reason.HasResourceCostReason())),
+        };
+        var chosen = (await CardSelectCmd.FromHand(ctx, player, prefs, null, source)).ToList();
         if (chosen.Count > 0)
             await CardCmd.Discard(ctx, chosen);
     }
