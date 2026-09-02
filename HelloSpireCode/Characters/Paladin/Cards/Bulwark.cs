@@ -10,14 +10,15 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Gain 2 Plating and 5 Block. The wall that regrows -- Blur identity retired in favor of
-/// the lane's own persistence mechanic.
+/// Gain 2 Plating and 8 Block. The wall that regrows -- Blur identity retired in favor of
+/// the lane's own persistence mechanic. Block buffed 5 to 8: at 2E the old total (~8 with
+/// Plating decay) sat under the 11-13 band base 2E defensive uncommons occupy.
 /// </summary>
 public sealed class Bulwark() : PaladinCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override bool GainsBlock => true;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(5m, ValueProp.Move), new DynamicVar("Plating", 2m)];
+        [new BlockVar(8m, ValueProp.Move), new DynamicVar("Plating", 2m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
