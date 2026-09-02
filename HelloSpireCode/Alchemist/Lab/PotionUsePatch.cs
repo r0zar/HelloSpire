@@ -167,8 +167,8 @@ internal static class PotionUsePatch
         if (claimed)
         {
             // The game already removed this exact instance from its belt slot (RemoveBeforeUse,
-            // decompiled from sts2.dll) -- re-Procuring it would leave a dead Potion behind, the
-            // same problem Reconstitute already solves the same way: Brew a fresh copy instead.
+            // decompiled from sts2.dll) -- re-Procuring it would leave a dead Potion behind, so
+            // Brew a fresh copy instead.
             await Belt.Brew(ctx, lab, potion.CanonicalInstance.ToMutable(), wasVolatile);
         }
     }

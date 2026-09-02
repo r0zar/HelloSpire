@@ -110,12 +110,11 @@ public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, Card
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
-/// <summary>Kill something and Brew a Rare Potion for it.</summary>
+/// <summary>Deal a lot of damage. If it kills, gain Gold.</summary>
 public sealed class GildedExecution() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(18m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(18m, ValueProp.Move), new DynamicVar("Gold", 15m)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -124,7 +123,7 @@ public sealed class GildedExecution() : AlchemistCard(2, CardType.Attack, CardRa
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         if (play.Target.CurrentHp <= 0)
-            await Belt.BrewRandom(ctx, Lab, PotionRarity.Rare);
+            await PlayerCmd.GainGold(DynamicVars["Gold"].BaseValue, Owner);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(5m);

@@ -9,7 +9,7 @@ using HelloSpire.HelloSpireCode.Alchemist.Lab;
 using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Powers 1-8. Each attaches a payout to a verb the character already uses every turn --
+// Uncommon Powers 1-9. Each attaches a payout to a verb the character already uses every turn --
 // Brewing, Distilling, Exhausting, drinking, Infusing, or emptying a slot. None of them changes
 // what you do; they change what it is worth.
 
@@ -159,4 +159,21 @@ public sealed class ToxicCulture() : AlchemistCard(1, CardType.Power, CardRarity
     }
 
     protected override void OnUpgrade() => DynamicVars["ToxicCulturePower"].UpgradeValueBy(1m);
+}
+
+/// <summary>Whenever you use a Potion, gain Strength this turn.</summary>
+public sealed class BottledFury() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<BottledFuryPower>(1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<BottledFuryPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        await PowerCmd.Apply<BottledFuryPower>(ctx, Owner.Creature,
+            DynamicVars["BottledFuryPower"].BaseValue, Owner.Creature, this);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["BottledFuryPower"].UpgradeValueBy(1m);
 }

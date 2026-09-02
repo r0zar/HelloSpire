@@ -10,22 +10,9 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Skills 1-15. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison), plus
+// Uncommon Skills 1-16. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison), plus
 // the Belt's own utility (Extra Vial, Stabilize, Reconstitute) and the Status sub-theme's first
 // real payoff cards (False Bottom, Reagent Recovery).
-
-/// <summary>Brew a random Common Potion.</summary>
-public sealed class BuyIngredients() : AlchemistCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
-{
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
-        await Belt.BrewRandom(ctx, Lab);
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
-}
 
 /// <summary>Distill a Potion for Energy.</summary>
 public sealed class DistillationColumn() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
@@ -45,20 +32,13 @@ public sealed class DistillationColumn() : AlchemistCard(1, CardType.Skill, Card
     protected override void OnUpgrade() => DynamicVars["Energy"].UpgradeValueBy(1m);
 }
 
-/// <summary>Brew a copy of the last Potion you used this combat.</summary>
+/// <summary>Return a card from your Exhaust pile to your hand, then Exhaust.</summary>
 public sealed class Reconstitute() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        var last = AlchemistEffects.Peek(Lab)?.UsedThisCombat.LastOrDefault();
-        if (last == null) return;
-
-        await Belt.Brew(ctx, Lab, last.CanonicalInstance.ToMutable());
-    }
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+        await Alchemy.ReturnFromExhaust(ctx, Lab);
 }
 
 /// <summary>Gain Block, and Brew a random Potion.</summary>
@@ -204,20 +184,22 @@ public sealed class FalseBottom() : AlchemistCard(1, CardType.Skill, CardRarity.
     }
 }
 
-/// <summary>Brew a Potion, and Infuse Unstable Concoction.</summary>
+/// <summary>Gain Block. If you have no Potions, draw two cards.</summary>
 public sealed class BrewUnderPressure() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("Bonus", 6m, ValueProp.Move)];
+    public override bool GainsBlock => true;
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(10m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await Belt.BrewRandom(ctx, Lab);
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
+
+        if (Belt.Held(Lab).Count == 0)
+            await AlchemistEffects.Draw(ctx, Lab, 2);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
 /// <summary>Distill a Potion, and apply Poison.</summary>
@@ -286,4 +268,14 @@ public sealed class PotentDistillation() : AlchemistCard(1, CardType.Skill, Card
     }
 
     protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
+}
+
+/// <summary>Exhaust a Status or Curse in your hand, and draw two cards.</summary>
+public sealed class SolventFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        if (!await Alchemy.ExhaustJunk(ctx, Lab)) return;
+        await AlchemistEffects.Draw(ctx, Lab, 2);
+    }
 }

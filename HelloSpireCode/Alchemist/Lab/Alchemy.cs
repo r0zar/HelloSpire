@@ -144,6 +144,21 @@ public static class Alchemy
         await AlchemistHooks.NotifyStatusCreated(ctx, lab);
     }
 
+    /// <summary>Return a card from the Exhaust pile to Hand, chosen by the player. Reconstitute.</summary>
+    public static async Task<bool> ReturnFromExhaust(PlayerChoiceContext ctx, LabContext lab)
+    {
+        var candidates = LabBridge.Current.ExhaustPile(lab.Player);
+        if (candidates.Count == 0) return false;
+
+        var chosen = candidates.Count == 1
+            ? candidates[0]
+            : await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
+        if (chosen == null) return false;
+
+        await LabBridge.Current.ReturnToHand(ctx, lab.Player, chosen);
+        return true;
+    }
+
     public static async Task<bool> DiscardOne(PlayerChoiceContext ctx, LabContext lab)
     {
         var candidates = OtherCardsInHand(lab);

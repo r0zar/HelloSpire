@@ -141,8 +141,11 @@ public interface ILabBridge
     /// <summary>The player's current Hand, in order.</summary>
     IReadOnlyList<CardModel> Hand(Player player);
 
-    /// <summary>The player's current Discard pile, in order. Flask Toss reads it.</summary>
+    /// <summary>The player's current Discard pile, in order.</summary>
     IReadOnlyList<CardModel> DiscardPile(Player player);
+
+    /// <summary>The player's current Exhaust pile, in order. Reconstitute reads it.</summary>
+    IReadOnlyList<CardModel> ExhaustPile(Player player);
 
     /// <summary>Exhaust a specific card from Hand.</summary>
     Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card);
@@ -152,6 +155,9 @@ public interface ILabBridge
 
     /// <summary>Put a card from Hand on the bottom of the Draw Pile. False Bottom.</summary>
     Task BottomOfDraw(PlayerChoiceContext ctx, Player player, CardModel card);
+
+    /// <summary>Move a card from anywhere -- Draw, Discard or Exhaust -- into Hand. Reconstitute.</summary>
+    Task ReturnToHand(PlayerChoiceContext ctx, Player player, CardModel card);
 
     /// <summary>A random card from a pool, for the creation cards. Null when the pool is unavailable.</summary>
     CardModel? RandomCard(Player player, CardRarity? rarity = null, CardType? type = null);
@@ -272,6 +278,12 @@ public sealed class UnwiredLabBridge : ILabBridge
         return [];
     }
 
+    public IReadOnlyList<CardModel> ExhaustPile(Player player)
+    {
+        Report("reading the Exhaust pile");
+        return [];
+    }
+
     public Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card)
     {
         Report("Exhausting a chosen card");
@@ -287,6 +299,12 @@ public sealed class UnwiredLabBridge : ILabBridge
     public Task BottomOfDraw(PlayerChoiceContext ctx, Player player, CardModel card)
     {
         Report("bottoming a card");
+        return Task.CompletedTask;
+    }
+
+    public Task ReturnToHand(PlayerChoiceContext ctx, Player player, CardModel card)
+    {
+        Report("returning a card to Hand");
         return Task.CompletedTask;
     }
 

@@ -1,3 +1,4 @@
+using HelloSpire.HelloSpireCode.Alchemist.Cards;
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
 using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using HelloSpire.HelloSpireCode.Powers;
@@ -9,6 +10,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using HelloSpire.HelloSpireCode.Alchemist;
 using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Powers;
@@ -278,4 +280,25 @@ public sealed class DistillationMasteryPower : AlchemistEnginePower, IDistillLis
         if (bench != null) bench.BrewBonusMultiplier = Multiplier;
         return Task.CompletedTask;
     }
+}
+
+/// <summary>Whenever you use a Potion, gain Strength this turn.</summary>
+public sealed class BottledFuryPower : AlchemistEnginePower, IPotionUseListener
+{
+    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
+    {
+        Flash();
+        await PowerCmd.Apply<BottledFuryStrengthPower>(ctx, Owner, Amount, Owner, null);
+    }
+}
+
+/// <summary>
+/// The temporary Strength Bottled Fury grants -- a plain <see cref="TemporaryStrengthPower"/>,
+/// same Dark Shackles pattern as the Paladin's Seal of Justice, just positive. Not an
+/// AlchemistEnginePower: it needs the vanilla temp-Strength apply/restore bookkeeping instead.
+/// </summary>
+public sealed class BottledFuryStrengthPower : TemporaryStrengthPower
+{
+    public override AbstractModel OriginModel => ModelDb.Card<BottledFury>();
+    protected override bool IsPositive => true;
 }

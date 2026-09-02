@@ -231,6 +231,9 @@ public sealed class WiredLabBridge : ILabBridge
     public IReadOnlyList<CardModel> DiscardPile(Player player) =>
         PileType.Discard.GetPile(player).Cards.ToList();
 
+    public IReadOnlyList<CardModel> ExhaustPile(Player player) =>
+        PileType.Exhaust.GetPile(player).Cards.ToList();
+
     public Task Exhaust(PlayerChoiceContext ctx, Player player, CardModel card) =>
         CardCmd.Exhaust(ctx, card);
 
@@ -239,6 +242,9 @@ public sealed class WiredLabBridge : ILabBridge
 
     public async Task BottomOfDraw(PlayerChoiceContext ctx, Player player, CardModel card) =>
         await CardPileCmd.Add(card, PileType.Draw, CardPilePosition.Bottom);
+
+    public async Task ReturnToHand(PlayerChoiceContext ctx, Player player, CardModel card) =>
+        await CardPileCmd.Add(card, PileType.Hand);
 
     public CardModel? RandomCard(Player player, CardRarity? rarity = null, CardType? type = null)
     {

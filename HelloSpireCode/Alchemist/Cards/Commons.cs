@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The 22 commons: 10 Attacks, 10 Skills, 2 Powers.
+// The 22 commons: 11 Attacks, 9 Skills, 2 Powers.
 //
 // Deliberately unexciting, and deliberately proactive -- almost none of them ask "did you do X
 // this turn" anymore. Most either Brew a specific Volatile Potion by name (so the deck teaches
@@ -37,19 +37,22 @@ public sealed class CopperShot() : AlchemistCard(1, CardType.Attack, CardRarity.
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Deal damage, and Brew a Volatile Vulnerable Potion.</summary>
+/// <summary>Deal damage. If you Exhausted a card this turn, apply Vulnerable.</summary>
 public sealed class CinnabarEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(9m, ValueProp.Move), new DynamicVar("Vulnerable", 1m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<VulnerablePower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Vulnerable));
+
+        if ((AlchemistEffects.Peek(Lab)?.CardsExhaustedThisTurn ?? 0) > 0)
+            await AlchemistEffects.ApplyVulnerable(ctx, Lab, play.Target, DynamicVars["Vulnerable"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -71,37 +74,57 @@ public sealed class GlassShard() : AlchemistCard(1, CardType.Attack, CardRarity.
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Free damage, and Brew a Volatile Speed Potion.</summary>
-public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+/// <summary>Free damage. If your Potion Belt is full, draw a card.</summary>
+public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(4m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Speed));
+
+        if (Belt.IsFull(Lab))
+            await AlchemistEffects.Draw(ctx, Lab, 1);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage, and Brew a Volatile Attack Potion.</summary>
-public sealed class FlaskToss() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+/// <summary>Deal damage. If you used a Potion this turn, deal additional damage.</summary>
+public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
+        var damage = DynamicVars.Damage.BaseValue;
+        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
+            damage += DynamicVars["Bonus"].BaseValue;
+
+        await DamageCmd.Attack(damage).FromCard(this).Targeting(play.Target).Execute(ctx);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+}
+
+/// <summary>Deal damage. If you used a Potion this turn, draw a card.</summary>
+public sealed class BrewedEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Attack));
+
+        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
+            await AlchemistEffects.Draw(ctx, Lab, 1);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -358,17 +381,6 @@ public sealed class ContaminatedSample() : AlchemistCard(0, CardType.Skill, Card
         await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
         await AlchemistEffects.GainEnergy(Lab, 1m);
     }
-}
-
-/// <summary>Brew a Volatile Speed Potion, then Exhaust.</summary>
-public sealed class SolventFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
-{
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Speed));
 }
 
 // ---------------------------------------------------------------------------- Powers

@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Attacks 1-12. Half of these Brew a specific Volatile Potion by name; the rest scale off
+// Uncommon Attacks 1-10. Half of these Brew a specific Volatile Potion by name; the rest scale off
 // Potions held, Infuse directly, or apply Poison outright -- almost nothing left asks "did you do X
 // this turn."
 
@@ -110,24 +110,6 @@ public sealed class FlashPowder() : AlchemistCard(1, CardType.Attack, CardRarity
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
-}
-
-/// <summary>Deal damage, and Brew a random Potion.</summary>
-public sealed class BrewedEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.BrewRandom(ctx, Lab);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
 /// <summary>Big damage, and Infuse Unstable Concoction.</summary>
@@ -239,20 +221,3 @@ public sealed class VenomousAmpoule() : AlchemistCard(1, CardType.Attack, CardRa
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage, and Brew a Strength Potion.</summary>
-public sealed class BottledFury() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Strength));
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
-}
