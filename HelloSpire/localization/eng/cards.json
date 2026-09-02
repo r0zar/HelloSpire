@@ -284,8 +284,6 @@
   "HELLOSPIRE-RENEW.description": "A player gains [blue]{Regen:diff()}[/blue] [gold]Regen[/gold].\n[gold]Tithe[/gold]: gain 1 Energy.",
   "HELLOSPIRE-SENTINEL.title": "Sentinel",
   "HELLOSPIRE-SENTINEL.description": "Gain {Block:diff()} [gold]Block[/gold].\nGain 1 [gold]Spirit[/gold].",
-  "HELLOSPIRE-PRAYER_OF_MENDING.title": "Prayer of Mending",
-  "HELLOSPIRE-PRAYER_OF_MENDING.description": "Heal a player [blue]{Heal:diff()}[/blue].\nDraw 1 card, then discard 1 card.\n[gold]Tithe[/gold]: draw 1 card.",
   "HELLOSPIRE-DIVINE_ALLEGIANCE.title": "Divine Allegiance",
   "HELLOSPIRE-DIVINE_ALLEGIANCE.description": "A player gains {Block:diff()} [gold]Block[/gold].\nDraw 1 card.",
   "HELLOSPIRE-BULWARK.title": "Bulwark",
@@ -604,5 +602,7 @@
   "HELLOSPIRE-PRAYER.title": "Prayer",
   "HELLOSPIRE-PRAYER.description": "Gain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\nDraw 1 card, then discard 1 card.",
   "HELLOSPIRE-SMITE.title": "Smite",
-  "HELLOSPIRE-SMITE.description": "Deal {Damage:diff()} damage.\nApply {Weak:diff()} [gold]Weak[/gold]."
+  "HELLOSPIRE-SMITE.description": "Deal {Damage:diff()} damage.\nApply {Weak:diff()} [gold]Weak[/gold].",
+  "HELLOSPIRE-SHIELD_SLAM.title": "Shield Slam",
+  "HELLOSPIRE-SHIELD_SLAM.description": "Deal {Damage:diff()} damage.\nGain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold]."
 }
