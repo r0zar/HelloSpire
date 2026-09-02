@@ -11,18 +11,15 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Deal 18. Tithe: Judge a random enemy. The Ret uncommon reworked from a flavorless 16 +
-/// 3-chip face: execute-weight numbers on the swing, and the set's only judge-from-hand on
-/// the face -- pitch the hammer and the verdict still lands (cashes the seal bank; sealless
-/// it still fires the whenever-you-Judge powers). Upgrade: 24.
+/// Deal 18. Judge. The Ret heavy verdict: execute-weight numbers and the bank cashes on the
+/// same skull the hammer cracks. Judgment's big sibling at uncommon (8/Judge at 1E there,
+/// 18/Judge at 2E here); no Tithe face -- the whole card is the payoff. Upgrade: 24.
 /// </summary>
 public sealed class HammerOfWrath() : PaladinCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(18m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
-
-    public override bool HasTithe => true;
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Judge)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -30,13 +27,7 @@ public sealed class HammerOfWrath() : PaladinCard(2, CardType.Attack, CardRarity
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_heavy_blunt")
             .Execute(choiceContext);
-    }
-
-    protected override async Task OnTithe(PlayerChoiceContext ctx)
-    {
-        var enemy = PaladinEffects.RandomEnemy(Owner);
-        if (enemy == null) return;
-        await Seals.Judge(ctx, Owner, enemy);
+        await Seals.Judge(choiceContext, Owner, cardPlay.Target);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(6m);
