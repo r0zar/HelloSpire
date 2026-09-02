@@ -206,9 +206,6 @@
   "HELLOSPIRE-SEAL_OF_HUMILITY_POWER.title": "Seal of Humility",
   "HELLOSPIRE-SEAL_OF_HUMILITY_POWER.description": "Next time you [gold]Judge[/gold], the enemy loses 3 [gold]Strength[/gold] this turn.",
   "HELLOSPIRE-SEAL_OF_HUMILITY_POWER.smartDescription": "Next time you [gold]Judge[/gold], the enemy loses [blue]3[/blue] [gold]Strength[/gold] this turn.",
-  "HELLOSPIRE-SEAL_OF_THE_PENITENT_POWER.title": "Seal of the Penitent",
-  "HELLOSPIRE-SEAL_OF_THE_PENITENT_POWER.description": "Next time you [gold]Judge[/gold], deal 6 damage to ALL enemies.",
-  "HELLOSPIRE-SEAL_OF_THE_PENITENT_POWER.smartDescription": "Next time you [gold]Judge[/gold], deal [blue]6[/blue] damage to ALL enemies.",
   "HELLOSPIRE-AURA_OF_DEVOTION_POWER.title": "Aura of Devotion",
   "HELLOSPIRE-AURA_OF_DEVOTION_POWER.description": "ALL players gain [gold]Plating[/gold] at the start of your turn.",
   "HELLOSPIRE-AURA_OF_DEVOTION_POWER.smartDescription": "ALL players gain [blue]{Amount}[/blue] [gold]Plating[/gold] at the start of your turn.",
@@ -220,5 +217,8 @@
   "HELLOSPIRE-SPIRIT_DEBT_POWER.smartDescription": "Your effective [gold]Spirit[/gold] is reduced by [blue]{Amount}[/blue]: healing restores that much less. [gold]Spirit[/gold] gains pay this down before banking.",
   "HELLOSPIRE-DEVOTION_POWER.title": "Devotion",
   "HELLOSPIRE-DEVOTION_POWER.description": "At the start of your turn, gain [gold]Spirit[/gold].",
-  "HELLOSPIRE-DEVOTION_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Spirit[/gold]."
+  "HELLOSPIRE-DEVOTION_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Spirit[/gold].",
+  "HELLOSPIRE-SEAL_OF_THE_MARTYR_THORNS_POWER.title": "Martyr’s Thorns",
+  "HELLOSPIRE-SEAL_OF_THE_MARTYR_THORNS_POWER.description": "Lose the granted [gold]Thorns[/gold] at the end of this turn.",
+  "HELLOSPIRE-SEAL_OF_THE_MARTYR_THORNS_POWER.smartDescription": "Lose [blue]{Amount}[/blue] [gold]Thorns[/gold] at the end of this turn."
 }

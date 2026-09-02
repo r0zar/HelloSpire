@@ -9,11 +9,11 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// A player gains 1 Strength, free, no Exhaust -- the small clean blessing that comes back
-/// every reshuffle. (The perma-stat-Exhausts law is waived here by design: 1 Str per deck
-/// cycle at the cost of a card slot is the fair rate.)
+/// A player gains 1 Strength, no Exhaust -- the small clean blessing that comes back every
+/// reshuffle. Costs 1 now (a free permanent stat every cycle was an auto-include in any
+/// deck); the upgrade buys the freebie back. Strength stays 1 on both.
 /// </summary>
-public sealed class BlessingOfMight() : PaladinCard(0, CardType.Skill, CardRarity.Common, TargetType.AnyPlayer)
+public sealed class BlessingOfMight() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyPlayer)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Strength", 1m)];
 
@@ -25,5 +25,5 @@ public sealed class BlessingOfMight() : PaladinCard(0, CardType.Skill, CardRarit
             DynamicVars["Strength"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Strength"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
