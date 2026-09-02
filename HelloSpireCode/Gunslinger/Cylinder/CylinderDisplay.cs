@@ -222,9 +222,12 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
             var round = cylinder.Chambers[index];
             var when = i == 0 ? "Under the hammer — fires next." : $"Fires {Ordinal(i + 1)}.";
             var titleKey = "HELLOSPIRE-" + (round?.Key ?? "EMPTY_CHAMBER") + ".title";
+            // The title label is a plain Label (no BBCode), so the colour match lives in the
+            // body: a chip swatch in the chamber's exact cylinder colour opens each tip.
+            var chip = $"[color=#{(round == null ? Empty : ColorFor(round)).ToHtml(false)}]●[/color] ";
             var body = round == null
-                ? when
-                : $"{when} Deal {round.Damage} damage." +
+                ? chip + when
+                : chip + $"{when} Deal {round.Damage} damage." +
                   (RoundEffects.TryGetValue(round.Key, out var fx) ? fx : "");
             tips.Add(new HoverTip(new LocString("static_hover_tips", titleKey), body)
             {
