@@ -39,6 +39,8 @@ import {
   allCardFiles,
   allRelicFiles,
   assertSlug,
+  readAllCards,
+  readCardBases,
   safeJoin,
   type ArtSize,
 } from "./src/repo.ts";
@@ -83,7 +85,7 @@ app.use(
 // edit made in another window (or in an IDE) can't be clobbered by stale spans.
 
 function readCards(): ParsedCard[] {
-  return allCardFiles().flatMap((f) => parseCards(f, readFileSync(join(REPO_ROOT, f), "utf8")));
+  return readAllCards();
 }
 
 function readRelics(): ParsedRelic[] {
@@ -172,7 +174,11 @@ app.put("/api/cards/:className", (req, res) => {
       // Re-parse the single file so the spans are current, then splice.
       const full = join(REPO_ROOT, card.file);
       const src = readFileSync(full, "utf8");
-      const fresh = parseCards(card.file, src).find((c) => c.className === className);
+      // Bases are re-read too: a card on an intermediate base (SealCard) is
+      // unparseable without them, and would look like it had vanished.
+      const fresh = parseCards(card.file, src, readCardBases()).find(
+        (c) => c.className === className,
+      );
       if (!fresh) throw new Error(`${className} vanished from ${card.file}`);
       const edits = cardEdits(fresh, body.patch);
       if (edits.length > 0) writeFileSync(full, applyEdits(src, edits), "utf8");

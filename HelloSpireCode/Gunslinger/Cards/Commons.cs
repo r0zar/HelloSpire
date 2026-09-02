@@ -144,9 +144,11 @@ public sealed class Ricochet() : GunslingerCard(1, CardType.Attack, CardRarity.C
 }
 
 /// <summary>Deal damage. No ammunition involved — the answer to an empty gun.</summary>
-public sealed class PistolWhip() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class PistolWhip() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -160,12 +162,14 @@ public sealed class PistolWhip() : GunslingerCard(1, CardType.Attack, CardRarity
 }
 
 /// <summary>Deal damage and gain Block.</summary>
-public sealed class ShoulderShot() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class ShoulderShot() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(7m, ValueProp.Move), new BlockVar(4m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -183,12 +187,13 @@ public sealed class ShoulderShot() : GunslingerCard(1, CardType.Attack, CardRari
 }
 
 /// <summary>Deal damage; more if the target is already Weak.</summary>
-public sealed class GutShot() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class GutShot() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WeakPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<WeakPower>(), Tip(GunslingerTips.Gadget)];
 
     protected override bool ShouldGlowGoldInternal =>
         CombatState?.HittableEnemies.Any(enemy => enemy.HasPower<WeakPower>()) ?? false;
@@ -211,14 +216,15 @@ public sealed class GutShot() : GunslingerCard(1, CardType.Attack, CardRarity.Co
 }
 
 /// <summary>Cheap Weak, and it leaves the deck behind it.</summary>
-public sealed class WarningShot() : GunslingerCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class WarningShot() : GunslingerCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(3m, ValueProp.Move), new PowerVar<WeakPower>(1m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WeakPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<WeakPower>(), Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -546,11 +552,12 @@ public sealed class TakeStock() : GunslingerCard(1, CardType.Skill, CardRarity.C
 /// the gun up and using it compete for the same Energy every turn, so a debuff that costs nothing
 /// to slot in is worth more to the deck than a third stack of Weak on one enemy.
 /// </summary>
-public sealed class PocketSand() : GunslingerCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class PocketSand() : GunslingerCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<WeakPower>(2m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WeakPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<WeakPower>(), Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {

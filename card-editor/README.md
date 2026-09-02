@@ -35,7 +35,7 @@ literals and one JSON line, and reads as a balance change in review.
 
 | Surface | Where it lives | Editable |
 | --- | --- | --- |
-| Cost, type, rarity, target | the four constructor arguments | yes |
+| Cost, type, rarity, target | the four constructor arguments | yes, unless inherited |
 | Var base values | `CanonicalVars` | yes |
 | Upgrade deltas | `UpgradeValueBy(…)` in `OnUpgrade` | yes, where one exists |
 | Title, description, upgrade text | `localization/eng/cards.json` | yes |
@@ -47,6 +47,13 @@ literals and one JSON line, and reads as a balance change in review.
 A var whose value is a named constant (`new DynamicVar("Threshold", ArmorThreshold)`)
 is still editable — the edit rewrites the `private const` line, which the panel
 labels, since other code in the class may read it too.
+
+Most cards name a character base and pass all four arguments. A few sit on an
+intermediate base instead — the Paladin's eight Seals extend
+`SealCard(int cost, CardRarity rarity, decimal amount)`, which bakes in
+`CardType.Skill` and `TargetType.Self` and shares one `OnUpgrade` between them.
+The editor reads those through the base and shows the inherited values, but
+locks the controls: the number is real, it just is not that card's to change.
 
 Two things the editor deliberately will not do. It cannot add an upgrade to a
 var that has none, because that means writing a statement into `OnUpgrade` —
@@ -67,6 +74,10 @@ That is why a duplicate class name is a real bug rather than a style question �
 two classes with one name share a portrait and a title. The **warnings** tab
 lists those, plus every class with no localized title and every class with no
 art.
+
+The rule runs both ways, and the test suite checks the other direction too: a
+string-table key with no class behind it is a card that was retired without its
+text being cleared, which nothing else in the toolchain ever notices.
 
 ## Art
 

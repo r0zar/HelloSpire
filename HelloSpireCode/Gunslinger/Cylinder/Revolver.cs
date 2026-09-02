@@ -507,7 +507,7 @@ public static class Revolver
 
     /// <summary>
     /// Points the gun the wrong way. A loaded chamber costs the Round's printed damage as HP loss —
-    /// no Strength, no Weak, no Deadeye, and no Block, Armor or Dodge to hide behind. The Round's
+    /// no Strength, no Weak, no Deadeye, and no Block or Armor to hide behind. The Round's
     /// other effects do not happen. An empty chamber just Clicks.
     /// </summary>
     public static async Task<FireResult> SelfFire(PlayerChoiceContext ctx, GunContext gun)

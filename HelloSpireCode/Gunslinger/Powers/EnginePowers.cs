@@ -187,7 +187,7 @@ public sealed class IronWillPower : GunslingerEnginePower
 
 /// <summary>
 /// Every point of Armor also buys Block, which turns the character's flat mitigation into a
-/// per-turn cushion. Armor arrives in larger helpings than Dodge ever did, so the rate is low
+/// per-turn cushion. Armor arrives in large helpings across a fight, so the rate is low
 /// and the volume does the work.
 /// </summary>
 public sealed class UntouchablePower : GunslingerEnginePower, IArmorGainListener
@@ -196,6 +196,61 @@ public sealed class UntouchablePower : GunslingerEnginePower, IArmorGainListener
     {
         Flash();
         await GunslingerEffects.GainBlock(gun, Amount * amount);
+    }
+}
+
+/// <summary>
+/// The first Gadget you play each turn draws a card.
+///
+/// Once a turn rather than once a Gadget, which is what keeps it out of a Tripwire loop: Tripwire
+/// costs nothing, and a per-Gadget draw would turn a hand of zero-cost debuffs into a draw engine
+/// that never stops. The latch is the same <see cref="GunslingerEnginePower.UsedThisTurn"/> every
+/// other first-time-each-turn power in the character runs on.
+///
+/// Watched through the base game's own <c>AfterCardPlayed</c> hook rather than a mod-side
+/// notification, because Gadget-ness is a property of the card model and the game already hands
+/// every played card to every power. See <see cref="IGadget"/>.
+/// </summary>
+public sealed class TinkersKitPower : GunslingerEnginePower
+{
+    public override async Task AfterCardPlayed(PlayerChoiceContext ctx, CardPlay cardPlay)
+    {
+        if (UsedThisTurn || cardPlay.Card is not IGadget) return;
+        if (cardPlay.Card.Owner != GunslingerEffects.PlayerFor(Owner)) return;
+
+        // Latched only once there is a gun to pay out from, so a turn where the context could not
+        // be resolved does not silently spend the trigger.
+        if (Gun is not { } gun) return;
+        UsedThisTurn = true;
+
+        Flash();
+        await GunslingerEffects.Draw(ctx, gun, (int)Amount);
+    }
+}
+
+/// <summary>
+/// Whenever you play a Gadget, gain Armor.
+///
+/// Every Gadget, not the first each turn — that is the difference between the Rare and
+/// <see cref="TinkersKitPower"/>, and it is what a deck built on the archetype is drafting
+/// towards. Four Gadgets in a turn is four Armor, and Armor does not expire, so the wall grows
+/// across the fight rather than resetting with the turn.
+///
+/// The Armor goes through <see cref="GunslingerEffects.GainArmor"/> like every other source, so
+/// Untouchable and Iron Will see it. That is deliberate: this is the card that makes those two
+/// Rares worth holding.
+/// </summary>
+public sealed class GadgeteerPower : GunslingerEnginePower
+{
+    public override async Task AfterCardPlayed(PlayerChoiceContext ctx, CardPlay cardPlay)
+    {
+        if (cardPlay.Card is not IGadget) return;
+        if (cardPlay.Card.Owner != GunslingerEffects.PlayerFor(Owner)) return;
+
+        if (Gun is not { } gun) return;
+
+        Flash();
+        await GunslingerEffects.GainArmor(ctx, gun, Amount);
     }
 }
 

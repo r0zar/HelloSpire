@@ -1,9 +1,12 @@
 // Where the mod keeps its content, and the guards that keep the dev server
 // writing only inside it.
 
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { parseCardBases, parseCards } from "./cs-cards.ts";
+import type { ParsedCard } from "./cs-cards.ts";
 
 export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -65,6 +68,28 @@ export function allCardFiles(): string[] {
     .filter((f) => f.endsWith(".cs") && f.includes(`${sep}Cards${sep}`))
     .map((f) => relative(REPO_ROOT, f))
     .sort();
+}
+
+/**
+ * Every card in the mod, parsed.
+ *
+ * Two passes, and that is the whole reason this lives here rather than at each
+ * call site. Some cards are built on an intermediate base declared in another
+ * file -- the Paladin's Seals extend SealCard, which supplies their type and
+ * target -- and a parse that has not seen that base cannot read them at all. It
+ * used to drop them silently, so eight shipped cards were invisible to the
+ * editor and surfaced only as unexplained orphan strings. Anything that wants
+ * the card set should call this instead of mapping parseCards itself.
+ */
+export function readAllCards(): ParsedCard[] {
+  const files = allCardFiles().map((f) => ({ f, src: readFileSync(join(REPO_ROOT, f), "utf8") }));
+  const bases = files.flatMap(({ src }) => parseCardBases(src));
+  return files.flatMap(({ f, src }) => parseCards(f, src, bases));
+}
+
+/** The intermediate card bases, for callers that re-parse a single file. */
+export function readCardBases(): ReturnType<typeof parseCardBases> {
+  return allCardFiles().flatMap((f) => parseCardBases(readFileSync(join(REPO_ROOT, f), "utf8")));
 }
 
 /** Repo-relative .cs files that can hold relic classes. */

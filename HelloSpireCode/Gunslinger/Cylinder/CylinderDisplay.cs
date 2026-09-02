@@ -189,7 +189,7 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
         ["CRIPPLING_ROUND"]    = " Applies 1 Weak.",
         ["PIERCING_ROUND"]     = " Ignores Block.",
         ["GUARD_ROUND"]        = " You gain 5 Block.",
-        ["SMOKE_ROUND"]        = " You gain 1 Dodge.",
+        ["SMOKE_ROUND"]        = " You gain 4 Block and 1 Armor.",
         ["RENDING_ROUND"]      = " Applies 1 Debilitate.",
         ["BLACK_POWDER_ROUND"] = " You then lose 3 HP.",
     };

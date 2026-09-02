@@ -44,13 +44,19 @@ public sealed class SightlineTonic : GunslingerPotion
     }
 }
 
-/// <summary>Gain 2 Dodge. Two hits off the biggest intent in the fight.</summary>
+/// <summary>
+/// Gain 1 Intangible: the whole of the next enemy turn, refused.
+///
+/// One stack rather than the two Dodge this used to grant, for the same reason Ghost Step dropped
+/// to one — Intangible answers an entire turn, not an individual hit, so two of them is two turns
+/// of a boss fight out of a Rare potion.
+/// </summary>
 public sealed class GhostSmoke : GunslingerPotion
 {
     public override PotionRarity Rarity => PotionRarity.Rare;
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
     {
-        await GunslingerEffects.GainDodge(ctx, Gun, 2);
+        await GunslingerEffects.GainIntangible(ctx, Gun, 1);
     }
 }

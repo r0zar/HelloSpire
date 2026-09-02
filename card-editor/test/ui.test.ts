@@ -2,28 +2,23 @@
 // are actually catchable without a browser: what the card text renders as, and
 // what the controls bar selects.
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parseCards } from "../src/cs-cards.ts";
 import type { CardVar } from "../src/cs-cards.ts";
 import { balanceStats } from "../src/balance.ts";
 import { danglingVars, renderText } from "../src/text.ts";
 import { emptyFilters, facets, filterCards, toggle } from "../src/filters.ts";
 import { locFor, readTable } from "../src/localization.ts";
 import { CARD_FIELDS } from "../src/localization.ts";
-import { allCardFiles, REPO_ROOT } from "../src/repo.ts";
+import { readAllCards } from "../src/repo.ts";
 import type { CardRecord } from "../src/api.ts";
 
 const loc = readTable("cards");
-const records: CardRecord[] = allCardFiles()
-  .flatMap((f) => parseCards(f, readFileSync(join(REPO_ROOT, f), "utf8")))
-  .map((c) => ({
-    ...c,
-    loc: locFor(loc, c.id, CARD_FIELDS),
-    balance: balanceStats(c),
-    art: { small: null, big: null },
-  }));
+const records: CardRecord[] = readAllCards().map((c) => ({
+  ...c,
+  loc: locFor(loc, c.id, CARD_FIELDS),
+  balance: balanceStats(c),
+  art: { small: null, big: null },
+}));
 
 const vars: CardVar[] = [
   {
@@ -84,11 +79,14 @@ describe("card text", () => {
         ),
       }))
       .filter((x) => x.dangling.length > 0);
-    // The one legitimate hit is the Bandolier name collision: two classes share
-    // HELLOSPIRE-BANDOLIER, so the Gunslinger's text reaches the Alchemist's
-    // card, which declares no {Lead}. That is the content bug /api/warnings
-    // reports, not a parser gap.
-    expect(broken.map((b) => b.className)).toEqual(["Bandolier"]);
+    // This used to allow one hit — the Alchemist and the Gunslinger both had a
+    // Bandolier, so one card's text reached the other's vars. That class has
+    // since been renamed, and the fourteen Paladin healing cards that also
+    // showed up here were a parser bug (SpiritHealVar read as declaring
+    // "SpiritHeal" rather than inheriting HealVar's "Heal"), not content. The
+    // honest expectation is now zero: any hit here is a real dangling
+    // placeholder that renders as literal "{Foo}" in game.
+    expect(broken.map((b) => b.className)).toEqual([]);
   });
 });
 
@@ -124,11 +122,33 @@ describe("filters", () => {
   });
 
   it("finds the content that still needs text", () => {
+    // Asserted against a synthetic pair rather than against the tree. The
+    // original test required the repo to contain at least one unlocalized card,
+    // which was true while the Alchemist was scaffolded and stopped being true
+    // when its text landed — so a green test turned red on the set being
+    // finished. What is worth pinning is that the filter selects on a missing
+    // title, in both directions.
+    const [sample] = records;
+    expect(sample).toBeDefined();
+    const untitled: CardRecord = { ...sample!, className: "Untitled", loc: {} };
+    const titled: CardRecord = { ...sample!, className: "Titled", loc: { title: "Titled" } };
+
     const f = emptyFilters();
     f.missingText = true;
-    const out = filterCards(records, f);
-    expect(out.length).toBeGreaterThan(0);
-    for (const c of out) expect(c.loc["title"]).toBeUndefined();
+    const out = filterCards([untitled, titled], f);
+    expect(out.map((c) => c.className)).toEqual(["Untitled"]);
+
+    f.missingText = false;
+    expect(filterCards([untitled, titled], f)).toHaveLength(2);
+  });
+
+  it("reports whatever content is genuinely unlocalized", () => {
+    // Not an assertion on the count — just the standing check that the filter
+    // and the tree agree, so this stays meaningful whether the set is finished
+    // or not.
+    const f = emptyFilters();
+    f.missingText = true;
+    for (const c of filterCards(records, f)) expect(c.loc["title"]).toBeUndefined();
   });
 
   it("sorts damage descending, with no filter dropping cards silently", () => {
