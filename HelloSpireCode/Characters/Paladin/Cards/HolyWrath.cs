@@ -25,7 +25,7 @@ public sealed class HolyWrath() : PaladinCard(0, CardType.Attack, CardRarity.Rar
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
         var times = ResolveEnergyXValue();
         if (times <= 0) return;
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).WithAttackerAnim(HeavyAttackAnim, HeavyAttackDelay).Targeting(cardPlay.Target)
             .WithHitCount(times)
             .WithHitFx("vfx/vfx_heavy_blunt")
             .Execute(choiceContext);

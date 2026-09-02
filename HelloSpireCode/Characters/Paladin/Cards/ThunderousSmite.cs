@@ -18,7 +18,7 @@ public sealed class ThunderousSmite() : PaladinCard(2, CardType.Attack, CardRari
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).WithAttackerAnim(HeavyAttackAnim, HeavyAttackDelay)
             .TargetingAllOpponents(CombatState)
             .WithHitFx("vfx/vfx_heavy_blunt")
             .SpawningHitVfxOnEachCreature()

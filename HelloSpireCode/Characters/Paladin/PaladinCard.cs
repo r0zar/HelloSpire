@@ -6,6 +6,7 @@ using HelloSpire.HelloSpireCode.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Characters;
 
 namespace HelloSpire.HelloSpireCode.Characters;
 
@@ -38,6 +39,16 @@ public abstract class PaladinCard(int cost, CardType type, CardRarity rarity, Ta
     /// </summary>
     protected MegaCrit.Sts2.Core.Entities.Creatures.Creature TargetOrOwner(CardPlay cardPlay) =>
         cardPlay.Target ?? Owner.Creature;
+
+    /// <summary>
+    /// The heavy windup swing for the set's big blunt hits. The Paladin rides the Ironclad rig
+    /// (reskinned), whose skeleton carries attack_heavy; Ironclad's helper degrades to the
+    /// plain Attack anim if the character check ever stops passing, so this is safe either way.
+    /// </summary>
+    protected string HeavyAttackAnim => Ironclad.GetHeavyAnimIfApplicable(Owner.Character);
+
+    /// <summary>Attacker-anim delay paired with <see cref="HeavyAttackAnim"/>.</summary>
+    protected float HeavyAttackDelay => Ironclad.GetHeavyAttackDelayIfApplicable(Owner.Character);
 
     /// <summary>True on cards that carry a Tithe face. Derived cards opt in by overriding OnTithe.</summary>
     public virtual bool HasTithe => false;
