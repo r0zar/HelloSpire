@@ -1,28 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Gain 8 Block now and 8 at the start of next turn. The prepared wall.</summary>
-public sealed class Bastion() : PaladinCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+/// <summary>
+/// Gain Block equal to 6 + your Plating. Your armor made wall -- the defensive twin of
+/// Shield Bash (Plating into damage there, into Block here). Common now (swapped rarities
+/// with Blinding Light) and buffed 4 to 6: one line, simple, exactly what commons should be.
+/// </summary>
+public sealed class Bastion() : PaladinCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
-        await PowerCmd.Apply<BastionPower>(choiceContext, Owner.Creature,
-            DynamicVars.Block.BaseValue, Owner.Creature, this);
+        var amount = 6m + Owner.Creature.GetPowerAmount<PlatingPower>();
+        await CreatureCmd.GainBlock(Owner.Creature, amount, ValueProp.Move, cardPlay);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

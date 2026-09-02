@@ -14,6 +14,8 @@ export interface FilterState {
   types: Set<string>;
   rarities: Set<string>;
   costs: Set<number>;
+  /** multiplayer | singleplayer | any. */
+  modes: Set<string>;
   /** Only content with no portrait/icon. */
   missingArt: boolean;
   /** Only content with no localized title. */
@@ -28,6 +30,7 @@ export function emptyFilters(): FilterState {
     types: new Set(),
     rarities: new Set(),
     costs: new Set(),
+    modes: new Set(),
     missingArt: false,
     missingText: false,
     sort: "name",
@@ -48,6 +51,18 @@ function matchesSearch(text: string, record: CardRecord | RelicRecord): boolean 
   );
 }
 
+/**
+ * Mode chips are pools, not raw constraint values: "singleplayer" is the card
+ * pool a solo run can see (everything not MultiplayerOnly); "multiplayer only"
+ * is just the co-op-gated cards. Both/neither selected shows everything.
+ */
+function matchesMode(f: FilterState, c: CardRecord): boolean {
+  if (f.modes.size === 0) return true;
+  if (f.modes.has("singleplayer") && c.mode !== "multiplayer") return true;
+  if (f.modes.has("multiplayer") && c.mode === "multiplayer") return true;
+  return false;
+}
+
 /** Shared predicate: everything relics and cards both have. */
 function common(f: FilterState, r: CardRecord | RelicRecord): boolean {
   if (!matchesSearch(f.search, r)) return false;
@@ -63,7 +78,8 @@ export function filterCards(cards: CardRecord[], f: FilterState): CardRecord[] {
       common(f, c) &&
       (f.types.size === 0 || f.types.has(c.type)) &&
       (f.rarities.size === 0 || f.rarities.has(c.rarity)) &&
-      (f.costs.size === 0 || f.costs.has(c.cost)),
+      (f.costs.size === 0 || f.costs.has(c.cost)) &&
+      matchesMode(f, c),
   );
   return sortCards(out, f.sort);
 }

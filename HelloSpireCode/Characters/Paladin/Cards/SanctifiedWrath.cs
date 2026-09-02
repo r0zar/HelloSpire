@@ -3,24 +3,23 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>
-/// At the start of your turn, gain 1 Energy and lose 2 HP. The Berserk slot with a penance
-/// price -- the one drawback this class can answer with heals, at the cost of the cards to do it.
-/// </summary>
-public sealed class SanctifiedWrath() : PaladinCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
+/// <summary>Whenever you Judge an enemy, deal 4 to ALL enemies. The wrath sanctified into an engine.</summary>
+public sealed class SanctifiedWrath() : PaladinCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Damage", 4m)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Judge)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
         await PowerCmd.Apply<SanctifiedWrathPower>(choiceContext, Owner.Creature,
-            DynamicVars["Energy"].BaseValue, Owner.Creature, this);
+            DynamicVars["Damage"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => DynamicVars["Damage"].UpgradeValueBy(2m);
 }

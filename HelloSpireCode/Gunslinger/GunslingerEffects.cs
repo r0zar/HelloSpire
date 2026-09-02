@@ -65,11 +65,23 @@ public static class GunslingerEffects
         await GunslingerHooks.NotifyArmorGained(ctx, gun, (int)amount);
     }
 
-    public static async Task GainDodge(PlayerChoiceContext ctx, GunContext gun, decimal amount)
+    /// <summary>
+    /// The character's premium defence, and the base game's power rather than one of ours.
+    ///
+    /// This replaced Dodge, which counted individual enemy Attack hits and needed a branch in
+    /// <see cref="Powers.GunslingerDamagePatch"/> plus a pending-flag handshake to spend a stack
+    /// only when a hit really landed. Intangible needs none of that — the game reduces the damage
+    /// and decays the stack itself — so the whole mechanic is one call, and the only defensive
+    /// power this mod still has to patch damage for is Armor.
+    ///
+    /// It is also far stronger per stack than Dodge was, which is why almost nothing grants it:
+    /// Ghost Step and the Ghost Smoke potion, both Rare, both 1. Everything that used to hand out
+    /// cheap Dodge is now a Gadget paying out in Block and Armor instead.
+    /// </summary>
+    public static async Task GainIntangible(PlayerChoiceContext ctx, GunContext gun, decimal amount)
     {
         if (amount <= 0) return;
-        await PowerCmd.Apply<DodgePower>(ctx, gun.Self, amount, gun.Self, gun.Card);
-        await GunslingerHooks.NotifyDodgeGained(ctx, gun, (int)amount);
+        await PowerCmd.Apply<IntangiblePower>(ctx, gun.Self, amount, gun.Self, gun.Card);
     }
 
     public static async Task Draw(PlayerChoiceContext ctx, GunContext gun, int count)

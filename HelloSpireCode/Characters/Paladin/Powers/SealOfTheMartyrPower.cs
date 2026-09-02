@@ -2,19 +2,21 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
 /// <summary>
-/// The tank Seal, judge face only: deal Amount to ALL enemies. Its passive is real ThornsPower,
-/// applied by the card -- no reinvented thorns (same call as Consecrated Ground).
+/// The Prot emergency, banked: a pure judge charge (the Thorns were paid on cast).
+/// Judge: ALL enemies lose 5 Strength until end of turn.
 /// </summary>
 public sealed class SealOfTheMartyrPower : SealPower
 {
+    public const decimal JudgeStrengthDown = 5m;
+
     public override async Task OnJudged(PlayerChoiceContext ctx, Creature target)
     {
-        if (Owner.CombatState is not { } state || state.HittableEnemies.Count == 0) return;
-        await CreatureCmd.Damage(ctx, state.HittableEnemies, Amount, ValueProp.Unpowered, Owner);
+        if (Owner.CombatState is not { } state) return;
+        foreach (var enemy in state.HittableEnemies)
+            await PowerCmd.Apply<HumblingShacklesPower>(ctx, enemy, JudgeStrengthDown, Owner, null);
     }
 }

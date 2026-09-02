@@ -5,7 +5,10 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using MegaCrit.Sts2.Core.Nodes.HoverTips;
 
 namespace HelloSpire.HelloSpireCode.Gunslinger.Cylinder;
 
@@ -31,8 +34,11 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
     private const float ChamberSize = 22f;
     private const double SpinSeconds = 0.32;
 
-    /// <summary>Offset from the Energy orb. Up and to the left of it, clear of the hand.</summary>
-    private static readonly Vector2 EnergyOffset = new(-124f, -18f);
+    /// <summary>Gap between the top of the Energy display and the bottom of the widget.</summary>
+    private const float AboveEnergyGap = 12f;
+
+    /// <summary>Fallback offset over the Energy orb when its Control reports zero size.</summary>
+    private static readonly Vector2 EnergyOffset = new(-Centre, -(Size + AboveEnergyGap));
 
     /// <summary>Where the widget lands if no Energy node can be found to hang it off.</summary>
     private static readonly Vector2 FallbackOffset = new(40f, -200f);
@@ -175,6 +181,70 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
     private static Color ColorFor(Round round) =>
         RoundColors.TryGetValue(round.Key, out var color) ? color : Brass;
 
+    // ------------------------------------------------------------------ hover tips
+
+    /// <summary>Effect line per Round kind, appended after the damage line. Blank = damage only.</summary>
+    private static readonly Dictionary<string, string> RoundEffects = new()
+    {
+        ["CRIPPLING_ROUND"]    = " Applies 1 Weak.",
+        ["PIERCING_ROUND"]     = " Ignores Block.",
+        ["GUARD_ROUND"]        = " You gain 5 Block.",
+        ["SMOKE_ROUND"]        = " You gain 4 Block and 1 Armor.",
+        ["RENDING_ROUND"]      = " Applies 1 Debilitate.",
+        ["BLACK_POWDER_ROUND"] = " You then lose 3 HP.",
+    };
+
+    /// <summary>
+    /// The standard STS2 hover panel, the way orbs do it: one tip for the mechanic, then one tip
+    /// per chamber in firing order from the hammer -- which bullets are loaded where, at a glance.
+    /// Each chamber tip gets a unique Id or IHoverTip.RemoveDupes would collapse two chambers
+    /// holding the same Round kind into one.
+    /// </summary>
+    private void OnHoverStart()
+    {
+        if (_root is not { } root || !GodotObject.IsInstanceValid(root) || !root.Visible) return;
+        if (_creature?.GetPower<CylinderPower>() is not { } cylinder) return;
+        NHoverTipSet.CreateAndShow(root, BuildTips(cylinder), HoverTip.GetHoverTipAlignment(root))?.SetFollowOwner();
+    }
+
+    private void OnHoverEnd()
+    {
+        if (_root is { } root && GodotObject.IsInstanceValid(root)) NHoverTipSet.Remove(root);
+    }
+
+    private static IEnumerable<IHoverTip> BuildTips(CylinderPower cylinder)
+    {
+        var tips = new List<IHoverTip> { HoverTipFactory.Static(GunslingerTips.TheCylinder) };
+
+        for (var i = 0; i < CylinderPower.ChamberCount; i++)
+        {
+            var index = (cylinder.Hammer + i) % CylinderPower.ChamberCount;
+            var round = cylinder.Chambers[index];
+            var when = i == 0 ? "Under the hammer — fires next." : $"Fires {Ordinal(i + 1)}.";
+            var titleKey = "HELLOSPIRE-" + (round?.Key ?? "EMPTY_CHAMBER") + ".title";
+            // The title label is a plain Label (no BBCode), so the colour match lives in the
+            // body: a chip swatch in the chamber's exact cylinder colour opens each tip.
+            var chip = $"[color=#{(round == null ? Empty : ColorFor(round)).ToHtml(false)}]●[/color] ";
+            var body = round == null
+                ? chip + when
+                : chip + $"{when} Deal {round.Damage} damage." +
+                  (RoundEffects.TryGetValue(round.Key, out var fx) ? fx : "");
+            tips.Add(new HoverTip(new LocString("static_hover_tips", titleKey), body)
+            {
+                Id = $"HELLOSPIRE-CHAMBER-{i}",
+            });
+        }
+
+        return tips;
+    }
+
+    private static string Ordinal(int n) => n switch
+    {
+        2 => "2nd",
+        3 => "3rd",
+        _ => $"{n}th",
+    };
+
     // ------------------------------------------------------------------ nodes
 
     /// <summary>
@@ -190,7 +260,11 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
         if (FindEnergy(nCombatUi) is { } energy)
         {
             energy.AddChild(root);
-            root.Position = EnergyOffset;
+            // Directly above the Energy display, horizontally centred on it. The old spot
+            // (up-left of the orb) hung the widget half off the screen edge.
+            root.Position = energy.Size.X > 0
+                ? new Vector2((energy.Size.X - Size) / 2f, -(Size + AboveEnergyGap))
+                : EnergyOffset;
             return;
         }
 
@@ -223,8 +297,12 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
             CustomMinimumSize = new Vector2(Size, Size),
             Size = new Vector2(Size, Size),
             MouseFilter = Control.MouseFilterEnum.Pass,
-            TooltipText = "The Cylinder",
         };
+
+        // Native STS2 hover tips (the orb pattern: NHoverTipSet on focus, Remove on unfocus)
+        // replace the bare Godot TooltipText the widget shipped with.
+        root.MouseEntered += OnHoverStart;
+        root.MouseExited += OnHoverEnd;
 
         root.AddChild(Circle("Body", Size, Vector2.Zero, Body, Brass.Darkened(0.3f), 3));
 

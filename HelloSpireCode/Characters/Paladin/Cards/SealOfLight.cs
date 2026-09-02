@@ -1,33 +1,19 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using HelloSpire.HelloSpireCode.Characters.PaladinContent;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Powers;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Grants Seal of Light: the healer lane's anchor. The passive stays small (1 + Spirit per copy);
-/// the upgrade raises the JUDGE -- 2 Spirit per Judgment -- so upgrading buys ramp, not raw heal.
-/// JudgeSpirit is a high-water mark on the power: one upgraded copy lifts it, extra copies stack
-/// the passive as usual.
+/// Gain Amount Spirit now, and arm the seal. Judge: draw 3, discard 2. The per-turn tick died
+/// in playtest -- small early decks cycle Judgment so fast the seal never got a second turn,
+/// so the Spirit pays up front.
 /// </summary>
-public sealed class SealOfLight() : PaladinCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public sealed class SealOfLight() : SealCard(1, CardRarity.Uncommon, 1m)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new SpiritHealVar("Amount", 1m), new DynamicVar("Spirit", 1m)];
-
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
     {
-        await Seals.Grant<SealOfLightPower>(choiceContext, Owner, DynamicVars["Amount"].BaseValue, this);
-        if (Owner.Creature.GetPower<SealOfLightPower>() is { } seal)
-            seal.JudgeSpirit = Math.Max(seal.JudgeSpirit, DynamicVars["Spirit"].IntValue);
+        await Spirit.Gain(ctx, Owner, (int)amount, this);
+        await Seals.Grant<SealOfLightPower>(ctx, Owner, 1m, this);
     }
-
-    protected override void OnUpgrade() => DynamicVars["Spirit"].UpgradeValueBy(1m);
 }

@@ -49,14 +49,15 @@ A sequencing character who loads a visible six-shooter, manipulates its cylinder
 ### Core Strengths
 - Flexible front-loaded damage once the Cylinder is prepared.
 - Strong Weak access.
-- Layered defense: Block + Armor + short-lived Dodge.
+- Layered defense: Block + Armor, with Intangible as the rare panic button.
+- Gadgets: a whole second axis that works with the gun empty.
 - Excellent tactical control over single large enemy hits.
 - Strong "burst turn" potential through Deadeye and multi-shot cards.
 
 ### Core Weaknesses
 - Ammo setup costs cards and Energy.
 - Multi-shot cards are poor when the Cylinder is empty.
-- Dodge expires quickly and cannot be banked.
+- Intangible is scarce: two sources in the whole pack, both Rare.
 - Armor erodes under repeated hits.
 - Weak/Debilitate package is defensive and lacks native Vulnerable.
 - Several premium cards become weaker if draw order prevents proper Cylinder setup.
@@ -202,20 +203,36 @@ Design purpose:
 
 ---
 
-## 3.4 Dodge
-**Dodge X:** Prevent all damage from the next X individual enemy Attack hits this turn.
+## 3.4 Intangible
 
-At the start of your next turn, remove all remaining Dodge.
+The Gunslinger's premium defence is the base game's **Intangible**, not a keyword of its own.
 
-Important:
-- Dodge does **not** persist between turns.
-- Dodge stops one hit, not an entire multi-hit intent.
-- It does not prevent non-Attack HP loss.
-- This makes it a tactical "read the intent" defense rather than permanent Intangible/Buffer.
+### Why Dodge is gone (2026-09-02)
+Dodge read "prevent all damage from the next X individual enemy Attack hits this turn", cleared at
+the start of the owner's turn, and cost the mod a custom power, a branch in the damage patch and a
+pending-flag handshake so a stack was only spent when a hit really landed — all of it to make
+"hits" countable, which is the one thing the base game's damage pipeline does not hand you
+cleanly.
+
+Intangible is the game's own word for the same job, needs no keyword, no per-hit bookkeeping and
+no patch, and every player already knows what it does. The mod's damage patch is now Armor and
+nothing else.
+
+### What it costs
+Intangible answers an entire enemy turn rather than one hit, so it is worth several times what a
+Dodge stack was, and it is priced accordingly. Exactly two sources exist:
+
+| Source | Rarity | Grants |
+|---|---|---|
+| **Ghost Step** | Rare card, 1 Energy, Exhaust | 1 Intangible |
+| **Ghost Smoke** | Rare potion | 1 Intangible |
 
 Balance rule:
-- No unconditional Common card grants Dodge.
-- Repeatable Dodge should require rare engines, special ammo, or significant Energy.
+- No card below Rare grants Intangible, and no engine, relic or Round ever does.
+- One stack at a time. A card that grants 2 is a card that skips a boss turn twice.
+
+Everything that used to hand out cheap Dodge — Duck and Weave, Never Still, Dead Man's Bluff, the
+Smoke Round — now pays in Block and Armor instead, and most of them became **Gadgets** (§3.7).
 
 ---
 
@@ -246,14 +263,72 @@ To Self-Fire 1:
 Self-Fire damage:
 - Ignores Strength, Weak, Vulnerable, and Deadeye.
 - Is HP loss for balance purposes, not normal enemy Attack damage.
-- Is not reduced by Block, Armor, or Dodge unless future testing explicitly changes that rule.
+- Is not reduced by Block or Armor unless future testing explicitly changes that rule.
 
 The last line is enforced by the damage patch, which now skips anything flagged `Unpowered` —
-the flag every self-inflicted cost in this character carries. Before that, holding a single Dodge
-made Russian Roulette's Self-Fire, Grit Teeth's HP cost and the Black Powder Round's recoil all
-free, which quietly removed the risk from every risk card in the set.
+the flag every self-inflicted cost in this character carries. Before that, a defensive power on
+the Gunslinger made Russian Roulette's Self-Fire, Grit Teeth's HP cost and the Black Powder
+Round's recoil all free, which quietly removed the risk from every risk card in the set.
 
 This creates a clean Russian Roulette ruleset.
+
+---
+
+## 3.7 Gadgets
+
+A **Gadget** is a card that uses no ammunition: it never Loads, Fires, Cycles or Spins.
+
+### Why they exist (2026-09-02)
+The character shipped with one axis. Put Rounds in, take Rounds out — every card in the set sat
+somewhere on that line, so a hand with no ammunition card *and* no Fire card did nothing at all,
+and a draft that missed the cartridge commons had no second plan. The alternative archetypes the
+plan lists (Weak/Debilitate, Armor) were never really alternatives: they were riders on cards that
+still wanted the gun.
+
+Gadgets are the second plan. They pay in debuffs, Block and Armor, and they are worth exactly as
+much with the cylinder empty as with it full.
+
+Rules:
+- A Gadget touches no chamber. Reading state the cylinder owns is fine — Bear Trap asks how much
+  Armor you hold — but a Gadget that Loads is a cartridge card with the wrong word on it, and the
+  archetype stops meaning anything the moment one ships.
+- Gadget-ness is a property of the card, not a cost or a keyword the player pays for. Payoff cards
+  count Gadgets played; nothing consumes them.
+- The word appears on the card so the hover tip is reachable.
+
+### The package
+
+| Rarity | Card | Type | Cost | Effect |
+|---|---|---|---:|---|
+| Common | **Pistol Whip** | Attack | 1 | Deal 9 damage. *(retagged)* |
+| Common | **Shoulder Shot** | Attack | 1 | Deal 7 damage. Gain 4 Block. *(retagged)* |
+| Common | **Gut Shot** | Attack | 1 | Deal 8 damage; 4 more if the enemy is Weak. *(retagged)* |
+| Common | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. *(retagged)* |
+| Common | **Pocket Sand** | Skill | 1 | Apply 2 Weak. *(retagged)* |
+| Common | **Blinding Powder** | Skill | 1 | Apply 1 Weak to ALL enemies. Gain 3 Block. |
+| Common | **Bear Trap** | Attack | 1 | Deal 6 damage and apply 1 Weak. If you have Armor, deal 4 more. |
+| Common | **Tripwire** | Skill | 0 | Apply 1 Weak. Gain 1 Armor. Exhaust. |
+| Uncommon | **Cold Read** | Skill | 1 | Apply 1 Weak and 1 Debilitate. Exhaust. *(retagged)* |
+| Uncommon | **Under the Duster** | Skill | 1 | Gain 3 Armor. *(retagged)* |
+| Uncommon | **Grit Teeth** | Skill | 1 | Lose 2 HP. Gain 10 Block and 2 Armor. *(retagged)* |
+| Uncommon | **Duck and Weave** | Skill | 2 | Gain 3 Armor, then Block equal to twice your Armor. Exhaust. *(rebuilt)* |
+| Uncommon | **Smoke Bomb** | Skill | 1 | Gain 6 Block. Apply 1 Weak to ALL enemies. |
+| Uncommon | **Field Kit** | Skill | 1 | Gain 2 Armor. Draw 1 card. |
+| Uncommon | **Scattergun Shell** | Attack | 2 | Deal 8 damage to ALL enemies. Apply 1 Weak to ALL enemies. |
+| Uncommon | **Tinker's Kit** | Power | 1 | The first Gadget you play each turn, draw 1 card. *(not itself a Gadget)* |
+| Rare | **Never Still** | Skill | 1 | Gain 8 Block. Next turn, gain 1 Energy and draw 1. Exhaust. *(rebuilt)* |
+| Rare | **Gadgeteer** | Power | 2 | Whenever you play a Gadget, gain 1 Armor. *(not itself a Gadget)* |
+
+Tinker's Kit and Gadgeteer are deliberately not Gadgets themselves: a Power that counted its own
+play would make the very first trigger an ordering question nobody should have to reason about.
+
+### Balance watchlist
+- Tripwire is free and Gadgeteer pays per Gadget, so a hand of zero-cost Gadgets is the loop to
+  watch. Tripwire Exhausts for exactly that reason.
+- Duck and Weave reads Armor *after* its own Armor lands, so its floor is the printed value
+  doubled and its ceiling is whatever the deck has stacked. Watch it alongside Iron Will.
+- The archetype's damage ceiling is meant to be low. If a pure Gadget deck starts closing fights
+  faster than a gun deck, cut Scattergun Shell rather than the defensive cards.
 
 ---
 
@@ -266,7 +341,7 @@ This creates a clean Russian Roulette ruleset.
 | **Crippling Round** | Deal 5 damage. Apply 1 Weak. | Control. |
 | **Piercing Round** | Deal 8 damage. This Round ignores Block. | Anti-Block. |
 | **Guard Round** | Deal 5 damage. Gain 5 Block. | Hybrid defense. |
-| **Smoke Round** | Deal 3 damage. Gain 1 Dodge. | Premium tactical defense. |
+| **Smoke Round** | Deal 3 damage. Gain 4 Block and 1 Armor. | Layered defensive ammunition. |
 | **Rending Round** | Deal 6 damage. Apply 1 Debilitate. | Rare debuff ammunition. |
 | **Black Powder Round** | Deal 16 damage. After firing it at an enemy, lose 3 HP. | Rare risk damage. |
 | **Dead Man's Round** | Deal 24 damage. | Russian Roulette payload. |
@@ -443,16 +518,16 @@ rarity, not these.
 | 18 | **Custom Load** | Skill | 1 | Choose Heavy, Crippling, or Guard. Load 1 of that Round and 1 Lead Round. Gain 3 Block. | Load 2 of the chosen Round and 1 Lead Round. | Ammo choice |
 | 19 | **Piercing Cartridge** | Skill | 1 | Load 2 Piercing Rounds. Gain 2 Block. | Load 3 Piercing Rounds. | Piercing ammo |
 | 20 | **Guard Cartridge** | Skill | 1 | Load 2 Guard Rounds. Gain 3 Block. | Load 3 Guard Rounds. | Guard ammo |
-| 21 | **Smoke Cartridge** | Skill | 1 | Load 1 Smoke Round. Gain 4 Block. | Gain 6 Block. | Dodge ammo |
+| 21 | **Smoke Cartridge** | Skill | 1 | Load 1 Smoke Round. Gain 4 Block. | Gain 6 Block. | Defensive ammo |
 | 22 | **Re-Cock** | Skill | 0 | Cycle 1. Gain 2 Deadeye. | Gain 4 Deadeye. | Cycle |
 | 23 | **Check the Cylinder** | Skill | 0 | Cycle up to 2. If the current chamber is loaded, draw 1 card. Exhaust. | Cycle up to 3. | Selection |
 | 24 | **Stacked Chamber** | Skill | 1 | The next Round you Load is placed under the hammer. Gain 5 Deadeye. | Gain 8 Deadeye. | Setup |
 | 25 | **Under the Duster** | Skill | 1 | Gain 3 Armor. | Gain 4 Armor. | Armor |
 | 26 | **Hunker Down** | Skill | 1 | Gain 8 Block. If you have not Fired this turn, gain 4 more Block and Load 1 Lead Round. | Gain 10 Block; conditional Block becomes 5. | Block |
-| 27 | **Duck and Weave** | Skill | 2 | Gain 1 Dodge. Exhaust. | Also gain 6 Block. | Dodge |
+| 27 | **Duck and Weave** | Skill | 2 | Gain 3 Armor, then gain Block equal to twice your Armor. Exhaust. *Gadget.* | Gain 4 Armor. | Armor payoff |
 | 28 | **Dive for Cover** | Skill | 1 | If any enemy intends to Attack, gain 9 Block. If total incoming Attack damage is 20 or more, gain 1 Armor. If no enemy intends to Attack, Load 2 Lead Rounds instead. | Gain 12 Block; gain 2 Armor at the threshold. | Intent defense |
 | 29 | **Grit Teeth** | Skill | 1 | Lose 2 HP. Gain 10 Block and 2 Armor. | Gain 13 Block and 2 Armor. | Risk defense |
-| 30 | **Dead Man's Bluff** | Skill | 1 | Spin. If the current chamber is empty, gain 1 Dodge and Load 1 Lead Round; otherwise gain 9 Block. Exhaust. | Loaded result gives 12 Block. | Spin defense |
+| 30 | **Dead Man's Bluff** | Skill | 1 | Spin. If the current chamber is empty, gain 2 Armor and Load 1 Lead Round; otherwise gain 9 Block. Exhaust. | Loaded result gives 12 Block. | Spin defense |
 | 31 | **Cold Read** | Skill | 1 | Apply 1 Weak and 1 Debilitate. Exhaust. | Apply 2 Weak and 1 Debilitate. | Debuff control |
 | 32 | **Gunfighter's Rhythm** | Power | 1 | Every 6th Round you Fire, draw 1 card. | Draw 2 cards instead. | Cylinder cadence |
 | 33 | **Hard Leather** | Power | 1 | The first time each turn Armor prevents damage, gain 3 Block next turn. | Gain 5 Block next turn. | Armor engine |
@@ -476,9 +551,9 @@ rarity, not these.
 | 10 | **Russian Roulette** | Skill | 0 | Load 1 Dead Man's Round into a random empty chamber. Spin, then Self-Fire 1. If it Clicks, gain 1 Energy and draw 2 cards. Exhaust. | The Dead Man's Round deals 30 instead of 24 damage. | Signature gamble |
 | 11 | **Stack the Cylinder** | Skill | 1 | Rearrange all chambers in any order and choose the hammer position. Exhaust. | Costs 0. | Perfect control |
 | 12 | **Perfect Reload** | Skill | 2 | Choose Lead, Heavy, Crippling, Guard, or Piercing. Fill all empty chambers with that Round. Gain 5 Block. Exhaust. | Costs 1. | Ammo capstone |
-| 13 | **Ghost Step** | Skill | 2 | Gain 2 Dodge. Exhaust. | Costs 1. | Dodge capstone |
+| 13 | **Ghost Step** | Skill | 1 | Gain 1 Intangible. Exhaust. | Costs 0. | Defensive capstone |
 | 14 | **Armored Longcoat** | Skill | 2 | Gain 5 Armor. Exhaust. | Gain 7 Armor. | Armor capstone |
-| 15 | **Never Still** | Skill | 1 | Gain 1 Dodge. Next turn, gain 1 Energy and draw 1 card. Exhaust. | Draw 2 cards next turn. | Tempo defense |
+| 15 | **Never Still** | Skill | 1 | Gain 8 Block. Next turn, gain 1 Energy and draw 1 card. Exhaust. *Gadget.* | Draw 2 cards next turn. | Tempo defense |
 | 16 | **Deadeye Focus** | Skill | 1 | Gain 12 Deadeye. Exhaust. | Gain 16 Deadeye. | Shot capstone |
 | 17 | **Sixth Sense** | Skill | 1 | Choose a chamber. If loaded, move it under the hammer and draw 2 cards. If empty, gain 1 Armor. Exhaust. | Draw 3 if loaded; if empty, also gain 5 Block. | Precision defense |
 | 18 | **Rending Cartridge** | Skill | 1 | Load 2 Rending Rounds. Exhaust. | Load 3 Rending Rounds. | Debilitate ammo |
@@ -519,7 +594,7 @@ section 4 for the full list and the two rules that keep it fair.
 |---|---|---|
 | Common | **Speedloader Flask** | Load 3 Lead Rounds into empty chambers. |
 | Uncommon | **Sightline Tonic** | Gain 10 Deadeye. |
-| Rare | **Ghost Smoke** | Gain 2 Dodge this turn. |
+| Rare | **Ghost Smoke** | Gain 1 Intangible. |
 
 ---
 
@@ -533,7 +608,7 @@ These are outside the 82 normal-card pool, matching the current STS2 pattern.
 | **Suppressive Volley** | Attack | 2 | Fire 3. Apply 1 Weak to ALL enemies. | Apply 2 Weak. |
 | **Hand Me That** | Skill | 1 | Another player draws 2 cards. Load 2 Lead Rounds. | They draw 3 cards. |
 | **Softened Up** | Skill | 1 | Apply 1 Debilitate to ALL enemies. Exhaust. | Apply 2 Debilitate. |
-| **Stand Together** | Skill | 2 | ALL players gain 8 Block. You gain 1 Dodge. | ALL players gain 11 Block. |
+| **Ride Together** | Power | 2 | The first time each turn each other player plays an Attack, Load 1 Lead Round. | Also gain 2 Deadeye. |
 
 Multiplayer note:
 Debilitate is particularly potent in co-op because teammates can exploit doubled Weak/Vulnerable effects, so Softened Up should be watched closely in four-player balance tests.
@@ -625,21 +700,22 @@ Fast multi-hit enemies erode Armor quickly.
 
 ---
 
-## E. Smoke / Evasion
-**Core:** Smoke Rounds + Dodge + intent-reading.
+## E. Gadgets
+**Core:** Debuffs, Block and Armor from cards that never touch the gun.
 
 Key cards:
-- Smoke Cartridge
-- Duck and Weave
-- Dead Man's Bluff
-- Ghost Step
-- Never Still
+- Pocket Sand, Blinding Powder, Tripwire, Bear Trap
+- Smoke Bomb, Field Kit, Scattergun Shell
+- Under the Duster, Grit Teeth, Duck and Weave
+- Tinker's Kit, Gadgeteer
 
 Play pattern:
-Use Dodge on the exact turn it matters; do not try to bank it.
+Weak the room, stack Armor, and let Gadgeteer turn a hand of cheap debuffs into a wall. The gun is
+a damage option, not a requirement — the deck functions on an empty cylinder.
 
 Failure mode:
-Dodge is inefficient against many small hits and useless against non-Attack HP loss.
+Low ceiling on damage. Without Scattergun Shell or a few Rounds to Fire, the deck out-defends
+every fight and then cannot close one.
 
 ---
 
@@ -758,9 +834,9 @@ clearest case: its Load lives in the branch where the card used to do nothing at
 the floor without touching the ceiling.
 
 Left alone deliberately: **Grit Teeth** (already the densest defensive uncommon, and paying for a
-Round in HP changes what the card is), **Duck and Weave** and **Ghost Step** (Dodge is premium and
-should not accumulate riders), and **Rending Cartridge** / **Lucky Shot** (a Rare debuff engine and
-a 0-cost gamble, both already at their ceiling).
+Round in HP changes what the card is), **Ghost Step** (Intangible is premium and should not
+accumulate riders), and **Rending Cartridge** / **Lucky Shot** (a Rare debuff engine and a 0-cost
+gamble, both already at their ceiling).
 
 ## 13.3 Armor
 Treat 1 Armor as approximately:
@@ -775,8 +851,8 @@ Watch for:
 
 If Armor is too strong, adjust card values before changing the keyword.
 
-**Implementation note — why Armor used to evaporate.** Both Armor and Dodge reduce damage from a
-Harmony postfix on `Hook.ModifyDamage`, which is the only hook that sees an incoming hit before it
+**Implementation note — why Armor used to evaporate.** Armor reduces damage from a Harmony
+postfix on `Hook.ModifyDamage`, which is the only hook that sees an incoming hit before it
 lands. That hook answers the question "how big would this hit be", and the game asks it more than
 once per hit — the intent forecast above each enemy asks it too. The first implementation spent a
 stack of Armor every time it was asked, so a stack drained to nothing before anything had swung,
@@ -784,18 +860,17 @@ which read in play as "Armor wears off immediately".
 
 The reduction and the spend are now separate. The patch only ever reduces, which makes it
 idempotent — the property the hook actually requires — and raises a pending flag on the power.
-`ArmorPower.BeforeDamageReceived` and `DodgePower.BeforeDamageReceived` spend that flag; those
-hooks run once, for damage that is really being dealt. `Hard Leather` is announced from the same
+`ArmorPower.BeforeDamageReceived` spends that flag; that hook runs once, for damage that is
+really being dealt. `Hard Leather` is announced from the same
 place, so it can no longer be triggered by a forecast redraw either.
 
-## 13.4 Dodge
-Dodge is intentionally premium.
+## 13.4 Intangible
+Intangible is intentionally scarce — see §3.4 for the full rule.
 
 Guardrails:
-- No repeatable unconditional Common Dodge.
-- 1 Dodge at Uncommon generally costs 2 Energy, Exhausts, or is conditional.
-- 2 Dodge belongs at Rare and usually Exhausts.
-- Dodge expires at the start of the Gunslinger's turn, so it cannot be stockpiled.
+- Rare only, one stack, and never from an engine, relic or Round.
+- Both sources Exhaust or are consumed, so it can never be looped.
+- If it proves too strong, the fix is removing a source, not shaving the stack.
 
 ## 13.5 Weak / Debilitate
 Weak is a major class strength.
@@ -877,7 +952,7 @@ Test draft buckets separately:
 2. Heavy + Deadeye.
 3. Weak/Debilitate.
 4. Armor.
-5. Dodge/Smoke.
+5. Gadgets (no-cylinder).
 6. Empty-cylinder.
 7. Spin/gamble.
 
@@ -885,7 +960,7 @@ Look for:
 - "Parasitic" cards that require too many other cards to function.
 - Infinite loops involving 0-cost Spin/Cycle/draw.
 - Fire 6 turns gaining too much from Strength.
-- Smoke Round loops producing multiple Dodge too cheaply.
+- Gadgeteer plus zero-cost Gadgets producing Armor faster than a fight can erode it.
 
 ## Phase 3 — Defense Stress Tests
 Fight patterns:
@@ -900,7 +975,7 @@ Fight patterns:
 Desired outcome:
 - Block is the reliable baseline.
 - Armor is a medium-term efficiency layer.
-- Dodge is the precise answer to a specific hit.
+- Intangible is the rare, complete answer to one enemy turn.
 - No one defensive mechanic should solve all three attack profiles.
 
 ## Phase 4 — Russian Roulette
@@ -919,7 +994,7 @@ Important rule:
 Primary watchlist:
 - Weak + Debilitate trivializing bosses.
 - Armor invalidating chip damage.
-- Dodge invalidating single-hit elites.
+- Intangible invalidating single-turn boss burst.
 - Perfect Reload + High Noon becoming a one-card two-turn kill package.
 - Sixth Shot creating Energy-positive loops.
 - Quickdraw Legend making 3-cost salvo cards effectively free too often.
@@ -931,7 +1006,7 @@ Primary watchlist:
 If the class is too strong:
 1. Lead 6 → 5.
 2. Old Iron starts with 2 Lead instead of 3.
-3. Smoke Round grants 6 Block instead of Dodge.
+3. Gadgeteer grants Block instead of Armor.
 4. Armor cards lose 1 stack across the board.
 5. High Noon remains 3 Energy when upgraded; upgrade adds damage instead.
 6. Dead Man's Round 24 → 20.
@@ -960,8 +1035,8 @@ When adding/replacing cards, preserve these rules:
 3. **Randomness needs correction tools.**  
    Spin is fun because Cycle, Called Shot, Stack the Cylinder, and Loaded Dice exist.
 
-4. **Dodge must remain tactical.**  
-   Do not turn it into bankable Intangible.
+4. **Intangible must stay Rare and singular.**  
+   Two sources, one stack each. Nothing repeatable ever grants it.
 
 5. **Armor is not Plating.**  
    Armor reduces leaking HP damage; Plating creates Block.

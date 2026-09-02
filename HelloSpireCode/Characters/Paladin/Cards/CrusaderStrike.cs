@@ -10,7 +10,10 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Deal 10, apply 1 Vulnerable. The crusader leads the charge and opens the wound.</summary>
+/// <summary>
+/// Deal 10, apply 1 Vulnerable. The crusader leads the charge and opens the wound. Won the
+/// A/B against Condemn: the honest rate common every deck drafts. Upgrade: 13 and 2 Vulnerable.
+/// </summary>
 public sealed class CrusaderStrike() : PaladinCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10m, ValueProp.Move), new DynamicVar("Vulnerable", 1m)];
@@ -26,5 +29,9 @@ public sealed class CrusaderStrike() : PaladinCard(1, CardType.Attack, CardRarit
                 DynamicVars["Vulnerable"].BaseValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars["Vulnerable"].UpgradeValueBy(1m);
+    }
 }

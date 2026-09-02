@@ -60,7 +60,7 @@ kits behave like one set.
 
 1. **Allies receive generic things; you receive character-specific things.** A card may give an
    ally Block, HP, Energy, cards, or a damage bonus. It may **never** give an ally Faith, Armor,
-   Dodge, Deadeye, Potency, a Round, or a Potion Slot. Cross-character keyword contamination makes
+   Deadeye, Potency, a Round, or a Potion Slot. Cross-character keyword contamination makes
    every card a compatibility matrix; keeping the gift generic means each card has one behaviour
    regardless of who else is in the lobby.
 

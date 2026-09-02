@@ -1,26 +1,21 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>Grants Seal OfTheMartyr.</summary>
-public sealed class SealOfTheMartyr() : PaladinCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+/// <summary>
+/// Gain Amount Thorns this turn, bank the seal. Judge: ALL enemies lose 5 Strength this turn.
+/// The Prot emergency -- temp Thorns now (permanent Thorns never ticked down: the same
+/// cycle-snowball as the old Strength seals); a parry you time against the multi-hit turn.
+/// </summary>
+public sealed class SealOfTheMartyr() : SealCard(1, CardRarity.Rare, 3m)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 3m)];
-
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
     {
-        await PowerCmd.Apply<ThornsPower>(choiceContext, Owner.Creature,
-            DynamicVars["Amount"].BaseValue, Owner.Creature, this);
-        await Seals.Grant<SealOfTheMartyrPower>(choiceContext, Owner, DynamicVars["Amount"].BaseValue, this);
+        await PowerCmd.Apply<SealOfTheMartyrThornsPower>(ctx, Owner.Creature, amount, Owner.Creature, this);
+        await Seals.Grant<SealOfTheMartyrPower>(ctx, Owner, 1m, this);
     }
-
-    protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
 }

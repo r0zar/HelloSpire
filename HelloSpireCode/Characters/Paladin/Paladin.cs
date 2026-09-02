@@ -24,8 +24,9 @@ public class Paladin : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 75;
 
-    // The starter: 4 Strike / 4 Defend / 1 Mend / 1 Judgment. The Paladin is being built
-    // one card at a time from here; every addition is a deliberate decision, not a batch.
+    // The starter: 4 Strike / 4 Defend / 1 Smite / 1 Prayer. No heal, no Judge in the kit --
+    // the deck teaches tanky (Weak + Plating) + card rhythm (draw/discard); seals AND judging
+    // are opt-in from the draft. See design/paladin-rework-2026-08-31.md.
     public override IEnumerable<CardModel> StartingDeck =>
     [
         ModelDb.Card<StrikePaladin>(),
@@ -36,11 +37,11 @@ public class Paladin : PlaceholderCharacterModel
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<DefendPaladin>(),
         ModelDb.Card<DefendPaladin>(),
-        ModelDb.Card<Mend>(),
-        ModelDb.Card<Judgment>(),
+        ModelDb.Card<Smite>(),
+        ModelDb.Card<Prayer>(),
     ];
 
-    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<HolyBook>()];
+    public override IReadOnlyList<RelicModel> StartingRelics => [ModelDb.Relic<ConsecratedPlate>()];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<PaladinCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<PaladinRelicPool>();
