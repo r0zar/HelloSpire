@@ -14,11 +14,11 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // Potion access, plus the two "empty your Hand" capstones (Heavy Transmute, Perfect Solvent).
 
 /// <summary>
-/// Brew a real Rare Potion.
+/// Brew a real Rare Potion -- and a real one, not Volatile: it survives past the end of combat
+/// like <see cref="TheGreatWork"/>'s Philosopher's Stone.
 ///
 /// The base game's Colorless card, adopted into this pool because the name and the mechanic are
-/// too exact to ignore. Volatile like every other Brew -- see <see cref="TheGreatWork"/> for the
-/// one Potion in the class that genuinely survives combat.
+/// too exact to ignore.
 /// </summary>
 public sealed class Alchemize() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
@@ -29,7 +29,7 @@ public sealed class Alchemize() : AlchemistCard(1, CardType.Skill, CardRarity.Ra
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await Belt.BrewRandom(ctx, Lab, PotionRarity.Rare);
+        await Belt.BrewRandom(ctx, Lab, PotionRarity.Rare, volatilePotion: false);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);

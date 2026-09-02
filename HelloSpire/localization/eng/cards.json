@@ -519,7 +519,7 @@
   "HELLOSPIRE-CATALYTIC_EXPLOSION.title": "Catalytic Explosion",
   "HELLOSPIRE-CATALYTIC_EXPLOSION.description": "Deal {Damage:diff()} damage. [gold]Infuse[/gold] {PerType:diff()} Damage for each different Potion type you've used this combat.",
   "HELLOSPIRE-ALCHEMIZE.title": "Alchemize",
-  "HELLOSPIRE-ALCHEMIZE.description": "[gold]Brew[/gold] a Rare Potion.",
+  "HELLOSPIRE-ALCHEMIZE.description": "[gold]Brew[/gold] a Rare Potion. It is not [gold]Volatile[/gold].",
   "HELLOSPIRE-HEAVY_TRANSMUTE.title": "Heavy Transmute",
   "HELLOSPIRE-HEAVY_TRANSMUTE.description": "Exhaust every other card in your hand: [gold]Infuse[/gold] {PerCard:diff()} Damage for each.",
   "HELLOSPIRE-MAGNUM_OPUS.title": "Magnum Opus",
