@@ -147,10 +147,10 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 }
 
 /// <summary>
-/// A real, permanent, unrestricted Potion Slot -- no cost gate, just the Energy and the Exhaust.
+/// A real, permanent Potion Slot -- no cost gate, just the Energy and the Exhaust.
 ///
-/// Deliberately asymmetric with Extra Vial: cheap slots are temporary and can only hold Volatile
-/// Potions; this is the one path to a real one.
+/// Asymmetric with Extra Vial: cheap Slots are temporary, this one is not. Both accept any
+/// Potion equally now; the difference is purely how long the Slot lasts.
 /// </summary>
 public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {

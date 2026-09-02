@@ -463,7 +463,7 @@
   "HELLOSPIRE-SPARE_FLASK.title": "Spare Flask",
   "HELLOSPIRE-SPARE_FLASK.description": "Gain {Block:diff()} [gold]Block[/gold]. [gold]Brew[/gold] a random Potion.",
   "HELLOSPIRE-EXTRA_VIAL.title": "Extra Vial",
-  "HELLOSPIRE-EXTRA_VIAL.description": "Gain {Slots} extra Potion Slot this combat. [gold]Volatile[/gold] Potions only.",
+  "HELLOSPIRE-EXTRA_VIAL.description": "Gain {Slots} extra Potion Slot this combat.",
   "HELLOSPIRE-STABILIZE.title": "Stabilize",
   "HELLOSPIRE-STABILIZE.description": "Remove [gold]Volatile[/gold] from a Potion.",
   "HELLOSPIRE-CATALYTIC_WASH.title": "Catalytic Wash",

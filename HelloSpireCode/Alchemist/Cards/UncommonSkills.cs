@@ -60,11 +60,10 @@ public sealed class SpareFlask() : AlchemistCard(1, CardType.Skill, CardRarity.U
 }
 
 /// <summary>
-/// One more Potion Slot for this combat.
-///
-/// The Slot is Volatile-only, which is the entire reason it is temporary — a Volatile Potion is
-/// removed at combat end anyway, so no separate expiry rule is needed. It also means this can
-/// never be used to bank a found Rare Potion.
+/// One more Potion Slot for this combat, for general use -- any Potion, Volatile or real, can sit
+/// in it. A real Potion still parked there when the Slot is taken back at combat end is simply
+/// relocated into a remaining real Slot (see <see cref="PotionSlotShrinkPatch"/>), never lost, so
+/// there is no restriction to enforce.
 /// </summary>
 public sealed class ExtraVial() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
@@ -72,8 +71,7 @@ public sealed class ExtraVial() : AlchemistCard(1, CardType.Skill, CardRarity.Un
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.ThePotionBelt), Tip(AlchemistTips.Volatile)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.ThePotionBelt)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await Belt.GrantTemporarySlots(ctx, Lab, DynamicVars["Slots"].IntValue);
