@@ -1,31 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Whenever an enemy attack hits you, gain 2 Plating (3 upgraded). Hardens under fire:
-/// multi-hit enemies feed it, and every stack feeds Shield Bash. Nerfed from 3/5 per hit --
-/// the flurry snowball outgrew the rare-power band.
+/// Power: at the start of your turn, deal damage equal to your Plating to ALL enemies.
+/// The Prot payoff rare -- the wall itself goes on crusade. Reworked from Plating-per-hit,
+/// which played better in non-Prot decks than Prot ones. Upgrade: costs 1.
 /// </summary>
 public sealed class ArdentDefender() : PaladinCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Plating", 2m)];
-
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        await PowerCmd.Apply<ArdentDefenderPower>(choiceContext, Owner.Creature,
-            DynamicVars["Plating"].BaseValue, Owner.Creature, this);
+        await PowerCmd.Apply<ArdentDefenderPower>(choiceContext, Owner.Creature, 1m, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Plating"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
