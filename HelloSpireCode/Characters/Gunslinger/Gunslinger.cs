@@ -5,6 +5,8 @@ using HelloSpire.HelloSpireCode.Extensions;
 using HelloSpire.HelloSpireCode.Gunslinger.Cards;
 using HelloSpire.HelloSpireCode.Gunslinger.Relics;
 using GunslingerCard = HelloSpire.HelloSpireCode.Gunslinger.Cards.GunslingerCard;
+using MegaCrit.Sts2.Core.Animation;
+using MegaCrit.Sts2.Core.Bindings.MegaSpine;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -17,7 +19,7 @@ namespace HelloSpire.HelloSpireCode.Characters;
 ///
 /// The gun is the whole character. Ammunition has to be loaded before it can be spent, the order of
 /// the chambers is knowable and manipulable, and almost every card either fills the cylinder, spends
-/// it, or rearranges what is coming next. Everything else — Deadeye, Armor, Dodge, Weak — exists to
+/// it, or rearranges what is coming next. Everything else — Deadeye, Armor, Weak, Gadgets — exists to
 /// give the player something to do with the two or three chambers they can see ahead.
 /// </summary>
 public class Gunslinger : PlaceholderCharacterModel
@@ -55,6 +57,39 @@ public class Gunslinger : PlaceholderCharacterModel
     public override CardPoolModel CardPool => ModelDb.CardPool<GunslingerCardPool>();
     public override RelicPoolModel RelicPool => ModelDb.RelicPool<GunslingerRelicPool>();
     public override PotionPoolModel PotionPool => ModelDb.PotionPool<GunslingerPotionPool>();
+
+    /// <summary>
+    /// The Silent's animator, verbatim: the Gunslinger rides the Silent rig now (spine/gunslinger/
+    /// holds the silent skeleton; CharacterSkins repaints it), and the animator must map triggers
+    /// onto animation names that skeleton actually has -- including "Shiv", which Revolver fires
+    /// on every shot. The inherited Ironclad-shaped animator referenced attack_heavy instead.
+    /// </summary>
+    public override CreatureAnimator GenerateAnimator(MegaSprite controller)
+    {
+        var idle = new AnimState("idle_loop", isLooping: true);
+        var cast = new AnimState("cast");
+        var attack = new AnimState("attack");
+        var hurt = new AnimState("hurt");
+        var die = new AnimState("die");
+        var shiv = new AnimState("shiv");
+        var relaxed = new AnimState("relaxed_loop", isLooping: true);
+        cast.NextState = idle;
+        attack.NextState = idle;
+        hurt.NextState = idle;
+        shiv.NextState = idle;
+        relaxed.AddBranch("Idle", idle);
+
+        var animator = new CreatureAnimator(idle, controller);
+        animator.AddAnyState("Idle", idle);
+        animator.AddAnyState("Dead", die);
+        animator.AddAnyState("Hit", hurt);
+        animator.AddAnyState("Attack", attack);
+        animator.AddAnyState("Cast", cast);
+        animator.AddAnyState("Shiv", shiv);
+        animator.AddAnyState("Relaxed", relaxed);
+        animator.AddAnyState("PowerUp", cast);
+        return animator;
+    }
 
     /*  PlaceholderCharacterModel falls back to base-game assets for anything not overridden here.
         Art lives in HelloSpire/images/charui/ — swap these files rather than these paths. */

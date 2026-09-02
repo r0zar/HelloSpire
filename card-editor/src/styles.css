@@ -226,12 +226,14 @@ main {
   background: var(--panel-alt);
   border: 1px solid var(--border);
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   display: grid;
   place-items: center;
   color: var(--accent);
   flex: none;
+  font-size: 17px;
+  font-weight: bold;
 }
 
 .cf-type {
@@ -278,6 +280,7 @@ main {
 .cf-name {
   color: var(--rarity-color, var(--text));
   font-weight: bold;
+  font-size: 15px;
 }
 
 .cf-name--untranslated {
@@ -286,8 +289,8 @@ main {
 }
 
 .cf-text {
-  color: var(--muted);
-  font-size: 11px;
+  color: var(--text);
+  font-size: 14px;
   line-height: 1.45;
   white-space: pre-wrap;
 }

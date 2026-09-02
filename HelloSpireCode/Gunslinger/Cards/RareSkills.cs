@@ -91,17 +91,30 @@ public sealed class PerfectReload() : GunslingerCard(2, CardType.Skill, CardRari
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Gain Dodge. Two whole hits, gone.</summary>
+/// <summary>
+/// Gain 1 Intangible: a whole enemy turn reduced to a scratch.
+///
+/// This is the character's premium defence and, with the Ghost Smoke potion, one of only two
+/// sources of it in the pack. It used to read "gain 2 Dodge" — two individual hits prevented,
+/// gone at the start of your next turn — and the whole Dodge keyword existed to make that
+/// countable. Intangible is the base game's own word for the same idea and needs no keyword, no
+/// per-hit bookkeeping and no branch in the damage patch, which is the entire reason for the
+/// swap.
+///
+/// One stack, not two, and the upgrade buys the Energy rather than a second stack. Intangible is
+/// worth several times what a Dodge was, so the card is priced as a rare panic button that
+/// answers one enemy turn completely, not as something an engine hands out.
+/// </summary>
 public sealed class GhostStep() : GunslingerCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DodgePower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<IntangiblePower>(1m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<DodgePower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<IntangiblePower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
-        await GunslingerEffects.GainDodge(ctx, Gun, DynamicVars["DodgePower"].BaseValue);
+        await GunslingerEffects.GainIntangible(ctx, Gun, DynamicVars["IntangiblePower"].BaseValue);
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
@@ -121,20 +134,28 @@ public sealed class ArmoredLongcoat() : GunslingerCard(2, CardType.Power, CardRa
     protected override void OnUpgrade() => DynamicVars["ArmorPower"].UpgradeValueBy(2m);
 }
 
-/// <summary>Slip one hit now, and come back next turn with the tempo to do something about it.</summary>
-public sealed class NeverStill() : GunslingerCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+/// <summary>
+/// Cover this turn, and come back next turn with the tempo to do something about it.
+///
+/// The card's shape has not changed — buy the enemy turn, get paid at the start of yours — only
+/// the currency has. It used to spend a Dodge on the buying half, and there is no Dodge any more;
+/// Block does the same job here without pulling Intangible, which is Rare-and-scarce by design,
+/// into a card whose real payload is the Energy.
+/// </summary>
+public sealed class NeverStill() : GunslingerCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self), IGadget
 {
+    public override bool GainsBlock => true;
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<DodgePower>(1m), new EnergyVar(1), new CardsVar(1)];
+        [new BlockVar(8m, ValueProp.Move), new EnergyVar(1), new CardsVar(1)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<DodgePower>(), EnergyHoverTip];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [EnergyHoverTip, Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await GunslingerEffects.GainDodge(ctx, Gun, DynamicVars["DodgePower"].BaseValue);
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
 
         var power = await PowerCmd.Apply<NeverStillPower>(ctx, Owner.Creature, DynamicVars.Energy.BaseValue, Owner.Creature, this);
 

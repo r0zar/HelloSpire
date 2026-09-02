@@ -172,6 +172,12 @@ function renderControls(): void {
         ),
       ),
     );
+    controlsEl.appendChild(
+      group("mode", [
+        chip("singleplayer", f.modes.has("singleplayer"), () => toggle(f.modes, "singleplayer")),
+        chip("multiplayer only", f.modes.has("multiplayer"), () => toggle(f.modes, "multiplayer")),
+      ]),
+    );
   } else {
     controlsEl.appendChild(
       group(
@@ -300,6 +306,15 @@ function field(label: string, control: HTMLElement, hint?: string): HTMLDivEleme
   return wrap;
 }
 
+/** Disable a control whose value is not written in this class. */
+function lock<T extends HTMLInputElement | HTMLSelectElement>(control: T, span: unknown): T {
+  if (span === null) {
+    control.disabled = true;
+    control.title = "inherited from the card's base class — edit it there";
+  }
+  return control;
+}
+
 function numberInput(value: number, onChange: (n: number) => void): HTMLInputElement {
   const i = el("input", "num");
   i.type = "number";
@@ -381,33 +396,52 @@ function renderCardPanel(card: CardRecord): void {
 
   const stats = el("div", "panel-section");
   stats.appendChild(el("h3", "", "stats"));
+
+  // A card on an intermediate base (the Paladin's Seals extend SealCard) does
+  // not write all four of these itself: the base bakes some in and shares them
+  // with every subclass. A null span is how the parser says so, and the control
+  // is locked rather than hidden — the value is still what the card has, it just
+  // is not this card's to change.
+  const inherited = `set by ${card.via ?? "its base"}`;
   stats.appendChild(
     field(
       "cost",
-      numberInput(card.cost, (n) => (patch["cost"] = n)),
-      "-1 is X",
+      lock(numberInput(card.cost, (n) => (patch["cost"] = n)), card.costSpan),
+      card.costSpan ? "-1 is X" : inherited,
     ),
   );
   stats.appendChild(
     field(
       "type",
-      selectInput(card.type, state.schema?.cardTypes ?? [], (s) => (patch["type"] = s)),
+      lock(
+        selectInput(card.type, state.schema?.cardTypes ?? [], (s) => (patch["type"] = s)),
+        card.typeSpan,
+      ),
+      card.typeSpan ? undefined : inherited,
     ),
   );
   stats.appendChild(
     field(
       "rarity",
-      selectInput(card.rarity, state.schema?.cardRarities ?? [], (s) => (patch["rarity"] = s)),
+      lock(
+        selectInput(card.rarity, state.schema?.cardRarities ?? [], (s) => (patch["rarity"] = s)),
+        card.raritySpan,
+      ),
+      card.raritySpan ? undefined : inherited,
     ),
   );
   stats.appendChild(
     field(
       "target",
-      selectInput(
-        card.target,
-        ["Self", "AnyEnemy", "AllEnemies", "RandomEnemy", "None", "AnyPlayer", "AllPlayers"],
-        (s) => (patch["target"] = s),
+      lock(
+        selectInput(
+          card.target,
+          ["Self", "AnyEnemy", "AllEnemies", "RandomEnemy", "None", "AnyPlayer", "AllPlayers"],
+          (s) => (patch["target"] = s),
+        ),
+        card.targetSpan,
       ),
+      card.targetSpan ? undefined : inherited,
     ),
   );
   panelEl.appendChild(stats);
@@ -434,7 +468,15 @@ function renderCardPanel(card: CardRecord): void {
         // writing a statement into OnUpgrade — a code change, not a number.
         upCell.appendChild(el("span", "no-upgrade", "—"));
       } else {
-        upCell.appendChild(numberInput(v.upgrade, (n) => (upgrades[v.name] = n)));
+        // An upgrade with no span is one the card inherits: the UpgradeValueBy
+        // lives in the base class and every card on that base shares it, so it
+        // shows its value but cannot be edited from here.
+        upCell.appendChild(
+          lock(
+            numberInput(v.upgrade, (n) => (upgrades[v.name] = n)),
+            v.upgradeSpan,
+          ),
+        );
       }
       row.appendChild(upCell);
 

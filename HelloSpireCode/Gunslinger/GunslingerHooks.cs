@@ -38,12 +38,6 @@ public interface IWeakListener
     Task OnWeakApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount);
 }
 
-/// <summary>Reacts to Dodge being gained.</summary>
-public interface IDodgeListener
-{
-    Task OnDodgeGained(PlayerChoiceContext ctx, GunContext gun, int amount);
-}
-
 /// <summary>Reacts to Armor absorbing part of a hit. Fired from the damage patch.</summary>
 public interface IArmorListener
 {
@@ -106,9 +100,6 @@ public static class GunslingerHooks
 
     public static Task NotifyWeakApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount) =>
         Dispatch<IWeakListener>(gun, listener => listener.OnWeakApplied(ctx, gun, target, amount));
-
-    public static Task NotifyDodgeGained(PlayerChoiceContext ctx, GunContext gun, int amount) =>
-        Dispatch<IDodgeListener>(gun, listener => listener.OnDodgeGained(ctx, gun, amount));
 
     public static Task NotifyArmorGained(PlayerChoiceContext ctx, GunContext gun, int amount) =>
         Dispatch<IArmorGainListener>(gun, listener => listener.OnArmorGained(ctx, gun, amount));

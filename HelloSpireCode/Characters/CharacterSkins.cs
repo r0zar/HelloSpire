@@ -59,7 +59,11 @@ internal static class CharacterSkins
     [HarmonyPostfix]
     private static void Reskin(Creature __instance, NCreatureVisuals? __result)
     {
-        if (__result == null || MaterialFor(__instance.Player?.Character) is not { } material) return;
+        if (__result == null) return;
+        // A character with authored spine assets (CharacterSkeletons) renders its own art;
+        // palette-remapping it would wreck the authored colors.
+        if (CharacterSkeletons.SkeletonFor(__instance.Player?.Character) != null) return;
+        if (MaterialFor(__instance.Player?.Character) is not { } material) return;
         var body = __result.GetNodeOrNull<Node2D>("%Visuals");
         if (body == null || body.GetClass() != "SpineSprite") return;
         body.Call("set_normal_material", material);

@@ -1,26 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Grants Seal of the Crusader: Attacks deal +1; Judged, gain 1 permanent Strength. The rare
-/// Seal that turns trigger density into scaling.
+/// Gain Amount Strength this turn, and bank the seal. Judge: deal 20. The Ret rare -- temp
+/// Strength (was permanent 2/cycle, the Inflame-every-shuffle problem); 4 for the burst turn
+/// where the banked verdicts unleash.
 /// </summary>
-public sealed class SealOfTheCrusader() : PaladinCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+public sealed class SealOfTheCrusader() : SealCard(1, CardRarity.Rare, 4m)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Amount", 1m)];
-
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay) =>
-        await Seals.Grant<SealOfTheCrusaderPower>(choiceContext, Owner, DynamicVars["Amount"].BaseValue, this);
-
-    protected override void OnUpgrade() => DynamicVars["Amount"].UpgradeValueBy(1m);
+    protected override async Task Arm(PlayerChoiceContext ctx, decimal amount)
+    {
+        await PowerCmd.Apply<SealOfTheCrusaderStrengthPower>(ctx, Owner.Creature, amount, Owner.Creature, this);
+        await Seals.Grant<SealOfTheCrusaderPower>(ctx, Owner, 1m, this);
+    }
 }

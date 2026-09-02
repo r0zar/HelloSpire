@@ -1,40 +1,35 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>First time each turn an enemy attacks you: heal Amount plus Spirit.</summary>
+/// <summary>
+/// At the start of your turn, deal damage equal to your Plating to ALL enemies. The wall
+/// fights back -- worthless without the Plating engine, scary with it. (Reworked from
+/// Plating-per-hit, which was better in non-Prot decks than Prot ones: free defense with
+/// zero build investment, and Guardian could not even amp its ticks.)
+/// </summary>
 public sealed class ArdentDefenderPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Counter;
-
-    private bool _usedThisTurn;
+    public override PowerStackType StackType => PowerStackType.Single;
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
-        if (player.Creature == Owner) _usedThisTurn = false;
-        await Task.CompletedTask;
-    }
-
-    public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
-        DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
-    {
-        if (_usedThisTurn || target != Owner || dealer == null || !props.IsPoweredAttack()) return;
-        _usedThisTurn = true;
+        if (player != Owner.Player) return;
+        var plating = Owner.GetPowerAmount<PlatingPower>();
+        if (plating <= 0) return;
+        if (Owner.CombatState is not { } state) return;
+        var enemies = state.HittableEnemies.ToList();
+        if (enemies.Count == 0) return;
         Flash();
-        if (Owner.Player is { } player) await Spirit.Heal(player, Amount);
+        await CreatureCmd.Damage(choiceContext, enemies, plating, ValueProp.Unpowered, Owner);
     }
 }

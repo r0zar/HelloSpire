@@ -81,6 +81,9 @@ public static class Rounds
 /// </summary>
 public static class Revolver
 {
+    /// <summary>The Silent rig's dagger-throw, triggered on every shot (see Gunslinger.GenerateAnimator).</summary>
+    private const string ShivAnim = "Shiv";
+
     /// <summary>
     /// The cylinder if combat has already created it, without creating one.
     ///
@@ -318,6 +321,7 @@ public static class Revolver
                 var attack = await DamageCmd.Attack(damage)
                     .WithHitCount(hits)
                     .FromCard(gun.Card)
+                    .WithAttackerAnim(ShivAnim, gun.Card.Owner.Character.AttackAnimDelay)
                     .Targeting(target)
                     .WithHitFx("vfx/vfx_attack_blunt", null, "blunt_attack.mp3")
                     .Execute(ctx);
@@ -386,6 +390,7 @@ public static class Revolver
 
                 var attack = await DamageCmd.Attack(damage)
                     .FromCard(gun.Card)
+                    .WithAttackerAnim(ShivAnim, gun.Card.Owner.Character.AttackAnimDelay)
                     .Targeting(enemy)
                     .Execute(ctx);
                 dealt += attack.Results.SelectMany(hit => hit).Sum(result => result.TotalDamage);
@@ -446,6 +451,10 @@ public static class Revolver
     private static async Task<int> Pierce(PlayerChoiceContext ctx, GunContext gun, Creature target,
         int damage, int hits)
     {
+        // CreatureCmd.Damage carries no attacker anim; fire the draw by hand so piercing
+        // Rounds look like every other shot.
+        await CreatureCmd.TriggerAnim(gun.Self, ShivAnim,
+            gun.Card?.Owner.Character.AttackAnimDelay ?? 0f);
         for (var i = 0; i < hits; i++)
             await CreatureCmd.Damage(ctx, target, damage, ValueProp.Unblockable, gun.Self, gun.Card);
 
@@ -498,7 +507,7 @@ public static class Revolver
 
     /// <summary>
     /// Points the gun the wrong way. A loaded chamber costs the Round's printed damage as HP loss —
-    /// no Strength, no Weak, no Deadeye, and no Block, Armor or Dodge to hide behind. The Round's
+    /// no Strength, no Weak, no Deadeye, and no Block or Armor to hide behind. The Round's
     /// other effects do not happen. An empty chamber just Clicks.
     /// </summary>
     public static async Task<FireResult> SelfFire(PlayerChoiceContext ctx, GunContext gun)

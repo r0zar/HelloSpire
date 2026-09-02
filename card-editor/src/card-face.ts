@@ -100,7 +100,13 @@ export function cardFace(card: CardRecord, opts: FaceOpts): HTMLDivElement {
   face.style.setProperty("--rarity-color", RARITY_COLOR[card.rarity] ?? "#d9d9e6");
 
   const head = el("div", "cf-head");
-  head.appendChild(el("span", "cf-cost", card.cost < 0 ? "X" : String(card.cost)));
+  const cost =
+    opts.upgraded && card.costUpgrade != null
+      ? Math.max(0, card.cost + card.costUpgrade)
+      : card.cost;
+  const costEl = el("span", "cf-cost", cost < 0 ? "X" : String(cost));
+  if (opts.upgraded && card.costUpgrade != null && card.cost >= 0) costEl.style.color = "#7ee08a";
+  head.appendChild(costEl);
   head.appendChild(
     el(
       "span",

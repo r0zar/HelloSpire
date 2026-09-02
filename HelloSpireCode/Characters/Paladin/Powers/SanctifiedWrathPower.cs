@@ -1,26 +1,22 @@
 using System.Threading.Tasks;
 using HelloSpire.HelloSpireCode.Powers;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 
-/// <summary>After each energy reset, gain Amount Energy and lose 2 HP. Fervor has a cost.</summary>
-public sealed class SanctifiedWrathPower : HelloSpirePower
+/// <summary>Whenever you Judge an enemy, deal Amount to ALL enemies. Fires per judge instance -- multi-judges cascade.</summary>
+public sealed class SanctifiedWrathPower : HelloSpirePower, IJudgeTrigger
 {
-    public const decimal HpCost = 2m;
-
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override async Task AfterEnergyReset(Player player)
+    public async Task OnJudgeInstance(PlayerChoiceContext ctx, Creature target)
     {
-        if (player != Owner.Player) return;
-        Flash();
-        await PlayerCmd.GainEnergy(Amount, player);
-        await CreatureCmd.Damage(new MegaCrit.Sts2.Core.GameActions.Multiplayer.ThrowingPlayerChoiceContext(),
-            Owner, HpCost, ValueProp.Unblockable | ValueProp.Unpowered, Owner, null);
+        if (Owner.CombatState is not { } state || state.HittableEnemies.Count == 0) return;
+        await CreatureCmd.Damage(ctx, state.HittableEnemies, Amount, ValueProp.Unpowered, Owner);
     }
 }

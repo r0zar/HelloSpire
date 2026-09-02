@@ -140,7 +140,7 @@ public sealed class SmokeCartridge() : GunslingerCard(1, CardType.Skill, CardRar
     protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(4m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(GunslingerTips.Load), HoverTipFactory.FromPower<DodgePower>()];
+        [Tip(GunslingerTips.Load), HoverTipFactory.FromPower<ArmorPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -221,11 +221,12 @@ public sealed class StackedChamber() : GunslingerCard(1, CardType.Skill, CardRar
 }
 
 /// <summary>Gain Armor.</summary>
-public sealed class UnderTheDuster() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class UnderTheDuster() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ArmorPower>(3m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<ArmorPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<ArmorPower>(), Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await GunslingerEffects.GainArmor(ctx, Gun, DynamicVars["ArmorPower"].BaseValue);
@@ -267,23 +268,40 @@ public sealed class HunkerDown() : GunslingerCard(1, CardType.Skill, CardRarity.
     }
 }
 
-/// <summary>Gain Dodge. Expensive, one-shot, and the only unconditional Dodge below Rare.</summary>
-public sealed class DuckAndWeave() : GunslingerCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+/// <summary>
+/// Gain Armor, then turn the whole plate into Block. The Gadget that pays an Armor deck back.
+///
+/// This used to be the set's only unconditional Dodge below Rare, at 2 Energy and Exhausting for
+/// a single prevented hit. Dodge is gone — the character's premium defence is Intangible now, and
+/// Intangible at Uncommon is not a price anyone could pay — so the card was rebuilt around the
+/// layer it always sat next to.
+///
+/// The Block is read off Armor *after* this card's own Armor lands, so the floor is the printed
+/// value doubled and the ceiling is whatever the rest of the deck has stacked up. That is the
+/// point: Armor is a slow, flat mitigation that a long fight rewards, and this is the card that
+/// cashes a big pile of it in on the one turn a big pile is not enough.
+/// </summary>
+public sealed class DuckAndWeave() : GunslingerCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
 {
+    public override bool GainsBlock => true;
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<DodgePower>(1m), new BlockVar(0m, ValueProp.Move)];
+        [new PowerVar<ArmorPower>(3m), new DynamicVar("Multiplier", 2m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<DodgePower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<ArmorPower>(), Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await GunslingerEffects.GainDodge(ctx, Gun, DynamicVars["DodgePower"].BaseValue);
-        await GunslingerEffects.GainBlock(Gun, DynamicVars.Block.BaseValue);
+        await GunslingerEffects.GainArmor(ctx, Gun, DynamicVars["ArmorPower"].BaseValue);
+
+        var armor = Owner.Creature.GetPowerAmount<ArmorPower>();
+        await GunslingerEffects.GainBlock(Gun, armor * DynamicVars["Multiplier"].BaseValue);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(6m);
+    protected override void OnUpgrade() => DynamicVars["ArmorPower"].UpgradeValueBy(1m);
 }
 
 /// <summary>
@@ -338,7 +356,7 @@ public sealed class DiveForCover() : GunslingerCard(1, CardType.Skill, CardRarit
 }
 
 /// <summary>Pay a little HP for a lot of defence.</summary>
-public sealed class GritTeeth() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class GritTeeth() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
 {
     public override bool GainsBlock => true;
 
@@ -349,7 +367,8 @@ public sealed class GritTeeth() : GunslingerCard(1, CardType.Skill, CardRarity.U
         new DamageVar("SelfDamage", 2m, ValueProp.Unblockable | ValueProp.Unpowered)
     ];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<ArmorPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<ArmorPower>(), Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -361,18 +380,18 @@ public sealed class GritTeeth() : GunslingerCard(1, CardType.Skill, CardRarity.U
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Spin, and take whatever the cylinder gives you: cover, or a way out and a fresh Round.</summary>
+/// <summary>Spin, and take whatever the cylinder gives you: cover, or plate and a fresh Round.</summary>
 public sealed class DeadMansBluff() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(9m, ValueProp.Move), new PowerVar<DodgePower>(1m), new DynamicVar("Load", 1m)];
+        [new BlockVar(9m, ValueProp.Move), new PowerVar<ArmorPower>(2m), new DynamicVar("Load", 1m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(GunslingerTips.Spin), Tip(GunslingerTips.Load), HoverTipFactory.FromPower<DodgePower>()];
+        [Tip(GunslingerTips.Spin), Tip(GunslingerTips.Load), HoverTipFactory.FromPower<ArmorPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -380,7 +399,7 @@ public sealed class DeadMansBluff() : GunslingerCard(1, CardType.Skill, CardRari
 
         if (Revolver.Peek(Gun) is { UnderHammer: null })
         {
-            await GunslingerEffects.GainDodge(ctx, Gun, DynamicVars["DodgePower"].BaseValue);
+            await GunslingerEffects.GainArmor(ctx, Gun, DynamicVars["ArmorPower"].BaseValue);
             await Revolver.Load(ctx, Gun, Rounds.Lead, DynamicVars["Load"].IntValue);
             return;
         }
@@ -425,7 +444,7 @@ public sealed class PowderBurn() : GunslingerCard(1, CardType.Skill, CardRarity.
 }
 
 /// <summary>Weak and Debilitate together, which is where the Gunslinger's defence really comes from.</summary>
-public sealed class ColdRead() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class ColdRead() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<WeakPower>(1m), new PowerVar<DebilitatePower>(1m)];
@@ -433,7 +452,8 @@ public sealed class ColdRead() : GunslingerCard(1, CardType.Skill, CardRarity.Un
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<WeakPower>(), HoverTipFactory.FromPower<DebilitatePower>()];
+        [HoverTipFactory.FromPower<WeakPower>(), HoverTipFactory.FromPower<DebilitatePower>(),
+         Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {

@@ -35,4 +35,7 @@ public static class GunslingerTips
 
     /// <summary>Which Round each class hands the Gunslinger. See <see cref="Cylinder.AmmoAffinity"/>.</summary>
     [CustomEnum] public static StaticHoverTip MatchedAmmo;
+
+    /// <summary>A card that uses no ammunition at all. See <see cref="IGadget"/>.</summary>
+    [CustomEnum] public static StaticHoverTip Gadget;
 }

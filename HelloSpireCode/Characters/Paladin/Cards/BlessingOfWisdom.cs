@@ -1,30 +1,25 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
-/// <summary>A player gains 2 Energy at the start of their next turn. Fuel for a friend --
-/// spending 1 now to hand an ally 2 is a real gift, not an energy sidestep.</summary>
+/// <summary>
+/// A player draws 2 cards, then discards 1. Card flow as a gift -- and a discard trigger
+/// wherever it lands. Solo, the gift is yours.
+/// </summary>
 public sealed class BlessingOfWisdom() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
 {
-    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 2m)];
-
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
+        var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<EnergyNextTurnPower>(choiceContext, cardPlay.Target,
-            DynamicVars["Energy"].BaseValue, Owner.Creature, this);
+        var receiver = target.Player ?? Owner;
+        await CardPileCmd.Draw(choiceContext, 2, receiver);
+        await PaladinEffects.DiscardChosen(choiceContext, receiver, 1, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["Energy"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

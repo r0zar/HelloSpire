@@ -85,6 +85,15 @@ public sealed class GuardRound : Round
     }
 }
 
+/// <summary>
+/// The defensive specialist: little damage, a wall of cover, and a point of plate behind it.
+///
+/// It used to grant 1 Dodge, which made a repeatable Smoke loop the cheapest premium defence in
+/// the pack. Dodge is gone and its replacement, Intangible, is far too strong to come out of
+/// ammunition at all — so the Round pays in the two layers the character can print freely.
+/// Against Guard (5 damage, 5 Block) it trades a little of both for the Armor, which is the layer
+/// that survives into the turn after this one.
+/// </summary>
 public sealed class SmokeRound : Round
 {
     public override string Key => "SMOKE_ROUND";
@@ -92,7 +101,8 @@ public sealed class SmokeRound : Round
 
     public override async Task Resolve(PlayerChoiceContext ctx, GunContext gun, Creature? target)
     {
-        await GunslingerEffects.GainDodge(ctx, gun, 1);
+        await GunslingerEffects.GainBlock(gun, 4);
+        await GunslingerEffects.GainArmor(ctx, gun, 1);
     }
 }
 

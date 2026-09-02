@@ -16,13 +16,22 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 /// per-turn aura; now it stacks with Aura of Vitality/Mercy into one decaying pool -- playing the
 /// family together is the mechanic.
 /// </summary>
-public sealed class TyrsDeliverance() : PaladinCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class TyrsDeliverance() : PaladinCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self), IHealingCard
 {
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
     public override bool GainsBlock => true;
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Regen", 4m), new BlockVar(4m, ValueProp.Move)];
+
+    public override bool HasTithe => true;
+
+    /// <summary>Tithe: ALL players gain 1 Plating -- armor, not Regen, so the recurring face never loops.</summary>
+    protected override async Task OnTithe(PlayerChoiceContext ctx)
+    {
+        foreach (var player in Owner.Creature.CombatState.PlayerCreatures.Where(c => c.IsAlive))
+            await PowerCmd.Apply<PlatingPower>(ctx, player, 1m, Owner.Creature, this);
+    }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
