@@ -86,27 +86,24 @@ public sealed class Masterwork() : AlchemistCard(2, CardType.Skill, CardRarity.R
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Pour a Potion out; the better the Potion, the better the return.</summary>
+/// <summary>Gain Potency, and draw cards.</summary>
 public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new PowerVar<PotencyPower>(2m), new CardsVar(2)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var result = await Belt.Distill(ctx, Lab);
-        if (!result.Distilled) return;
-
-        var cards = result.Rarity switch
-        {
-            PotionRarity.Rare => 3,
-            PotionRarity.Uncommon => 2,
-            _ => 1
-        };
-
-        await AlchemistEffects.Draw(ctx, Lab, cards);
+        await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
+        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
     }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>The next Potion this turn is not consumed. The best line in the class, and it knows it.</summary>

@@ -527,7 +527,7 @@
   "HELLOSPIRE-MASTERWORK.title": "Masterwork",
   "HELLOSPIRE-MASTERWORK.description": "Permanently Upgrade a card in your hand.",
   "HELLOSPIRE-ESSENCE_DISTILLATION.title": "Essence Distillation",
-  "HELLOSPIRE-ESSENCE_DISTILLATION.description": "[gold]Distill[/gold] a Potion. gain 2 energy and draw 3.",
+  "HELLOSPIRE-ESSENCE_DISTILLATION.description": "Gain {PotencyPower:diff()} [gold]Potency[/gold]. Draw {Cards:diff()} cards.",
   "HELLOSPIRE-BOTTLED_TIME.title": "Bottled Time",
   "HELLOSPIRE-BOTTLED_TIME.description": "The next Potion you use this turn is not consumed.",
   "HELLOSPIRE-PERFECT_SOLVENT.title": "Perfect Solvent",

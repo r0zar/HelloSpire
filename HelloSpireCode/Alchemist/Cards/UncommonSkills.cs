@@ -17,7 +17,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 /// <summary>Distill a Potion for Energy.</summary>
 public sealed class DistillationColumn() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 2m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
