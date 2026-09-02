@@ -96,7 +96,7 @@ public sealed class QuickSilver() : AlchemistCard(0, CardType.Attack, CardRarity
 public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
+        [new DamageVar(7m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -109,7 +109,7 @@ public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.C
         await DamageCmd.Attack(damage).FromCard(this).Targeting(play.Target).Execute(ctx);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
 /// <summary>Deal damage. If you used a Potion this turn, draw a card.</summary>
