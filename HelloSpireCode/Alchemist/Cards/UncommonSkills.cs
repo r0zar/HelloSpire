@@ -139,7 +139,7 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(2m);
 }
 
-/// <summary>Exhaust a card, for Energy next turn.</summary>
+/// <summary>Exhaust a card, for Energy.</summary>
 public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Energy", 2m)];
@@ -147,8 +147,7 @@ public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Un
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
-        await PowerCmd.Apply<EnergyNextTurnPower>(ctx, Owner.Creature,
-            DynamicVars["Energy"].BaseValue, Owner.Creature, this);
+        await AlchemistEffects.GainEnergy(Lab, DynamicVars["Energy"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["Energy"].UpgradeValueBy(1m);

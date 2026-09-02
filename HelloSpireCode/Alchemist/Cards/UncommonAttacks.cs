@@ -93,10 +93,10 @@ public sealed class ToxicNeedle() : AlchemistCard(1, CardType.Attack, CardRarity
 }
 
 /// <summary>Damage and Poison to ALL enemies.</summary>
-public sealed class FlashPowder() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.Self)
+public sealed class FlashPowder() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(6m, ValueProp.Move), new DynamicVar("Poison", 2m)];
+        [new DamageVar(6m, ValueProp.Move), new DynamicVar("Poison", 5m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
