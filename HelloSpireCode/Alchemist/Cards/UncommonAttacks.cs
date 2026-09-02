@@ -187,7 +187,7 @@ public sealed class SolventStrike() : AlchemistCard(1, CardType.Attack, CardRari
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Deal damage, and Brew a Poison Potion.</summary>
+/// <summary>Deal damage to ALL enemies, and Brew a Poison Ampoule.</summary>
 public sealed class VenomousAmpoule() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
@@ -196,10 +196,10 @@ public sealed class VenomousAmpoule() : AlchemistCard(2, CardType.Attack, CardRa
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        ArgumentNullException.ThrowIfNull(play.Target);
+        foreach (var enemy in AlchemistEffects.Enemies(Lab))
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(enemy).Execute(ctx);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Poison));
+        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.PoisonAmpoule));
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
