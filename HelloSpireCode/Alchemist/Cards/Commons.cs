@@ -373,13 +373,19 @@ public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.C
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Leave a Volatile Reagent in the draw pile, and gain a little Energy.</summary>
-public sealed class ContaminatedSample() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
+/// <summary>Leave a Volatile Reagent in the draw pile, and apply Poison.</summary>
+public sealed class ContaminatedSample() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
 {
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 3m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
+
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
+        ArgumentNullException.ThrowIfNull(play.Target);
+
         await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
-        await AlchemistEffects.GainEnergy(Lab, 1m);
+        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
     }
 }
 

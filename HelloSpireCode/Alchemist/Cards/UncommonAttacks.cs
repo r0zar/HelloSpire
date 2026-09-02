@@ -159,7 +159,7 @@ public sealed class MercuryLance() : AlchemistCard(2, CardType.Attack, CardRarit
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Deal damage, leave a Volatile Reagent in the draw pile, and apply Poison.</summary>
+/// <summary>Deal damage, and apply Poison.</summary>
 public sealed class ContaminatedBlade() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
@@ -172,7 +172,6 @@ public sealed class ContaminatedBlade() : AlchemistCard(1, CardType.Attack, Card
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
         await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
     }
 
