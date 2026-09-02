@@ -219,7 +219,7 @@
   "HELLOSPIRE-CONSECRATION.title": "Consecration",
   "HELLOSPIRE-CONSECRATION.description": "At the start of your turn, deal {Damage:diff()} damage to ALL enemies.",
   "HELLOSPIRE-DEVOTION.title": "Devotion",
-  "HELLOSPIRE-DEVOTION.description": "Gain [blue]{Spirit:diff()}[/blue] [gold]Spirit[/gold].\n[gold]Tithe[/gold]: gain 2 Block.",
+  "HELLOSPIRE-DEVOTION.description": "At the start of your turn, gain [blue]{Spirit}[/blue] [gold]Spirit[/gold].",
   "HELLOSPIRE-DIVINE_STORM.title": "Divine Storm",
   "HELLOSPIRE-DIVINE_STORM.description": "Deal {Damage:diff()} damage to ALL enemies twice.",
   "HELLOSPIRE-BLADE_OF_JUSTICE.title": "Blade of Justice",
