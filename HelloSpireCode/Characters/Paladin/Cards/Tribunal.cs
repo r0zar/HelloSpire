@@ -18,7 +18,7 @@ public sealed class Tribunal() : PaladinCard(2, CardType.Attack, CardRarity.Comm
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).WithAttackerAnim(HeavyAttackAnim, HeavyAttackDelay)
             .TargetingAllOpponents(CombatState)
             .WithHitFx("vfx/vfx_attack_blunt")
             .SpawningHitVfxOnEachCreature()

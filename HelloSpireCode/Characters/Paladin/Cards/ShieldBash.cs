@@ -22,7 +22,7 @@ public sealed class ShieldBash() : PaladinCard(0, CardType.Attack, CardRarity.Co
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
         var amount = Owner.Creature.GetPowerAmount<PlatingPower>();
         if (amount > 0)
-            await DamageCmd.Attack(amount).FromCard(this).WithAttackerAnim(HeavyAttackAnim, HeavyAttackDelay).Targeting(cardPlay.Target)
+            await DamageCmd.Attack(amount).FromCard(this).Targeting(cardPlay.Target)
                 .WithHitFx("vfx/vfx_heavy_blunt")
                 .Execute(choiceContext);
         if (!cardPlay.Target.IsDead)

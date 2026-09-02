@@ -29,7 +29,7 @@ public sealed class LastRites() : PaladinCard(0, CardType.Attack, CardRarity.Rar
         var times = ResolveEnergyXValue();
         if (times <= 0) return;
         var perHit = Math.Max(0m, DynamicVars.Damage.BaseValue + Spirit.Of(Owner) + 2m * CandlesSpent);
-        await DamageCmd.Attack(perHit).FromCard(this).WithAttackerAnim(HeavyAttackAnim, HeavyAttackDelay).Targeting(cardPlay.Target)
+        await DamageCmd.Attack(perHit).FromCard(this).Targeting(cardPlay.Target)
             .WithHitCount(times)
             .WithHitFx("vfx/vfx_heavy_blunt")
             .Execute(choiceContext);
