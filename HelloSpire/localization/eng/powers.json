@@ -220,5 +220,8 @@
   "HELLOSPIRE-DEVOTION_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Spirit[/gold].",
   "HELLOSPIRE-SEAL_OF_THE_MARTYR_THORNS_POWER.title": "Martyr’s Thorns",
   "HELLOSPIRE-SEAL_OF_THE_MARTYR_THORNS_POWER.description": "Lose the granted [gold]Thorns[/gold] at the end of this turn.",
-  "HELLOSPIRE-SEAL_OF_THE_MARTYR_THORNS_POWER.smartDescription": "Lose [blue]{Amount}[/blue] [gold]Thorns[/gold] at the end of this turn."
+  "HELLOSPIRE-SEAL_OF_THE_MARTYR_THORNS_POWER.smartDescription": "Lose [blue]{Amount}[/blue] [gold]Thorns[/gold] at the end of this turn.",
+  "HELLOSPIRE-RENEW_POWER.title": "Renew",
+  "HELLOSPIRE-RENEW_POWER.description": "At the start of your turn, heal and fade.",
+  "HELLOSPIRE-RENEW_POWER.smartDescription": "At the start of your turn, heal [blue]{Amount}[/blue] HP, then this fades."
 }

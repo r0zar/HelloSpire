@@ -6,20 +6,18 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// A player gains 3 Regen. Exhaust. Tithe: gain 1 Energy. Regen is healing, so the healing
-/// law applies in full. The face is the set's only energy Tithe -- renewal as refreshment
-/// (swapped from a 2-Block face, the most duplicated face in the set).
+/// Heal a player 3 + Spirit now, and the same again at the start of their next turn.
+/// Exhaust. Tithe: gain 1 Energy. Was flat Regen (the set's one heal that ignored Spirit);
+/// now the simple two-beat Spirit heal -- the echo snapshots the cast amount.
 /// </summary>
 public sealed class Renew() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer), IHealingCard
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Regen", 3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SpiritHealVar(3m)];
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.Static(PaladinTips.Tithe)];
 
     public override bool HasTithe => true;
@@ -28,12 +26,14 @@ public sealed class Renew() : PaladinCard(1, CardType.Skill, CardRarity.Uncommon
     {
         var target = TargetOrOwner(cardPlay);
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<RegenPower>(choiceContext, target,
-            DynamicVars["Regen"].BaseValue, Owner.Creature, this);
+        await Spirit.Heal(Owner, target, DynamicVars.Heal.BaseValue);
+        var echo = Math.Max(0m, DynamicVars.Heal.BaseValue + Spirit.Of(Owner));
+        if (echo > 0)
+            await PowerCmd.Apply<RenewPower>(choiceContext, target, echo, Owner.Creature, this);
     }
 
     protected override async Task OnTithe(PlayerChoiceContext ctx) =>
         await PlayerCmd.GainEnergy(1m, Owner);
 
-    protected override void OnUpgrade() => DynamicVars["Regen"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars.Heal.UpgradeValueBy(2m);
 }
