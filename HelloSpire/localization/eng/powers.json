@@ -168,7 +168,7 @@
   "HELLOSPIRE-REAGENT_PRESS_POWER.description": "The first card you Exhaust each turn [gold]Infuses[/gold] Damage.",
   "HELLOSPIRE-REAGENT_PRESS_POWER.smartDescription": "The first card you Exhaust each turn [gold]Infuses[/gold] [blue]{Amount}[/blue] Damage.",
   "HELLOSPIRE-CONCENTRATE_POWER.title": "Concentrate",
-  "HELLOSPIRE-CONCENTRATE_POWER.description": "Whenever you [gold]Infuse[/gold] a lot in one action, gain [gold]Energy[/gold].",
+  "HELLOSPIRE-CONCENTRATE_POWER.description": "Whenever you [gold]Infuse[/gold] 10 or more in one action, gain [gold]Energy[/gold].",
   "HELLOSPIRE-CONCENTRATE_POWER.smartDescription": "Whenever you [gold]Infuse[/gold] {Threshold} or more in one action, gain [blue]{Amount}[/blue] [gold]Energy[/gold].",
   "HELLOSPIRE-REACTIVE_LABORATORY_POWER.title": "Reactive Laboratory",
   "HELLOSPIRE-REACTIVE_LABORATORY_POWER.description": "The first Potion you use each turn draws a card.",
