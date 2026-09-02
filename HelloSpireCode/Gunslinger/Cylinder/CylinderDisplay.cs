@@ -34,8 +34,11 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
     private const float ChamberSize = 22f;
     private const double SpinSeconds = 0.32;
 
-    /// <summary>Offset from the Energy orb. Up and to the left of it, clear of the hand.</summary>
-    private static readonly Vector2 EnergyOffset = new(-124f, -18f);
+    /// <summary>Gap between the top of the Energy display and the bottom of the widget.</summary>
+    private const float AboveEnergyGap = 12f;
+
+    /// <summary>Fallback offset over the Energy orb when its Control reports zero size.</summary>
+    private static readonly Vector2 EnergyOffset = new(-Centre, -(Size + AboveEnergyGap));
 
     /// <summary>Where the widget lands if no Energy node can be found to hang it off.</summary>
     private static readonly Vector2 FallbackOffset = new(40f, -200f);
@@ -254,7 +257,11 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
         if (FindEnergy(nCombatUi) is { } energy)
         {
             energy.AddChild(root);
-            root.Position = EnergyOffset;
+            // Directly above the Energy display, horizontally centred on it. The old spot
+            // (up-left of the orb) hung the widget half off the screen edge.
+            root.Position = energy.Size.X > 0
+                ? new Vector2((energy.Size.X - Size) / 2f, -(Size + AboveEnergyGap))
+                : EnergyOffset;
             return;
         }
 
