@@ -453,7 +453,7 @@
   "HELLOSPIRE-SOLVENT_STRIKE.title": "Solvent Strike",
   "HELLOSPIRE-SOLVENT_STRIKE.description": "Deal {Damage:diff()} damage. Exhaust a Status from your discard pile: [gold]Infuse[/gold] {Bonus:diff()} Damage.",
   "HELLOSPIRE-VENOMOUS_AMPOULE.title": "Venomous Ampoule",
-  "HELLOSPIRE-VENOMOUS_AMPOULE.description": "Deal {Damage:diff()} damage. Apply {Poison:diff()} [gold]Poison[/gold]. [gold]Brew[/gold] a Poison Potion. Add a Volatile Residue to your discard pile.",
+  "HELLOSPIRE-VENOMOUS_AMPOULE.description": "Deal {Damage:diff()} damage. [gold]Brew[/gold] a Poison Potion. Add a Volatile Residue to your discard pile.",
   "HELLOSPIRE-BOTTLED_FURY.title": "Bottled Fury",
   "HELLOSPIRE-BOTTLED_FURY.description": "Whenever you use a Potion, gain 1 [gold]Strength[/gold] this turn.",
   "HELLOSPIRE-DISTILLATION_COLUMN.title": "Distillation Column",
