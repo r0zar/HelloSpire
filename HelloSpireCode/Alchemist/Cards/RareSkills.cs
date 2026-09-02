@@ -155,7 +155,7 @@ public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>A big dose of Poison, a big dose of Poison Infuse, and a Volatile Reagent besides.</summary>
+/// <summary>A big dose of Poison, a big dose of Poison Infuse, a Poison Potion, and a Volatile Reagent besides.</summary>
 public sealed class Overdose() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
@@ -164,7 +164,7 @@ public sealed class Overdose() : AlchemistCard(2, CardType.Skill, CardRarity.Rar
         [new DynamicVar("Poison", 10m), new DynamicVar("Bonus", 10m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<PoisonPower>(), Tip(AlchemistTips.Infuse)];
+        [HoverTipFactory.FromPower<PoisonPower>(), Tip(AlchemistTips.Infuse), Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -172,6 +172,7 @@ public sealed class Overdose() : AlchemistCard(2, CardType.Skill, CardRarity.Rar
 
         await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
         await Belt.Infuse(ctx, Lab, poison: DynamicVars["Bonus"].BaseValue);
+        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Poison));
         await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Discard);
     }
 

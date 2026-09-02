@@ -131,32 +131,20 @@ public sealed class PressureBurst() : AlchemistCard(2, CardType.Attack, CardRari
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
-/// <summary>Exhaust a chosen card, for damage scaling with its cost.</summary>
+/// <summary>Deal a lot of damage, and Exhaust a random other card.</summary>
 public sealed class MercuryLance() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("PerEnergy", 8m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(20m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var damage = DynamicVars.Damage.BaseValue;
-        var candidates = Alchemy.OtherCardsInHand(Lab);
-        if (candidates.Count > 0)
-        {
-            var chosen = await LabBridge.Current.ChooseCard(ctx, Owner, candidates, this);
-            if (chosen != null)
-            {
-                damage += DynamicVars["PerEnergy"].BaseValue * Math.Max(0, chosen.EnergyCost.Canonical);
-                await Alchemy.Exhaust(ctx, Lab, chosen);
-            }
-        }
-
-        await DamageCmd.Attack(damage).FromCard(this).Targeting(play.Target).Execute(ctx);
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
+        await Alchemy.ExhaustRandomOther(ctx, Lab);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(5m);
 }
 
 /// <summary>Deal damage, and apply Poison.</summary>
