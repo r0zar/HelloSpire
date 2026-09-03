@@ -341,11 +341,8 @@ public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.C
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await Belt.Infuse(ctx, Lab, block: DynamicVars.Block.BaseValue);
-        await Belt.LeaveResidualReagent(ctx, Lab);
-    }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }

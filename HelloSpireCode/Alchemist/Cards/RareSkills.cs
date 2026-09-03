@@ -68,10 +68,7 @@ public sealed class MagnumOpus() : AlchemistCard(2, CardType.Skill, CardRarity.R
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         var filled = await Belt.FillEmpty(ctx, Lab);
         if (filled > 0)
-        {
             await Belt.Infuse(ctx, Lab, damage: DynamicVars["PerPotion"].BaseValue * filled);
-            await Belt.LeaveResidualReagent(ctx, Lab);
-        }
     }
 
     protected override void OnUpgrade() => DynamicVars["PerPotion"].UpgradeValueBy(1m);
@@ -171,7 +168,6 @@ public sealed class Overdose() : AlchemistCard(2, CardType.Skill, CardRarity.Rar
 
         await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
         await Belt.Infuse(ctx, Lab, poison: DynamicVars["Bonus"].BaseValue);
-        await Belt.LeaveResidualReagent(ctx, Lab);
         await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Poison));
         await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.PoisonAmpoule));
     }
