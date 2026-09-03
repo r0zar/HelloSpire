@@ -284,7 +284,7 @@
   "HELLOSPIRE-BLESSING_OF_PROTECTION.title": "Blessing of Protection",
   "HELLOSPIRE-BLESSING_OF_PROTECTION.description": "A player gains [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\n[gold]Tithe[/gold]: gain 1 [gold]Plating[/gold].",
   "HELLOSPIRE-DIVINE_SHIELD.title": "Divine Shield",
-  "HELLOSPIRE-DIVINE_SHIELD.description": "Gain [blue]{Buffer:diff()}[/blue] [gold]Buffer[/gold].\n[gold]Tithe[/gold]: gain 3 Block.",
+  "HELLOSPIRE-DIVINE_SHIELD.description": "Gain [blue]{Buffer}[/blue] [gold]Buffer[/gold].\n[gold]Tithe[/gold]: gain 8 Block.",
   "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS.title": "Guardian of Ancient Kings",
   "HELLOSPIRE-GUARDIAN_OF_ANCIENT_KINGS.description": "Whenever a card grants you [gold]Plating[/gold], gain [blue]{Plating}[/blue] more.",
   "HELLOSPIRE-ARDENT_DEFENDER.title": "Ardent Defender",
