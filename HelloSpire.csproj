@@ -105,6 +105,16 @@
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsPath)$(MSBuildProjectName)/" />
         <Copy SourceFiles="$(AssemblyName).json" DestinationFolder="$(ModsPath)$(MSBuildProjectName)/" />
         <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ModsPath)$(MSBuildProjectName)/" />
+        <!-- Custom character rigs load as loose files (CharacterSkeletons reads
+             mods/HelloSpire/spine/<character>/ from disk, not the pck). Without this copy the
+             deployed mod folder lacks them, and any player who installs from build output sees
+             the shader-repaint fallback instead of the real skeleton. -->
+        <ItemGroup>
+            <SpineFiles Include="spine\**\*" Exclude="spine\**\*.import" />
+        </ItemGroup>
+        <Message Text="Copying spine rigs to mods folder." Importance="high" />
+        <Copy SourceFiles="@(SpineFiles)"
+              DestinationFolder="$(ModsPath)$(MSBuildProjectName)/spine/%(RecursiveDir)" />
     </Target>
 
     <Target Name="CopyQuickPck" AfterTargets="PackPck" Condition="Exists('$(PckPackerOutputPath)') And '$(PckPackerSkipped)' != 'true'">

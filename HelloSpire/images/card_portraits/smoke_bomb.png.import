@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8aq6n4iurgcb"
-path="res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"
+uid="uid://l2k110kxj0rr"
+path="res://.godot/imported/smoke_bomb.png-b08a388b0a717ab784e79db8e299e181.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spine/paladin/ironclad_2.png"
-dest_files=["res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"]
+source_file="res://HelloSpire/images/card_portraits/smoke_bomb.png"
+dest_files=["res://.godot/imported/smoke_bomb.png-b08a388b0a717ab784e79db8e299e181.ctex"]
 
 [params]
 

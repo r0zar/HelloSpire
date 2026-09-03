@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8aq6n4iurgcb"
-path="res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"
+uid="uid://c7vyeg5kxqd4i"
+path="res://.godot/imported/tinkers_kit_power.png-b71c1549a0f73358d5994f0f372ed25a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spine/paladin/ironclad_2.png"
-dest_files=["res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"]
+source_file="res://HelloSpire/images/powers/big/tinkers_kit_power.png"
+dest_files=["res://.godot/imported/tinkers_kit_power.png-b71c1549a0f73358d5994f0f372ed25a.ctex"]
 
 [params]
 

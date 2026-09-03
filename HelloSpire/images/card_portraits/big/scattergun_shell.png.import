@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8aq6n4iurgcb"
-path="res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"
+uid="uid://c4q16msr2jkb5"
+path="res://.godot/imported/scattergun_shell.png-43780d3ce7170cf1fef32ed76d73b620.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spine/paladin/ironclad_2.png"
-dest_files=["res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"]
+source_file="res://HelloSpire/images/card_portraits/big/scattergun_shell.png"
+dest_files=["res://.godot/imported/scattergun_shell.png-43780d3ce7170cf1fef32ed76d73b620.ctex"]
 
 [params]
 

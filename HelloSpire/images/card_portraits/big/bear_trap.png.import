@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8aq6n4iurgcb"
-path="res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"
+uid="uid://cn10ya2016n02"
+path="res://.godot/imported/bear_trap.png-a2987cee287a3bc446877414639193f9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spine/paladin/ironclad_2.png"
-dest_files=["res://.godot/imported/ironclad_2.png-069c3b3a89d8e5c80d1bc099a577b051.ctex"]
+source_file="res://HelloSpire/images/card_portraits/big/bear_trap.png"
+dest_files=["res://.godot/imported/bear_trap.png-a2987cee287a3bc446877414639193f9.ctex"]
 
 [params]
 
