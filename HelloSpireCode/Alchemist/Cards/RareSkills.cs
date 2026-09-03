@@ -99,7 +99,7 @@ public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, Car
         await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
 }
 
 /// <summary>The next Potion this turn is not consumed. The best line in the class, and it knows it.</summary>
