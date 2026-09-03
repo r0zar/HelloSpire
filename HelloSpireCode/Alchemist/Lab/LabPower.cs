@@ -75,6 +75,14 @@ public sealed class LabPower : HelloSpirePower
     /// </summary>
     public decimal BrewBonusMultiplier { get; set; } = 1m;
 
+    /// <summary>
+    /// Multiplies every Poison amount applied for the rest of this turn. Contaminated Blade's
+    /// payload. Read (not consumed -- it lasts the whole turn, not just one application) by
+    /// <see cref="AlchemistEffects.ApplyPoison"/>, and reset to 1 at the start of each of the
+    /// owner's turns.
+    /// </summary>
+    public decimal PoisonMultiplier { get; set; } = 1m;
+
     // ------------------------------------------------------------------ other bookkeeping
 
     /// <summary>Cards Exhausted this turn, by any means. Cinnabar Edge and the Exhaust engines read it.</summary>
@@ -107,6 +115,7 @@ public sealed class LabPower : HelloSpirePower
         DistilledThisTurn = 0;
         CardsExhaustedThisTurn = 0;
         CardsCreatedThisTurn = 0;
+        PoisonMultiplier = 1m;
 
         return Task.CompletedTask;
     }

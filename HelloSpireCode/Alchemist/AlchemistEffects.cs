@@ -62,6 +62,7 @@ public static class AlchemistEffects
     public static async Task ApplyPoison(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount)
     {
         if (amount <= 0) return;
+        amount *= Peek(lab)?.PoisonMultiplier ?? 1m;
         await PowerCmd.Apply<PoisonPower>(ctx, target, amount, lab.Self, lab.Card);
         await AlchemistHooks.NotifyPoisonApplied(ctx, lab, target, amount);
     }

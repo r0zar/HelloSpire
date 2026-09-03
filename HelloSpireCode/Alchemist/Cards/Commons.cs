@@ -112,10 +112,12 @@ public sealed class FlaskToss() : AlchemistCard(1, CardType.Attack, CardRarity.C
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage. If you used a Potion this turn, draw a card.</summary>
+/// <summary>Deal damage. If you Brewed a Potion this turn, draw a card.</summary>
 public sealed class BrewedEdge() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -123,7 +125,7 @@ public sealed class BrewedEdge() : AlchemistCard(1, CardType.Attack, CardRarity.
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
-        if ((AlchemistEffects.Peek(Lab)?.PotionsUsedThisTurn ?? 0) > 0)
+        if ((AlchemistEffects.Peek(Lab)?.BrewedThisTurn ?? 0) > 0)
             await AlchemistEffects.Draw(ctx, Lab, 1);
     }
 

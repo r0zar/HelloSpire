@@ -152,20 +152,20 @@ public sealed class MercuryLance() : AlchemistCard(2, CardType.Attack, CardRarit
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(5m);
 }
 
-/// <summary>Deal damage, and apply Poison.</summary>
+/// <summary>Deal damage, and increase Poison effects by 50% this turn.</summary>
 public sealed class ContaminatedBlade() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DynamicVar("Poison", 3m)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
+        [new DamageVar(8m, ValueProp.Move), new DynamicVar("Bonus", 50m)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
+
+        var bench = await AlchemistEffects.Bench(ctx, Lab);
+        if (bench != null) bench.PoisonMultiplier *= 1m + DynamicVars["Bonus"].BaseValue / 100m;
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
