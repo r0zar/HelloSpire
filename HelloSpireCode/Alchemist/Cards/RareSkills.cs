@@ -35,25 +35,22 @@ public sealed class Alchemize() : AlchemistCard(1, CardType.Skill, CardRarity.Ra
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Melt the entire rest of your Hand into Unstable Concoction.</summary>
+/// <summary>Melt the entire rest of your Hand into Gold.</summary>
 public sealed class HeavyTransmute() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerCard", 6m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Gold", 5m)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         var burned = await Alchemy.ExhaustAllOther(ctx, Lab);
         if (burned.Count == 0) return;
 
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["PerCard"].BaseValue * burned.Count);
-        await Belt.LeaveResidualReagent(ctx, Lab);
+        await PlayerCmd.GainGold(DynamicVars["Gold"].BaseValue * burned.Count, Owner);
     }
 
-    protected override void OnUpgrade() => DynamicVars["PerCard"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars["Gold"].UpgradeValueBy(1m);
 }
 
 /// <summary>Fill the belt, and Infuse for every Potion that landed. The Brewer's capstone.</summary>

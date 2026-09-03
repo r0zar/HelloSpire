@@ -406,7 +406,7 @@
   "HELLOSPIRE-ALCHEMIZE.title": "Alchemize",
   "HELLOSPIRE-ALCHEMIZE.description": "[gold]Brew[/gold] a Rare Potion. It is not [gold]Volatile[/gold].",
   "HELLOSPIRE-HEAVY_TRANSMUTE.title": "Heavy Transmute",
-  "HELLOSPIRE-HEAVY_TRANSMUTE.description": "Exhaust every other card in your hand: [gold]Infuse[/gold] {PerCard:diff()} Damage for each.",
+  "HELLOSPIRE-HEAVY_TRANSMUTE.description": "Exhaust every other card in your hand: gain {Gold:diff()} Gold for each.",
   "HELLOSPIRE-MAGNUM_OPUS.title": "Magnum Opus",
   "HELLOSPIRE-MAGNUM_OPUS.description": "Fill all empty Potion Slots with random Combat Potions. [gold]Infuse[/gold] {PerPotion:diff()} Damage for each Potion Brewed. Exhaust.",
   "HELLOSPIRE-ESSENCE_DISTILLATION.title": "Essence Distillation",
