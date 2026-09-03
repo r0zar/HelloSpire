@@ -142,13 +142,18 @@ public static class Belt
         return await Distill(ctx, lab, chosen);
     }
 
-    /// <summary>Distill one named Potion, for the cards that have already picked.</summary>
+    /// <summary>
+    /// Distill one named Potion, for the cards that have already picked. Removes the Potion
+    /// directly (<see cref="LabBridge.RemovePotion"/>) rather than through the belt's generic
+    /// Discard command, since Distilling is a different action from discarding and shouldn't be
+    /// blockable the same way -- Residual Reagent can't be Discarded but can still be Distilled.
+    /// </summary>
     public static async Task<DistillResult> Distill(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         var bench = await AlchemistEffects.Bench(ctx, lab);
         var wasVolatile = bench?.Volatile.Contains(potion) ?? false;
 
-        await LabBridge.Current.Discard(ctx, lab.Player, potion);
+        await LabBridge.Current.RemovePotion(lab.Player, potion);
 
         if (bench != null)
         {
