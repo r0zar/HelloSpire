@@ -20,7 +20,7 @@
   "HELLOSPIRE-VOLATILE.title": "Volatile",
   "HELLOSPIRE-VOLATILE.description": "This Potion behaves normally -- it occupies a Slot, costs no Energy, and triggers Potion effects -- but it is removed at the end of combat.",
   "HELLOSPIRE-DISTILL.title": "Distill",
-  "HELLOSPIRE-DISTILL.description": "Discard one of your Potions without resolving it, in exchange for the card's listed reward. Distilling is not using a Potion, but it does empty a Slot.",
+  "HELLOSPIRE-DISTILL.description": "Discard the listed number of Potions, unresolved, for the listed effect. Distilling is not using a Potion, but it does empty a Slot.",
   "HELLOSPIRE-POTENCY.title": "Potency",
   "HELLOSPIRE-POTENCY.description": "Whenever you use a Volatile Potion, its damage and Block values are increased by your Potency. Never applies to found or bought Potions.",
   "HELLOSPIRE-THE_POTION_BELT.title": "The Potion Belt",
