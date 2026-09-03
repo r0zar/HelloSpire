@@ -11,8 +11,10 @@ using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Heal a player 12 + Spirit. Exhaust. Tithe: deal 8 to a random enemy.
-/// The big single heal below Lay on Hands; the face keeps it live in Ret hands. Solo-legal now.
+/// Heal a player 12 + Spirit. Exhaust. Tithe: Judge a random enemy.
+/// The big single heal below Lay on Hands. The face was a flat 8 to a random enemy -- a copy
+/// of Holy Shock's identity; now it carries the set's only judge-from-hand (freed when Hammer
+/// of Wrath moved its judge to the cast): pitch the light and it passes judgment.
 /// </summary>
 public sealed class HolyLight() : PaladinCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer), IHealingCard
 {
@@ -33,7 +35,7 @@ public sealed class HolyLight() : PaladinCard(2, CardType.Skill, CardRarity.Unco
     {
         var enemy = PaladinEffects.RandomEnemy(Owner);
         if (enemy == null) return;
-        await CreatureCmd.Damage(ctx, [enemy], 8m, ValueProp.Unpowered, Owner.Creature);
+        await Seals.Judge(ctx, Owner, enemy);
     }
 
     protected override void OnUpgrade() => DynamicVars.Heal.UpgradeValueBy(4m);

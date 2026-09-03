@@ -210,7 +210,7 @@
   "HELLOSPIRE-AVENGERS_SHIELD.title": "Avenger's Shield",
   "HELLOSPIRE-AVENGERS_SHIELD.description": "Deal {Damage:diff()} damage.\nGain [blue]{Plating:diff()}[/blue] [gold]Plating[/gold].\n[gold]Judge[/gold].",
   "HELLOSPIRE-HOLY_LIGHT.title": "Holy Light",
-  "HELLOSPIRE-HOLY_LIGHT.description": "Heal a player {Heal:diff()} HP.\n[gold]Tithe[/gold]: deal 8 damage to a random enemy.",
+  "HELLOSPIRE-HOLY_LIGHT.description": "Heal a player {Heal:diff()} HP.\n[gold]Tithe[/gold]: [gold]Judge[/gold] a random enemy.",
   "HELLOSPIRE-FLASH_OF_LIGHT.title": "Flash of Light",
   "HELLOSPIRE-FLASH_OF_LIGHT.description": "Heal a player {Heal:diff()} HP.\n[gold]Tithe[/gold]: apply 1 [gold]Weak[/gold] to ALL enemies.",
   "HELLOSPIRE-CONSECRATION.title": "Consecration",
