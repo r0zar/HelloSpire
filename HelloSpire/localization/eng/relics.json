@@ -54,7 +54,7 @@
   "HELLOSPIRE-ASSAYERS_LENS.description": "The first time you [gold]Brew[/gold] each combat, gain 1 [gold]Energy[/gold].",
   "HELLOSPIRE-ASSAYERS_LENS.flavor": "Seeing the value clearly is halfway to spending it.",
   "HELLOSPIRE-GOLDEN_CRUCIBLE.title": "Golden Crucible",
-  "HELLOSPIRE-GOLDEN_CRUCIBLE.description": "Whenever you [gold]Distill[/gold] a Potion, [gold]Infuse[/gold] 3 Damage into Unstable Concoction.",
+  "HELLOSPIRE-GOLDEN_CRUCIBLE.description": "Whenever you [gold]Distill[/gold] a Potion, [gold]Infuse[/gold] 3 Damage into Unstable Concoction and add a Residual Reagent to your Potion Belt.",
   "HELLOSPIRE-GOLDEN_CRUCIBLE.flavor": "It turns a profit on everything, including itself.",
   "HELLOSPIRE-ALCHEMISTS_LEDGER.title": "Alchemist's Ledger",
   "HELLOSPIRE-ALCHEMISTS_LEDGER.description": "Whenever you use any Potion, gain 1 [gold]Block[/gold].",
