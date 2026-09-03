@@ -137,22 +137,17 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
     protected override void OnUpgrade() => DynamicVars["PerCard"].UpgradeValueBy(1m);
 }
 
-/// <summary>
-/// A real, permanent Potion Slot -- no cost gate, just the Energy and the Exhaust.
-///
-/// Asymmetric with Extra Vial: cheap Slots are temporary, this one is not. Both accept any
-/// Potion equally now; the difference is purely how long the Slot lasts.
-/// </summary>
+/// <summary>Two Potion Slots for the rest of combat -- gone at combat end, same as Extra Vial's.</summary>
 public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Slots", 2m)];
+
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.ThePotionBelt)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
-        // Permanent: granted straight through the bridge with no bench record, so the
-        // combat-end cleanup never takes it back -- player slots are run state and it persists.
-        await LabBridge.Current.GainSlots(Owner, 1);
+        await Belt.GrantTemporarySlots(ctx, Lab, DynamicVars["Slots"].IntValue);
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

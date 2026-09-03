@@ -274,14 +274,24 @@ public static class Belt
     // ------------------------------------------------------------------ Unstable Concoction
 
     /// <summary>
-    /// Add to whatever Unstable Concoction is currently held, if any. Silent no-op otherwise -- the belt
-    /// was full when Alchemical Satchel tried to Brew one, or it's already been used this combat --
-    /// same "a full belt is not an error" rule Brew itself follows.
+    /// Add to whatever Unstable Concoction is currently held. If none is held -- the belt was full
+    /// when Alchemical Satchel tried to Brew one, or it's already been used this combat -- Brew a
+    /// fresh one first, starting at 0 across the board (not its usual 3 base Damage) so this call
+    /// is the only thing it has ever held. A full belt still means the Infuse is lost, same as
+    /// every other "a full belt is not an error" case in this class.
     /// </summary>
     public static async Task Infuse(PlayerChoiceContext ctx, LabContext lab, decimal damage = 0,
         decimal block = 0, decimal poison = 0, decimal energy = 0, decimal vulnerable = 0)
     {
-        if (Held(lab).OfType<UnstableConcoction>().FirstOrDefault() is not { } mixture) return;
+        var mixture = Held(lab).OfType<UnstableConcoction>().FirstOrDefault();
+        if (mixture == null)
+        {
+            if (await Brew(ctx, lab, ModelDb.Potion<UnstableConcoction>().ToMutable()) is not UnstableConcoction brewed)
+                return;
+
+            mixture = brewed;
+            mixture.DynamicVars.Damage.BaseValue = 0m;
+        }
 
         if (damage > 0) mixture.DynamicVars.Damage.BaseValue += damage;
         if (block > 0) mixture.DynamicVars.Block.BaseValue += block;

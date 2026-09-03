@@ -134,9 +134,10 @@ public static class Alchemy
     }
 
     /// <summary>
-    /// Create a Volatile Residue (Status, Unplayable) and add it directly to a pile. Only ever
-    /// called from <see cref="Belt.Brew"/>, automatically, when the Brewing card is an Attack --
-    /// no card creates this one directly.
+    /// Create a Volatile Residue (Status, Unplayable) and add it directly to a pile. Called
+    /// automatically from <see cref="Belt.Brew"/> whenever the Brewing card is an Attack, and
+    /// directly by a couple of cards that want the same junk without being an Attack (Spare
+    /// Flask).
     /// </summary>
     public static async Task CreateVolatileResidue(PlayerChoiceContext ctx, LabContext lab, PileType pile)
     {

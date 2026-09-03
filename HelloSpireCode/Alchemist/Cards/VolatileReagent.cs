@@ -10,12 +10,13 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 /// <summary>
 /// A free Colorless card born from an unstable Brew. Gain 1 Energy, no strings attached -- Pooled
 /// as Colorless rather than as an Alchemist card, since gaining Energy has nothing to do with the
-/// Belt. Ethereal, so one left sitting in Hand doesn't linger past the turn it arrived.
+/// Belt. Exhausts on play, and Ethereal besides, so one left sitting in Hand doesn't linger past
+/// the turn it arrived either.
 /// </summary>
 [Pool(typeof(ColorlessCardPool))]
 public sealed class VolatileReagent() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Ethereal];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await AlchemistEffects.GainEnergy(Lab, 1m);

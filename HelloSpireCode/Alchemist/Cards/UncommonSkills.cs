@@ -43,7 +43,7 @@ public sealed class Reconstitute() : AlchemistCard(1, CardType.Skill, CardRarity
         await Alchemy.ReturnFromExhaust(ctx, Lab);
 }
 
-/// <summary>Gain Block, and Brew a random Potion.</summary>
+/// <summary>Gain Block, Brew a random Potion, and leave a Volatile Residue in the discard pile.</summary>
 public sealed class SpareFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override bool GainsBlock => true;
@@ -56,6 +56,7 @@ public sealed class SpareFlask() : AlchemistCard(1, CardType.Skill, CardRarity.U
     {
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
         await Belt.BrewRandom(ctx, Lab);
+        await Alchemy.CreateVolatileResidue(ctx, Lab, PileType.Discard);
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
