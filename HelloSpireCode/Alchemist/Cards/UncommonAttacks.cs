@@ -47,6 +47,7 @@ public sealed class AlembicBlade() : AlchemistCard(1, CardType.Attack, CardRarit
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
         await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -67,7 +68,10 @@ public sealed class Shatterstock() : AlchemistCard(1, CardType.Attack, CardRarit
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         if ((await Belt.Distill(ctx, Lab)).Distilled)
+        {
             await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.LeaveResidualReagent(ctx, Lab);
+        }
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -126,6 +130,7 @@ public sealed class PressureBurst() : AlchemistCard(2, CardType.Attack, CardRari
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
         await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
@@ -181,7 +186,10 @@ public sealed class SolventStrike() : AlchemistCard(1, CardType.Attack, CardRari
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
 
         if (await Alchemy.ExhaustJunkFromDiscard(ctx, Lab))
+        {
             await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.LeaveResidualReagent(ctx, Lab);
+        }
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);

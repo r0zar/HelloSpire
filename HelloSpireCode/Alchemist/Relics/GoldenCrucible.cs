@@ -15,5 +15,6 @@ public sealed class GoldenCrucible : Characters.AlchemistRelic, IDistillListener
     {
         Flash();
         await Belt.Infuse(ctx, lab, damage: 3m);
+        await Belt.LeaveResidualReagent(ctx, lab);
     }
 }

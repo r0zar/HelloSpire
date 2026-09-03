@@ -88,10 +88,11 @@ public sealed class WiredLabBridge : ILabBridge
         // non-Brewable by rule; Aurum Tincture is excluded because its Poison payload assumes it
         // was deliberately bought or found, not handed out for free by a random Brew. Poison
         // Ampoule is non-Brewable the same way the Stone is -- Stabilizing a Volatile Poison
-        // Ampoule is its only source. Residual Reagent is junk Belt.Infuse creates directly and
-        // should never be handed out any other way.
+        // Ampoule is its only source. Unstable Concoction is what Infuse Brews (see Belt.Infuse);
+        // Residual Reagent is what a card leaves behind by calling Belt.LeaveResidualReagent
+        // alongside it. Neither should ever be handed out any other way.
         var options = PotionFactory.GetPotionOptions(player, [])
-            .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule and not ResidualReagent)
+            .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule and not UnstableConcoction and not ResidualReagent)
             .Where(p => rarity == null || p.Rarity == rarity)
             .ToList();
         if (options.Count == 0) return null;
@@ -105,7 +106,7 @@ public sealed class WiredLabBridge : ILabBridge
         IEnumerable<PotionModel> source = rarity == PotionRarity.Common
             ? VolatileCommonPool()
             : PotionFactory.GetPotionOptions(player, [])
-                .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule and not ResidualReagent);
+                .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule and not UnstableConcoction and not ResidualReagent);
         var pool = source.Where(p => rarity == null || p.Rarity == rarity).ToList();
         var picks = new List<PotionModel>();
         while (picks.Count < count && pool.Count > 0)

@@ -279,6 +279,10 @@ public static class Belt
     /// fresh one first, starting at 0 across the board (not its usual 3 base Damage) so this call
     /// is the only thing it has ever held. A full belt still means the Infuse is lost, same as
     /// every other "a full belt is not an error" case in this class.
+    ///
+    /// Does not leave a Residual Reagent on its own -- that's <see cref="LeaveResidualReagent"/>, a
+    /// separate effect a card opts into by calling it alongside Infuse, not something every Infuse
+    /// carries automatically.
     /// </summary>
     public static async Task Infuse(PlayerChoiceContext ctx, LabContext lab, decimal damage = 0,
         decimal block = 0, decimal poison = 0, decimal energy = 0, decimal vulnerable = 0)
@@ -299,20 +303,20 @@ public static class Belt
         if (energy > 0) mixture.DynamicVars["Energy"].BaseValue += energy;
         if (vulnerable > 0) mixture.DynamicVars["Vulnerable"].BaseValue += vulnerable;
 
-        await CreateResidualReagent(ctx, lab);
-
         var total = damage + block + poison + energy + vulnerable;
         await AlchemistHooks.NotifyInfused(ctx, lab, total);
     }
 
     /// <summary>
-    /// Drop a Residual Reagent into an open Slot -- the junk-potion byproduct of Infusing.
-    /// Deliberately NOT routed through <see cref="Brew"/>'s own pipeline: it should not count as a
-    /// Brew for Brewing Habit/Brewing Engine/Thermal Buffer or any other Brew-triggered engine,
-    /// just Volatile-tracked so it falls out at combat end like everything else Volatile. A full
-    /// belt is not an error, same rule Brew itself follows -- the Reagent is simply lost.
+    /// Drop a Residual Reagent into an open Slot -- an optional side effect some Infuse cards carry
+    /// and others don't; call this alongside <see cref="Infuse"/> from a card's own OnPlay to give
+    /// it the effect, or leave it out to withhold it. Deliberately NOT routed through
+    /// <see cref="Brew"/>'s own pipeline: it should not count as a Brew for Brewing Habit/Brewing
+    /// Engine/Thermal Buffer or any other Brew-triggered engine, just Volatile-tracked so it falls
+    /// out at combat end like everything else Volatile. A full belt is not an error, same rule Brew
+    /// itself follows -- the Reagent is simply lost.
     /// </summary>
-    private static async Task CreateResidualReagent(PlayerChoiceContext ctx, LabContext lab)
+    public static async Task LeaveResidualReagent(PlayerChoiceContext ctx, LabContext lab)
     {
         var placed = await LabBridge.Current.Brew(ctx, lab.Player, ModelDb.Potion<ResidualReagent>().ToMutable());
         if (placed == null) return;

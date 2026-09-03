@@ -58,12 +58,12 @@ public sealed class PoisonPotion : AlchemistPotion
 }
 
 /// <summary>
-/// Junk: what Infuse knocks loose into the belt (see <see cref="Lab.Belt.Infuse"/>). No effect of
-/// its own -- Use and Discard are both disabled on it at the UI level (see
+/// Junk: what a card leaves behind by calling <see cref="Lab.Belt.LeaveResidualReagent"/> alongside
+/// its own Infuse -- a separate, optional effect, not something Infuse itself always does. No
+/// effect of its own -- Use and Discard are both disabled on it at the UI level (see
 /// <see cref="ResidualReagentButtonsPatch"/>), so the player can't choose either. Distilling it is
 /// still allowed. Falls out at combat end, same as any other Volatile Potion. Non-Brewable and
-/// kept out of shops and rewards the same way Poison Ampoule is -- Infusing is the only way to
-/// ever get one.
+/// kept out of shops and rewards the same way Poison Ampoule is.
 /// </summary>
 public sealed class ResidualReagent : AlchemistPotion
 {

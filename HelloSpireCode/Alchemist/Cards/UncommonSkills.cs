@@ -124,7 +124,10 @@ public sealed class CatalyticWash() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         if ((await Belt.Distill(ctx, Lab)).Distilled)
+        {
             await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+            await Belt.LeaveResidualReagent(ctx, Lab);
+        }
     }
 
     protected override void OnUpgrade() => DynamicVars["Bonus"].UpgradeValueBy(2m);
@@ -180,6 +183,7 @@ public sealed class SmeltTheWeak() : AlchemistCard(0, CardType.Skill, CardRarity
 
         await AlchemistEffects.GainEnergy(Lab, 1m);
         await Belt.Infuse(ctx, Lab, damage: DynamicVars["Infuse"].BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 }
 
@@ -322,6 +326,7 @@ public sealed class TaintedWard() : AlchemistCard(1, CardType.Skill, CardRarity.
     {
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
         await Belt.Infuse(ctx, Lab, vulnerable: DynamicVars["Vulnerable"].BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);

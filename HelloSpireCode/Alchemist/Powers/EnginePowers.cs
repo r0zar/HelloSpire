@@ -102,6 +102,7 @@ public sealed class ThermalBufferPower : AlchemistEnginePower, IBrewListener
         Flash();
         await AlchemistEffects.GainPotency(ctx, lab, Amount);
         await Belt.Infuse(ctx, lab, block: BlockInfuse);
+        await Belt.LeaveResidualReagent(ctx, lab);
     }
 }
 
@@ -124,6 +125,7 @@ public sealed class ReagentPressPower : AlchemistEnginePower, IExhaustListener
 
         Flash();
         await Belt.Infuse(ctx, lab, damage: Amount);
+        await Belt.LeaveResidualReagent(ctx, lab);
     }
 }
 
@@ -181,6 +183,7 @@ public sealed class ClosedSystemPower : AlchemistEnginePower, ISlotEmptiedListen
         Flash();
         await AlchemistEffects.GainBlock(lab, Amount);
         await Belt.Infuse(ctx, lab, block: 2m);
+        await Belt.LeaveResidualReagent(ctx, lab);
     }
 }
 
@@ -199,6 +202,7 @@ public sealed class VolatileLaboratoryPower : AlchemistEnginePower, IStatusCreat
     {
         Flash();
         await Belt.Infuse(ctx, lab, damage: Amount);
+        await Belt.LeaveResidualReagent(ctx, lab);
     }
 }
 

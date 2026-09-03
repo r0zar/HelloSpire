@@ -27,6 +27,7 @@ public sealed class PhilosophersFlame() : AlchemistCard(3, CardType.Attack, Card
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
         await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
     protected override void OnUpgrade()
@@ -164,6 +165,7 @@ public sealed class CatalyticExplosion() : AlchemistCard(2, CardType.Attack, Car
 
         var types = AlchemistEffects.Peek(Lab)?.UsedThisCombat.Select(p => p.GetType()).Distinct().Count() ?? 0;
         await Belt.Infuse(ctx, Lab, damage: DynamicVars["PerType"].BaseValue * types);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);

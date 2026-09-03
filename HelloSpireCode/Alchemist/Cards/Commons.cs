@@ -144,6 +144,7 @@ public sealed class CrucibleBlow() : AlchemistCard(1, CardType.Attack, CardRarit
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
         await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
     protected override void OnUpgrade()
@@ -312,6 +313,7 @@ public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRar
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
         await Belt.Infuse(ctx, Lab, block: DynamicVars["Bonus"].BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
     protected override void OnUpgrade()
@@ -348,8 +350,11 @@ public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.C
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
         await Belt.Infuse(ctx, Lab, block: DynamicVars.Block.BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
+    }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
