@@ -75,7 +75,7 @@ internal static class HideVolatilePotionsFromShopsAndRewardsPatch
     private static void BeforeCreate(ref IEnumerable<PotionModel>? blacklist)
     {
         blacklist = (blacklist ?? [])
-            .Concat(ModelDb.AllPotions.Where(p => p is VolatileCommonPotion or UnstableConcoction or PoisonAmpoule));
+            .Concat(ModelDb.AllPotions.Where(p => p is VolatileCommonPotion or UnstableConcoction or PoisonAmpoule or ResidualReagent));
     }
 }
 

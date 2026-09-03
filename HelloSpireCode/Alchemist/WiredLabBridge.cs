@@ -88,9 +88,10 @@ public sealed class WiredLabBridge : ILabBridge
         // non-Brewable by rule; Aurum Tincture is excluded because its Poison payload assumes it
         // was deliberately bought or found, not handed out for free by a random Brew. Poison
         // Ampoule is non-Brewable the same way the Stone is -- Stabilizing a Volatile Poison
-        // Ampoule is its only source.
+        // Ampoule is its only source. Residual Reagent is junk Belt.Infuse creates directly and
+        // should never be handed out any other way.
         var options = PotionFactory.GetPotionOptions(player, [])
-            .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule)
+            .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule and not ResidualReagent)
             .Where(p => rarity == null || p.Rarity == rarity)
             .ToList();
         if (options.Count == 0) return null;
@@ -103,7 +104,8 @@ public sealed class WiredLabBridge : ILabBridge
         // different labels. Deterministic across clients: the pool order and the synced RNG are.
         IEnumerable<PotionModel> source = rarity == PotionRarity.Common
             ? VolatileCommonPool()
-            : PotionFactory.GetPotionOptions(player, []).Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule);
+            : PotionFactory.GetPotionOptions(player, [])
+                .Where(p => p is not PhilosophersStone and not AurumTincture and not PoisonAmpoule and not ResidualReagent);
         var pool = source.Where(p => rarity == null || p.Rarity == rarity).ToList();
         var picks = new List<PotionModel>();
         while (picks.Count < count && pool.Count > 0)

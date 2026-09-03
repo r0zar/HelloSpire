@@ -58,6 +58,20 @@ public sealed class PoisonPotion : AlchemistPotion
 }
 
 /// <summary>
+/// Junk: what Infuse knocks loose into the belt (see <see cref="Lab.Belt.Infuse"/>). No effect,
+/// and can't be Distilled away -- once it lands in a Slot it sits there until either you drink it
+/// for nothing or the combat ends and it falls out like any other Volatile Potion. Non-Brewable
+/// and kept out of shops and rewards the same way Poison Ampoule is; nothing ever hands the player
+/// one on purpose.
+/// </summary>
+public sealed class ResidualReagent : AlchemistPotion
+{
+    public override PotionRarity Rarity => PotionRarity.Common;
+
+    protected override Task OnUse(PlayerChoiceContext ctx, Creature? target) => Task.CompletedTask;
+}
+
+/// <summary>
 /// Apply Poison to ALL enemies. Non-Brewable: no random Brew, no Alchemize, no Panacea may ever
 /// produce it, and it's kept out of shops and rewards -- same shape as The Great Work's
 /// Philosopher's Stone. Stabilizing a Volatile Poison Ampoule is the only way it exists.
