@@ -58,11 +58,10 @@ public sealed class PoisonPotion : AlchemistPotion
 }
 
 /// <summary>
-/// Junk: what Infuse knocks loose into the belt (see <see cref="Lab.Belt.Infuse"/>). No effect,
-/// and can't be Distilled away -- once it lands in a Slot it sits there until either you drink it
-/// for nothing or the combat ends and it falls out like any other Volatile Potion. Non-Brewable
-/// and kept out of shops and rewards the same way Poison Ampoule is; nothing ever hands the player
-/// one on purpose.
+/// Junk: what Infuse knocks loose into the belt (see <see cref="Lab.Belt.Infuse"/>). No effect on
+/// its own, but Distills or gets drunk like any real Potion, and falls out at combat end if
+/// neither happens first, same as any other Volatile Potion. Non-Brewable and kept out of shops
+/// and rewards the same way Poison Ampoule is -- Infusing is the only way to ever get one.
 /// </summary>
 public sealed class ResidualReagent : AlchemistPotion
 {

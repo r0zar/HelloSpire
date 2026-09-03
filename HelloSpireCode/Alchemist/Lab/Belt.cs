@@ -130,7 +130,7 @@ public static class Belt
     /// </summary>
     public static async Task<DistillResult> Distill(PlayerChoiceContext ctx, LabContext lab)
     {
-        var held = Held(lab).Where(p => p is not ResidualReagent).ToList();
+        var held = Held(lab);
         if (held.Count == 0) return DistillResult.Nothing;
 
         var chosen = held.Count == 1
@@ -142,14 +142,9 @@ public static class Belt
         return await Distill(ctx, lab, chosen);
     }
 
-    /// <summary>
-    /// Distill one named Potion, for the cards that have already picked. Residual Reagent can't be
-    /// Distilled -- it's a no-op that returns Nothing, same shape as an empty belt.
-    /// </summary>
+    /// <summary>Distill one named Potion, for the cards that have already picked.</summary>
     public static async Task<DistillResult> Distill(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
-        if (potion is ResidualReagent) return DistillResult.Nothing;
-
         var bench = await AlchemistEffects.Bench(ctx, lab);
         var wasVolatile = bench?.Volatile.Contains(potion) ?? false;
 
@@ -175,10 +170,9 @@ public static class Belt
     public static async Task<int> DistillAny(PlayerChoiceContext ctx, LabContext lab, int max)
     {
         var count = 0;
-        while (count < max && Held(lab).Any(p => p is not ResidualReagent))
+        while (count < max && Held(lab).Count > 0)
         {
-            var candidates = Held(lab).Where(p => p is not ResidualReagent).ToList();
-            var chosen = await LabBridge.Current.ChoosePotion(ctx, lab.Player, candidates,
+            var chosen = await LabBridge.Current.ChoosePotion(ctx, lab.Player, Held(lab),
                 new LocString("cards", "HELLOSPIRE-ALCHEMIST_DISTILL_CHOICE.header"), allowStop: true);
             if (chosen == null) break;
 
