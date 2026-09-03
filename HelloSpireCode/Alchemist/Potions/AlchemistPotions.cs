@@ -6,7 +6,6 @@ using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 using HelloSpire.HelloSpireCode.Alchemist;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
 
@@ -59,36 +58,16 @@ public sealed class PoisonPotion : AlchemistPotion
 }
 
 /// <summary>
-/// Junk: what Infuse knocks loose into the belt (see <see cref="Lab.Belt.Infuse"/>). Unusable
-/// (Usage.None) and can't be Discarded from the belt (see
-/// <see cref="BlockResidualReagentDiscardPatch"/>) -- Distilling it is the one way it ever leaves a
-/// Slot early, which works because <see cref="Lab.Belt.Distill"/> removes the Potion directly
-/// (<see cref="LabBridge.RemovePotion"/>) rather than going through the same Discard command the
-/// belt's generic discard button uses. Falls out at combat end regardless, same as any other
+/// Junk: what Infuse knocks loose into the belt (see <see cref="Lab.Belt.Infuse"/>). No effect,
+/// ordinary Use/Discard/Distill like any other Potion. Falls out at combat end, same as any other
 /// Volatile Potion. Non-Brewable and kept out of shops and rewards the same way Poison Ampoule is
 /// -- Infusing is the only way to ever get one.
 /// </summary>
 public sealed class ResidualReagent : AlchemistPotion
 {
     public override PotionRarity Rarity => PotionRarity.Common;
-    public override PotionUsage Usage => PotionUsage.None;
 
     protected override Task OnUse(PlayerChoiceContext ctx, Creature? target) => Task.CompletedTask;
-}
-
-/// <summary>
-/// Residual Reagent can't be Discarded -- not Distilled (that's a different, direct removal; see
-/// the class doc comment above), just the belt's ordinary "throw this Potion away" button, which
-/// routes through this one static command regardless of who calls it. PotionCmd.Discard takes no
-/// Player parameter (it resolves the owner from the Potion itself), so a Prefix here is the only
-/// place a per-Potion block can live -- same "the engine has no per-instance hook, so Harmony
-/// supplies one" shape as HideVolatilePotionsFromShopsAndRewardsPatch.
-/// </summary>
-[HarmonyLib.HarmonyPatch(typeof(PotionCmd), nameof(PotionCmd.Discard))]
-internal static class BlockResidualReagentDiscardPatch
-{
-    [HarmonyLib.HarmonyPrefix]
-    private static bool BeforeDiscard(PotionModel potion) => potion is not ResidualReagent;
 }
 
 /// <summary>

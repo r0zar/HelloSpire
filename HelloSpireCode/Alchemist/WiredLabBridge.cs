@@ -50,18 +50,6 @@ public sealed class WiredLabBridge : ILabBridge
     public Task Discard(PlayerChoiceContext ctx, Player player, PotionModel potion) =>
         PotionCmd.Discard(potion);
 
-    // Player.RemovePotionInternal (decompiled from sts2.dll) is the same bare "take it out of its
-    // Slot" primitive DiscardPotionInternal and RemoveUsedPotionInternal are, minus whatever
-    // Discard-specific ceremony PotionCmd.Discard adds on top -- confirmed via reflection against
-    // the compiled assembly, since it's non-public and there's no PotionCmd-level wrapper for it.
-    // Synchronous under the hood; wrapped in Task.CompletedTask to match the interface shape every
-    // other bridge method here already uses.
-    public Task RemovePotion(Player player, PotionModel potion)
-    {
-        player.RemovePotionInternal(potion);
-        return Task.CompletedTask;
-    }
-
     /// <summary>
     /// The real, weaker Volatile potions Common-rarity combat generation actually hands out (see
     /// VolatileCommonPotions.cs). Alchemize deliberately bypasses this -- it asks for
