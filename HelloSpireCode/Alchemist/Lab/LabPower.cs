@@ -132,17 +132,19 @@ public sealed class LabPower : HelloSpirePower
     }
 
     /// <summary>
-    /// The bench closes: Volatile Potions are discarded (they never leave combat), and then the
-    /// temporary slots are taken back. That order matters -- discarding first empties the doomed
+    /// The bench closes: Volatile Potions are removed (they never leave combat), and then the
+    /// temporary slots are taken back. That order matters -- removing first empties the doomed
     /// slots, so a real Potion sitting in one relocates instead of being lost (the game moves
-    /// occupants of removed slots into earlier free ones).
+    /// occupants of removed slots into earlier free ones). Removed directly
+    /// (<see cref="LabBridge.RemovePotion"/>), not via the generic Discard command -- a Volatile
+    /// Residual Reagent still has to fall out here even though it can't be Discarded.
     /// </summary>
     public override async Task AfterCombatEnd(CombatRoom room)
     {
         if (Owner.Player is not { } player) return;
 
         foreach (var potion in LabBridge.Current.Held(player).Where(Volatile.Contains).ToList())
-            await LabBridge.Current.Discard(null!, player, potion);
+            await LabBridge.Current.RemovePotion(player, potion);
         Volatile.Clear();
 
         if (TemporarySlots > 0)

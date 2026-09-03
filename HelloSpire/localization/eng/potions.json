@@ -14,7 +14,7 @@
   "HELLOSPIRE-POISON_AMPOULE.title": "Poison Ampoule",
   "HELLOSPIRE-POISON_AMPOULE.description": "Apply 5 [gold]Poison[/gold] to ALL enemies.",
   "HELLOSPIRE-RESIDUAL_REAGENT.title": "Residual Reagent",
-  "HELLOSPIRE-RESIDUAL_REAGENT.description": "Nothing happens.",
+  "HELLOSPIRE-RESIDUAL_REAGENT.description": "Cannot be Used or Discarded. Can still be Distilled.",
   "HELLOSPIRE-PANACEA_OF_PLENTY.title": "Panacea of Plenty",
   "HELLOSPIRE-PANACEA_OF_PLENTY.description": "Fill all empty Potion Slots with random [gold]Volatile[/gold] Common Combat Potions.",
   "HELLOSPIRE-PHILOSOPHERS_STONE.title": "Philosopher's Stone",

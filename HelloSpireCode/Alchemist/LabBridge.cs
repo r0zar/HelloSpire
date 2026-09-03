@@ -84,8 +84,20 @@ public interface ILabBridge
     /// </summary>
     Task<PotionModel?> Brew(PlayerChoiceContext ctx, Player player, PotionModel potion);
 
-    /// <summary>Remove a held Potion without resolving it. Distill's actual effect.</summary>
+    /// <summary>
+    /// The belt's ordinary "throw this Potion away" command -- what the generic discard button
+    /// calls. Not used by Distill anymore; see <see cref="RemovePotion"/>.
+    /// </summary>
     Task Discard(PlayerChoiceContext ctx, Player player, PotionModel potion);
+
+    /// <summary>
+    /// Take a Potion out of its Slot directly, without going through the Discard command --
+    /// Distill's actual effect, and the combat-end Volatile cleanup's. Potions.Discard has no
+    /// per-instance permission hook of its own (a Harmony Prefix is the only way to block a
+    /// specific Potion from it -- see BlockResidualReagentDiscardPatch), so anything that needs to
+    /// remove a Potion regardless of that block goes through here instead.
+    /// </summary>
+    Task RemovePotion(Player player, PotionModel potion);
 
     /// <summary>A random Potion from the curated Combat Potion pool — see design/alchemist.md.</summary>
     PotionModel? RandomCombatPotion(Player player, PotionRarity? rarity = null);
@@ -217,6 +229,12 @@ public sealed class UnwiredLabBridge : ILabBridge
     }
 
     public Task Discard(PlayerChoiceContext ctx, Player player, PotionModel potion)
+    {
+        Report("discarding a Potion");
+        return Task.CompletedTask;
+    }
+
+    public Task RemovePotion(Player player, PotionModel potion)
     {
         Report("Distill");
         return Task.CompletedTask;
