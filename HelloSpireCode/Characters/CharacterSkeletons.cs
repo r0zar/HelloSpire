@@ -53,7 +53,15 @@ internal static class CharacterSkeletons
         var modDir = Path.GetDirectoryName(typeof(CharacterSkeletons).Assembly.Location);
         if (modDir == null) return null;
         var dir = Path.Combine(modDir, "spine", folder);
-        if (!Directory.Exists(dir)) return null;
+        if (!Directory.Exists(dir))
+        {
+            // Loud on purpose: a missing folder means an incomplete install (the mod was
+            // copied without spine/), and the character silently degrades to the shader
+            // repaint. This line is how a co-op partner's godot.log proves which it is.
+            GD.PushWarning($"[HelloSpire] spine/{folder}/ not found beside the mod DLL — " +
+                           "incomplete install? Falling back to the shader repaint.");
+            return null;
+        }
         var atlasPath = Directory.GetFiles(dir, "*.atlas").FirstOrDefault();
         if (atlasPath == null) return null;
         var skelPath = Path.ChangeExtension(atlasPath, ".skel");
