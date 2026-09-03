@@ -360,7 +360,7 @@ public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.C
 }
 
 /// <summary>Leave a Volatile Reagent in the draw pile, and apply Poison.</summary>
-public sealed class ContaminatedSample() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class ContaminatedSample() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 3m)];
 
