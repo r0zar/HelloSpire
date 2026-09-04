@@ -288,7 +288,7 @@ public sealed class PocketFormula() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Exhaust a card for Block, free.</summary>
+/// <summary>Exhaust a card from your discard pile for Block, free.</summary>
 public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
@@ -299,7 +299,7 @@ public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRar
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
+        if (!await Alchemy.ExhaustOneFromDiscard(ctx, Lab)) return;
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
     }

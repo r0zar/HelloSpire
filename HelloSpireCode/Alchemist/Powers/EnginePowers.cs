@@ -85,7 +85,6 @@ public sealed class ThermalBufferPower : AlchemistEnginePower, IExhaustListener
 
         Flash();
         await Belt.Infuse(ctx, lab, block: Amount);
-        await Belt.LeaveResidualReagent(ctx, lab);
     }
 }
 

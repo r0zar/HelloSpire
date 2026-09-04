@@ -45,6 +45,22 @@ public static class Alchemy
     }
 
     /// <summary>
+    /// Exhaust one card from the discard pile, chosen by the player. Salvage Reagents. False when
+    /// the discard pile is empty or the player declined.
+    /// </summary>
+    public static async Task<bool> ExhaustOneFromDiscard(PlayerChoiceContext ctx, LabContext lab)
+    {
+        var candidates = LabBridge.Current.DiscardPile(lab.Player);
+        if (candidates.Count == 0) return false;
+
+        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
+        if (chosen == null) return false;
+
+        await Exhaust(ctx, lab, chosen);
+        return true;
+    }
+
+    /// <summary>
     /// Exhaust one named card. CardsExhaustedThisTurn and NotifyExhausted happen automatically
     /// from here -- see LabPower.AfterCardExhausted, a real base-game hook that fires for every
     /// Exhaust in combat, including cards that Exhaust themselves (Aegis Formula, Pocket Formula,
