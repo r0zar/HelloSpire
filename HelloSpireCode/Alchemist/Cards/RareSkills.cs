@@ -10,8 +10,24 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Skills 1-9. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
+// Rare Skills 1-10. The Belt's utility ceiling: Alchemize/Widen the Belt/Extra-Vial-style slot and
 // Potion access, plus the two "empty your Hand" capstones (Heavy Transmute, Perfect Solvent).
+
+/// <summary>Infuse a lot into Unstable Concoction.</summary>
+public sealed class PhilosophersFlame() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(30m, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await Belt.Infuse(ctx, Lab, damage: DynamicVars.Damage.BaseValue);
+        await Belt.LeaveResidualReagent(ctx, Lab);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
+}
 
 /// <summary>
 /// Brew a real Rare Potion -- and a real one, not Volatile: it survives past the end of combat

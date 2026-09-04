@@ -10,32 +10,8 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Rare Attacks 1-6. The class's damage ceiling -- every one of them either Infuses Unstable
+// Rare Attacks 1-5. The class's damage ceiling -- every one of them either Infuses Unstable
 // Concoction, applies a lot of Poison, or scales off board state built up over the whole fight.
-
-/// <summary>Deal damage, and Infuse a lot more into Unstable Concoction.</summary>
-public sealed class PhilosophersFlame() : AlchemistCard(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(20m, ValueProp.Move), new DamageVar("Bonus", 20m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
-        await Belt.LeaveResidualReagent(ctx, Lab);
-    }
-
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Damage.UpgradeValueBy(4m);
-        DynamicVars["Bonus"].UpgradeValueBy(4m);
-    }
-}
 
 /// <summary>Feed it your most expensive card, for damage.</summary>
 public sealed class MatterAnnihilation() : AlchemistCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
