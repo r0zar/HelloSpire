@@ -96,24 +96,18 @@ public sealed class ToxicNeedle() : AlchemistCard(1, CardType.Attack, CardRarity
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Damage and Poison to ALL enemies.</summary>
+/// <summary>Brew an Explosive Ampoule, and leave a Volatile Residue in the discard pile.</summary>
 public sealed class FlashPowder() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(6m, ValueProp.Move), new DynamicVar("Poison", 5m)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        foreach (var enemy in AlchemistEffects.Enemies(Lab))
-        {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(enemy).Execute(ctx);
-            await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, DynamicVars["Poison"].BaseValue);
-        }
+        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.ExplosiveAmpoule));
+        await Alchemy.CreateVolatileResidue(ctx, Lab, PileType.Discard);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Big damage, and Infuse Unstable Concoction.</summary>

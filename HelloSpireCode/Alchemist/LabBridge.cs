@@ -13,7 +13,7 @@ public enum BasePotion
     /// <summary>Gain 12 Block. Aegis Formula.</summary>
     Block,
 
-    /// <summary>Deal 10 damage to ALL enemies. Pyric Formula.</summary>
+    /// <summary>Deal 10 damage to ALL enemies. Flash Powder.</summary>
     ExplosiveAmpoule,
 
     /// <summary>Gain 2 Energy.</summary>
