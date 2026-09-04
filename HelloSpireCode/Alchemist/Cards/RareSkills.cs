@@ -157,7 +157,7 @@ public sealed class Overdose() : AlchemistCard(2, CardType.Skill, CardRarity.Rar
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Poison", 10m), new DynamicVar("Bonus", 10m)];
+        [new DynamicVar("Poison", 6m), new DynamicVar("Bonus", 6m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [HoverTipFactory.FromPower<PoisonPower>(), Tip(AlchemistTips.Infuse), Tip(AlchemistTips.Brew)];
