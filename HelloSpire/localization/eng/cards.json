@@ -352,7 +352,7 @@
   "HELLOSPIRE-BITTER_SOLVENT.title": "Bitter Solvent",
   "HELLOSPIRE-BITTER_SOLVENT.description": "Apply {Poison:diff()} [gold]Poison[/gold] and {WeakPower:diff()} [gold]Weak[/gold].",
   "HELLOSPIRE-EXTRA_VIAL.title": "Extra Vial",
-  "HELLOSPIRE-EXTRA_VIAL.description": "Gain {Slots} extra Potion Slot this combat.",
+  "HELLOSPIRE-EXTRA_VIAL.description": "Gain {Slots} extra Potion Slot this turn.",
   "HELLOSPIRE-BOTTLE_BARRAGE.title": "Bottle Barrage",
   "HELLOSPIRE-BOTTLE_BARRAGE.description": "Deal {PerPotion:diff()} damage for each occupied Potion Slot.",
   "HELLOSPIRE-SHATTERSTOCK.title": "Shatterstock",

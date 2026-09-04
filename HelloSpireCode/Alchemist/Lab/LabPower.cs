@@ -58,6 +58,14 @@ public sealed class LabPower : HelloSpirePower
     /// <summary>Extra Potion Slots granted for this combat only. All of them are Volatile-only.</summary>
     public int TemporarySlots { get; set; }
 
+    /// <summary>
+    /// Extra Potion Slots granted for the rest of THIS turn only -- Extra Vial's payload, and a
+    /// shorter-lived sibling of <see cref="TemporarySlots"/>. Taken back in
+    /// <see cref="BeforeSideTurnStart"/>, same place every other ThisTurn counter here resets, not
+    /// <see cref="AfterCombatEnd"/>.
+    /// </summary>
+    public int SlotsThisTurn { get; set; }
+
     public int PotionsUsedThisTurn { get; set; }
     public int SlotsEmptiedThisTurn { get; set; }
     public int BrewedThisTurn { get; set; }
@@ -105,9 +113,9 @@ public sealed class LabPower : HelloSpirePower
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Held", 0m)];
 
     /// <summary>Everything that resets between the owner's turns.</summary>
-    public override Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)
+    public override async Task BeforeSideTurnStart(PlayerChoiceContext ctx, CombatSide side, IReadOnlyList<Creature> participants, ICombatState state)
     {
-        if (side != Owner.Side) return Task.CompletedTask;
+        if (side != Owner.Side) return;
 
         PotionsUsedThisTurn = 0;
         SlotsEmptiedThisTurn = 0;
@@ -117,7 +125,11 @@ public sealed class LabPower : HelloSpirePower
         CardsCreatedThisTurn = 0;
         PoisonMultiplier = 1m;
 
-        return Task.CompletedTask;
+        if (SlotsThisTurn > 0 && Owner.Player is { } player)
+        {
+            await LabBridge.Current.LoseSlots(player, SlotsThisTurn);
+            SlotsThisTurn = 0;
+        }
     }
 
     /// <summary>

@@ -136,8 +136,8 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
     protected override void OnUpgrade() => DynamicVars["PerCard"].UpgradeValueBy(1m);
 }
 
-/// <summary>Two Potion Slots for the rest of combat -- gone at combat end, same as Extra Vial's.</summary>
-public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+/// <summary>Two Potion Slots for the rest of combat -- gone at combat end.</summary>
+public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 

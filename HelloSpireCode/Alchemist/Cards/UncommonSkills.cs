@@ -63,21 +63,19 @@ public sealed class SpareFlask() : AlchemistCard(1, CardType.Skill, CardRarity.U
 }
 
 /// <summary>
-/// One more Potion Slot for this combat, for general use -- any Potion, Volatile or real, can sit
-/// in it. A real Potion still parked there when the Slot is taken back at combat end is simply
-/// relocated into a remaining real Slot (see <see cref="PotionSlotShrinkPatch"/>), never lost, so
-/// there is no restriction to enforce.
+/// One more Potion Slot for this turn, for general use -- any Potion, Volatile or real, can sit
+/// in it. A real Potion still parked there when the Slot is taken back is simply relocated into a
+/// remaining real Slot (see <see cref="PotionSlotShrinkPatch"/>), never lost, so there is no
+/// restriction to enforce.
 /// </summary>
 public sealed class ExtraVial() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Slots", 1m)];
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.ThePotionBelt)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
-        await Belt.GrantTemporarySlots(ctx, Lab, DynamicVars["Slots"].IntValue);
+        await Belt.GrantSlotsThisTurn(ctx, Lab, DynamicVars["Slots"].IntValue);
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

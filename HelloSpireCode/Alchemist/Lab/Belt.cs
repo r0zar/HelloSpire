@@ -188,11 +188,11 @@ public static class Belt
 
     public static IReadOnlyList<PotionModel> Held(LabContext lab) => LabBridge.Current.Held(lab.Player);
 
-    /// <summary>Total slots, including this combat's temporary Volatile-only ones.</summary>
+    /// <summary>Total slots, including this combat's and this turn's temporary Volatile-only ones.</summary>
     public static int Slots(LabContext lab)
     {
         var bench = AlchemistEffects.Peek(lab);
-        return LabBridge.Current.SlotCount(lab.Player) + (bench?.TemporarySlots ?? 0);
+        return LabBridge.Current.SlotCount(lab.Player) + (bench?.TemporarySlots ?? 0) + (bench?.SlotsThisTurn ?? 0);
     }
 
     public static int EmptySlots(LabContext lab) => Math.Max(0, Slots(lab) - Held(lab).Count);
@@ -215,6 +215,23 @@ public static class Belt
 
         await LabBridge.Current.GainSlots(lab.Player, count);
         bench.TemporarySlots += count;
+    }
+
+    /// <summary>
+    /// Extra slots for the rest of THIS turn only -- gone before it's even the enemy's turn, taken
+    /// back in <see cref="LabPower.BeforeSideTurnStart"/> rather than at combat end. Extra Vial's
+    /// payload. Real slots, same as <see cref="GrantTemporarySlots"/>'s -- grown on the player via
+    /// the bridge so the game's own belt UI and Procure checks see them.
+    /// </summary>
+    public static async Task GrantSlotsThisTurn(PlayerChoiceContext ctx, LabContext lab, int count)
+    {
+        if (count <= 0) return;
+
+        var bench = await AlchemistEffects.Bench(ctx, lab);
+        if (bench == null) return;
+
+        await LabBridge.Current.GainSlots(lab.Player, count);
+        bench.SlotsThisTurn += count;
     }
 
     // ------------------------------------------------------------------ using a Potion
