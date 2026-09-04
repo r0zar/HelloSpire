@@ -75,20 +75,16 @@ public sealed class ConcentratePower : AlchemistEnginePower, IInfuseListener
     }
 }
 
-/// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a gap.</summary>
-public sealed class ThermalBufferPower : AlchemistEnginePower, IBrewListener
+/// <summary>The first Exhaust each turn Infuses Block.</summary>
+public sealed class ThermalBufferPower : AlchemistEnginePower, IExhaustListener
 {
-    /// <summary>Block Infused into Unstable Concoction. Set by the card; 3 base, 4 upgraded.</summary>
-    public decimal BlockInfuse { get; set; } = 3m;
-
-    public async Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
+    public async Task OnExhausted(PlayerChoiceContext ctx, LabContext lab)
     {
         if (UsedThisTurn) return;
         UsedThisTurn = true;
 
         Flash();
-        await AlchemistEffects.GainPotency(ctx, lab, Amount);
-        await Belt.Infuse(ctx, lab, block: BlockInfuse);
+        await Belt.Infuse(ctx, lab, block: Amount);
         await Belt.LeaveResidualReagent(ctx, lab);
     }
 }

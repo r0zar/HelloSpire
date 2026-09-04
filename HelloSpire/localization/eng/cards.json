@@ -551,7 +551,7 @@
   "HELLOSPIRE-POTENT_DISTILLATION.title": "Potent Distillation",
   "HELLOSPIRE-POTENT_DISTILLATION.description": "Gain {PotencyPower:diff()} [gold]Potency[/gold]. [gold]Distill[/gold] a Potion.",
   "HELLOSPIRE-THERMAL_BUFFER.title": "Thermal Buffer",
-  "HELLOSPIRE-THERMAL_BUFFER.description": "The first time you [gold]Brew[/gold] each turn, gain {ThermalBufferPower:diff()} [gold]Potency[/gold] and [gold]Infuse[/gold] {Infuse:diff()} Block. Add a Residual Reagent to your Potion Belt.",
+  "HELLOSPIRE-THERMAL_BUFFER.description": "The first card you Exhaust each turn [gold]Infuses[/gold] {ThermalBufferPower:diff()} Block and adds a Residual Reagent to your Potion Belt.",
   "HELLOSPIRE-REAGENT_PRESS.title": "Reagent Press",
   "HELLOSPIRE-REAGENT_PRESS.description": "The first card you Exhaust each turn [gold]Infuses[/gold] {ReagentPressPower:diff()} Damage and adds a Residual Reagent to your Potion Belt.",
   "HELLOSPIRE-EFFICIENT_DISTILLATION.title": "Efficient Distillation",

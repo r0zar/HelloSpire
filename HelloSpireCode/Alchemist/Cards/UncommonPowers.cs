@@ -31,29 +31,22 @@ public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a hole.</summary>
+/// <summary>The first Exhaust each turn Infuses Block.</summary>
 public sealed class ThermalBuffer() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<ThermalBufferPower>(2m), new BlockVar("Infuse", 3m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ThermalBufferPower>(5m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<ThermalBufferPower>()];
+        [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<ThermalBufferPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var power = await PowerCmd.Apply<ThermalBufferPower>(ctx, Owner.Creature,
+        await PowerCmd.Apply<ThermalBufferPower>(ctx, Owner.Creature,
             DynamicVars["ThermalBufferPower"].BaseValue, Owner.Creature, this);
-
-        if (power != null) power.BlockInfuse = DynamicVars["Infuse"].BaseValue;
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars["ThermalBufferPower"].UpgradeValueBy(1m);
-        DynamicVars["Infuse"].UpgradeValueBy(1m);
-    }
+    protected override void OnUpgrade() => DynamicVars["ThermalBufferPower"].UpgradeValueBy(1m);
 }
 
 /// <summary>The first card you Exhaust each turn Infuses Unstable Concoction.</summary>
