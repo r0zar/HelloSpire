@@ -12,9 +12,9 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Skills 1-19. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison), plus
-// the Belt's own utility (Extra Vial, Stabilize, Reconstitute) and the Status sub-theme's first
-// real payoff cards (False Bottom, Reagent Recovery).
+// Uncommon Skills 1-20. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison,
+// Strength/Dexterity), plus the Belt's own utility (Extra Vial, Stabilize, Reconstitute) and the
+// Status sub-theme's first real payoff cards (False Bottom, Reagent Recovery).
 
 /// <summary>Distill a Potion for Energy.</summary>
 public sealed class DistillationColumn() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
@@ -149,6 +149,30 @@ public sealed class TinctureTrade() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(2m);
 }
 
+/// <summary>Distill a Potion, for Strength and Dexterity.</summary>
+public sealed class ReactiveLaboratory() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new PowerVar<StrengthPower>(1m), new PowerVar<DexterityPower>(1m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<StrengthPower>(), HoverTipFactory.FromPower<DexterityPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
+
+        await AlchemistEffects.GainStrength(ctx, Lab, DynamicVars.Strength.BaseValue);
+        await AlchemistEffects.GainDexterity(ctx, Lab, DynamicVars.Dexterity.BaseValue);
+    }
+
+    protected override void OnUpgrade()
+    {
+        DynamicVars.Strength.UpgradeValueBy(1m);
+        DynamicVars.Dexterity.UpgradeValueBy(1m);
+    }
+}
+
 /// <summary>Add Volatile Reagents to your hand.</summary>
 public sealed class Liquidate() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
@@ -229,7 +253,7 @@ public sealed class ToxicDistillate() : AlchemistCard(1, CardType.Skill, CardRar
 }
 
 /// <summary>Brew a Poison Potion and a Weak Potion.</summary>
-public sealed class ReactiveMixture() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class ReactiveMixture() : AlchemistCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 

@@ -555,7 +555,7 @@
   "HELLOSPIRE-EFFICIENT_DISTILLATION.title": "Efficient Distillation",
   "HELLOSPIRE-EFFICIENT_DISTILLATION.description": "Whenever you [gold]Distill[/gold] a Potion, gain {EfficientDistillationPower:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-REACTIVE_LABORATORY.title": "Reactive Laboratory",
-  "HELLOSPIRE-REACTIVE_LABORATORY.description": "The first Potion you use each turn draws a card.",
+  "HELLOSPIRE-REACTIVE_LABORATORY.description": "[gold]Distill[/gold] a Potion: gain {StrengthPower:diff()} [gold]Strength[/gold] and {DexterityPower:diff()} [gold]Dexterity[/gold].",
   "HELLOSPIRE-TOXIC_CULTURE.title": "Toxic Culture",
   "HELLOSPIRE-TOXIC_CULTURE.description": "Whenever you [gold]Brew[/gold] a Poison Potion, apply {ToxicCulturePower:diff()} [gold]Poison[/gold] to a random enemy.",
   "HELLOSPIRE-OVERDOSE.title": "Overdose",

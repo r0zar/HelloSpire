@@ -9,9 +9,9 @@ using HelloSpire.HelloSpireCode.Alchemist.Lab;
 using MegaCrit.Sts2.Core.ValueProps;
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Powers 1-9. Each attaches a payout to a verb the character already uses every turn --
-// Brewing, Distilling, Exhausting, drinking, Infusing, or emptying a slot. None of them changes
-// what you do; they change what it is worth.
+// Uncommon Powers 1-8. Each attaches a payout to a verb the character already uses every turn --
+// Brewing, Distilling, Exhausting, Infusing, or emptying a slot. None of them changes what you do;
+// they change what it is worth.
 
 /// <summary>Whenever you Infuse, gain Energy for every 10 Infused.</summary>
 public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
@@ -82,23 +82,6 @@ public sealed class EfficientDistillation() : AlchemistCard(1, CardType.Power, C
     }
 
     protected override void OnUpgrade() => DynamicVars["EfficientDistillationPower"].UpgradeValueBy(2m);
-}
-
-/// <summary>The first Potion you use each turn also draws a card.</summary>
-public sealed class ReactiveLaboratory() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ReactiveLaboratoryPower>(1m)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<ReactiveLaboratoryPower>()];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<ReactiveLaboratoryPower>(ctx, Owner.Creature,
-            DynamicVars["ReactiveLaboratoryPower"].BaseValue, Owner.Creature, this);
-    }
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Every Brew is worth Block.</summary>

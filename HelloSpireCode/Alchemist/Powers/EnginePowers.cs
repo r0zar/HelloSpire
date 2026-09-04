@@ -121,19 +121,6 @@ public sealed class EfficientDistillationPower : AlchemistEnginePower, IDistillL
     }
 }
 
-/// <summary>The first Potion you use each turn also draws a card.</summary>
-public sealed class ReactiveLaboratoryPower : AlchemistEnginePower, IPotionUseListener
-{
-    public async Task OnPotionUsed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion, Creature? target)
-    {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
-        Flash();
-        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-    }
-}
-
 /// <summary>Whenever you Brew a Poison Potion, apply Poison to a random enemy.</summary>
 public sealed class ToxicCulturePower : AlchemistEnginePower, IBrewListener
 {
