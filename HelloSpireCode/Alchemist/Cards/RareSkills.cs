@@ -115,7 +115,7 @@ public sealed class BottledTime() : AlchemistCard(1, CardType.Skill, CardRarity.
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Every other card in Hand becomes Block and cards. The Exhaust deck's capstone.</summary>
+/// <summary>Every Status or Curse in Hand becomes Block and cards. The Exhaust deck's capstone.</summary>
 public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override bool GainsBlock => true;
@@ -126,7 +126,7 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        var burned = (await Alchemy.ExhaustAllOther(ctx, Lab)).Count;
+        var burned = (await Alchemy.ExhaustAllJunk(ctx, Lab)).Count;
         if (burned == 0) return;
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars["PerCard"].BaseValue * burned);

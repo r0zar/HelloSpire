@@ -154,23 +154,13 @@ public sealed class ToxicCulturePower : AlchemistEnginePower, IBrewListener
     }
 }
 
-/// <summary>
-/// The first Slot emptied each turn is worth Block, and a little Infuse besides.
-///
-/// Fires on Distill as well as on drinking, which is the point — it is the Empty Belt archetype's
-/// engine, and Distilling is that archetype's fastest way to empty the belt.
-/// </summary>
-public sealed class ClosedSystemPower : AlchemistEnginePower, ISlotEmptiedListener
+/// <summary>Every Brew is worth Block.</summary>
+public sealed class ClosedSystemPower : AlchemistEnginePower, IBrewListener
 {
-    public async Task OnSlotEmptied(PlayerChoiceContext ctx, LabContext lab)
+    public Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
         Flash();
-        await AlchemistEffects.GainBlock(lab, Amount);
-        await Belt.Infuse(ctx, lab, block: 2m);
-        await Belt.LeaveResidualReagent(ctx, lab);
+        return AlchemistEffects.GainBlock(lab, Amount);
     }
 }
 

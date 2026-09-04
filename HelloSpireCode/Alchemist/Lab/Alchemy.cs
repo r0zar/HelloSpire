@@ -74,6 +74,18 @@ public static class Alchemy
         return cards;
     }
 
+    /// <summary>Exhaust every Status or non-Eternal Curse in Hand. Perfect Solvent. Returns what went.</summary>
+    public static async Task<IReadOnlyList<CardModel>> ExhaustAllJunk(PlayerChoiceContext ctx, LabContext lab)
+    {
+        var junk = OtherCardsInHand(lab)
+            .Where(card => card.Type == CardType.Status ||
+                           (card.Type == CardType.Curse && !card.Keywords.Contains(CardKeyword.Eternal)))
+            .ToList();
+
+        foreach (var card in junk) await Exhaust(ctx, lab, card);
+        return junk;
+    }
+
     /// <summary>Exhaust one other card at random. Mercury Lance's cost — the player does not choose.</summary>
     public static async Task<CardModel?> ExhaustRandomOther(PlayerChoiceContext ctx, LabContext lab)
     {

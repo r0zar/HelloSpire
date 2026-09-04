@@ -108,13 +108,13 @@ public sealed class ReactiveLaboratory() : AlchemistCard(1, CardType.Power, Card
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first slot emptied each turn is worth Block, whether you drank it or poured it out.</summary>
+/// <summary>Every Brew is worth Block.</summary>
 public sealed class ClosedSystem() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ClosedSystemPower>(4m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.ThePotionBelt), HoverTipFactory.FromPower<ClosedSystemPower>()];
+        [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<ClosedSystemPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
