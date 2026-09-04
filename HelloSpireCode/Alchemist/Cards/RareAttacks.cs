@@ -38,7 +38,7 @@ public sealed class PhilosophersFlame() : AlchemistCard(3, CardType.Attack, Card
 }
 
 /// <summary>Feed it your most expensive card, for damage.</summary>
-public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class MatterAnnihilation() : AlchemistCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(10m, ValueProp.Move), new DamageVar("PerEnergy", 8m, ValueProp.Move)];
@@ -70,23 +70,23 @@ public sealed class MatterAnnihilation() : AlchemistCard(2, CardType.Attack, Car
     }
 }
 
-/// <summary>Damage, and two free Attacks to follow it.</summary>
-public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+/// <summary>Brew Attack Potions, and leave Volatile Residue behind for each.</summary>
+public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(14m, ValueProp.Move), new CardsVar(2)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Potions", 2m)];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-
-        for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
-            await Alchemy.Create(ctx, Lab, LabBridge.Current.RandomCard(Owner, type: CardType.Attack));
+        for (var i = 0; i < DynamicVars["Potions"].IntValue; i++)
+        {
+            await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Attack));
+            await Alchemy.CreateVolatileResidue(ctx, Lab, PileType.Discard);
+        }
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
+    protected override void OnUpgrade() => DynamicVars["Potions"].UpgradeValueBy(1m);
 }
 
 /// <summary>Deal a lot of damage. If it kills, gain Gold.</summary>

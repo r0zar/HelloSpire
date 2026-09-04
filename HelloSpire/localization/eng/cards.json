@@ -396,7 +396,7 @@
   "HELLOSPIRE-MATTER_ANNIHILATION.title": "Matter Annihilation",
   "HELLOSPIRE-MATTER_ANNIHILATION.description": "Exhaust a card: deal {Damage:diff()} damage plus {PerEnergy:diff()} for each Energy it cost.",
   "HELLOSPIRE-HOMUNCULUS_ASSAULT.title": "Homunculus Assault",
-  "HELLOSPIRE-HOMUNCULUS_ASSAULT.description": "Deal {Damage:diff()} damage. Create {Cards} random Attacks in your hand, costing 0 this turn.",
+  "HELLOSPIRE-HOMUNCULUS_ASSAULT.description": "[gold]Brew[/gold] {Potions:diff()} Attack Potions, leaving a Volatile Residue in your discard pile for each.",
   "HELLOSPIRE-GILDED_EXECUTION.title": "Gilded Execution",
   "HELLOSPIRE-GILDED_EXECUTION.description": "Deal {Damage:diff()} damage. If Fatal, gain {Gold:diff()} Gold.",
   "HELLOSPIRE-GRAND_COMBUSTION.title": "Grand Combustion",
