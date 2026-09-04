@@ -165,7 +165,7 @@ public sealed class CausticFlask() : AlchemistCard(1, CardType.Attack, CardRarit
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Deal damage, and leave a Volatile Reagent behind in the discard pile.</summary>
+/// <summary>Deal damage, and leave a Volatile Reagent behind in the draw pile.</summary>
 public sealed class VolatileStrike() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move)];
@@ -288,32 +288,23 @@ public sealed class PocketFormula() : AlchemistCard(1, CardType.Skill, CardRarit
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>Exhaust a card for Block and a little Infuse, free.</summary>
+/// <summary>Exhaust a card for Block, free.</summary>
 public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     public override bool GainsBlock => true;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(4m, ValueProp.Move), new BlockVar("Bonus", 3m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(6m, ValueProp.Move)];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         if (!await Alchemy.ExhaustOne(ctx, Lab)) return;
 
         await AlchemistEffects.GainBlock(Lab, DynamicVars.Block.BaseValue);
-        await Belt.Infuse(ctx, Lab, block: DynamicVars["Bonus"].BaseValue);
-        await Belt.LeaveResidualReagent(ctx, Lab);
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Block.UpgradeValueBy(2m);
-        DynamicVars["Bonus"].UpgradeValueBy(1m);
-    }
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(2m);
 }
 
 /// <summary>Apply Poison and Weak.</summary>
@@ -339,7 +330,7 @@ public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarit
 /// <summary>Infuse Block into Unstable Concoction.</summary>
 public sealed class SteadyPour() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(9m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
