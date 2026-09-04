@@ -332,9 +332,14 @@ public static class Belt
     /// Engine/Thermal Buffer or any other Brew-triggered engine, just Volatile-tracked so it falls
     /// out at combat end like everything else Volatile. A full belt is not an error, same rule Brew
     /// itself follows -- the Reagent is simply lost.
+    ///
+    /// Refiner's Eye suppresses this entirely -- checked here rather than at each of its callers,
+    /// same "one choke point" shape as Alchemy.Create's own Refiner's Eye check.
     /// </summary>
     public static async Task LeaveResidualReagent(PlayerChoiceContext ctx, LabContext lab)
     {
+        if (AlchemistEffects.Peek(lab)?.Owner.GetPower<Powers.RefinersEyePower>() != null) return;
+
         var placed = await LabBridge.Current.Brew(ctx, lab.Player, ModelDb.Potion<ResidualReagent>().ToMutable());
         if (placed == null) return;
 

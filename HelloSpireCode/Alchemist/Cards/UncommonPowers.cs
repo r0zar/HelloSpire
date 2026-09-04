@@ -103,7 +103,7 @@ public sealed class ClosedSystem() : AlchemistCard(1, CardType.Power, CardRarity
     protected override void OnUpgrade() => DynamicVars["ClosedSystemPower"].UpgradeValueBy(2m);
 }
 
-/// <summary>Everything you conjure this fight arrives Upgraded.</summary>
+/// <summary>Residual Reagents and Volatile Residue no longer get added when you play cards.</summary>
 public sealed class RefinersEye() : AlchemistCard(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<RefinersEyePower>(1m)];
@@ -123,7 +123,7 @@ public sealed class RefinersEye() : AlchemistCard(2, CardType.Power, CardRarity.
 /// <summary>Whenever you Brew a Poison Potion, apply Poison to a random enemy.</summary>
 public sealed class ToxicCulture() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ToxicCulturePower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ToxicCulturePower>(3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<ToxicCulturePower>()];

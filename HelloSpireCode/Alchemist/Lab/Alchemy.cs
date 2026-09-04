@@ -4,7 +4,6 @@ using MegaCrit.Sts2.Core.Models;
 
 using HelloSpire.HelloSpireCode.Alchemist;
 using HelloSpire.HelloSpireCode.Alchemist.Cards;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 
@@ -165,10 +164,12 @@ public static class Alchemy
     /// Create a Volatile Residue (Status, Unplayable) and add it directly to a pile. Called
     /// automatically from <see cref="Belt.Brew"/> whenever the Brewing card is an Attack, and
     /// directly by a couple of cards that want the same junk without being an Attack (Spare
-    /// Flask).
+    /// Flask). Refiner's Eye suppresses this entirely.
     /// </summary>
     public static async Task CreateVolatileResidue(PlayerChoiceContext ctx, LabContext lab, PileType pile)
     {
+        if (AlchemistEffects.Peek(lab)?.Owner.GetPower<Powers.RefinersEyePower>() != null) return;
+
         await LabBridge.Current.CreateStatusInPile(ctx, lab.Player, ModelDb.Card<VolatileResidue>(), pile);
         await AlchemistHooks.NotifyStatusCreated(ctx, lab);
     }
@@ -212,18 +213,10 @@ public static class Alchemy
         return true;
     }
 
-    /// <summary>
-    /// Create a card into Hand and count it.
-    ///
-    /// Refiner's Eye upgrades whatever comes out of here, which is why creation goes through one
-    /// function rather than each card calling the bridge.
-    /// </summary>
+    /// <summary>Create a card into Hand and count it.</summary>
     public static async Task Create(PlayerChoiceContext ctx, LabContext lab, CardModel? card, bool freeThisTurn = true)
     {
         if (card == null) return;
-
-        if (AlchemistEffects.Peek(lab)?.Owner.GetPower<Powers.RefinersEyePower>() != null)
-            CardCmd.Upgrade(card, CardPreviewStyle.None);
 
         await LabBridge.Current.CreateInHand(ctx, lab.Player, card, freeThisTurn);
 
