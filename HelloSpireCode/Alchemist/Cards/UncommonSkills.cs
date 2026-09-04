@@ -181,12 +181,12 @@ public sealed class SmeltTheWeak() : AlchemistCard(0, CardType.Skill, CardRarity
     }
 }
 
-/// <summary>Leave a Volatile Reagent in the discard pile, and draw two cards.</summary>
+/// <summary>Leave a Volatile Reagent in the draw pile, and draw two cards.</summary>
 public sealed class FalseBottom() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Discard);
+        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
         await AlchemistEffects.Draw(ctx, Lab, 2);
     }
 }

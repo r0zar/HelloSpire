@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The 21 commons: 11 Attacks, 8 Skills, 2 Powers.
+// The 21 commons: 11 Attacks, 9 Skills, 1 Power.
 //
 // Deliberately unexciting, and deliberately proactive -- almost none of them ask "did you do X
 // this turn" anymore. Most either Brew a specific Volatile Potion by name (so the deck teaches
@@ -175,7 +175,7 @@ public sealed class VolatileStrike() : AlchemistCard(1, CardType.Attack, CardRar
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Discard);
+        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
@@ -385,20 +385,19 @@ public sealed class ResidualToxins() : AlchemistCard(1, CardType.Power, CardRari
     protected override void OnUpgrade() => DynamicVars["ResidualToxinsPower"].UpgradeValueBy(2m);
 }
 
-/// <summary>The first time you Brew each turn, draw a card.</summary>
-public sealed class BrewingHabit() : AlchemistCard(1, CardType.Power, CardRarity.Common, TargetType.Self)
+/// <summary>Distill a Potion, and draw cards.</summary>
+public sealed class BrewingHabit() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<BrewingHabitPower>(1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(3)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Brew), HoverTipFactory.FromPower<BrewingHabitPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await PowerCmd.Apply<BrewingHabitPower>(ctx, Owner.Creature,
-            DynamicVars["BrewingHabitPower"].BaseValue, Owner.Creature, this);
+        if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
+
+        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1m);
 }

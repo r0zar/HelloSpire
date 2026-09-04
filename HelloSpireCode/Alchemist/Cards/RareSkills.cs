@@ -74,13 +74,13 @@ public sealed class MagnumOpus() : AlchemistCard(2, CardType.Skill, CardRarity.R
     protected override void OnUpgrade() => DynamicVars["PerPotion"].UpgradeValueBy(1m);
 }
 
-/// <summary>Distill a Potion, for Potency and cards.</summary>
+/// <summary>Distill a Potion, for Potency and Energy.</summary>
 public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<PotencyPower>(2m), new CardsVar(2)];
+        [new PowerVar<PotencyPower>(2m), new DynamicVar("Energy", 2m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Potency), HoverTipFactory.FromPower<PotencyPower>()];
@@ -90,7 +90,7 @@ public sealed class EssenceDistillation() : AlchemistCard(1, CardType.Skill, Car
         if (!(await Belt.Distill(ctx, Lab)).Distilled) return;
 
         await AlchemistEffects.GainPotency(ctx, Lab, DynamicVars["PotencyPower"].BaseValue);
-        await AlchemistEffects.Draw(ctx, Lab, DynamicVars.Cards.IntValue);
+        await AlchemistEffects.GainEnergy(Lab, DynamicVars["Energy"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars["PotencyPower"].UpgradeValueBy(1m);
@@ -137,7 +137,7 @@ public sealed class PerfectSolvent() : AlchemistCard(1, CardType.Skill, CardRari
 }
 
 /// <summary>Two Potion Slots for the rest of combat -- gone at combat end.</summary>
-public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
+public sealed class WidenTheBelt() : AlchemistCard(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 

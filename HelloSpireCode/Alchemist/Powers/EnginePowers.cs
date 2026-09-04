@@ -75,19 +75,6 @@ public sealed class ConcentratePower : AlchemistEnginePower, IInfuseListener
     }
 }
 
-/// <summary>The first time you Brew each turn, draw a card.</summary>
-public sealed class BrewingHabitPower : AlchemistEnginePower, IBrewListener
-{
-    public async Task OnBrewed(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
-    {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
-        Flash();
-        await AlchemistEffects.Draw(ctx, lab, (int)Amount);
-    }
-}
-
 /// <summary>The first Brew each turn is worth Potency and a little Infuse. Makes a setup turn less of a gap.</summary>
 public sealed class ThermalBufferPower : AlchemistEnginePower, IBrewListener
 {
