@@ -47,14 +47,15 @@ public abstract class AlchemistEnginePower : HelloSpirePower
         Task.CompletedTask;
 }
 
-/// <summary>The first time Poison is applied each turn, regardless of source, apply additional Poison to the same target.</summary>
+/// <summary>
+/// Every time Poison is applied, regardless of source, apply additional Poison to the same
+/// target. Safe from re-triggering itself: AlchemistHooks.Dispatch's own re-entrancy guard makes
+/// the nested NotifyPoisonApplied from this Power's own ApplyPoison call below a no-op.
+/// </summary>
 public sealed class ResidualToxinsPower : AlchemistEnginePower, IPoisonAppliedListener
 {
     public async Task OnPoisonApplied(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount)
     {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
         Flash();
         await AlchemistEffects.ApplyPoison(ctx, lab, target, Amount);
     }
@@ -146,10 +147,11 @@ public sealed class ClosedSystemPower : AlchemistEnginePower, IBrewListener
 }
 
 /// <summary>
-/// Cards you create in combat arrive Upgraded.
+/// Residual Reagents and Volatile Residue no longer get added when you play cards.
 ///
-/// Holds no logic — <see cref="Alchemy.Create"/> checks for it, because creation is funnelled
-/// through one function specifically so this power only has to exist in one place.
+/// Holds no logic — <see cref="Belt.LeaveResidualReagent"/> and <see cref="Alchemy.CreateVolatileResidue"/>
+/// each check for it directly at their own one choke point, rather than this Power reacting to
+/// anything itself.
 /// </summary>
 public sealed class RefinersEyePower : AlchemistEnginePower;
 

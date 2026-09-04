@@ -337,7 +337,7 @@ public sealed class ContaminatedSample() : AlchemistCard(1, CardType.Skill, Card
 
 // ---------------------------------------------------------------------------- Powers
 
-/// <summary>The first time Poison is applied each turn applies additional Poison.</summary>
+/// <summary>Every time Poison is applied, apply additional Poison.</summary>
 public sealed class ResidualToxins() : AlchemistCard(1, CardType.Power, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ResidualToxinsPower>(3m)];
