@@ -360,7 +360,7 @@
   "HELLOSPIRE-CINNABAR_EDGE.title": "Cinnabar Edge",
   "HELLOSPIRE-CINNABAR_EDGE.description": "Deal {Damage:diff()} damage. If you Exhausted a card this turn, apply {Vulnerable:diff()} [gold]Vulnerable[/gold].",
   "HELLOSPIRE-FLASH_POWDER.title": "Flash Powder",
-  "HELLOSPIRE-FLASH_POWDER.description": "[gold]Brew[/gold] an Explosive Ampoule. Add a Volatile Residue to your discard pile.",
+  "HELLOSPIRE-FLASH_POWDER.description": "Deal {Damage:diff()} damage to ALL enemies. [gold]Brew[/gold] an Explosive Ampoule. Add a Volatile Residue to your discard pile.",
   "HELLOSPIRE-MERCURY_LANCE.title": "Mercury Lance",
   "HELLOSPIRE-MERCURY_LANCE.description": "Deal {Damage:diff()} damage. Exhaust a random card in your hand.",
   "HELLOSPIRE-DISTILLATION_COLUMN.title": "Distillation Column",
