@@ -111,20 +111,18 @@ public sealed class GildedExecution() : AlchemistCard(2, CardType.Attack, CardRa
 /// <summary>
 /// Empty the whole belt into the room.
 ///
-/// The Distillation deck's finisher: everything you were saving becomes damage and Poison to
-/// every enemy, right now -- no partial version, no choice, the whole belt goes.
+/// The Distillation deck's finisher: everything you were saving becomes damage to every enemy,
+/// right now -- no partial version, no choice, the whole belt goes.
 /// </summary>
 public sealed class GrandCombustion() : AlchemistCard(3, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(16m, ValueProp.Move),
-        new DamageVar("PerPotion", 8m, ValueProp.Move),
-        new DynamicVar("Poison", 2m)
+        new DamageVar("PerPotion", 8m, ValueProp.Move)
     ];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [Tip(AlchemistTips.Distill), HoverTipFactory.FromPower<PoisonPower>()];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -133,13 +131,9 @@ public sealed class GrandCombustion() : AlchemistCard(3, CardType.Attack, CardRa
             if ((await Belt.Distill(ctx, Lab, potion)).Distilled) poured++;
 
         var damage = DynamicVars.Damage.BaseValue + DynamicVars["PerPotion"].BaseValue * poured;
-        var poison = DynamicVars["Poison"].BaseValue * poured;
 
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
-        {
             await DamageCmd.Attack(damage).FromCard(this).Targeting(enemy).Execute(ctx);
-            if (poison > 0) await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, poison);
-        }
     }
 
     protected override void OnUpgrade()

@@ -402,7 +402,7 @@
   "HELLOSPIRE-GILDED_EXECUTION.title": "Gilded Execution",
   "HELLOSPIRE-GILDED_EXECUTION.description": "Deal {Damage:diff()} damage. If Fatal, gain {Gold:diff()} Gold.",
   "HELLOSPIRE-GRAND_COMBUSTION.title": "Grand Combustion",
-  "HELLOSPIRE-GRAND_COMBUSTION.description": "[gold]Distill[/gold] every Potion you hold. Deal {Damage:diff()} damage, plus {PerPotion:diff()} per Potion Distilled, to ALL enemies. Apply {Poison:diff()} [gold]Poison[/gold] per Potion Distilled.",
+  "HELLOSPIRE-GRAND_COMBUSTION.description": "[gold]Distill[/gold] every Potion you hold. Deal {Damage:diff()} damage, plus {PerPotion:diff()} per Potion Distilled, to ALL enemies.",
   "HELLOSPIRE-ALCHEMIZE.title": "Alchemize",
   "HELLOSPIRE-ALCHEMIZE.description": "[gold]Brew[/gold] a Rare Potion. It is not [gold]Volatile[/gold].",
   "HELLOSPIRE-HEAVY_TRANSMUTE.title": "Heavy Transmute",
