@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Attacks 1-10. Half of these Brew a specific Volatile Potion by name; the rest scale off
+// Uncommon Attacks 1-9. Half of these Brew a specific Volatile Potion by name; the rest scale off
 // Potions held, Infuse directly, or apply Poison outright -- almost nothing left asks "did you do X
 // this turn."
 
@@ -193,23 +193,5 @@ public sealed class SolventStrike() : AlchemistCard(1, CardType.Attack, CardRari
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
-}
-
-/// <summary>Deal damage to ALL enemies, and Brew a Poison Ampoule.</summary>
-public sealed class VenomousAmpoule() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(6m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        foreach (var enemy in AlchemistEffects.Enemies(Lab))
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(enemy).Execute(ctx);
-
-        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.PoisonAmpoule));
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 

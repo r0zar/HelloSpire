@@ -12,7 +12,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Skills 1-18. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison), plus
+// Uncommon Skills 1-19. Distill's payoffs live here (Block, Energy, Infuse, draw, Poison), plus
 // the Belt's own utility (Extra Vial, Stabilize, Reconstitute) and the Status sub-theme's first
 // real payoff cards (False Bottom, Reagent Recovery).
 
@@ -324,4 +324,17 @@ public sealed class TaintedWard() : AlchemistCard(1, CardType.Skill, CardRarity.
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
+}
+
+/// <summary>Brew a Poison Ampoule.</summary>
+public sealed class VenomousAmpoule() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+        await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.PoisonAmpoule));
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
