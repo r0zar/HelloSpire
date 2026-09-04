@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// The 21 commons: 11 Attacks, 9 Skills, 1 Power.
+// The 21 commons: 10 Attacks, 10 Skills, 1 Power.
 //
 // Deliberately unexciting, and deliberately proactive -- almost none of them ask "did you do X
 // this turn" anymore. Most either Brew a specific Volatile Potion by name (so the deck teaches
@@ -223,24 +223,20 @@ public sealed class CoagulatingAgent() : AlchemistCard(1, CardType.Skill, CardRa
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
 }
 
-/// <summary>Deal damage and Poison every enemy.</summary>
-public sealed class ScatterFlask() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+/// <summary>Apply Poison to every enemy.</summary>
+public sealed class ScatterFlask() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.AllEnemies)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(2m, ValueProp.Move), new DynamicVar("Poison", 3m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Poison", 3m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         foreach (var enemy in AlchemistEffects.Enemies(Lab))
-        {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(enemy).Execute(ctx);
             await AlchemistEffects.ApplyPoison(ctx, Lab, enemy, DynamicVars["Poison"].BaseValue);
-        }
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(2m);
 }
 
 /// <summary>Brew a Volatile Energy Potion.</summary>

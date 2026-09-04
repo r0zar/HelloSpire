@@ -334,7 +334,7 @@
   "HELLOSPIRE-GLASS_SHARD.title": "Glass Shard",
   "HELLOSPIRE-GLASS_SHARD.description": "Deal {Damage:diff()} damage to a random enemy.",
   "HELLOSPIRE-SCATTER_FLASK.title": "Scatter Flask",
-  "HELLOSPIRE-SCATTER_FLASK.description": "Deal {Damage:diff()} damage and apply {Poison:diff()} [gold]Poison[/gold] to ALL enemies.",
+  "HELLOSPIRE-SCATTER_FLASK.description": "Apply {Poison:diff()} [gold]Poison[/gold] to ALL enemies.",
   "HELLOSPIRE-QUICK_SILVER.title": "Quick Silver",
   "HELLOSPIRE-QUICK_SILVER.description": "Deal {Damage:diff()} damage. If your Potion Belt is full, draw 1 card.",
   "HELLOSPIRE-CRUCIBLE_BLOW.title": "Crucible Blow",
