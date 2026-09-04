@@ -382,7 +382,7 @@
   "HELLOSPIRE-TINCTURE_TRADE.title": "Tincture Trade",
   "HELLOSPIRE-TINCTURE_TRADE.description": "[gold]Distill[/gold] a Potion: gain {Block:diff()} [gold]Block[/gold] and {Energy} [gold]Energy[/gold].",
   "HELLOSPIRE-CONCENTRATE.title": "Concentrate",
-  "HELLOSPIRE-CONCENTRATE.description": "Whenever you [gold]Infuse[/gold] 10 or more in one action, gain [gold]Energy[/gold].",
+  "HELLOSPIRE-CONCENTRATE.description": "Whenever you [gold]Infuse[/gold], gain [gold]Energy[/gold] for every 10 Infused.",
   "HELLOSPIRE-REACTIVE_MIXTURE.title": "Reactive Mixture",
   "HELLOSPIRE-REACTIVE_MIXTURE.description": "[gold]Brew[/gold] a Poison Potion and a Weak Potion.",
   "HELLOSPIRE-CLOSED_SYSTEM.title": "Closed System",

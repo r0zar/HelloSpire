@@ -60,18 +60,18 @@ public sealed class ResidualToxinsPower : AlchemistEnginePower, IPoisonAppliedLi
     }
 }
 
-/// <summary>Whenever you Infuse a lot in one action, gain Energy.</summary>
+/// <summary>Whenever you Infuse, gain Energy for every 10 Infused in that action.</summary>
 public sealed class ConcentratePower : AlchemistEnginePower, IInfuseListener
 {
-    /// <summary>The single-call threshold. Set by the card; 10 base.</summary>
-    public decimal Threshold { get; set; } = 10m;
+    private const decimal Threshold = 10m;
 
     public async Task OnInfused(PlayerChoiceContext ctx, LabContext lab, decimal amount)
     {
-        if (amount < Threshold) return;
+        var energy = (int)(amount / Threshold) * Amount;
+        if (energy <= 0) return;
 
         Flash();
-        await AlchemistEffects.GainEnergy(lab, Amount);
+        await AlchemistEffects.GainEnergy(lab, energy);
     }
 }
 

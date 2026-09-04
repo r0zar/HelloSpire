@@ -13,7 +13,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // Brewing, Distilling, Exhausting, drinking, Infusing, or emptying a slot. None of them changes
 // what you do; they change what it is worth.
 
-/// <summary>Whenever you Infuse a lot in one action, gain Energy.</summary>
+/// <summary>Whenever you Infuse, gain Energy for every 10 Infused.</summary>
 public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ConcentratePower>(1m)];
