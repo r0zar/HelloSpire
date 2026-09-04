@@ -551,7 +551,7 @@
   "HELLOSPIRE-THERMAL_BUFFER.title": "Thermal Buffer",
   "HELLOSPIRE-THERMAL_BUFFER.description": "The first card you Exhaust each turn [gold]Infuses[/gold] {ThermalBufferPower:diff()} Block.",
   "HELLOSPIRE-REAGENT_PRESS.title": "Reagent Press",
-  "HELLOSPIRE-REAGENT_PRESS.description": "The first card you Exhaust each turn [gold]Infuses[/gold] {ReagentPressPower:diff()} Damage and adds a Residual Reagent to your Potion Belt.",
+  "HELLOSPIRE-REAGENT_PRESS.description": "The first Potion [gold]Distilled[/gold] each turn [gold]Infuses[/gold] {ReagentPressPower:diff()} Damage.",
   "HELLOSPIRE-EFFICIENT_DISTILLATION.title": "Efficient Distillation",
   "HELLOSPIRE-EFFICIENT_DISTILLATION.description": "Whenever you [gold]Distill[/gold] a Potion, gain {EfficientDistillationPower:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-REACTIVE_LABORATORY.title": "Reactive Laboratory",

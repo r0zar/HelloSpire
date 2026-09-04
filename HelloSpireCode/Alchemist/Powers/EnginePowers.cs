@@ -89,17 +89,17 @@ public sealed class ThermalBufferPower : AlchemistEnginePower, IExhaustListener
 }
 
 /// <summary>
-/// The first Exhaust each turn Infuses Damage, up to a hard per-combat cap.
+/// The first Potion Distilled each turn Infuses Damage, up to a hard per-combat cap.
 ///
 /// The cap is the whole design. An uncapped trigger makes stalling a fight the correct play,
 /// which is the guardrail exists to prevent, regardless of what currency it pays out in.
 /// </summary>
-public sealed class ReagentPressPower : AlchemistEnginePower, IExhaustListener
+public sealed class ReagentPressPower : AlchemistEnginePower, IDistillListener
 {
     /// <summary>Triggers remaining this combat. Set by the card; 3 base, 4 upgraded.</summary>
     public int TriggersLeft { get; set; } = 3;
 
-    public async Task OnExhausted(PlayerChoiceContext ctx, LabContext lab)
+    public async Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
         if (UsedThisTurn || TriggersLeft <= 0) return;
         UsedThisTurn = true;
@@ -107,7 +107,6 @@ public sealed class ReagentPressPower : AlchemistEnginePower, IExhaustListener
 
         Flash();
         await Belt.Infuse(ctx, lab, damage: Amount);
-        await Belt.LeaveResidualReagent(ctx, lab);
     }
 }
 
