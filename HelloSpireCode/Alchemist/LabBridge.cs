@@ -98,6 +98,13 @@ public interface ILabBridge
     IReadOnlyList<PotionModel> CombatPotionOptions(Player player, int count, PotionRarity? rarity = null);
 
     /// <summary>
+    /// A random Potion from the Draw pool -- the four Volatile Potions that hand you a free card
+    /// (Attack/Colorless/Power/Skill) -- kept separate from the Combat Potion pool above and never
+    /// offered by it. Spare Flask.
+    /// </summary>
+    PotionModel? RandomDrawPotion(Player player);
+
+    /// <summary>
     /// One of the handful of base-game Potions the Alchemist Brews by name.
     ///
     /// An enum rather than a <c>Type</c> so that no card file has to reference a base-game potion
@@ -244,6 +251,12 @@ public sealed class UnwiredLabBridge : ILabBridge
     {
         Report("listing Potion options");
         return [];
+    }
+
+    public PotionModel? RandomDrawPotion(Player player)
+    {
+        Report("the Draw Potion pool");
+        return null;
     }
 
     public Task GainSlots(Player player, int count)

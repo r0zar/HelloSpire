@@ -133,12 +133,18 @@ public sealed class PotentMixture() : AlchemistCard(1, CardType.Power, CardRarit
 /// The only source of the Stone, and the Stone is not Volatile — so it survives the fight and can
 /// be hoarded for a boss. The one Brew in the whole class that isn't temporary.
 /// </summary>
-public sealed class TheGreatWork() : AlchemistCard(3, CardType.Power, CardRarity.Rare, TargetType.Self)
+public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar("Life", 6m, ValueProp.Unblockable | ValueProp.Unpowered)];
+
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Brew)];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        await AlchemistEffects.LoseHp(ctx, Lab, DynamicVars["Life"].BaseValue);
         await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>().ToMutable(), volatilePotion: false);
+    }
 }

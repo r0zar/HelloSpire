@@ -102,6 +102,10 @@ public static class Belt
         PotionRarity? rarity = PotionRarity.Common, bool volatilePotion = true) =>
         Brew(ctx, lab, LabBridge.Current.RandomCombatPotion(lab.Player, rarity), volatilePotion);
 
+    /// <summary>Brew a random Potion from the separate Draw Potion pool. Spare Flask.</summary>
+    public static Task<PotionModel?> BrewRandomDraw(PlayerChoiceContext ctx, LabContext lab, bool volatilePotion = true) =>
+        Brew(ctx, lab, LabBridge.Current.RandomDrawPotion(lab.Player), volatilePotion);
+
     /// <summary>Fill every empty slot with random Combat Potions. Magnum Opus and Panacea of Plenty.</summary>
     public static async Task<int> FillEmpty(PlayerChoiceContext ctx, LabContext lab)
     {

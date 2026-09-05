@@ -55,25 +55,37 @@ public sealed class WiredLabBridge : ILabBridge
     /// VolatileCommonPotions.cs). Alchemize deliberately bypasses this -- it asks for
     /// <c>rarity: null</c> specifically to reach the full, unrestricted pool below, since it
     /// Procures a real, non-Volatile Potion.
+    ///
+    /// The four Draw Potions (Attack/Colorless/Power/Skill) are deliberately NOT in this list --
+    /// see <see cref="VolatileDrawPool"/>, their own separate pool.
     /// </summary>
     private static IReadOnlyList<PotionModel> VolatileCommonPool() =>
     [
-        ModelDb.Potion<VolatileAttackPotion>(),
         ModelDb.Potion<VolatileBlockPotion>(),
-        ModelDb.Potion<VolatileColorlessPotion>(),
         ModelDb.Potion<VolatileDexterityPotion>(),
         ModelDb.Potion<VolatileEnergyPotion>(),
         ModelDb.Potion<VolatileExplosiveAmpoule>(),
         ModelDb.Potion<VolatileFirePotion>(),
         ModelDb.Potion<VolatileFlexPotion>(),
         ModelDb.Potion<VolatilePoisonPotion>(),
-        ModelDb.Potion<VolatilePowerPotion>(),
-        ModelDb.Potion<VolatileSkillPotion>(),
         ModelDb.Potion<VolatileSpeedPotion>(),
         ModelDb.Potion<VolatileStrengthPotion>(),
         ModelDb.Potion<VolatileSwiftPotion>(),
         ModelDb.Potion<VolatileVulnerablePotion>(),
         ModelDb.Potion<VolatileWeakPotion>(),
+    ];
+
+    /// <summary>
+    /// The four Volatile Potions that hand you a free card instead of a stat or damage. Their own
+    /// pool, not part of <see cref="VolatileCommonPool"/> -- Spare Flask is the only way into it;
+    /// ordinary random Common Brews, Alchemize, and shop offers never reach these four at all.
+    /// </summary>
+    private static IReadOnlyList<PotionModel> VolatileDrawPool() =>
+    [
+        ModelDb.Potion<VolatileAttackPotion>(),
+        ModelDb.Potion<VolatileColorlessPotion>(),
+        ModelDb.Potion<VolatilePowerPotion>(),
+        ModelDb.Potion<VolatileSkillPotion>(),
     ];
 
     public PotionModel? RandomCombatPotion(Player player, PotionRarity? rarity = null)
@@ -116,6 +128,12 @@ public sealed class WiredLabBridge : ILabBridge
             picks.Add(pick.ToMutable());
         }
         return picks;
+    }
+
+    public PotionModel? RandomDrawPotion(Player player)
+    {
+        var options = VolatileDrawPool();
+        return options.Count == 0 ? null : player.RunState.Rng.CombatPotionGeneration.NextItem(options).ToMutable();
     }
 
     public Task GainSlots(Player player, int count) => PlayerCmd.GainMaxPotionCount(count, player);
