@@ -76,14 +76,11 @@ public sealed class ConcentratePower : AlchemistEnginePower, IInfuseListener
     }
 }
 
-/// <summary>The first Exhaust each turn Infuses Block.</summary>
-public sealed class ThermalBufferPower : AlchemistEnginePower, IExhaustListener
+/// <summary>Every time you create a Residual Reagent, Infuse Block.</summary>
+public sealed class ThermalBufferPower : AlchemistEnginePower, IResidualReagentCreatedListener
 {
-    public async Task OnExhausted(PlayerChoiceContext ctx, LabContext lab)
+    public async Task OnResidualReagentCreated(PlayerChoiceContext ctx, LabContext lab)
     {
-        if (UsedThisTurn) return;
-        UsedThisTurn = true;
-
         Flash();
         await Belt.Infuse(ctx, lab, block: Amount);
     }

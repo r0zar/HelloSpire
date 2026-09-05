@@ -61,6 +61,12 @@ public interface IPoisonAppliedListener
     Task OnPoisonApplied(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount);
 }
 
+/// <summary>Reacts to a Residual Reagent actually landing in a Slot. Thermal Buffer.</summary>
+public interface IResidualReagentCreatedListener
+{
+    Task OnResidualReagentCreated(PlayerChoiceContext ctx, LabContext lab);
+}
+
 /// <summary>
 /// Dispatch for the Alchemist's own listener interfaces.
 ///
@@ -122,6 +128,9 @@ public static class AlchemistHooks
 
     public static Task NotifyPoisonApplied(PlayerChoiceContext ctx, LabContext lab, Creature target, decimal amount) =>
         Dispatch<IPoisonAppliedListener>(lab, listener => listener.OnPoisonApplied(ctx, lab, target, amount));
+
+    public static Task NotifyResidualReagentCreated(PlayerChoiceContext ctx, LabContext lab) =>
+        Dispatch<IResidualReagentCreatedListener>(lab, listener => listener.OnResidualReagentCreated(ctx, lab));
 
     private static async Task Dispatch<T>(LabContext lab, Func<T, Task> notify) where T : class
     {

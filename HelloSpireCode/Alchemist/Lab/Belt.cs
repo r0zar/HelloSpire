@@ -329,9 +329,9 @@ public static class Belt
     /// and others don't; call this alongside <see cref="Infuse"/> from a card's own OnPlay to give
     /// it the effect, or leave it out to withhold it. Deliberately NOT routed through
     /// <see cref="Brew"/>'s own pipeline: it should not count as a Brew for Brewing Habit/Brewing
-    /// Engine/Thermal Buffer or any other Brew-triggered engine, just Volatile-tracked so it falls
-    /// out at combat end like everything else Volatile. A full belt is not an error, same rule Brew
-    /// itself follows -- the Reagent is simply lost.
+    /// Engine or any other Brew-triggered engine, just Volatile-tracked so it falls out at combat
+    /// end like everything else Volatile. A full belt is not an error, same rule Brew itself
+    /// follows -- the Reagent is simply lost, and nothing is notified.
     ///
     /// Refiner's Eye suppresses this entirely -- checked here rather than at each of its callers,
     /// same "one choke point" shape as Alchemy.Create's own Refiner's Eye check.
@@ -345,6 +345,8 @@ public static class Belt
 
         var bench = await AlchemistEffects.Bench(ctx, lab);
         bench?.Volatile.Add(placed);
+
+        await AlchemistHooks.NotifyResidualReagentCreated(ctx, lab);
     }
 
     private static async Task NotifySlotEmptied(PlayerChoiceContext ctx, LabContext lab)

@@ -31,7 +31,7 @@ public sealed class Concentrate() : AlchemistCard(1, CardType.Power, CardRarity.
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first Exhaust each turn Infuses Block.</summary>
+/// <summary>Every time you create a Residual Reagent, Infuse Block.</summary>
 public sealed class ThermalBuffer() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ThermalBufferPower>(5m)];

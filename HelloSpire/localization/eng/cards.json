@@ -549,7 +549,7 @@
   "HELLOSPIRE-POTENT_DISTILLATION.title": "Potent Distillation",
   "HELLOSPIRE-POTENT_DISTILLATION.description": "Gain {PotencyPower:diff()} [gold]Potency[/gold]. [gold]Distill[/gold] a Potion.",
   "HELLOSPIRE-THERMAL_BUFFER.title": "Thermal Buffer",
-  "HELLOSPIRE-THERMAL_BUFFER.description": "The first card you Exhaust each turn [gold]Infuses[/gold] {ThermalBufferPower:diff()} Block.",
+  "HELLOSPIRE-THERMAL_BUFFER.description": "Every time you create a Residual Reagent, [gold]Infuse[/gold] {ThermalBufferPower:diff()} Block.",
   "HELLOSPIRE-REAGENT_PRESS.title": "Reagent Press",
   "HELLOSPIRE-REAGENT_PRESS.description": "Every Potion [gold]Distilled[/gold] [gold]Infuses[/gold] {ReagentPressPower:diff()} Damage.",
   "HELLOSPIRE-EFFICIENT_DISTILLATION.title": "Efficient Distillation",
