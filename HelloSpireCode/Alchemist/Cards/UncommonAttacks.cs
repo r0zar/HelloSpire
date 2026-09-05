@@ -13,10 +13,10 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 // Potions held, Infuse directly, or apply Poison outright -- almost nothing left asks "did you do X
 // this turn."
 
-/// <summary>Damage scaling with a full belt. Full Belt's headline card.</summary>
+/// <summary>Multiple hits, one more for every Potion in the belt. Full Belt's headline card.</summary>
 public sealed class BottleBarrage() : AlchemistCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerPotion", 4m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(3m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.ThePotionBelt)];
 
@@ -24,13 +24,12 @@ public sealed class BottleBarrage() : AlchemistCard(1, CardType.Attack, CardRari
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
-        var damage = DynamicVars["PerPotion"].BaseValue * Belt.Held(Lab).Count;
-        if (damage <= 0) return;
-
-        await DamageCmd.Attack(damage).FromCard(this).Targeting(play.Target).Execute(ctx);
+        var hits = 1 + Belt.Held(Lab).Count;
+        for (var i = 0; i < hits; i++)
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
     }
 
-    protected override void OnUpgrade() => DynamicVars["PerPotion"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(1m);
 }
 
 /// <summary>Deal damage, and Infuse Unstable Concoction.</summary>

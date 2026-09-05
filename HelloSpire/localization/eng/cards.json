@@ -352,7 +352,7 @@
   "HELLOSPIRE-EXTRA_VIAL.title": "Extra Vial",
   "HELLOSPIRE-EXTRA_VIAL.description": "Gain {Slots} extra Potion Slot this turn.",
   "HELLOSPIRE-BOTTLE_BARRAGE.title": "Bottle Barrage",
-  "HELLOSPIRE-BOTTLE_BARRAGE.description": "Deal {PerPotion:diff()} damage for each occupied Potion Slot.",
+  "HELLOSPIRE-BOTTLE_BARRAGE.description": "Deal {Damage:diff()} damage. Hits 1 additional time for each Potion in your Belt.",
   "HELLOSPIRE-SHATTERSTOCK.title": "Shatterstock",
   "HELLOSPIRE-SHATTERSTOCK.description": "Deal {Damage:diff()} damage. [gold]Distill[/gold] a Potion: [gold]Infuse[/gold] {Bonus:diff()} Damage and add a Residual Reagent to your Potion Belt.",
   "HELLOSPIRE-PRESSURE_BURST.title": "Pressure Burst",
