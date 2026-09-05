@@ -90,7 +90,7 @@ public sealed class ThermalBufferPower : AlchemistEnginePower, IExhaustListener
 }
 
 /// <summary>
-/// The first Potion Distilled each turn Infuses Damage, up to a hard per-combat cap.
+/// Every Potion Distilled Infuses Damage, up to a hard per-combat cap.
 ///
 /// The cap is the whole design. An uncapped trigger makes stalling a fight the correct play,
 /// which is the guardrail exists to prevent, regardless of what currency it pays out in.
@@ -102,8 +102,7 @@ public sealed class ReagentPressPower : AlchemistEnginePower, IDistillListener
 
     public async Task OnDistilled(PlayerChoiceContext ctx, LabContext lab, PotionModel potion)
     {
-        if (UsedThisTurn || TriggersLeft <= 0) return;
-        UsedThisTurn = true;
+        if (TriggersLeft <= 0) return;
         TriggersLeft--;
 
         Flash();

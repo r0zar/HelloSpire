@@ -49,7 +49,7 @@ public sealed class ThermalBuffer() : AlchemistCard(1, CardType.Power, CardRarit
     protected override void OnUpgrade() => DynamicVars["ThermalBufferPower"].UpgradeValueBy(1m);
 }
 
-/// <summary>The first Potion Distilled each turn Infuses Unstable Concoction.</summary>
+/// <summary>Every Potion Distilled Infuses Unstable Concoction.</summary>
 public sealed class ReagentPress() : AlchemistCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ReagentPressPower>(4m)];
