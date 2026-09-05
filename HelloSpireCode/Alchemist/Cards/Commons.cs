@@ -286,22 +286,17 @@ public sealed class SalvageReagents() : AlchemistCard(0, CardType.Skill, CardRar
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(2m);
 }
 
-/// <summary>Apply Poison and Weak.</summary>
-public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+/// <summary>Infuse Poison and Weak into Unstable Concoction.</summary>
+public sealed class BitterSolvent() : AlchemistCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Poison", 3m), new PowerVar<WeakPower>(1m)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromPower<PoisonPower>(), HoverTipFactory.FromPower<WeakPower>()];
+        [Tip(AlchemistTips.Infuse), HoverTipFactory.FromPower<PoisonPower>(), HoverTipFactory.FromPower<WeakPower>()];
 
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
-        await AlchemistEffects.ApplyWeak(ctx, Lab, play.Target, DynamicVars["WeakPower"].BaseValue);
-    }
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
+        await Belt.Infuse(ctx, Lab, poison: DynamicVars["Poison"].BaseValue, weak: DynamicVars["WeakPower"].BaseValue);
 
     protected override void OnUpgrade() => DynamicVars["Poison"].UpgradeValueBy(1m);
 }

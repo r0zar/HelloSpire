@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
@@ -31,7 +32,8 @@ public sealed class UnstableConcoction : AlchemistPotion
         new BlockVar(0m, ValueProp.Unpowered),
         new DynamicVar("Poison", 0m),
         new DynamicVar("Energy", 0m),
-        new DynamicVar("Vulnerable", 0m)
+        new DynamicVar("Vulnerable", 0m),
+        new PowerVar<WeakPower>(0m)
     ];
 
     protected override async Task OnUse(PlayerChoiceContext ctx, Creature? target)
@@ -41,6 +43,7 @@ public sealed class UnstableConcoction : AlchemistPotion
         var poison = DynamicVars["Poison"].BaseValue;
         var energy = DynamicVars["Energy"].BaseValue;
         var vulnerable = DynamicVars["Vulnerable"].BaseValue;
+        var weak = DynamicVars.Weak.BaseValue;
 
         if (damage > 0 && target != null)
             await CreatureCmd.Damage(ctx, target, damage, ValueProp.Unpowered, Owner.Creature, null);
@@ -50,6 +53,9 @@ public sealed class UnstableConcoction : AlchemistPotion
 
         if (vulnerable > 0 && target != null)
             await AlchemistEffects.ApplyVulnerable(ctx, Lab, target, vulnerable);
+
+        if (weak > 0 && target != null)
+            await AlchemistEffects.ApplyWeak(ctx, Lab, target, weak);
 
         if (block > 0)
             await AlchemistEffects.GainBlock(Lab, block);

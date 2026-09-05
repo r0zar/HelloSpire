@@ -302,7 +302,7 @@ public static class Belt
     /// carries automatically.
     /// </summary>
     public static async Task Infuse(PlayerChoiceContext ctx, LabContext lab, decimal damage = 0,
-        decimal block = 0, decimal poison = 0, decimal energy = 0, decimal vulnerable = 0)
+        decimal block = 0, decimal poison = 0, decimal energy = 0, decimal vulnerable = 0, decimal weak = 0)
     {
         var mixture = Held(lab).OfType<UnstableConcoction>().FirstOrDefault();
         if (mixture == null)
@@ -319,8 +319,9 @@ public static class Belt
         if (poison > 0) mixture.DynamicVars["Poison"].BaseValue += poison;
         if (energy > 0) mixture.DynamicVars["Energy"].BaseValue += energy;
         if (vulnerable > 0) mixture.DynamicVars["Vulnerable"].BaseValue += vulnerable;
+        if (weak > 0) mixture.DynamicVars.Weak.BaseValue += weak;
 
-        var total = damage + block + poison + energy + vulnerable;
+        var total = damage + block + poison + energy + vulnerable + weak;
         await AlchemistHooks.NotifyInfused(ctx, lab, total);
     }
 

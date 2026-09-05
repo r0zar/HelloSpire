@@ -348,7 +348,7 @@
   "HELLOSPIRE-STEADY_POUR.title": "Steady Pour",
   "HELLOSPIRE-STEADY_POUR.description": "[gold]Infuse[/gold] {Block:diff()} Block.",
   "HELLOSPIRE-BITTER_SOLVENT.title": "Bitter Solvent",
-  "HELLOSPIRE-BITTER_SOLVENT.description": "Apply {Poison:diff()} [gold]Poison[/gold] and {WeakPower:diff()} [gold]Weak[/gold].",
+  "HELLOSPIRE-BITTER_SOLVENT.description": "[gold]Infuse[/gold] {Poison:diff()} Poison and {WeakPower:diff()} Weak.",
   "HELLOSPIRE-EXTRA_VIAL.title": "Extra Vial",
   "HELLOSPIRE-EXTRA_VIAL.description": "Gain {Slots} extra Potion Slot this turn.",
   "HELLOSPIRE-BOTTLE_BARRAGE.title": "Bottle Barrage",
