@@ -231,7 +231,7 @@ public sealed class WiredLabBridge : ILabBridge
     public Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false) =>
         ChoosePotionFrom(ctx, player, from, prompt, allowStop);
 
-    public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null)
+    public async Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null, PileType? pile = null)
     {
         // FromChooseACardScreen only supports 3 or fewer cards (throws otherwise -- confirmed via
         // a real in-game AggregateException on Salvage Reagents with a bigger hand). FromHand is
@@ -249,6 +249,18 @@ public sealed class WiredLabBridge : ILabBridge
         // pick one card and the selection completes; with exactly one candidate the game skips
         // the screen entirely, same as vanilla.
         var prefs = new CardSelectorPrefs(prompt ?? CardSelectorPrefs.ExhaustSelectionPrompt, 1);
+
+        // FromHand's screen can only ever show cards that are actually in Hand -- filtering it down
+        // to Discard/Exhaust-sourced candidates just leaves it with nothing to show, which is why
+        // Salvage Reagents, Reagent Recovery, Solvent Strike and Reconstitute all silently did
+        // nothing the moment their pile held more than one candidate. FromCombatPile is the real
+        // pile-agnostic equivalent -- same idea, just told which pile to actually look at.
+        if (pile.HasValue)
+        {
+            var chosenFromPile = await CardSelectCmd.FromCombatPile(ctx, pile.Value.GetPile(player), player, prefs, card => from.Contains(card));
+            return chosenFromPile.FirstOrDefault();
+        }
+
         var chosen = await CardSelectCmd.FromHand(ctx, player, prefs, card => from.Contains(card),
             source ?? from.FirstOrDefault());
         return chosen.FirstOrDefault();

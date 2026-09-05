@@ -144,14 +144,21 @@ public interface ILabBridge
     Task<PotionModel?> ChoosePotion(PlayerChoiceContext ctx, Player player, IReadOnlyList<PotionModel> from, LocString? prompt = null, bool allowStop = false);
 
     /// <summary>
-    /// Ask the player to pick one card from a set, typically their Hand.
+    /// Ask the player to pick one card from a set.
     /// </summary>
     /// <param name="source">
     /// The card, potion or relic that kicked off this selection (e.g. the Transmute being played).
     /// The real hand-selection screen requires a non-null source internally; pass the card whose
     /// effect is asking, never null.
     /// </param>
-    Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null);
+    /// <param name="pile">
+    /// Which real pile <paramref name="from"/> is drawn from. Null (the default) means Hand -- the
+    /// base game's hand-selection screen, which can only ever show cards actually in Hand. Pass the
+    /// pile explicitly for Discard/Exhaust-sourced candidates (Salvage Reagents, Reagent Recovery,
+    /// Solvent Strike, Reconstitute): with this left null, those silently show nothing pickable the
+    /// moment there's more than one candidate, since none of them are in Hand to filter down to.
+    /// </param>
+    Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null, PileType? pile = null);
 
     // -------------------------------------------------------------------------- hand and piles
 
@@ -289,7 +296,7 @@ public sealed class UnwiredLabBridge : ILabBridge
         return Task.FromResult<PotionModel?>(null);
     }
 
-    public Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null)
+    public Task<CardModel?> ChooseCard(PlayerChoiceContext ctx, Player player, IReadOnlyList<CardModel> from, CardModel? source, LocString? prompt = null, PileType? pile = null)
     {
         Report("choosing a card");
         return Task.FromResult<CardModel?>(null);

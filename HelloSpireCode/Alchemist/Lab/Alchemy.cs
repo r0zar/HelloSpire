@@ -52,7 +52,7 @@ public static class Alchemy
         var candidates = LabBridge.Current.DiscardPile(lab.Player);
         if (candidates.Count == 0) return false;
 
-        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
+        var chosen = await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card, pile: PileType.Discard);
         if (chosen == null) return false;
 
         await Exhaust(ctx, lab, chosen);
@@ -143,7 +143,7 @@ public static class Alchemy
 
         if (junk.Count == 0) return false;
 
-        var chosen = junk.Count == 1 ? junk[0] : await LabBridge.Current.ChooseCard(ctx, lab.Player, junk, lab.Card);
+        var chosen = junk.Count == 1 ? junk[0] : await LabBridge.Current.ChooseCard(ctx, lab.Player, junk, lab.Card, pile: PileType.Discard);
         if (chosen == null) return false;
 
         await Exhaust(ctx, lab, chosen);
@@ -182,7 +182,7 @@ public static class Alchemy
 
         var chosen = candidates.Count == 1
             ? candidates[0]
-            : await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card);
+            : await LabBridge.Current.ChooseCard(ctx, lab.Player, candidates, lab.Card, pile: PileType.Exhaust);
         if (chosen == null) return false;
 
         await LabBridge.Current.ReturnToHand(ctx, lab.Player, chosen);
