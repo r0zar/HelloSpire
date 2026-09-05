@@ -56,7 +56,7 @@ public sealed class AlembicBlade() : AlchemistCard(1, CardType.Attack, CardRarit
 public sealed class Shatterstock() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(9m, ValueProp.Move), new DamageVar("Bonus", 6m, ValueProp.Move)];
+        [new DamageVar(6m, ValueProp.Move), new DamageVar("Bonus", 6m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Distill), Tip(AlchemistTips.Infuse)];
 
@@ -173,7 +173,7 @@ public sealed class ContaminatedBlade() : AlchemistCard(1, CardType.Attack, Card
 public sealed class SolventStrike() : AlchemistCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(10m, ValueProp.Move), new DamageVar("Bonus", 5m, ValueProp.Move)];
+        [new DamageVar(7m, ValueProp.Move), new DamageVar("Bonus", 5m, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
 
