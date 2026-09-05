@@ -136,6 +136,12 @@ public sealed class WiredLabBridge : ILabBridge
         return options.Count == 0 ? null : player.RunState.Rng.CombatPotionGeneration.NextItem(options).ToMutable();
     }
 
+    public PotionModel? RandomVolatilePotion(Player player)
+    {
+        var options = VolatileCommonPool().Concat(VolatileDrawPool()).ToList();
+        return options.Count == 0 ? null : player.RunState.Rng.CombatPotionGeneration.NextItem(options).ToMutable();
+    }
+
     public Task GainSlots(Player player, int count) => PlayerCmd.GainMaxPotionCount(count, player);
 
     public Task LoseSlots(Player player, int count) => PlayerCmd.LoseMaxPotionCount(count, player);

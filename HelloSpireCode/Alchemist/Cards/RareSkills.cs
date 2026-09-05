@@ -69,7 +69,10 @@ public sealed class HeavyTransmute() : AlchemistCard(1, CardType.Skill, CardRari
     protected override void OnUpgrade() => DynamicVars["Gold"].UpgradeValueBy(1m);
 }
 
-/// <summary>Fill the belt, and Infuse for every Potion that landed. The Brewer's capstone.</summary>
+/// <summary>
+/// Fill the belt with any random Volatile Potion (Combat pool and Draw pool both), and Infuse for
+/// every Potion that landed. The Brewer's capstone.
+/// </summary>
 public sealed class MagnumOpus() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar("PerPotion", 4m, ValueProp.Move)];
@@ -82,7 +85,7 @@ public sealed class MagnumOpus() : AlchemistCard(2, CardType.Skill, CardRarity.R
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var filled = await Belt.FillEmpty(ctx, Lab);
+        var filled = await Belt.FillEmpty(ctx, Lab, anyVolatile: true);
         if (filled > 0)
             await Belt.Infuse(ctx, Lab, damage: DynamicVars["PerPotion"].BaseValue * filled);
     }

@@ -105,6 +105,12 @@ public interface ILabBridge
     PotionModel? RandomDrawPotion(Player player);
 
     /// <summary>
+    /// A random Potion from EVERY Volatile Common Potion this mod has -- the Combat pool and the
+    /// Draw pool combined, the one deliberate bypass of keeping those two separate. Magnum Opus.
+    /// </summary>
+    PotionModel? RandomVolatilePotion(Player player);
+
+    /// <summary>
     /// One of the handful of base-game Potions the Alchemist Brews by name.
     ///
     /// An enum rather than a <c>Type</c> so that no card file has to reference a base-game potion
@@ -256,6 +262,12 @@ public sealed class UnwiredLabBridge : ILabBridge
     public PotionModel? RandomDrawPotion(Player player)
     {
         Report("the Draw Potion pool");
+        return null;
+    }
+
+    public PotionModel? RandomVolatilePotion(Player player)
+    {
+        Report("the combined Volatile Potion pool");
         return null;
     }
 

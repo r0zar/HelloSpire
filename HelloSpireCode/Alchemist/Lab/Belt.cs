@@ -106,8 +106,19 @@ public static class Belt
     public static Task<PotionModel?> BrewRandomDraw(PlayerChoiceContext ctx, LabContext lab, bool volatilePotion = true) =>
         Brew(ctx, lab, LabBridge.Current.RandomDrawPotion(lab.Player), volatilePotion);
 
-    /// <summary>Fill every empty slot with random Combat Potions. Magnum Opus and Panacea of Plenty.</summary>
-    public static async Task<int> FillEmpty(PlayerChoiceContext ctx, LabContext lab)
+    /// <summary>
+    /// Brew a random Potion from EVERY Volatile Common Potion this mod has -- Combat pool and Draw
+    /// pool both. Magnum Opus's deliberate bypass of keeping those two separate.
+    /// </summary>
+    public static Task<PotionModel?> BrewRandomVolatile(PlayerChoiceContext ctx, LabContext lab, bool volatilePotion = true) =>
+        Brew(ctx, lab, LabBridge.Current.RandomVolatilePotion(lab.Player), volatilePotion);
+
+    /// <summary>
+    /// Fill every empty slot with random Potions. Magnum Opus and Panacea of Plenty -- Magnum Opus
+    /// passes <paramref name="anyVolatile"/> to reach the Draw pool too; Panacea leaves it false for
+    /// the ordinary Combat pool only.
+    /// </summary>
+    public static async Task<int> FillEmpty(PlayerChoiceContext ctx, LabContext lab, bool anyVolatile = false)
     {
         var brewed = 0;
 
@@ -116,7 +127,8 @@ public static class Belt
         var attempts = EmptySlots(lab);
         for (var i = 0; i < attempts; i++)
         {
-            if (await BrewRandom(ctx, lab) == null) break;
+            var result = anyVolatile ? await BrewRandomVolatile(ctx, lab) : await BrewRandom(ctx, lab);
+            if (result == null) break;
             brewed++;
         }
 
