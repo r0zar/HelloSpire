@@ -38,8 +38,8 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Potions;
 ///
 /// So these have to be real members of AlchemistPotionPool. Keeping them out of shops and reward
 /// screens is instead handled by <see cref="HideVolatilePotionsFromShopsAndRewardsPatch"/>, which
-/// blacklists every VolatileCommonPotion from the one method (PotionFactory.
-/// CreateRandomPotionsOutOfCombat) that actually generates a random potion outside combat.
+/// blacklists every VolatileCommonPotion from both out-of-combat generation methods on
+/// PotionFactory.
 /// </summary>
 [Pool(typeof(HelloSpire.HelloSpireCode.Characters.AlchemistPotionPool))]
 public abstract class VolatileCommonPotion : BaseLib.Abstracts.CustomPotionModel
@@ -61,16 +61,27 @@ public abstract class VolatileCommonPotion : BaseLib.Abstracts.CustomPotionModel
 /// <summary>
 /// Keeps every VolatileCommonPotion, plus the real Poison Ampoule, out of shops and reward screens
 /// without needing a separate, unreachable pool (see the doc comment on
-/// <see cref="VolatileCommonPotion"/> for why that doesn't work). PotionFactory.
-/// CreateRandomPotionsOutOfCombat (decompiled from sts2.dll) is the sole general-purpose "give the
-/// player a random potion outside combat" entry point and already accepts a blacklist parameter for
-/// exactly this purpose; combat generation is untouched, since WiredLabBridge's own
-/// RandomCombatPotion/CombatPotionOptions never call this method at all -- those two are where
-/// Poison Ampoule's combat-side exclusion lives instead.
+/// <see cref="VolatileCommonPotion"/> for why that doesn't work).
+///
+/// PotionFactory (decompiled from sts2.dll) has two independent out-of-combat generation methods,
+/// not one calling the other: CreateRandomPotionsOutOfCombat (plural, used by shops) and
+/// CreateRandomPotionOutOfCombat (singular -- no "s" -- which is what PotionReward.Populate calls
+/// for every combat reward potion). Patching only the plural one left combat rewards unfiltered,
+/// which is how a Volatile Common Potion could turn up as -- and then get kept as -- a reward
+/// after a fight, something that's meant to never survive past the combat it's Brewed in. Both
+/// need the same blacklist; combat generation itself is untouched, since WiredLabBridge's own
+/// RandomCombatPotion/CombatPotionOptions never call either of these methods at all -- those two
+/// are where Poison Ampoule's combat-side exclusion lives instead.
 /// </summary>
-[HarmonyLib.HarmonyPatch(typeof(PotionFactory), nameof(PotionFactory.CreateRandomPotionsOutOfCombat))]
+[HarmonyLib.HarmonyPatch]
 internal static class HideVolatilePotionsFromShopsAndRewardsPatch
 {
+    private static IEnumerable<System.Reflection.MethodBase> TargetMethods() =>
+    [
+        HarmonyLib.AccessTools.Method(typeof(PotionFactory), nameof(PotionFactory.CreateRandomPotionsOutOfCombat)),
+        HarmonyLib.AccessTools.Method(typeof(PotionFactory), nameof(PotionFactory.CreateRandomPotionOutOfCombat))
+    ];
+
     [HarmonyLib.HarmonyPrefix]
     private static void BeforeCreate(ref IEnumerable<PotionModel>? blacklist)
     {
