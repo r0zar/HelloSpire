@@ -83,7 +83,7 @@ public sealed class ExtraVial() : AlchemistCard(1, CardType.Skill, CardRarity.Un
 }
 
 /// <summary>Make a held Potion permanent.</summary>
-public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
