@@ -343,6 +343,8 @@ public sealed class ContaminatedSample() : AlchemistCard(1, CardType.Skill, Card
         await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
         await AlchemistEffects.ApplyPoison(ctx, Lab, play.Target, DynamicVars["Poison"].BaseValue);
     }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 // ---------------------------------------------------------------------------- Powers
