@@ -1,12 +1,10 @@
 using HelloSpire.HelloSpireCode.Alchemist.Lab;
-using HelloSpire.HelloSpireCode.Alchemist.Potions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
@@ -78,41 +76,6 @@ public sealed class ExtraVial() : AlchemistCard(1, CardType.Skill, CardRarity.Un
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await Belt.GrantSlotsThisTurn(ctx, Lab, DynamicVars["Slots"].IntValue);
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
-}
-
-/// <summary>Make a held Potion permanent.</summary>
-public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
-{
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Volatile)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        var bench = await AlchemistEffects.Bench(ctx, Lab);
-        if (bench == null || bench.Volatile.Count == 0) return;
-
-        var candidates = bench.Volatile.ToList();
-        var chosen = candidates.Count == 1
-            ? candidates[0]
-            : await LabBridge.Current.ChoosePotion(ctx, Owner, candidates,
-                new LocString("cards", "HELLOSPIRE-ALCHEMIST_STABILIZE_CHOICE.header"));
-
-        if (chosen == null) return;
-        bench.Volatile.Remove(chosen);
-        LabBridge.Current.RefreshPotionOutline(Owner, chosen);
-
-        // Poison Ampoule is the one Volatile Potion Stabilize doesn't just keep as-is: it upgrades
-        // into the real, stronger version instead, since Stabilizing a Volatile Poison Ampoule is
-        // the real one's only source anywhere in the class.
-        if (chosen is VolatilePoisonAmpoule)
-        {
-            await LabBridge.Current.Discard(ctx, Owner, chosen);
-            await Belt.Brew(ctx, Lab, ModelDb.Potion<PoisonAmpoule>().ToMutable(), volatilePotion: false);
-        }
-    }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
