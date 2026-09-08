@@ -17,6 +17,40 @@ All three characters compile and are playable end to end. The Paladin runs three
 - [**TODO.md**](TODO.md) — phased roadmap for building each character out, with real base-game baselines
 - [**ART.md**](ART.md) — the art pipeline: where assets live, required sizes, and how to extract the base game's art for reference
 
+## Known gaps
+
+Coverage counts below are verified against what's actually on disk and what the code actually
+requests, not against ART.md's own description of itself (which is out of date in a couple of
+places, noted inline).
+
+### Art
+
+| Asset | Paladin | Gunslinger | Alchemist |
+|---|---|---|---|
+| Character UI (`charui/`) | complete | complete | complete |
+| Combat body / spine rig | custom reskinned rig (`spine/paladin/`) | no mod-local rig — reuses the base game's Silent skeleton as-is, repainted by shader | no mod-local rig — also reuses the Silent skeleton, repainted; visually just a palette-shifted Silent in combat |
+| Card portraits | **86/86** — hand-painted | **85/104** finished; 9 are still placeholder tiles (`Gadgets.cs` group); 10 more exist on disk under the *wrong* filename from an underscore-stripping bug in `tools/gen_card_art.py` (rename, not new art, fixes those) | **50/85** (59%) have art; the other 35 fall back to the generic card back entirely |
+| Card upgraded/beta art | none for any character — `BetaPortraitPath` always falls back to base art; no `beta/` folder exists yet (~275 cards affected pack-wide) |||
+| Relic icon (small + outline) | 6/6 | 9/9 | **8/9** — the starter relic `AlchemicalSatchel` has no icon at all, falls back to generic |
+| Relic detail art (`relics/big/`) | **3/6** (`ChainedGauntlet`, `HolyBook`, `LibramOfWrath` missing) | 9/9 | **0/9** |
+| Potion icons | n/a — the Paladin has no potions in the kit yet | **0/3** | **0/25** |
+| Power icons | 31/35 (4 unmatched — may be minor aux powers that intentionally reuse a base-game icon, worth a manual check before treating as a real gap) | 21/21 | **4/15** — 11 missing, the largest icon gap in the pack |
+| Ancient dialogue | only the Architect has lines (4 lines × 3 characters); every other Ancient is unstubbed |||
+
+`tools/gen_gunslinger_icons.py` output is real, shipped art for the Gunslinger's powers and relics,
+not scaffolding — and per its own comment it modeled that style on the Paladin's `HolyBook`/
+`ChainedGauntlet` icons and an assumed complete Alchemist power-icon set. That assumption is wrong:
+the Alchemist only has 4/15 power icons today, so `ART.md`'s claim that engine powers get "the
+medallion disc the Alchemist's fifteen use" is aspirational, not current. `tools/gen_card_art.py`
+output (card portraits) is scaffolding, meant to be replaced by hand art.
+
+### Non-art
+
+- **Multiplayer cards aren't gated.** Only the Gunslinger's five (`HelloSpireCode/Gunslinger/Cards/Multiplayer.cs`) exist in code; the Paladin's five and the Alchemist's five are design text only (`design/multiplayer-cards.md`). There's also no mechanism yet to keep a multiplayer-only card out of solo rewards/shops — the Gunslinger's five currently leak into the normal solo pool.
+- **Localization still has placeholder "for now" copy.** `HelloSpire/localization/eng/characters.json`'s `cardsModifierDescription` for the Paladin and Alchemist literally reads "...is still borrowed steel/apparatus. For now." — written before the Paladin rework and never revisited. `ancients.json` is likewise still placeholder text (see the Ancient dialogue row above).
+- **Cut-content cleanup.** ~30 orphaned `.cs.uid` files (and matching orphaned art) under `Characters/Paladin/Cards/` are leftovers from the pre-rework "Reset" commit; harmless but worth deleting in a pass. `HelloSpireCode/Characters/Paladin/Ui/PaladinSkin.cs.uid` is a similar orphan from a since-generalized patch.
+- `TODO.md`'s Phase 0–11 checklist (129 items) has never actually been checked off for any character — progress is tracked narratively in its "Status" note instead. Don't read the unchecked boxes as "nothing done."
+
 ## Why one mod instead of three
 
 Because of how the game gates multiplayer. On joining a lobby the game exchanges an `InitialGameInfoMessage` carrying the game version, an `idDatabaseHash` fingerprint of the whole model database, and **two separate mod lists** — `gameplayAffectingMods` and `otherMods`. A mismatch in the first list is a first-class rejection: `ConnectionFailureReason.ModMismatch`.
