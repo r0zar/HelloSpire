@@ -87,6 +87,16 @@ public interface ILabBridge
     /// <summary>The belt's ordinary "throw this Potion away" command -- what the generic discard button calls.</summary>
     Task Discard(PlayerChoiceContext ctx, Player player, PotionModel potion);
 
+    /// <summary>
+    /// Redraw a still-held Potion's belt slot -- specifically the Volatile purple outline (see
+    /// VolatilePotionOutlinePatch), which only redraws when the slot's NPotion.Reload() runs. That
+    /// happens automatically the moment a Potion is first placed in a slot, but nothing calls it
+    /// again just because a Potion's Volatile state changed later without moving slots. Stabilize
+    /// is the one card that does exactly that -- removing Volatile tracking from a Potion that
+    /// stays put -- so it needs to ask for a redraw explicitly.
+    /// </summary>
+    void RefreshPotionOutline(Player player, PotionModel potion);
+
     /// <summary>A random Potion from the curated Combat Potion pool — see design/alchemist.md.</summary>
     PotionModel? RandomCombatPotion(Player player, PotionRarity? rarity = null);
 
@@ -241,6 +251,9 @@ public sealed class UnwiredLabBridge : ILabBridge
         Report("discarding a Potion");
         return Task.CompletedTask;
     }
+
+    public void RefreshPotionOutline(Player player, PotionModel potion) =>
+        Report("refreshing a Potion's belt outline");
 
     public PotionModel? RandomCombatPotion(Player player, PotionRarity? rarity = null)
     {

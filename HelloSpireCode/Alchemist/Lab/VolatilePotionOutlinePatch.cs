@@ -20,9 +20,10 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Lab;
 /// Outline texture and applies a shader (volatile_potion_outline.gdshader) that turns its alpha
 /// edge into a solid purple line -- same sprite, no new art per potion.
 ///
-/// Known gap: this only redraws the outline when Reload() runs, which happens when a potion's
-/// belt slot is created, not on every Volatile-state change. A potion that stops being Volatile
-/// mid-combat (Stabilize, once ported) keeps its purple outline until its slot is recreated.
+/// This only redraws the outline when Reload() runs, which happens when a potion's belt slot is
+/// created, not on every Volatile-state change -- a potion that stops being Volatile mid-combat
+/// keeps its purple outline until something re-triggers Reload(). Stabilize is the one card that
+/// does that, and it calls WiredLabBridge.RefreshPotionOutline itself to force the redraw.
 ///
 /// VERIFY AGAINST sts2.dll if NPotion's shape ever changes -- Reload is private, so this patches
 /// the exact layout confirmed there rather than a public contract.

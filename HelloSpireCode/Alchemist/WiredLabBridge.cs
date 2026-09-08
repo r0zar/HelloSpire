@@ -19,6 +19,7 @@ using MegaCrit.Sts2.Core.Models.Potions;
 using MegaCrit.Sts2.Core.Multiplayer.Game;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using MegaCrit.Sts2.Core.Nodes.Multiplayer;
+using MegaCrit.Sts2.Core.Nodes.Potions;
 using MegaCrit.Sts2.Core.Runs;
 
 namespace HelloSpire.HelloSpireCode.Alchemist;
@@ -49,6 +50,28 @@ public sealed class WiredLabBridge : ILabBridge
 
     public Task Discard(PlayerChoiceContext ctx, Player player, PotionModel potion) =>
         PotionCmd.Discard(potion);
+
+    /// <summary>
+    /// The Volatile outline only ever redraws when a slot's NPotion.Reload() runs, which normally
+    /// happens once, when PotionCmd.TryToProcure first places a Potion in a slot (see the comment
+    /// on Belt.Brew). Stabilize changes a Potion's Volatile state without moving it to a new slot,
+    /// so nothing re-triggers that -- the purple outline would otherwise sit there, unchanged,
+    /// making the card look like it did nothing. NPotionContainer keeps its holders in a private
+    /// list, so this walks the Godot tree instead (public API only) to find the one NPotion whose
+    /// Model is this exact instance, then re-runs its own Reload().
+    /// </summary>
+    public void RefreshPotionOutline(Player player, PotionModel potion)
+    {
+        var container = MegaCrit.Sts2.Core.Nodes.NRun.Instance?.GlobalUi.TopBar.PotionContainer;
+        if (container == null) return;
+
+        foreach (var node in container.FindChildren("*", nameof(NPotionHolder), true, false))
+            if (node is NPotionHolder { Potion: { } nPotion } && nPotion.Model == potion)
+            {
+                nPotion.Reload();
+                return;
+            }
+    }
 
     /// <summary>
     /// The real, weaker Volatile potions Common-rarity combat generation actually hands out (see

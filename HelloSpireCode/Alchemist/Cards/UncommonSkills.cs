@@ -102,6 +102,7 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
 
         if (chosen == null) return;
         bench.Volatile.Remove(chosen);
+        LabBridge.Current.RefreshPotionOutline(Owner, chosen);
 
         // Poison Ampoule is the one Volatile Potion Stabilize doesn't just keep as-is: it upgrades
         // into the real, stronger version instead, since Stabilizing a Volatile Poison Ampoule is
