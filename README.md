@@ -2,17 +2,17 @@
 
 A three-character pack for [Slay the Spire 2](https://store.steampowered.com/app/2868840/), built to be played together in co-op.
 
-Built against **game v0.107.1** and **BaseLib 3.4.5**. Slay the Spire 2 is in Early Access, so expect this to need a rebuild after breaking updates.
+Built against **game v0.107.0** (the manifest's declared floor) and **BaseLib 3.4.5**. Slay the Spire 2 is in Early Access, so expect this to need a rebuild after breaking updates.
 
 ## The characters
 
 | Character | HP | Colour | Status |
 |---|---:|---|---|
-| **The Paladin** | 75 | gold | starter deck only, being rebuilt one card at a time |
-| **The Alchemist** | 68 | green | shell only — borrowed starter kit |
-| **The Gunslinger** | 72 | rust | full card set, relics, potions and cylinder UI in code; first balance pass done |
+| **The Paladin** | 75 | gold | full 87-card set in code; numbers are placeholders, most card art is a labelled tile |
+| **The Alchemist** | 68 | green | full ~85-card set and Lab/Belt economy in code; newest of the three, under active balance iteration |
+| **The Gunslinger** | 72 | rust | full ~104-card set, relics, potions, Cylinder UI and a Gadgets sub-archetype in code; balance pass done |
 
-The Paladin's 91-card set, Faith system and starter relic are all in code, generated from one spec (`tools/gen_paladin.py`); its numbers are untuned placeholders and most card art is a labelled tile. The Gunslinger's full set is in and compiling, with real power and relic icons generated from `tools/gen_gunslinger_icons.py`. The Alchemist is scaffolded but excluded from the build until its card text lands.
+All three characters compile and are playable end to end. The Paladin runs three lanes — Protection, Retribution, Holy — around **Plating** (decaying end-of-turn Block), with **Seals**/**Judge** and Spirit-scaled healing as opt-in sub-mechanics drafted rather than in the starter kit; its card art is still a labelled tile from `tools/gen_card_art.py`. The Gunslinger loads a six-chamber **Cylinder** and chooses to Fire, Cycle or Spin it, cashing out through **Deadeye**, with a parallel **Gadgets** archetype that skips the gun entirely; its power and relic icons are real art from `tools/gen_gunslinger_icons.py`, not placeholders. The Alchemist converts Potions, Gold and Max HP into each other via **Transform** — **Brew**, **Distill**, **Invest**, **Render** — banking Volatile Potions into a **Belt**; it's the most recently reworked of the three and where most current commits land.
 
 - [**TODO.md**](TODO.md) — phased roadmap for building each character out, with real base-game baselines
 - [**ART.md**](ART.md) — the art pipeline: where assets live, required sizes, and how to extract the base game's art for reference
@@ -54,16 +54,26 @@ A character mod is necessarily `true`. Shipping three separate character mods wo
 
 ## Layout
 
+Not uniform per character — Paladin keeps everything under `Characters/Paladin/`; Gunslinger and
+Alchemist keep only their base/pool glue there and hold the real card/relic/power content in
+sibling top-level trees. An artifact of how each character was built, not a rule to follow.
+
 ```
 HelloSpireCode/
-  MainFile.cs                     single [ModInitializer] for the whole pack; Harmony instance
+  MainFile.cs                     single [ModInitializer] for the whole pack; Harmony instance;
+                                   wires the Alchemist's LabBridge before patching
   Extensions/StringExtensions.cs  asset path helpers
   Powers/HelloSpirePower.cs       shared — powers are mod-wide, not per-character
+
   Characters/
-    Paladin/     Paladin.cs, PaladinCardPool/RelicPool/PotionPool.cs,
-                 PaladinCard.cs, PaladinRelic.cs, PaladinPotion.cs
-    Alchemist/   ... same seven files
-    Gunslinger/  ... same seven files
+    Paladin/     Paladin.cs, PaladinCard.cs, PaladinCardPool.cs, PaladinRelic.cs, PaladinRelicPool.cs,
+                 PaladinPotion.cs, PaladinPotionPool.cs, PaladinEffects.cs, PaladinTips.cs
+                 Cards/ Relics/ Powers/ Ui/    — the Paladin's actual content, one class per file
+    Gunslinger/  Gunslinger.cs + the seven base/pool glue classes only
+    Alchemist/   Alchemist.cs + the seven base/pool glue classes only
+
+  Gunslinger/    Cards/ Cylinder/ Powers/ Relics/ Potions/   the Gunslinger's actual content
+  Alchemist/     Cards/ Lab/ Powers/ Relics/ Potions/        the Alchemist's actual content
 
 HelloSpire/
   images/
@@ -78,7 +88,10 @@ Card, relic and potion art resolves by **class name** (`Id.Entry`), which is alr
 
 ### Adding a fourth character
 
-Copy any `Characters/<Name>/` folder, rename the seven classes, then:
+Copy `Characters/Gunslinger/` for the seven base/pool glue classes, then either keep its real
+content in a sibling top-level `HelloSpireCode/<Name>/` tree or follow the Paladin's pattern and
+put everything under `Characters/<Name>/` — the game doesn't care which. Rename the seven classes,
+then:
 
 1. Give the character class a `CharacterId`, an `AssetFolder`, and a `Color`
 2. Create `images/charui/<assetfolder>/` with the six UI images
