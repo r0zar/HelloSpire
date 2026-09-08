@@ -186,7 +186,7 @@ public sealed class AccumulationPower : AlchemistEnginePower, IInfuseListener
 /// step too late to make it resolve a second time. TryClaim is the once-per-COMBAT latch (unlike
 /// every other engine here, which resets every turn) -- PotionUsePatch calls it and, if it
 /// succeeds, adds the Potion to LabPower.DoubleActivate, the same one-shot mechanism Pressure
-/// Burst used to mark a chosen Potion.
+/// Burst uses to mark a chosen Potion.
 /// </summary>
 public sealed class EternalCruciblePower : AlchemistEnginePower
 {

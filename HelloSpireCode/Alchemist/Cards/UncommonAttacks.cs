@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -114,21 +115,29 @@ public sealed class FlashPowder() : AlchemistCard(2, CardType.Attack, CardRarity
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }
 
-/// <summary>Big damage, and Infuse Unstable Concoction.</summary>
+/// <summary>Deal damage, and mark a Potion to resolve twice, consumed once, next time it's used.</summary>
 public sealed class PressureBurst() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 8m, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(AlchemistTips.Infuse)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
         ArgumentNullException.ThrowIfNull(play.Target);
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-        await Belt.Infuse(ctx, Lab, damage: DynamicVars["Bonus"].BaseValue);
-        await Belt.LeaveResidualReagent(ctx, Lab);
+
+        var held = LabBridge.Current.Held(Owner);
+        if (held.Count == 0) return;
+
+        var bench = await AlchemistEffects.Bench(ctx, Lab);
+        if (bench == null) return;
+
+        var chosen = held.Count == 1
+            ? held[0]
+            : await LabBridge.Current.ChoosePotion(ctx, Owner, held,
+                new LocString("cards", "HELLOSPIRE-ALCHEMIST_DOUBLE_CHOICE.header"));
+
+        if (chosen != null) bench.DoubleActivate.Add(chosen);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
