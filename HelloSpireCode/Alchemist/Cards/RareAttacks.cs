@@ -47,7 +47,7 @@ public sealed class MatterAnnihilation() : AlchemistCard(1, CardType.Attack, Car
 }
 
 /// <summary>Brew Attack Potions, and leave Volatile Residue behind for each.</summary>
-public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, CardRarity.Rare, TargetType.Self)
+public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Potions", 2m)];
 
@@ -62,7 +62,7 @@ public sealed class HomunculusAssault() : AlchemistCard(2, CardType.Attack, Card
         }
     }
 
-    protected override void OnUpgrade() => DynamicVars["Potions"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Deal a lot of damage. If it kills, gain Gold.</summary>
