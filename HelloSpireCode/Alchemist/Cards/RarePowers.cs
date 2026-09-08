@@ -147,4 +147,6 @@ public sealed class TheGreatWork() : AlchemistCard(3, CardType.Skill, CardRarity
         await AlchemistEffects.LoseHp(ctx, Lab, DynamicVars["Life"].BaseValue);
         await Belt.Brew(ctx, Lab, ModelDb.Potion<PhilosophersStone>().ToMutable(), volatilePotion: false);
     }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

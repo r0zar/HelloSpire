@@ -41,6 +41,8 @@ public sealed class Reconstitute() : AlchemistCard(1, CardType.Skill, CardRarity
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await Alchemy.ReturnFromExhaust(ctx, Lab);
+
+    protected override void OnUpgrade() => RemoveKeyword(CardKeyword.Exhaust);
 }
 
 /// <summary>Gain Block, Brew a random Draw Potion, and leave a Volatile Residue in the discard pile.</summary>
@@ -110,6 +112,8 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
             await Belt.Brew(ctx, Lab, ModelDb.Potion<PoisonAmpoule>().ToMutable(), volatilePotion: false);
         }
     }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Distill a Potion, and Infuse Unstable Concoction.</summary>
@@ -203,16 +207,24 @@ public sealed class SmeltTheWeak() : AlchemistCard(0, CardType.Skill, CardRarity
         await AlchemistEffects.GainEnergy(Lab, 1m);
         await Belt.Infuse(ctx, Lab, damage: DynamicVars["Infuse"].BaseValue);
     }
+
+    protected override void OnUpgrade() => RemoveKeyword(CardKeyword.Exhaust);
 }
 
 /// <summary>Leave a Volatile Reagent in the draw pile, and draw two cards.</summary>
 public sealed class FalseBottom() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Reagents", 1m)];
+
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
-        await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
+        for (var i = 0; i < DynamicVars["Reagents"].IntValue; i++)
+            await Alchemy.CreateVolatileReagent(ctx, Lab, PileType.Draw);
+
         await AlchemistEffects.Draw(ctx, Lab, 2);
     }
+
+    protected override void OnUpgrade() => DynamicVars["Reagents"].UpgradeValueBy(1m);
 }
 
 /// <summary>Gain Block. If you have no Potions, draw two cards.</summary>
@@ -264,6 +276,8 @@ public sealed class ReactiveMixture() : AlchemistCard(2, CardType.Skill, CardRar
         await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Poison));
         await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Weak));
     }
+
+    protected override void OnUpgrade() => RemoveKeyword(CardKeyword.Exhaust);
 }
 
 /// <summary>Exhaust a Status from the discard pile, for cards and Block.</summary>
@@ -309,6 +323,8 @@ public sealed class SolventFlask() : AlchemistCard(1, CardType.Skill, CardRarity
         if (!await Alchemy.ExhaustJunk(ctx, Lab)) return;
         await AlchemistEffects.Draw(ctx, Lab, 2);
     }
+
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Gain Block. If your Potion Belt is full, gain additional Block.</summary>

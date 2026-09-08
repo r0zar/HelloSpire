@@ -258,6 +258,8 @@ public sealed class EnergyFlask() : AlchemistCard(0, CardType.Skill, CardRarity.
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Energy));
+
+    protected override void OnUpgrade() => RemoveKeyword(CardKeyword.Exhaust);
 }
 
 /// <summary>Brew something. The plainest statement of what the character does.</summary>
