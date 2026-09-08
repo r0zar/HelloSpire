@@ -3,14 +3,13 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 
 namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 
-// Uncommon Attacks 1-9. Half of these Brew a specific Volatile Potion by name; the rest scale off
+// Uncommon Attacks 1-8. Half of these Brew a specific Volatile Potion by name; the rest scale off
 // Potions held, Infuse directly, or apply Poison outright -- almost nothing left asks "did you do X
 // this turn."
 
@@ -113,34 +112,6 @@ public sealed class FlashPowder() : AlchemistCard(2, CardType.Attack, CardRarity
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
-}
-
-/// <summary>Deal damage, and mark a Potion to resolve twice, consumed once, next time it's used.</summary>
-public sealed class PressureBurst() : AlchemistCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
-{
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8m, ValueProp.Move)];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
-    {
-        ArgumentNullException.ThrowIfNull(play.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(play.Target).Execute(ctx);
-
-        var held = LabBridge.Current.Held(Owner);
-        if (held.Count == 0) return;
-
-        var bench = await AlchemistEffects.Bench(ctx, Lab);
-        if (bench == null) return;
-
-        var chosen = held.Count == 1
-            ? held[0]
-            : await LabBridge.Current.ChoosePotion(ctx, Owner, held,
-                new LocString("cards", "HELLOSPIRE-ALCHEMIST_DOUBLE_CHOICE.header"));
-
-        if (chosen != null) bench.DoubleActivate.Add(chosen);
-    }
-
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4m);
 }
 
 /// <summary>Deal a lot of damage, and Exhaust a random other card.</summary>

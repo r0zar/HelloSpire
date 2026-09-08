@@ -117,6 +117,26 @@ public sealed class Stabilize() : AlchemistCard(1, CardType.Skill, CardRarity.Un
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
+/// <summary>Mark a Potion to resolve twice, consumed once, next time it's used.</summary>
+public sealed class PressureBurst() : AlchemistCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+{
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
+    {
+        var held = LabBridge.Current.Held(Owner);
+        if (held.Count == 0) return;
+
+        var bench = await AlchemistEffects.Bench(ctx, Lab);
+        if (bench == null) return;
+
+        var chosen = held.Count == 1
+            ? held[0]
+            : await LabBridge.Current.ChoosePotion(ctx, Owner, held,
+                new LocString("cards", "HELLOSPIRE-ALCHEMIST_DOUBLE_CHOICE.header"));
+
+        if (chosen != null) bench.DoubleActivate.Add(chosen);
+    }
+}
+
 /// <summary>Distill a Potion, and Infuse Unstable Concoction.</summary>
 public sealed class CatalyticWash() : AlchemistCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
