@@ -13,7 +13,7 @@ namespace HelloSpire.HelloSpireCode.Alchemist.Cards;
 /// </summary>
 public sealed class VolatileResidue() : AlchemistCard(-1, CardType.Status, CardRarity.Status, TargetType.None)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Unplayable];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Unplayable, CardKeyword.Ethereal];
 
     protected override Task OnPlay(PlayerChoiceContext ctx, CardPlay play) => Task.CompletedTask;
 }

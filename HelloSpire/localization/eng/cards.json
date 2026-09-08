@@ -326,7 +326,7 @@
   "HELLOSPIRE-DEFEND_ALCHEMIST.title": "Defend",
   "HELLOSPIRE-DEFEND_ALCHEMIST.description": "Gain {Block:diff()} [gold]Block[/gold].",
   "HELLOSPIRE-AEGIS_FORMULA.title": "Aegis Formula",
-  "HELLOSPIRE-AEGIS_FORMULA.description": "[gold]Brew[/gold] a Block Potion.",
+  "HELLOSPIRE-AEGIS_FORMULA.description": "[gold]Brew[/gold] a Block Potion. Add a Volatile Residue to your discard pile.",
   "HELLOSPIRE-FLASK_TOSS.title": "Flask Toss",
   "HELLOSPIRE-FLASK_TOSS.description": "[gold]Distill[/gold] a Potion: apply {Poison:diff()} [gold]Poison[/gold] to 3 random enemies.",
   "HELLOSPIRE-GLASS_SHARD.title": "Glass Shard",

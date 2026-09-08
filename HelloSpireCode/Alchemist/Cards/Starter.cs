@@ -55,8 +55,6 @@ public sealed class DefendAlchemist() : AlchemistCard(1, CardType.Skill, CardRar
 /// </summary>
 public sealed class AegisFormula() : AlchemistCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         [Tip(AlchemistTips.Brew), Tip(AlchemistTips.Volatile)];
 
@@ -64,6 +62,7 @@ public sealed class AegisFormula() : AlchemistCard(1, CardType.Skill, CardRarity
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await Belt.Brew(ctx, Lab, LabBridge.Current.NamedPotion(BasePotion.Block));
+        await Alchemy.CreateVolatileResidue(ctx, Lab, PileType.Discard);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
