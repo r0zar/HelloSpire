@@ -19,19 +19,24 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 /// judge charge: Strength seals surge for the turn (the Dark Shackles pattern, positive sign),
 /// and the Martyr's Thorns flare and fade the same way. Recurring permanent stats per deck
 /// cycle made act 1 trivial.
+///
+/// Each has its own icon rather than borrowing its parent seal's: the seal and its one-turn
+/// buff sit side by side in the power bar, and two identical icons there are unreadable. The
+/// shared mark is the hourglass badge every one of these carries -- the seal's own glyph, plus
+/// "this turn only". See tools/gen_power_icons.py.
 /// </summary>
 public sealed class SealOfRighteousnessStrengthPower : TemporaryStrengthPower, ICustomPower
 {
     public override AbstractModel OriginModel => ModelDb.Card<Cards.SealOfRighteousness>();
-    public string CustomPackedIconPath => "seal_of_righteousness_power.png".PowerImagePath();
-    public string CustomBigIconPath => "seal_of_righteousness_power.png".BigPowerImagePath();
+    public string CustomPackedIconPath => "seal_of_righteousness_strength_power.png".PowerImagePath();
+    public string CustomBigIconPath => "seal_of_righteousness_strength_power.png".BigPowerImagePath();
 }
 
 public sealed class SealOfTheCrusaderStrengthPower : TemporaryStrengthPower, ICustomPower
 {
     public override AbstractModel OriginModel => ModelDb.Card<Cards.SealOfTheCrusader>();
-    public string CustomPackedIconPath => "seal_of_the_crusader_power.png".PowerImagePath();
-    public string CustomBigIconPath => "seal_of_the_crusader_power.png".BigPowerImagePath();
+    public string CustomPackedIconPath => "seal_of_the_crusader_strength_power.png".PowerImagePath();
+    public string CustomBigIconPath => "seal_of_the_crusader_strength_power.png".BigPowerImagePath();
 }
 
 /// <summary>

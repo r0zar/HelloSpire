@@ -9,7 +9,8 @@ namespace HelloSpire.HelloSpireCode.Characters.PaladinContent;
 /// The one-turn Strength loss the Humility and Martyr judges apply -- the Dark Shackles pattern:
 /// TemporaryStrengthPower handles the apply/restore bookkeeping and borrows the vanilla
 /// Temporary Strength Down text, so this class only names its origin. (Successor to the retired
-/// Seal of Justice shackles; keeps its icon.)
+/// Seal of Justice shackles; it now carries its own icon rather than the retired seal's, which
+/// was named for a card that no longer exists.)
 /// </summary>
 public sealed class HumblingShacklesPower : TemporaryStrengthPower, ICustomPower
 {
@@ -17,6 +18,6 @@ public sealed class HumblingShacklesPower : TemporaryStrengthPower, ICustomPower
 
     protected override bool IsPositive => false;
 
-    public string CustomPackedIconPath => "seal_of_justice_shackles_power.png".PowerImagePath();
-    public string CustomBigIconPath => "seal_of_justice_shackles_power.png".BigPowerImagePath();
+    public string CustomPackedIconPath => "humbling_shackles_power.png".PowerImagePath();
+    public string CustomBigIconPath => "humbling_shackles_power.png".BigPowerImagePath();
 }

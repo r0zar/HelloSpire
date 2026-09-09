@@ -1,4 +1,10 @@
 {
+  "HELLOSPIRE-ANOINTING_OIL.title": "Anointing Oil",
+  "HELLOSPIRE-ANOINTING_OIL.description": "Gain 2 [gold]Spirit[/gold]. Heal 8 HP, plus your [gold]Spirit[/gold].",
+  "HELLOSPIRE-VIAL_OF_VERDICT.title": "Vial of Verdict",
+  "HELLOSPIRE-VIAL_OF_VERDICT.description": "Deal 10 damage.\n[gold]Judge[/gold] 2 times.",
+  "HELLOSPIRE-SANCTIFIED_DRAUGHT.title": "Sanctified Draught",
+  "HELLOSPIRE-SANCTIFIED_DRAUGHT.description": "Gain 15 [gold]Block[/gold] and 1 [gold]Buffer[/gold].",
   "HELLOSPIRE-SPEEDLOADER_FLASK.title": "Speedloader Flask",
   "HELLOSPIRE-SPEEDLOADER_FLASK.description": "[gold]Load[/gold] 3 [gold]Lead Rounds[/gold] into empty chambers.",
   "HELLOSPIRE-SIGHTLINE_TONIC.title": "Sightline Tonic",

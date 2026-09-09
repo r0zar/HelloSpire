@@ -109,6 +109,20 @@ The earlier spend-economy design (a Faith pool; Mend cost 1) and the signed holy
 extension are archived thinking; the stat model replaces the pool. Unholy, if it returns, would
 be negative Spirit on the same icon.
 
+### Potions
+
+Three, one per rarity, one per archetype spine — so the belt can answer whichever kind of turn goes
+wrong, and each one is a Paladin answer rather than a generic one.
+
+| Potion | Rarity | Effect | The problem it solves |
+|---|---|---|---|
+| **Anointing Oil** | Common | Gain 2 Spirit, then heal 8 + Spirit | Every heal in the kit costs a card AND Energy, and the turn you need one you have neither. The Spirit lands first, so it pays 10 on the spot and leaves the stat behind for the heals drawn after it. |
+| **Vial of Verdict** | Uncommon | Deal 10, then Judge twice | Seals bank fine; the trigger cards are what you fail to draw. Damage first so it is never dead — a seal-less use is still a Fire Potion. |
+| **Sanctified Draught** | Rare | Gain 15 Block and 1 Buffer | Divine Shield in a bottle, with a wall behind it: the telegraphed hit lands on the Buffer, the chip damage around it lands on the Block. |
+
+Potion damage and Block are both `Unpowered` — Strength and Dexterity do not ride the belt, the
+same rule the other two characters' potions follow.
+
 ### Card pool
 
 A full pool (86 cards at the base game's 4/20/36/26 shape, 25 of them MultiplayerOnly),

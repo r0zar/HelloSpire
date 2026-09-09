@@ -6,11 +6,11 @@ Built against **game v0.107.0** (the manifest's declared floor) and **BaseLib 3.
 
 ## The characters
 
-275 cards, 24 relics, 28 potions and 74 powers, counted from the classes actually in the tree.
+275 cards, 24 relics, 31 potions and 74 powers, counted from the classes actually in the tree.
 
 | Character | HP | Colour | Cards | Relics | Potions | Powers | Status |
 |---|---:|---|---:|---:|---:|---:|---|
-| **The Paladin** | 75 | gold | 86 | 6 | 0 | 35 | full set in code, card art complete; numbers still being tuned |
+| **The Paladin** | 75 | gold | 86 | 6 | 3 | 35 | full set in code, card art complete; numbers still being tuned |
 | **The Alchemist** | 68 | green | 85 | 9 | 25 | 18 | full set and Lab/Belt economy in code; newest of the three, under active balance iteration, and the thinnest on art |
 | **The Gunslinger** | 72 | rust | 104 | 9 | 3 | 21 | full set, relics, potions, Cylinder UI and a Gadgets sub-archetype in code; balance pass done |
 
@@ -46,23 +46,24 @@ requests — every class in the tree matched against the filename its `Id.Entry`
 | Card upgraded/beta art | none for any character — `BetaPortraitPath` always falls back to base art; no `beta/` folder exists yet (275 cards affected pack-wide) |||
 | Relic icon (small + `_outline`) | 6/6 | 9/9 | **8/9** — the starter relic `AlchemicalSatchel` has no icon at all, falls back to generic |
 | Relic detail art (`relics/big/`) | **3/6** (`ChainedGauntlet`, `HolyBook`, `LibramOfWrath` missing) | 9/9 | **0/9** |
-| Potion icons (fill + `outline/`) | n/a — the Paladin has no potions in the kit | **0/3** | **0/25** |
-| Power icons (small + `big/`) | **31/35** — missing `HumblingShacklesPower` and the three seal temp-buff powers, which are internal bookkeeping powers and may be fine borrowing a base-game icon | 21/21 | **7/18** — 11 missing, the largest icon gap in the pack |
-| Ancient dialogue | only the Architect has lines, and those are real writing, not filler (4 lines × 3 characters); every other Ancient is unwritten |||
+| Potion icons (fill + `outline/`) | 3/3 | 3/3 | 25/25 — 15 of them by pointing at the base game's own potion sprites rather than shipping duplicate PNGs, the other 10 drawn here |
+| Power icons (small + `big/`) | 35/35 — the four one-turn bookkeeping powers now carry their own icons rather than borrowing a seal's, each marked with the shared hourglass badge, and `RenewPower`'s placeholder tile is replaced with art | 21/21 | 17/18 — the eighteenth is `BottledFuryStrengthPower`, a vanilla `TemporaryStrengthPower` that correctly shows the base game's own temporary-Strength icon |
+| Ancient dialogue | **complete** — nine Ancients × three characters × four beats, 108 lines, all of it real writing. The eight past the Architect are keyed from their wiki display names, which is the one thing still to verify against the game's own IDs; see `design/ancient-dialogue.md` |||
 
 `tools/gen_gunslinger_icons.py` output is real, shipped art for the Gunslinger's 21 powers and 9
 relics, not scaffolding. `tools/gen_card_art.py` output (the labelled tiles) *is* scaffolding, meant
 to be replaced by hand art.
 
 Cut content has also left orphaned art behind that nothing references any more: 92 card portraits
-(both sizes), 26 power icons, and `greater_alembic` relic art for a relic that was designed but
-never built. Left in place deliberately — several are reusable for the Alchemist's 35 missing
+(both sizes), 27 power icons, and `greater_alembic` relic art for a relic that was designed but
+never built. (`seal_of_justice_shackles_power` joined that list when `HumblingShacklesPower` — the
+successor to a seal that no longer exists — was given an icon of its own.) Left in place deliberately — several are reusable for the Alchemist's 35 missing
 portraits — but nothing loads them today.
 
 ### Non-art
 
 - **The Alchemist has no multiplayer cards.** Its five are design text only (`design/multiplayer-cards.md`). The Gunslinger's five are built (`HelloSpireCode/Gunslinger/Cards/Multiplayer.cs`) and the Paladin carries nine party cards; both are now gated out of solo offers by `CardMultiplayerConstraint.MultiplayerOnly`, so nothing leaks into solo rewards or shops. The Paladin's nine are not the five in the design doc — that document predates the Paladin rework and its Paladin section is stale.
-- **`ancients.json` covers one Ancient.** The Architect has four lines against each of the three characters. Every other Ancient is unwritten; the key names for them have not been pulled out of the game's own localization yet, which is what that work needs first.
+- **`ancients.json`'s eight new Ancient IDs are inferred, not verified.** Neow, Orobas, Pael, Tezcatara, Darv, Nonupeipe, Tanx and Vakuu are keyed from their wiki display names, on the single precedent that "The Architect" is `THE_ARCHITECT`. The lines themselves are written and final. If the game spells an ID differently that Ancient is **silently mute** — no error, no log line, blast radius one Ancient. `tools/gen_ancient_dialogue.py check --base <extracted ancients.json>` names any wrong ID and `rename` fixes it without touching the text; running that check once closes this out. The Architect's twelve lines came with the mod template and are known-good.
 - **`SolventFlask` is both a card and a potion.** Two different models, same class name and same display name, in `Alchemist/Cards/UncommonSkills.cs` and `Alchemist/Potions/AlchemistPotions.cs`. They don't collide technically — the loc tables and art folders are separate — but the mod ships two unrelated things called "Solvent Flask" that do the same thing. Worth renaming one.
 - `TODO.md`'s Phase 0–11 checklist has never been checked off item by item; progress is tracked narratively in its "Status" note instead. Don't read the unchecked boxes as "nothing done."
 

@@ -11,12 +11,12 @@ Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x
 ## Status (2026-09-09)
 
 All three characters are content-complete in code and playable end to end: **275 cards, 24 relics,
-28 potions, 74 powers.** Every card has a working upgrade; the only card without an `OnUpgrade` is
+31 potions, 74 powers.** Every card has a working upgrade; the only card without an `OnUpgrade` is
 `VolatileResidue`, a Status card, which is correct.
 
 | | Cards | Relics | Potions | Powers | Card art |
 |---|---:|---:|---:|---:|---|
-| Paladin | 86 | 6 | 0 | 35 | 86/86 hand-painted |
+| Paladin | 86 | 6 | 3 | 35 | 86/86 hand-painted |
 | Alchemist | 85 | 9 | 25 | 18 | 50/85 |
 | Gunslinger | 104 | 9 | 3 | 21 | 104/104 resolve, 85 finished (19 placeholder tiles) |
 
@@ -27,13 +27,14 @@ records what replaced it.
 
 **What is actually outstanding** is art plus one design gap, not code:
 
-- Alchemist art — 35 card portraits, 11 power icons, 25 potion icons, 9 relic detail images, and
-  the `AlchemicalSatchel` relic icon. Much the largest remaining block of work in the pack.
+- Alchemist art — 35 card portraits, 9 relic detail images, and the `AlchemicalSatchel` relic
+  icon. Much the largest remaining block of work in the pack. (Potion and power icons are done:
+  `tools/gen_potion_icons.py` and `tools/gen_power_icons.py` draw every one the pack needs.)
 - Gunslinger — 19 card portraits are still labelled placeholder tiles.
 - Paladin — 3 relic detail images.
 - No `beta/` (upgraded-card) art exists for any of the 275 cards.
 - The Alchemist's five multiplayer cards are still design text only.
-- Ancient dialogue exists for the Architect only.
+- Ancient dialogue is written for all nine Ancients (108 lines). What is left is one verification, not writing: the eight new Ancient IDs are inferred from wiki display names, and `gen_ancient_dialogue.py check --base <extracted ancients.json>` confirms or corrects them.
 
 See the README's "Known gaps" for the same list with per-file detail.
 
@@ -93,7 +94,7 @@ Base-game values, read directly out of `sts2.dll` for reference:
 All keys are **flat dotted strings** under `HelloSpire/localization/eng/`. The `STS001` analyzer fails the build on any missing key, so it will tell you exactly what's outstanding — treat build errors as your checklist.
 
 - [x] `characters.json` — `title`, `titleObject`, `description`, four pronoun keys, `goldMonologue`, `eventDeathPrevention`, `aromaPrinciple`, `cardsModifierTitle`, `cardsModifierDescription`, `banter.alive.endTurnPing`, `banter.dead.endTurnPing` — written for all three; the "For now" placeholder `cardsModifierDescription` copy is gone
-- [x] `ancients.json` — Architect dialogue, written for all three characters. Every other Ancient is still unwritten: pull the real key names out of the base game's `localization/eng/ancients.json` first (see ART.md for extraction) rather than guessing them, since a wrong key is silently ignored.
+- [x] `ancients.json` — all nine Ancients × three characters × four beats, 108 lines. The eight past the Architect are keyed from wiki display names; a wrong key is silently ignored, so run `tools/gen_ancient_dialogue.py check --base <base game's ancients.json>` once to verify the IDs, and `rename` to fix any that are off. `design/ancient-dialogue.md` has the shape and the voices.
 - [ ] Rewrite all placeholder strings once Phase 0 is locked
 - [ ] `CharacterSelectDesc` — the pitch a player reads before committing 45 minutes
 
@@ -250,9 +251,9 @@ Base game ships **298 relics**, but the split is the surprising part:
 
 Base game ships **64 potions**. `PotionRarity`: `Common`, `Uncommon`, `Rare`, `Event`, `Token`.
 
-- [ ] 3–6 character potions
-- [ ] Extend `<Name>Potion`, images + outlines, loc entries
-- [ ] Potions are emergency buttons — they should solve a problem, not add incremental value
+- [x] 3–6 character potions — 3 each for Paladin and Gunslinger, 25 for the Alchemist
+- [x] Extend `<Name>Potion`, images + outlines, loc entries
+- [x] Potions are emergency buttons — they should solve a problem, not add incremental value
 
 ---
 
@@ -419,7 +420,8 @@ Different content → different entry count → different hash. This is why vers
 - [ ] Unlocks — `UnlocksAfterRunAs` if the character should be gated
 - [ ] `GetUnlockText` — what the locked tile says
 - [ ] `RunWonAchievement`
-- [ ] Ancient dialogue for every Ancient, not just the Architect *(the Architect's is written, not a stub; the rest need the base game's key names extracted first)*
+- [x] Ancient dialogue for every Ancient, not just the Architect — 108 lines, `design/ancient-dialogue.md` records the roster, the four-beat shape and the three voices
+- [ ] Verify the eight inferred Ancient IDs against the base game's own (`gen_ancient_dialogue.py check --base ...`); a wrong ID makes that Ancient silently mute
 - [ ] Character-specific events (`CustomEventModel`)
 - [ ] Character-specific encounters (`CustomEncounterModel`, `CustomMonsterModel`)
 - [ ] Badges (`CustomBadge`) — end-of-run flavor
