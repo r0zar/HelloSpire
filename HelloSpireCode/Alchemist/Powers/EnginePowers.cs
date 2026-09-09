@@ -178,24 +178,21 @@ public sealed class AccumulationPower : AlchemistEnginePower, IInfuseListener
 }
 
 /// <summary>
-/// The first Potion each combat resolves twice and is consumed once.
+/// The first Potion each turn resolves twice and is consumed once.
 ///
 /// The actual double-resolution is claimed and performed by PotionUsePatch's prefix, before the
 /// Potion's own effect runs -- not here. IPotionUseListener.OnPotionUsed (what every other engine
 /// in this file reacts through) only fires AFTER a Potion has already resolved once, which is one
-/// step too late to make it resolve a second time. TryClaim is the once-per-COMBAT latch (unlike
-/// every other engine here, which resets every turn) -- PotionUsePatch calls it and, if it
-/// succeeds, adds the Potion to LabPower.DoubleActivate, the same one-shot mechanism Pressure
-/// Burst uses to mark a chosen Potion.
+/// step too late to make it resolve a second time. TryClaim spends the base class's UsedThisTurn
+/// latch -- PotionUsePatch calls it and, if it succeeds, adds the Potion to LabPower.DoubleActivate,
+/// the same one-shot mechanism Pressure Burst uses to mark a chosen Potion.
 /// </summary>
 public sealed class EternalCruciblePower : AlchemistEnginePower
 {
-    private bool _usedThisCombat;
-
     public bool TryClaim()
     {
-        if (_usedThisCombat) return false;
-        _usedThisCombat = true;
+        if (UsedThisTurn) return false;
+        UsedThisTurn = true;
         Flash();
         return true;
     }

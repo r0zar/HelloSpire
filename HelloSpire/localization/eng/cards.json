@@ -418,7 +418,7 @@
   "HELLOSPIRE-THE_GREAT_WORK.title": "The Great Work",
   "HELLOSPIRE-THE_GREAT_WORK.description": "Lose {Life} HP. [gold]Brew[/gold] a Philosopher's Stone. It is not [gold]Volatile[/gold].",
   "HELLOSPIRE-ETERNAL_CRUCIBLE.title": "Crucible Form",
-  "HELLOSPIRE-ETERNAL_CRUCIBLE.description": "The first Potion you use each combat resolves twice and is consumed once.",
+  "HELLOSPIRE-ETERNAL_CRUCIBLE.description": "The first Potion you use each turn resolves twice and is consumed once.",
   "HELLOSPIRE-DISTILLATION_MASTERY.title": "Distillation Mastery",
   "HELLOSPIRE-DISTILLATION_MASTERY.description": "Whenever you [gold]Distill[/gold] a Potion, the next Potion you [gold]Brew[/gold] has its effect increased by {Bonus:diff()}%.",
   "HELLOSPIRE-THUMB_THE_GATE.title": "Thumb the Gate",

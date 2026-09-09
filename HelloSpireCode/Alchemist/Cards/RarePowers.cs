@@ -33,7 +33,7 @@ public sealed class Accumulation() : AlchemistCard(2, CardType.Power, CardRarity
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>The first Potion each combat resolves twice and is consumed once.</summary>
+/// <summary>The first Potion each turn resolves twice and is consumed once.</summary>
 public sealed class EternalCrucible() : AlchemistCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<EternalCruciblePower>(1m)];
