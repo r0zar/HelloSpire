@@ -6,13 +6,27 @@ Built against **game v0.107.0** (the manifest's declared floor) and **BaseLib 3.
 
 ## The characters
 
-| Character | HP | Colour | Status |
-|---|---:|---|---|
-| **The Paladin** | 75 | gold | full 87-card set in code; numbers are placeholders, most card art is a labelled tile |
-| **The Alchemist** | 68 | green | full ~85-card set and Lab/Belt economy in code; newest of the three, under active balance iteration |
-| **The Gunslinger** | 72 | rust | full ~104-card set, relics, potions, Cylinder UI and a Gadgets sub-archetype in code; balance pass done |
+275 cards, 24 relics, 28 potions and 74 powers, counted from the classes actually in the tree.
 
-All three characters compile and are playable end to end. The Paladin runs three lanes — Protection, Retribution, Holy — around **Plating** (decaying end-of-turn Block), with **Seals**/**Judge** and Spirit-scaled healing as opt-in sub-mechanics drafted rather than in the starter kit; its card art is still a labelled tile from `tools/gen_card_art.py`. The Gunslinger loads a six-chamber **Cylinder** and chooses to Fire, Cycle or Spin it, cashing out through **Deadeye**, with a parallel **Gadgets** archetype that skips the gun entirely; its power and relic icons are real art from `tools/gen_gunslinger_icons.py`, not placeholders. The Alchemist converts Potions, Gold and Max HP into each other via **Transform** — **Brew**, **Distill**, **Invest**, **Render** — banking Volatile Potions into a **Belt**; it's the most recently reworked of the three and where most current commits land.
+| Character | HP | Colour | Cards | Relics | Potions | Powers | Status |
+|---|---:|---|---:|---:|---:|---:|---|
+| **The Paladin** | 75 | gold | 86 | 6 | 0 | 35 | full set in code, card art complete; numbers still being tuned |
+| **The Alchemist** | 68 | green | 85 | 9 | 25 | 18 | full set and Lab/Belt economy in code; newest of the three, under active balance iteration, and the thinnest on art |
+| **The Gunslinger** | 72 | rust | 104 | 9 | 3 | 21 | full set, relics, potions, Cylinder UI and a Gadgets sub-archetype in code; balance pass done |
+
+All three characters compile and are playable end to end. Every card carries a working upgrade —
+274 of the 275 change a number, a cost or a keyword when upgraded, and the one exception
+(`VolatileResidue`) is a Status card, which the game never offers to an upgrade in the first place.
+
+The Paladin runs three lanes — Protection, Retribution, Holy — around **Plating** (decaying
+end-of-turn Block), with **Seals**/**Judge** and Spirit-scaled healing as opt-in sub-mechanics
+drafted rather than in the starter kit; its card art is finished, all 86 hand-painted. The
+Gunslinger loads a six-chamber **Cylinder** and chooses to Fire, Cycle or Spin it, cashing out
+through **Deadeye**, with a parallel **Gadgets** archetype that skips the gun entirely; its power
+and relic icons are real art from `tools/gen_gunslinger_icons.py`, not placeholders. The Alchemist
+converts Potions, Gold and Max HP into each other via **Transform** — **Brew**, **Distill**,
+**Invest**, **Render** — banking Volatile Potions into a **Belt**; it's the most recently reworked
+of the three, where most current commits land, and the one still short of art.
 
 - [**TODO.md**](TODO.md) — phased roadmap for building each character out, with real base-game baselines
 - [**ART.md**](ART.md) — the art pipeline: where assets live, required sizes, and how to extract the base game's art for reference
@@ -20,36 +34,37 @@ All three characters compile and are playable end to end. The Paladin runs three
 ## Known gaps
 
 Coverage counts below are verified against what's actually on disk and what the code actually
-requests, not against ART.md's own description of itself (which is out of date in a couple of
-places, noted inline).
+requests — every class in the tree matched against the filename its `Id.Entry` resolves to.
 
 ### Art
 
 | Asset | Paladin | Gunslinger | Alchemist |
 |---|---|---|---|
-| Character UI (`charui/`) | complete | complete | complete |
-| Combat body / spine rig | custom reskinned rig (`spine/paladin/`) | no mod-local rig — reuses the base game's Silent skeleton as-is, repainted by shader | no mod-local rig — also reuses the Silent skeleton, repainted; visually just a palette-shifted Silent in combat |
-| Card portraits | **86/86** — hand-painted | **85/104** finished; 9 are still placeholder tiles (`Gadgets.cs` group); 10 more exist on disk under the *wrong* filename from an underscore-stripping bug in `tools/gen_card_art.py` (rename, not new art, fixes those) | **50/85** (59%) have art; the other 35 fall back to the generic card back entirely |
-| Card upgraded/beta art | none for any character — `BetaPortraitPath` always falls back to base art; no `beta/` folder exists yet (~275 cards affected pack-wide) |||
-| Relic icon (small + outline) | 6/6 | 9/9 | **8/9** — the starter relic `AlchemicalSatchel` has no icon at all, falls back to generic |
+| Character UI (`charui/`) | complete (8 files) | complete for what it asks for — alone among the three it doesn't override `CustomIconOutlineTexturePath`, so it keeps the base game's icon outline | complete (8 files) |
+| Combat body / spine rig | custom reskinned Ironclad rig (`spine/paladin/`), the only hand-edited rig in the pack | ships a mod-local *copy* of the base game's Silent rig (`spine/gunslinger/`) so the swap is clean, but the atlas is the stock green Silent art — the rust comes from `gunslinger_repaint.gdshader` at render time | no rig folder at all: rides the inherited Ironclad rig, repainted by `alchemist_repaint.gdshader`; visually a palette-shifted Ironclad in combat |
+| Card portraits | **86/86** — hand-painted, complete | **104/104 resolve**, but **19 are still labelled placeholder tiles** from `tools/gen_card_art.py`: the 9 `Gadgets.cs` cards plus 10 whose filenames were mis-generated by a since-fixed underscore-stripping bug (the files are renamed now, so they at least show a labelled tile instead of the generic card back). **85 finished.** | **50/85**; the other 35 have no file at all and fall back to the generic card back |
+| Card upgraded/beta art | none for any character — `BetaPortraitPath` always falls back to base art; no `beta/` folder exists yet (275 cards affected pack-wide) |||
+| Relic icon (small + `_outline`) | 6/6 | 9/9 | **8/9** — the starter relic `AlchemicalSatchel` has no icon at all, falls back to generic |
 | Relic detail art (`relics/big/`) | **3/6** (`ChainedGauntlet`, `HolyBook`, `LibramOfWrath` missing) | 9/9 | **0/9** |
-| Potion icons | n/a — the Paladin has no potions in the kit yet | **0/3** | **0/25** |
-| Power icons | 31/35 (4 unmatched — may be minor aux powers that intentionally reuse a base-game icon, worth a manual check before treating as a real gap) | 21/21 | **4/15** — 11 missing, the largest icon gap in the pack |
-| Ancient dialogue | only the Architect has lines (4 lines × 3 characters); every other Ancient is unstubbed |||
+| Potion icons (fill + `outline/`) | n/a — the Paladin has no potions in the kit | **0/3** | **0/25** |
+| Power icons (small + `big/`) | **31/35** — missing `HumblingShacklesPower` and the three seal temp-buff powers, which are internal bookkeeping powers and may be fine borrowing a base-game icon | 21/21 | **7/18** — 11 missing, the largest icon gap in the pack |
+| Ancient dialogue | only the Architect has lines, and those are real writing, not filler (4 lines × 3 characters); every other Ancient is unwritten |||
 
-`tools/gen_gunslinger_icons.py` output is real, shipped art for the Gunslinger's powers and relics,
-not scaffolding — and per its own comment it modeled that style on the Paladin's `HolyBook`/
-`ChainedGauntlet` icons and an assumed complete Alchemist power-icon set. That assumption is wrong:
-the Alchemist only has 4/15 power icons today, so `ART.md`'s claim that engine powers get "the
-medallion disc the Alchemist's fifteen use" is aspirational, not current. `tools/gen_card_art.py`
-output (card portraits) is scaffolding, meant to be replaced by hand art.
+`tools/gen_gunslinger_icons.py` output is real, shipped art for the Gunslinger's 21 powers and 9
+relics, not scaffolding. `tools/gen_card_art.py` output (the labelled tiles) *is* scaffolding, meant
+to be replaced by hand art.
+
+Cut content has also left orphaned art behind that nothing references any more: 92 card portraits
+(both sizes), 26 power icons, and `greater_alembic` relic art for a relic that was designed but
+never built. Left in place deliberately — several are reusable for the Alchemist's 35 missing
+portraits — but nothing loads them today.
 
 ### Non-art
 
-- **Multiplayer cards aren't gated.** Only the Gunslinger's five (`HelloSpireCode/Gunslinger/Cards/Multiplayer.cs`) exist in code; the Paladin's five and the Alchemist's five are design text only (`design/multiplayer-cards.md`). There's also no mechanism yet to keep a multiplayer-only card out of solo rewards/shops — the Gunslinger's five currently leak into the normal solo pool.
-- **Localization still has placeholder "for now" copy.** `HelloSpire/localization/eng/characters.json`'s `cardsModifierDescription` for the Paladin and Alchemist literally reads "...is still borrowed steel/apparatus. For now." — written before the Paladin rework and never revisited. `ancients.json` is likewise still placeholder text (see the Ancient dialogue row above).
-- **Cut-content cleanup.** ~30 orphaned `.cs.uid` files (and matching orphaned art) under `Characters/Paladin/Cards/` are leftovers from the pre-rework "Reset" commit; harmless but worth deleting in a pass. `HelloSpireCode/Characters/Paladin/Ui/PaladinSkin.cs.uid` is a similar orphan from a since-generalized patch.
-- `TODO.md`'s Phase 0–11 checklist (129 items) has never actually been checked off for any character — progress is tracked narratively in its "Status" note instead. Don't read the unchecked boxes as "nothing done."
+- **The Alchemist has no multiplayer cards.** Its five are design text only (`design/multiplayer-cards.md`). The Gunslinger's five are built (`HelloSpireCode/Gunslinger/Cards/Multiplayer.cs`) and the Paladin carries nine party cards; both are now gated out of solo offers by `CardMultiplayerConstraint.MultiplayerOnly`, so nothing leaks into solo rewards or shops. The Paladin's nine are not the five in the design doc — that document predates the Paladin rework and its Paladin section is stale.
+- **`ancients.json` covers one Ancient.** The Architect has four lines against each of the three characters. Every other Ancient is unwritten; the key names for them have not been pulled out of the game's own localization yet, which is what that work needs first.
+- **`SolventFlask` is both a card and a potion.** Two different models, same class name and same display name, in `Alchemist/Cards/UncommonSkills.cs` and `Alchemist/Potions/AlchemistPotions.cs`. They don't collide technically — the loc tables and art folders are separate — but the mod ships two unrelated things called "Solvent Flask" that do the same thing. Worth renaming one.
+- `TODO.md`'s Phase 0–11 checklist has never been checked off item by item; progress is tracked narratively in its "Status" note instead. Don't read the unchecked boxes as "nothing done."
 
 ## Why one mod instead of three
 
@@ -68,7 +83,7 @@ A character mod is necessarily `true`. Shipping three separate character mods wo
 
 | Requirement | Notes |
 |---|---|
-| Slay the Spire 2 | v0.107.1 or compatible |
+| Slay the Spire 2 | v0.107.0 or newer — the floor `HelloSpire.json` declares |
 | [BaseLib](https://github.com/Alchyr/BaseLib-StS2/releases) | v3.4.5, in your `mods/` folder or via Steam Workshop |
 | .NET SDK | 9.0 or higher |
 | MegaDot, or Godot **4.5.1** .NET | Must be 4.5.1 — the game refuses `.pck` files exported by a newer Godot |
@@ -100,9 +115,14 @@ HelloSpireCode/
   Powers/HelloSpirePower.cs       shared — powers are mod-wide, not per-character
 
   Characters/
+    CharacterSkeletons.cs   swaps the combat rig to spine/<character>/ when that folder exists
+    CharacterSkins.cs       palette-remap shader over whatever rig is in use
+    EnergyCounterSkins.cs, RoomSkins.cs
+
     Paladin/     Paladin.cs, PaladinCard.cs, PaladinCardPool.cs, PaladinRelic.cs, PaladinRelicPool.cs,
-                 PaladinPotion.cs, PaladinPotionPool.cs, PaladinEffects.cs, PaladinTips.cs
-                 Cards/ Relics/ Powers/ Ui/    — the Paladin's actual content, one class per file
+                 PaladinPotion.cs, PaladinPotionPool.cs, PaladinEffects.cs, PaladinTips.cs,
+                 SpiritHealVar.cs
+                 Cards/ Relics/ Powers/        — the Paladin's actual content, one class per file
     Gunslinger/  Gunslinger.cs + the seven base/pool glue classes only
     Alchemist/   Alchemist.cs + the seven base/pool glue classes only
 
@@ -112,13 +132,23 @@ HelloSpireCode/
 HelloSpire/
   images/
     charui/paladin|alchemist|gunslinger/   per-character UI art
-    card_portraits/ relics/ potions/ powers/   shared trees
+    card_portraits/ + big/                 shared;  <card_class>.png in snake_case
+    relics/ (+ big/), potions/ (+ outline/), powers/ (+ big/)   shared trees
   localization/eng/*.json                 all display text
+
+spine/paladin|gunslinger/       plain Spine .atlas/.skel/.png; a folder here replaces that
+                                 character's combat rig, and its absence is not an error
 ```
 
 ### Why only `charui` is namespaced per character
 
 Card, relic and potion art resolves by **class name** (`Id.Entry`), which is already unique mod-wide — `PaladinStrike` and `GunslingerStrike` cannot collide. So those trees stay shared. Character UI art (icon, select portrait, map marker, energy orb) is the one asset class with fixed filenames per character, so it is the only one split by folder.
+
+`Id.Entry` is the class name in `SCREAMING_SNAKE_CASE`, and the art path is that lowercased — so
+`HandMeThat` looks for `hand_me_that.png`, **underscores included**. A file named `handmethat.png`
+is not found, and the only symptom is one `Could not find card image path` line in `godot.log`
+while the card quietly shows the generic card back. `tools/gen_card_art.py` used to strip the
+underscores; that is fixed, and the ten files it had already mis-named have been renamed.
 
 ### Adding a fourth character
 
@@ -128,8 +158,14 @@ put everything under `Characters/<Name>/` — the game doesn't care which. Renam
 then:
 
 1. Give the character class a `CharacterId`, an `AssetFolder`, and a `Color`
-2. Create `images/charui/<assetfolder>/` with the six UI images
+2. Create `images/charui/<assetfolder>/` with its UI images — `character_icon.png`,
+   `character_icon_outline.png`, `char_select.png`, `char_select_locked.png`, `map_marker.png`,
+   `big_energy.png`, `text_energy.png`, plus `char_select_bg.png` if you also add a
+   `scenes/char_select_bg_<name>.tscn` for `CustomCharacterSelectBg`.
+   `tools/gen_character_art.py` scaffolds six of these at the right sizes.
 3. Add its localization keys to `characters.json` and `ancients.json`
+4. Optionally drop a Spine rig in `spine/<assetfolder>/` and a repaint shader in
+   `HelloSpire/shaders/` — both are looked up by character and both degrade quietly if absent
 
 The `[Pool(typeof(...))]` attribute on the three content base classes does the registration — individual cards and relics never declare a pool.
 
@@ -145,6 +181,29 @@ Keys are **flat dotted strings**, namespaced by mod id, with the model slug in `
 Files must live at `res://HelloSpire/localization/<lang>/`. A file at `res://localization/...` — without the mod id segment — is silently ignored.
 
 The game ships a Roslyn analyzer (`STS001`) that **fails the build** if a model references a key you haven't written, and lists exactly which ones are missing. Treat its errors as your checklist rather than an obstacle.
+
+## Card upgrades
+
+Every card overrides `OnUpgrade()`, and there are only four things it can do. Across the 275 cards
+that breaks down as 221 raising a var, 45 cutting the cost, 8 changing a keyword, and one
+(`VolatileResidue`) with no upgrade because it is a Status card:
+
+| Move | Call | Shows up as |
+|---|---|---|
+| raise a number | `DynamicVars["X"].UpgradeValueBy(n)` | `{X:diff()}` in the description renders the delta |
+| lower the cost | `EnergyCost.UpgradeBy(-1)` | the cost pip |
+| add a keyword | `AddKeyword(CardKeyword.Innate)` | the keyword line |
+| drop a keyword | `RemoveKeyword(CardKeyword.Exhaust)` | the keyword line |
+
+When an upgrade changes the *sentence* rather than a number, write a
+`HELLOSPIRE-<SLUG>.upgrade.description` key alongside the base one — `QUICK_DRAW`, `SNAP_SHOT` and
+`CHAIN_REACTION` all do this.
+
+The trap is an upgrade that works but is invisible: raising a var the description never
+interpolates, or leaving a number hardcoded in the string where a `{Var:diff()}` belongs. The
+compiler cannot see it and the `STS001` analyzer cannot either — it checks that keys exist, not
+that they say anything true. Only `VolatileResidue` has no `OnUpgrade`, and only because Status
+cards are never offered to one.
 
 ## Card & relic editor
 

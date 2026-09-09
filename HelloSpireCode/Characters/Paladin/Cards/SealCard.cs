@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace HelloSpire.HelloSpireCode.Characters.PaladinContent.Cards;
 
 /// <summary>
-/// Base for the nine seal cards: a Skill that arms a held stance. One seal at a time --
+/// Base for the eight seal cards: a Skill that arms a held stance. One seal at a time --
 /// Seals.Grant replaces whatever is held. The card's "Amount" var sizes the seal's passive;
 /// upgrades raise it by 1 unless a card overrides.
 /// </summary>

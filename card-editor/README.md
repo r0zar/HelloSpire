@@ -2,7 +2,7 @@
 
 A local web app for balancing HelloSpire's cards and relics: edit costs, values
 and upgrade deltas, write the card text, and crop art into every size the mod
-needs — without hand-editing 200 C# files and a 372-key string table.
+needs — without hand-editing 200-odd C# files and a 570-key string table.
 
 ```bash
 cd card-editor
@@ -61,6 +61,11 @@ a code change, not a number. And a relic's numbers sit inside its behaviour
 with nothing marking which argument is the balance knob, so relics expose
 rarity, text and art only.
 
+Note that "where one exists" in the table above is not the same as "where an
+upgrade exists". A card can upgrade its cost or a keyword instead of a var, and
+those upgrades are invisible to this editor even though they are real. Every
+card in the pack upgrades except `VolatileResidue`, which is a Status card.
+
 ## Identity
 
 One rule ties everything together, and the editor derives rather than stores it:
@@ -101,6 +106,6 @@ as a literal, and allows only the local dev origin. Don't loosen those — write
 different program instead.
 
 Work on a branch and read `git diff` before committing, the same as any other
-source change. The parser's regression suite asserts that re-saving all 263
-cards unchanged produces zero edits, and that every recorded span still points
+source change. The parser's regression suite asserts that re-saving every
+card unchanged produces zero edits, and that every recorded span still points
 at the text it claims.

@@ -1,6 +1,6 @@
 // The controls bar, and the filter/sort it drives.
 //
-// 263 cards is too many to scroll, and the questions a designer actually asks
+// 275 cards is too many to scroll, and the questions a designer actually asks
 // are narrow: "show me the Gunslinger commons", "which cards have no art yet",
 // "sort the attacks by damage per energy". Each control here answers one.
 

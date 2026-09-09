@@ -20,4 +20,11 @@ public sealed class VolatileReagent() : AlchemistCard(0, CardType.Skill, CardRar
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play) =>
         await AlchemistEffects.GainEnergy(Lab, 1m);
+
+    /// <summary>
+    /// Upgrade: drop Ethereal, so a Reagent that arrives on a turn you cannot spend it survives
+    /// to the turn you can. The Energy stays at 1 -- a card that Brews itself into your hand for
+    /// free should not also scale, and Exhaust stays for the same reason.
+    /// </summary>
+    protected override void OnUpgrade() => RemoveKeyword(CardKeyword.Ethereal);
 }

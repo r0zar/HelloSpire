@@ -8,14 +8,34 @@ Ordered by dependency, not by effort. Phases 0–3 are load-bearing: everything 
 
 Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x86_64\sts2.xml` and `sts2.dll`) and **BaseLib 3.4.5**. Early Access moves; re-verify after breaking updates.
 
-## Status (2026-08-30)
+## Status (2026-09-09)
 
-**Reset.** The Paladin is back to Strike, Defend, Mend (heal 6) and Hammer of Justice (2-cost,
-10 damage, Stun), plus Holy Fervor. The Faith system, Judged / Warded / Blessed, the generated
-card set and the generator are removed from the tree; the full build is at `aaec1e4`. The card
-art Dan made for the full set is kept in the repo, ready for each card as it is re-added.
+All three characters are content-complete in code and playable end to end: **275 cards, 24 relics,
+28 potions, 74 powers.** Every card has a working upgrade; the only card without an `OnUpgrade` is
+`VolatileResidue`, a Status card, which is correct.
 
-From here: one card at a time, each a deliberate decision, playtested before the next.
+| | Cards | Relics | Potions | Powers | Card art |
+|---|---:|---:|---:|---:|---|
+| Paladin | 86 | 6 | 0 | 35 | 86/86 hand-painted |
+| Alchemist | 85 | 9 | 25 | 18 | 50/85 |
+| Gunslinger | 104 | 9 | 3 | 21 | 104/104 resolve, 85 finished (19 placeholder tiles) |
+
+The 2026-08-30 "Reset" note this replaced is long superseded — the Paladin was rebuilt past it into
+the 86-card Plating/Seals/Spirit set. The Faith system, and Judged / Warded / Blessed, stayed cut;
+`design/paladin-faith-archive.md` keeps that design, and `design/paladin-rework-2026-08-31.md`
+records what replaced it.
+
+**What is actually outstanding** is art plus one design gap, not code:
+
+- Alchemist art — 35 card portraits, 11 power icons, 25 potion icons, 9 relic detail images, and
+  the `AlchemicalSatchel` relic icon. Much the largest remaining block of work in the pack.
+- Gunslinger — 19 card portraits are still labelled placeholder tiles.
+- Paladin — 3 relic detail images.
+- No `beta/` (upgraded-card) art exists for any of the 275 cards.
+- The Alchemist's five multiplayer cards are still design text only.
+- Ancient dialogue exists for the Architect only.
+
+See the README's "Known gaps" for the same list with per-file detail.
 
 ---
 
@@ -72,8 +92,8 @@ Base-game values, read directly out of `sts2.dll` for reference:
 
 All keys are **flat dotted strings** under `HelloSpire/localization/eng/`. The `STS001` analyzer fails the build on any missing key, so it will tell you exactly what's outstanding — treat build errors as your checklist.
 
-- [ ] `characters.json` — `title`, `titleObject`, `description`, four pronoun keys, `goldMonologue`, `eventDeathPrevention`, `aromaPrinciple`, `cardsModifierTitle`, `cardsModifierDescription`, `banter.alive.endTurnPing`, `banter.dead.endTurnPing` *(done for placeholder text — rewrite when the fantasy is final)*
-- [ ] `ancients.json` — Architect dialogue *(placeholder written)*
+- [x] `characters.json` — `title`, `titleObject`, `description`, four pronoun keys, `goldMonologue`, `eventDeathPrevention`, `aromaPrinciple`, `cardsModifierTitle`, `cardsModifierDescription`, `banter.alive.endTurnPing`, `banter.dead.endTurnPing` — written for all three; the "For now" placeholder `cardsModifierDescription` copy is gone
+- [x] `ancients.json` — Architect dialogue, written for all three characters. Every other Ancient is still unwritten: pull the real key names out of the base game's `localization/eng/ancients.json` first (see ART.md for extraction) rather than guessing them, since a wrong key is silently ignored.
 - [ ] Rewrite all placeholder strings once Phase 0 is locked
 - [ ] `CharacterSelectDesc` — the pitch a player reads before committing 45 minutes
 
@@ -83,11 +103,11 @@ All keys are **flat dotted strings** under `HelloSpire/localization/eng/`. The `
 
 The single highest-leverage balance decision in the whole character. A player sees the starting deck 40+ times per run.
 
-- [ ] **Write your own Strike and Defend.** Currently inherited from Ironclad (`StrikeIronclad`, `DefendIronclad`) — placeholder, must be replaced.
+- [x] **Write your own Strike and Defend.** Done for all three — `StrikePaladin`/`DefendPaladin`, and the pairs in each character's `Cards/Starter.cs`. Nothing is inherited from Ironclad any more.
 - [ ] Decide the starter deck ratio. 5 Strike / 5 Defend is the default; deviating is a strong statement (Necrobinder and Defect both do).
 - [ ] **Add 1–2 signature starter cards** that teach the mechanic on turn one. This is how a character introduces itself. If your mechanic isn't visible in the opening hand, players won't find it.
 - [ ] **Design the starting relic.** `RelicRarity.Starter`. It should encode the fantasy, not just give stats. Burning Blood (heal on combat end) *is* the Ironclad's attrition identity in one relic.
-- [ ] Replace `BurningBlood` in `StartingRelics`.
+- [x] Replace `BurningBlood` in `StartingRelics`. Paladin `ConsecratedPlate`, Gunslinger `OldIron`, Alchemist `AlchemicalSatchel` — the last of which still has no icon art.
 - [ ] `StartingPotions` — usually empty; override only for a deliberate reason.
 
 **Sanity check:** play 10 Act 1 openings with only the starter deck. If you can't reliably clear the first three fights, it's too weak. If you never take damage, it's too strong.
@@ -389,6 +409,8 @@ Different content → different entry count → different hash. This is why vers
 - [ ] Test the rejection path: have someone join without the pack and confirm a clean `ModMismatch`, not a hang
 - [ ] Version your releases properly — a mod ID match with a content mismatch is the nastiest failure mode
 - [ ] `RemoteTargetingLineColor` / `RemoteTargetingLineOutline` on the character are multiplayer-only visuals; set them or your character looks unfinished in co-op
+- [x] **Gate multiplayer-only cards out of solo runs.** `CardModel.MultiplayerConstraint` returning `CardMultiplayerConstraint.MultiplayerOnly` is the mechanism — pools filter on `RunState.CardMultiplayerConstraint` when asked for unlocked cards, so the `[Pool]` attribute stays as-is. The Paladin's nine party cards carry it per-card; the Gunslinger's five carry it once on `GunslingerMultiplayerCard`.
+- [ ] Every multiplayer card still needs a defined single-player behaviour — the gate keeps them out of the solo *offer*, but save continuation or a lobby that empties out can still put one in a solo deck
 
 ---
 
@@ -397,7 +419,7 @@ Different content → different entry count → different hash. This is why vers
 - [ ] Unlocks — `UnlocksAfterRunAs` if the character should be gated
 - [ ] `GetUnlockText` — what the locked tile says
 - [ ] `RunWonAchievement`
-- [ ] Ancient dialogue for every Ancient, not just the Architect *(currently one stub)*
+- [ ] Ancient dialogue for every Ancient, not just the Architect *(the Architect's is written, not a stub; the rest need the base game's key names extracted first)*
 - [ ] Character-specific events (`CustomEventModel`)
 - [ ] Character-specific encounters (`CustomEncounterModel`, `CustomMonsterModel`)
 - [ ] Badges (`CustomBadge`) — end-of-run flavor

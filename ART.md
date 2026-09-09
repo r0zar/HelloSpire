@@ -18,16 +18,24 @@ first** — a running instance holds `HelloSpire.dll` open and the copy step fai
 ```
 HelloSpire/images/
   charui/<character>/    per-character UI — the only tree split by character
-  card_portraits/        shared;  <cardclass>.png  and  big/<cardclass>.png
-  relics/                shared;  <relicclass>.png and <relicclass>_outline.png
-  potions/               shared
-  powers/                shared
+  card_portraits/        shared;  <card_class>.png       and  big/<card_class>.png
+  relics/                shared;  <relic_class>.png, <relic_class>_outline.png, big/<relic_class>.png
+  potions/               shared;  <potion_class>.png     and  outline/<potion_class>.png
+  powers/                shared;  <power_class>.png      and  big/<power_class>.png
+
+spine/<character>/       plain .atlas + .skel + page .png; present = that character's combat
+                         rig is replaced, absent = it keeps the inherited one
 ```
 
 Card, relic and potion art resolves by **class name** (`Id.Entry`, lowercased), which is
 already unique mod-wide — `PaladinStrike` and `GunslingerStrike` cannot collide — so those
 trees stay shared. Character UI uses fixed filenames per character, so it is the one tree
 namespaced by character folder.
+
+**`Id.Entry` is `SCREAMING_SNAKE_CASE`, so the lowercased filename keeps the underscores.**
+`HandMeThat` → `hand_me_that.png`. `handmethat.png` is a file the game never asks for, and the
+only symptom is a `Could not find card image path` line in `godot.log` while the card shows the
+generic back. Single-word names hide the mistake, which is how it went unnoticed once already.
 
 Missing art degrades gracefully: the helpers in `StringExtensions.cs` fall back to the
 generic placeholder and log `Could not find ... image path`, rather than crashing.
@@ -68,18 +76,20 @@ adjusted by editing a shape rather than repainting a bitmap. Requires `rsvg-conv
 (`brew install librsvg`) and Pillow.
 
 ```
-python tools/gen_gunslinger_icons.py                    # all 20 powers and 9 relics
+python tools/gen_gunslinger_icons.py                    # all 21 powers and 9 relics
 python tools/gen_gunslinger_icons.py deadeye old_iron   # just these
 python tools/gen_gunslinger_icons.py --sheet /tmp/x.png # contact sheet, to judge the set as a set
 ```
 
 Two families, following what the pack already does:
 
-- **Keyword powers** — Cylinder, Deadeye, Armor, Dodge — are flat glyphs on transparent, the way
-  the base game draws Strength and Dexterity and the way the Paladin's Spirit icon does. These
-  four read as stats the character has, not as buffs it was granted.
-- **Engine powers** get the medallion disc the Alchemist's fifteen use: brown disc, brass ring,
-  pale glyph. They are things a card gave you, and the disc says so.
+- **Keyword powers** — Cylinder, Deadeye, Armor — are flat glyphs on transparent, the way the base
+  game draws Strength and Dexterity and the way the Paladin's Spirit icon does. These three read as
+  stats the character has, not as buffs it was granted.
+- **Engine powers** (18 of them) get a medallion disc: brown disc, brass ring, pale glyph. They are
+  things a card gave you, and the disc says so. This style was modelled on the Paladin's `HolyBook`
+  and `ChainedGauntlet` and on the Alchemist's power icons — note that the Alchemist's set is only
+  7 of 18 done, so it is a target to match, not a finished set to copy from.
 
 Relic `_outline` files are derived from the alpha of the relic art itself, so a silhouette can
 never drift from the art it belongs to. Do not hand-edit them.
@@ -119,8 +129,16 @@ pipeline — `res://models/` contains two files.
 Spine rigs. Godot's own animation tools are enough.
 
 Simplest option of all: `PlaceholderCharacterModel` borrows base-game character assets, so
-you get working animation for free and can defer this entirely. All three characters run
-that way today.
+you get working animation for free and can defer this entirely. All three characters still derive
+from it.
+
+On top of that, `Characters/CharacterSkeletons.cs` swaps in a mod-local rig for any character with
+a `spine/<character>/` folder — plain `.atlas`/`.skel`/page `.png`, no `.spskel` wrapper or pck
+import needed — and `Characters/CharacterSkins.cs` repaints whatever rig is in use through a
+per-character palette shader. Today the Paladin ships a reskinned Ironclad rig, the Gunslinger
+ships an unrepainted copy of the Silent rig (its rust comes entirely from the shader), and the
+Alchemist ships no rig at all and rides the inherited one. A missing folder is not an error: it
+degrades to the shader repaint alone.
 
 ## Tools
 

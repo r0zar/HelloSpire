@@ -3,7 +3,7 @@
 // A HelloSpire card is a C# class, not a data file: its behaviour is real code
 // in OnPlay. What a designer balances, though, is a small and very regular
 // surface — the four constructor arguments, the base value of each declared
-// DynamicVar, and the per-var upgrade deltas in OnUpgrade. All 263 cards in
+// DynamicVar, and the per-var upgrade deltas in OnUpgrade. All 275 cards in
 // the mod are written in the same shape:
 //
 //   /// <summary>Fire 1. Draw 1 card.</summary>

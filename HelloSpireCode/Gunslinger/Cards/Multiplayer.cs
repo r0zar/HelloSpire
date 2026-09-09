@@ -20,17 +20,23 @@ namespace HelloSpire.HelloSpireCode.Gunslinger.Cards;
 /// <summary>
 /// Base for the multiplayer five.
 ///
-/// It exists for one reason: there is exactly one place to apply the multiplayer gate once we
-/// know what the gate is. Every shipped character carries five cards outside its 80-card pool,
-/// so the mechanism exists in the game — but it has not been identified in sts2.dll yet, and
-/// these cards inherit <see cref="Characters.GunslingerCard"/>'s [Pool] attribute, so today they
-/// are ordinary members of the Gunslinger's reward pool and will show up in solo runs.
+/// It exists for one reason: there is exactly one place to apply the multiplayer gate. The gate
+/// is <see cref="CardMultiplayerConstraint"/>, which the engine reads through
+/// <c>RunState.CardMultiplayerConstraint</c> when a pool is asked for its unlocked cards -- so a
+/// card marked MultiplayerOnly is filtered out of solo rewards and shops without any change to
+/// the [Pool] attribute these cards inherit from <see cref="Characters.GunslingerCard"/>. The
+/// Paladin's party cards already carry the same override per-card; the Gunslinger's five are the
+/// only ones with a shared base, so it goes here once.
 ///
-/// TODO(Phase 9): find the flag/pool/rarity the base game uses for multiplayer-only cards and
-/// apply it here. Until then this is a known, deliberate wrong.
+/// Every card below still has a defined single-player behaviour (see design/multiplayer-cards.md,
+/// house rule 3) -- the constraint keeps them out of the solo *offer*, but a card carried into a
+/// solo run through save continuation or a lobby that empties out must not brick.
 /// </summary>
 public abstract class GunslingerMultiplayerCard(int cost, CardType type, CardRarity rarity, TargetType target)
-    : GunslingerCard(cost, type, rarity, target);
+    : GunslingerCard(cost, type, rarity, target)
+{
+    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
+}
 
 /// <summary>
 /// Another player draws 2 cards, and hands you 2 Rounds of whatever their class carries.

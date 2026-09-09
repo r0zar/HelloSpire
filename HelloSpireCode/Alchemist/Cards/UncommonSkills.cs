@@ -98,6 +98,12 @@ public sealed class PressureBurst() : AlchemistCard(2, CardType.Skill, CardRarit
 
         if (chosen != null) bench.DoubleActivate.Add(chosen);
     }
+
+    /// <summary>
+    /// Upgrade: costs 1. The effect is a flag on one Potion -- there is no number on this card to
+    /// raise -- so the upgrade buys the turn back instead, the same trade Extra Vial makes.
+    /// </summary>
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>Distill a Potion, and Infuse Unstable Concoction.</summary>

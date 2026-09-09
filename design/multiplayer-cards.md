@@ -1,6 +1,13 @@
 # The Multiplayer Cards — 15
 
-**Status:** design agreed. Gunslinger's five implemented; Paladin's and Alchemist's on paper.
+**Status (2026-09-09):** design agreed. The Gunslinger's five are implemented and gated. The
+Alchemist's five are still on paper. **The Paladin section below is stale** — it was written
+against the Faith system, which the 2026-08-31 rework cut (`design/paladin-rework-2026-08-31.md`).
+The Paladin now carries *nine* party cards built around Plating, Regen and Thorns rather than the
+five Faith cards described here: Aura of Devotion, Aura of Protection, Aura of Vitality, Beacon of
+Light, Circle of Healing, Crusader Aura, Divine Hymn, Retribution Aura and Tyr's Deliverance. Read
+this document's Paladin table as design history, and the trinity/house-rules sections — which still
+hold — as current.
 
 Every shipped Slay the Spire 2 character carries **five multiplayer cards** outside its 80-card
 pool. This document is the pack's whole set — five each for the Paladin, the Gunslinger and the
@@ -378,12 +385,13 @@ Ordered by how likely each is to be the thing that breaks.
 
 ## Open questions
 
-- **How does the game gate a multiplayer card?** Unresolved, and it blocks shipping. Every shipped
-  character has five cards outside its 80-card pool, so the mechanism exists — but the flag, pool,
-  or rarity that carries it has not been identified in `sts2.dll`. Until it is, the Gunslinger's
-  five are registered into the normal pool by the `[Pool]` attribute they inherit and **will appear
-  as solo card rewards**. The gate belongs on `GunslingerMultiplayerCard`, which exists for exactly
-  that reason and currently carries a `TODO(Phase 9)`.
+- ~~**How does the game gate a multiplayer card?**~~ **Resolved.** It is
+  `CardModel.MultiplayerConstraint`, returning `CardMultiplayerConstraint.MultiplayerOnly`. A pool
+  filters on `RunState.CardMultiplayerConstraint` when it is asked for its unlocked cards, so the
+  gate needs no change to the `[Pool]` attribute these cards inherit. It sits once on
+  `GunslingerMultiplayerCard`; the Paladin's party cards carry the same override per-card. House
+  rule 3 still stands — the constraint keeps a card out of the solo *offer*, not out of a solo run
+  that continues from a save or a lobby that empties out, so none of them may brick.
 - **Can a card write a Potion into another player's belt?** `Shared Flask` needs it. If the
   cross-client inventory write turns out not to be available, the fallback is "Brew a Potion; the
   next ally to use a Potion this combat draws 2 cards", which keeps the flavour and loses the
