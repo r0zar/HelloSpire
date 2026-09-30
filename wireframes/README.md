@@ -6,8 +6,8 @@ a design reference, not a game asset.
 
 | File | Character |
 |---|---|
-| `paladin.html` | grounded, square, almost-locked-knee stance; slow heavy breathing sway with a periodic shield-arm "readiness" flex |
-| `gunslinger.html` | contrapposto, weight on the back foot, gun hand coiled near the holster; body nearly still except a fast tremor in the gun hand and a slow coat-tail sway |
+| `paladin.html` | grounded, wide-split, almost-locked-knee stance, shield held out front; slow heavy breathing sway with a periodic shield-arm "readiness" flex |
+| `gunslinger.html` | contrapposto, weight on the back foot, gun hand (the back hand) cocked at the hip over the holster, about to draw; body nearly still except a fast tremor in the gun hand and a slow coat-tail sway |
 | `alchemist.html` | hunched forward, bent knees, oversized head; constant small motion — vial hand rotating, head tilting, satchel bouncing |
 
 Each page renders an animated SVG stick figure — an 18-bone humanoid skeleton (spine chain,
@@ -17,59 +17,90 @@ forward-kinematics solver walks every frame. Three things are defined per charac
 
 - **Stance** — each bone's rest-pose rotation. This *is* the posture: how wide the feet are
   planted, how bent the knees are, where the hands sit. Click "Pause (view stance)" on any
-  page to freeze the animation and inspect it exactly.
+  page to freeze the animation and inspect it exactly (or open it with `#stance` on the URL).
+  Every character **faces right**: in combat the player's side stands on the left of the
+  screen facing the enemies, so each rig is posed in profile toward the right edge.
 - **Movement** — a sine-wave oscillation layered on top of the stance per bone (amplitude,
   frequency, phase), so each character idles with a gait that's actually theirs rather than
   a shared default loop. Movement is meant to read as an extension of the character's
   established identity (see each page's "Movement" note and the linked `design/*.md`), not
   as a separate animation decision.
-- **Component map** — nine labeled attachment points (head, chest, back, belt, both
-  shoulders, both hands, feet), each following the bone chain during animation and each
+- **Component map** — ten labeled attachment points (head, chest, back, belt, both
+  shoulders, both hands, both feet), each following the bone chain during animation and each
   annotated with what art belongs there and what it should look like. This is the "grand
   vision" layer: a written target for whoever illustrates or rigs the real part next.
 
 ## Art attachment
 
-Every one of the 9 slots on all 3 characters (27 total) now carries a working `art` block —
-this isn't a labeled point plus a proof of concept anymore, it's the full demo. A slot's `art`
-is either a real image or a procedurally drawn icon:
+Every character is skinned with painted, transparent cut-out parts — a full, detailed figure
+at any frame, with the stick figure hidden underneath (**"Hide art overlay"** brings it back).
+The parts live in `assets/<character>/` and come from
+`../image_gen_pipeline/generate_wireframe_parts.py`, which paints each piece with the OpenAI
+Images API, steered by that character's reference art (`art_reference/<character>/`, or the
+character-select art for the Gunslinger), and trims it to its silhouette:
+
+| Piece | How it's drawn | How the page places it |
+|---|---|---|
+| `thigh`, `shin`, `upper_arm`, `forearm`, `hand` | upright, joint end at the top | stretched along its bone (`fit:'bone'`, `start:'top'`) |
+| `chest`, `abdomen` | upright, joint end at the bottom | stretched along `chest` / `spine` (`start:'bottom'`) |
+| `head`, `foot`, `back`, `belt`, props | side view facing right | pinned to a bone point, upright or `align`ed |
+
+Near and far limbs share one image; the far side is shaded darker. Re-painting a piece is
+`python3 generate_wireframe_parts.py <character> --only <part> --force` (masters are cached
+in `wireframe_masters/`, so re-running without `--force` costs nothing).
+
+There are two kinds of placement. **Segments** — the torso and limbs, listed in a rig's
+`skin` array — stretch along their bone:
 
 ```js
-// real image — the Paladin's head, a crop of art_reference/paladin/portrait.png
-art: { src:'assets/paladin_head.png', bone:'head_stub', t:1.0, w:70, h:70,
-       anchor:{x:0.5,y:0.5}, rotationOffset:90 }
-
-// procedural icon — every other slot on all three characters, since no other part art
-// exists yet: a small vector shape list in the character's palette, generated the same
-// way concept-art/cards/*.html generates its card icons — correct and distinct, not a
-// substitute for real art
-art: { bone:'chest', t:0.5, w:80, h:66, anchor:{x:0.5,y:0.5}, rotationOffset:90, shapes:[
-  {tag:'rect', attrs:{x:9,y:6,width:62,height:52,rx:9, fill:'base', stroke:'#0c1120', 'stroke-width':2}},
-  {tag:'circle', attrs:{cx:40,cy:28,r:9, fill:'accent', stroke:'color','stroke-width':2}},
-  // ...
-]}
+{ bone:'r_thigh', src:'assets/gunslinger/thigh.png', fit:'bone', start:'top', pad:[0.2, 0.2], scale:0.8 }
 ```
 
-`shapes` entries are plain SVG element descriptors (`tag` + `attrs`); `fill`/`stroke` values of
-`'color'`, `'accent'`, or `'base'` resolve against that character's palette (declared once at
-the top of the RIG object) so every generated part stays visually consistent with the real art
-next to it. Whichever kind a slot uses, it's positioned at the named bone's world position for
-the given `t`, then rotated to track that bone's current angle — `rotationOffset` cancels out
-the bone's own rest-pose rotation so the art sits upright by default and only rotates by however
-much the rig moves from there. Every one of the 27 `rotationOffset` values was checked with a
-small script that re-derives each bone's rest-world-angle from the actual `RIG` data and
-confirms the resulting art rotation is exactly 0° at stance — not eyeballed.
+The image's joint end sits on the bone's start; `pad:[before, after]` extends it past both
+joints (fractions of the bone's length) so neighbouring segments overlap and no gap opens at an
+elbow or knee; the width follows the image's own proportions, times `scale`.
 
-The framed border on every part is intentional: this is a calibration tool, so it stays honest
-about being an unmasked placeholder rather than a finished cutout. Two toggles control what's
-visible: **"Hide art overlay"** removes all part art to see the bare skeleton (useful for rig
-work); **"Hide attachment markers"** removes the diamond calibration points to see the art
-alone (useful for judging the read). Both default on, layered together, so misalignment is easy
-to spot while iterating.
+Overlap alone leaves each part's inked cut end showing, so joints are finished with draw order
+and feathering: the part that belongs on top is drawn on top (boot over trouser leg, coat over
+the thighs), and `fadeTop:[from,to]` / `fadeBottom:[from,to]` (fractions of the image's height)
+melt the end that tucks underneath. Fade only an end that some opaque neighbour covers — a fade
+over bare background reads as a murky patch. Where a generated shin already carries a whole boot
+(Gunslinger, Alchemist) it *is* the foot; the separate foot image is dropped rather than doubled,
+and the Alchemist's bent knees get a second trouser piece on the shin bone so the leg follows the
+bend down into the boot.
 
-Wiring up real art once it exists is mechanical either way: drop an image in `assets/` and swap
-`shapes` for `src` on that slot — same `bone`/`t`/`w`/`h`/`anchor`/`rotationOffset` fields,
-tuned against the live preview until it tracks correctly.
+**Pinned pieces** — the component-map slots' `art` — sit at a point on a bone:
+
+```js
+art: { src:'assets/gunslinger/head.png', bone:'neck', t:0.15, w:74, anchor:{x:0.56,y:0.9} }
+```
+
+`w` sets the size (height follows the image), `anchor` is the point of the image (0–1 fractions)
+that sits on the bone at `t`. The page solves the rest pose once at load and cancels each bone's
+rest-world-angle, so a pinned piece stands exactly upright at stance and only turns by however
+much the rig moves from there. Optional fields:
+
+- `tilt` — a fixed extra rotation in degrees (the Alchemist's head is tipped down 12°).
+- `align:true` — lay the art's +x axis along the bone instead of standing it upright, for
+  weapons that should point where the hand points (the revolver, the mace).
+- `mirror:true` — flip the art horizontally, for a painted part that came out facing left.
+- `behind:true` — tuck the piece under everything else in its layer (boots under shins).
+- `shapes:[...]` instead of `src` — a procedural vector icon (`tag` + `attrs` SVG descriptors,
+  with `'color'`/`'accent'`/`'base'` resolving against the rig's palette), for sketching a slot
+  before it has painted art.
+
+A slot can also carry a `moveArt` block that replaces `art` (or appears on its own) while Attack
+or Self buff plays — the Gunslinger's revolver sits in the holster at idle, and during a move
+the holster shows empty and the revolver appears in his hand.
+
+**Depth.** Parts are drawn in four layers, back to front: `back` (the cape/coat/satchel, hung
+from a short stub at the top of the back), `far` (the limbs on the side away from the viewer,
+shaded darker), `body` (torso, head, belt), `near`. Bones and art default to their layer by name
+(`l_*` far, `r_*` near, everything else body); a `layer` field overrides it — the Gunslinger's
+draw arm is on the near layer so his cocked hand reads over the hip.
+
+**"Show attachment markers"** overlays the component-map points and a frame around every part,
+for calibrating placement.
 
 ## Movement: Idle, Attack, Self buff
 
@@ -104,7 +135,7 @@ stance and idle gait already establish — see each page's "Movement" section fo
 a showman's cylinder spin vs. a held-up, fizzing vial).
 
 **What this does and doesn't fix.** All of this answers "can art be mapped onto the wireframe and
-previewed through multiple movements" — yes, for all 27 slots and all three motion states now.
+previewed through multiple movements" — yes, for all 30 slots and all three motion states now.
 It does **not** touch the re-integration gap described above: the bone names, coordinate scheme,
 and this attachment/move format are still local to this HTML/SVG tool, not Spine's slot/
 attachment model, `edits.json`'s schema, or its animation format. Everything validated here still
