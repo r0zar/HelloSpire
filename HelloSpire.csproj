@@ -50,10 +50,13 @@
         <Compile Remove="materials/**" />
         <Compile Remove="shaders/**" />
         <Compile Remove="images/**" />
+        <!-- tests/ holds its own xunit project; keep its sources out of the mod assembly. -->
+        <Compile Remove="tests/**" />
         <EmbeddedResource Remove="HelloSpire/**" />
         <EmbeddedResource Remove="materials/**" />
         <EmbeddedResource Remove="shaders/**" />
         <EmbeddedResource Remove="images/**" />
+        <EmbeddedResource Remove="tests/**" />
     </ItemGroup>
 
     <ItemGroup>
