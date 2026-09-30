@@ -158,6 +158,18 @@ folder. If a tester has both a Workshop subscription and a manual copy in `mods/
 load two HelloSpires. Tell testers to pick one channel. `install-playtest.ps1` warns about the
 BaseLib case.
 
+### If a Workshop subscription alone doesn't load the mod
+
+At least one tester has reported that subscribing on the Workshop page was not enough by
+itself — the mod only loaded after they also manually created a `mods/HelloSpire/` folder and
+copied the mod's files into it, on top of the Workshop subscription (see issue
+[#19](https://github.com/r0zar/HelloSpire/issues/19)). That contradicts the "Workshop and manual
+installs don't mix" guidance above, and the root cause hasn't been confirmed — it may be a
+BaseLib or base-game mod-loader quirk with Workshop-only installs rather than anything in this
+repo's control. Until it's root-caused, if **Play with Mods** doesn't show HelloSpire as
+enabled after a Workshop subscribe, fall back to the manual install (step 3a) instead of
+troubleshooting the Workshop path further.
+
 ## Release checklist
 
 - [ ] Version bumped in `HelloSpire.json`, commit tagged with the same string

@@ -300,7 +300,7 @@ Rules:
 
 | Rarity | Card | Type | Cost | Effect |
 |---|---|---|---:|---|
-| Common | **Pistol Whip** | Attack | 1 | Deal 9 damage. *(retagged)* |
+| Common | **Pistol Whip** | Attack | 1 | Deal 6 damage. Apply 1 Vulnerable. *(retagged; reworked from a flat 9 damage, issue #17)* |
 | Common | **Shoulder Shot** | Attack | 1 | Deal 7 damage. Gain 4 Block. *(retagged)* |
 | Common | **Gut Shot** | Attack | 1 | Deal 8 damage; 4 more if the enemy is Weak. *(retagged)* |
 | Common | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. *(retagged)* |
@@ -317,7 +317,7 @@ Rules:
 | Uncommon | **Scattergun Shell** | Attack | 2 | Deal 8 damage to ALL enemies. Apply 1 Weak to ALL enemies. |
 | Uncommon | **Tinker's Kit** | Power | 1 | The first Gadget you play each turn, draw 1 card. *(not itself a Gadget)* |
 | Rare | **Never Still** | Skill | 1 | Gain 8 Block. Next turn, gain 1 Energy and draw 1. Exhaust. *(rebuilt)* |
-| Rare | **Gadgeteer** | Power | 2 | Whenever you play a Gadget, gain 1 Armor. *(not itself a Gadget)* |
+| Rare | **Gadgeteer** | Power | 2 | Whenever you play a Gadget, gain 1 Armor. Its debuffs apply twice. *(not itself a Gadget; debuff double added issue #18)* |
 
 Tinker's Kit and Gadgeteer are deliberately not Gadgets themselves: a Power that counted its own
 play would make the very first trigger an ordering question nobody should have to reason about.
@@ -477,7 +477,7 @@ rarity, not these.
 | 4 | **Last Round** | Attack | 1 | Fire 1. If the Cylinder is empty afterward, return a Reload to your hand from anywhere. | Costs 0. | Empty-cylinder |
 | 5 | **Suppressing Fire** | Attack | 1 | Fire 1. If a Round hits, apply 1 Weak. | Apply 2 Weak instead. | Weak / Fire |
 | 6 | **Ricochet** | Attack | 1 | Fire 1. If a Round hits, deal 4 damage to ALL other enemies. | Splash damage becomes 6. | AoE / Fire |
-| 7 | **Pistol Whip** | Attack | 1 | Deal 9 damage. | Deal 12 damage. | Non-Fire fallback |
+| 7 | **Pistol Whip** | Attack | 1 | Deal 6 damage. Apply 1 Vulnerable. | Deal 9 damage. | Non-Fire fallback |
 | 8 | **Shoulder Shot** | Attack | 1 | Deal 7 damage. Gain 4 Block. | Deal 9 damage. Gain 5 Block. | Hybrid |
 | 9 | **Gut Shot** | Attack | 1 | Deal 8 damage. If the enemy is Weak, deal 4 additional damage. | Deal 10 damage; bonus becomes 6. | Weak payoff |
 | 10 | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. | Deal 5 damage. | Cheap Weak |

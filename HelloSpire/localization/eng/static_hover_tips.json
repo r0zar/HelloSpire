@@ -26,7 +26,7 @@
   "HELLOSPIRE-THE_POTION_BELT.title": "The Potion Belt",
   "HELLOSPIRE-THE_POTION_BELT.description": "Your Potion Slots. Cards can grant extra Slots for one combat; those Slots hold only Volatile Potions.",
   "HELLOSPIRE-GADGET.title": "Gadget",
-  "HELLOSPIRE-GADGET.description": "A card that uses no ammunition: it never [gold]Loads[/gold], [gold]Fires[/gold], [gold]Cycles[/gold] or [gold]Spins[/gold]. Gadgets are worth the same with the [gold]Cylinder[/gold] empty as with it full, and some cards care how many you play.",
+  "HELLOSPIRE-GADGET.description": "A card that uses no ammunition: it never [gold]Loads[/gold], [gold]Fires[/gold], [gold]Cycles[/gold] or [gold]Spins[/gold]. Gadgets are their own track alongside the [gold]Cylinder[/gold], worth the same whether it's empty or full, and some cards combo off how many you play.",
   "HELLOSPIRE-SEAL.title": "Seal",
   "HELLOSPIRE-SEAL.description": "A banked charge. Seals STACK: every cast pays its immediate effect and banks one charge -- the number on the seal icon is how many charges you hold. Judging fires every banked charge, then consumes them all.",
   "HELLOSPIRE-JUDGE.title": "Judge",

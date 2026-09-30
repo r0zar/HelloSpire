@@ -46,6 +46,13 @@ public static class GunslingerEffects
         await PowerCmd.Apply<DebilitatePower>(ctx, target, amount, gun.Self, gun.Card);
     }
 
+    public static async Task ApplyVulnerable(PlayerChoiceContext ctx, GunContext gun, Creature target, decimal amount)
+    {
+        if (amount <= 0) return;
+        await PowerCmd.Apply<VulnerablePower>(ctx, target, amount, gun.Self, gun.Card);
+        await GunslingerHooks.NotifyVulnerableApplied(ctx, gun, target, (int)amount);
+    }
+
     public static async Task GainDeadeye(PlayerChoiceContext ctx, GunContext gun, decimal amount)
     {
         if (amount <= 0) return;

@@ -38,8 +38,10 @@ The open boxes from every phase below, grouped by kind.
 - No `beta/` art exists for any of the 280 cards. `BetaPortraitPath` falls back to the normal portrait, so nothing looks broken; this is only needed if the game's beta-art option should show something different.
 - ~~Relic art: the `AlchemicalSatchel` icon, 9 Alchemist relic detail images, and 3 Paladin relic detail images.~~ — done 2026-09-28; see ART.md's "Paladin relic icons" and "Alchemist relic icons".
 - ~~Gunslinger card-back tint is still the identity.~~ — `GunslingerCardPool` now sets `ShaderColor => Gunslinger.Color`, like the other two pools. ⚠️ Not yet compiled or seen in game.
-- Rest-site bodies are still shader repaints of the placeholder's scene; the shop now swaps to each character's own rig. That shop change is unverified in game.
+- ~~Rest-site bodies are still shader repaints of the placeholder's scene.~~ — done: all three characters have a real `spine/<character>/restsite/` rig (`012c5e6`, "Rest site shows each character's own recoloured body"), loaded the same way as the combat rig via `CharacterSkeletons.cs` and swapped in by `RoomSkins.RestSite.Reskin`. Both the rest-site swap and the shop swap (`RoomSkins.Merchant.Reskin`) are code-complete but ⚠️ neither has been confirmed in a running game yet.
 - Nothing character-specific for SFX, arm (rock/paper/scissors/pointing) textures, card trail or character-select transition; all are inherited from Ironclad.
+- ⚠️ `pistol_whip.png` (small and `big/`) is a gunshot muzzle-flash painting, not a pistol-whip — confirmed by looking at it (issue #17). The card's mechanics were reworked to match its name (6 damage + 1 Vulnerable, blunt VFX), but the art itself still needs a real illustration; no generation tool available covers this.
+- ⚠️ 8 of 9 Alchemist relic images (small and/or `big/`) have a flat-opaque background instead of real transparency — confirmed by inspecting alpha channels (issue #15). `AlchemicalSatchel` is the one that's already correct, proving clean transparency is achievable in this art style; an automated background-matting attempt strips the ink outlines and shading along with the background and isn't good enough to ship. Needs either the original generation pipeline re-run with a transparent background, or real matting tooling (e.g. `rembg`).
 
 **Bugs**
 - Stray code or tags reported at the bottom of some cards, mostly the Gunslinger's. Quickdraw Legend's was found and fixed; the rest need naming in game (the files themselves check clean).
@@ -335,7 +337,7 @@ Existing art-replacement mods worth studying for conventions: [Card Art Editor](
 - [x] ~~Card art for every card *(the long pole — budget for it early)*.~~ — 280/280 unique.
 - [x] ~~Relic and potion icons.~~ — all potions and relics, tray and tooltip sizes.
 - [ ] ⚠️ `CharacterSelectBg`, `CharacterSelectTransitionPath`. *All three have a background; none has a transition of its own.*
-- [ ] ⚠️ `RestSiteAnimPath`, `MerchantAnimPath` — the character appears at rest sites and shops. *The shop swaps to each character's own rig (`RoomSkins`, 2026-09-28; not yet seen in game). The rest site is still a shader repaint of the placeholder's scene.*
+- [ ] ⚠️ `RestSiteAnimPath`, `MerchantAnimPath` — the character appears at rest sites and shops. *Both the shop rig swap and the rest-site rig swap (`RoomSkins`, `012c5e6`) are code-complete and use each character's own rig, not the placeholder's; neither has been confirmed in a running game yet.*
 - [ ] ⚠️ SFX: `AttackSfx`, `CastSfx`, `PowerUpSfx`, `DeathSfx`, `CharacterSelectSfx`, `CharacterTransitionSfx`. *All inherited from Ironclad.*
 - [ ] ⚠️ Animation timing: `AttackAnimDelay`, `CastAnimDelay`, `PowerUpAnimDelay` — these are abstract, you must set them, and wrong values make every attack feel off. *Inherited from BaseLib's placeholder; not tuned to the Silent or Necrobinder rigs.*
 - [ ] ⚠️ `ArmRockTexture` / `ArmPaperTexture` / `ArmScissorsTexture` / `ArmPointingTexture`. *Inherited from Ironclad (Silent for the Alchemist).*

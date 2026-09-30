@@ -38,6 +38,12 @@ public interface IWeakListener
     Task OnWeakApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount);
 }
 
+/// <summary>Reacts to Vulnerable being applied by the Gunslinger.</summary>
+public interface IVulnerableListener
+{
+    Task OnVulnerableApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount);
+}
+
 /// <summary>Reacts to Armor absorbing part of a hit. Fired from the damage patch.</summary>
 public interface IArmorListener
 {
@@ -100,6 +106,9 @@ public static class GunslingerHooks
 
     public static Task NotifyWeakApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount) =>
         Dispatch<IWeakListener>(gun, listener => listener.OnWeakApplied(ctx, gun, target, amount));
+
+    public static Task NotifyVulnerableApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount) =>
+        Dispatch<IVulnerableListener>(gun, listener => listener.OnVulnerableApplied(ctx, gun, target, amount));
 
     public static Task NotifyArmorGained(PlayerChoiceContext ctx, GunContext gun, int amount) =>
         Dispatch<IArmorGainListener>(gun, listener => listener.OnArmorGained(ctx, gun, amount));

@@ -143,12 +143,21 @@ public sealed class Ricochet() : GunslingerCard(1, CardType.Attack, CardRarity.C
     protected override void OnUpgrade() => DynamicVars["Splash"].UpgradeValueBy(2m);
 }
 
-/// <summary>Deal damage. No ammunition involved — the answer to an empty gun.</summary>
+/// <summary>
+/// Deal damage and apply Vulnerable. No ammunition involved — the answer to an empty gun.
+///
+/// A pistol used as a club rather than fired: less damage than a shot would do, but it opens the
+/// target up the way a shot never could. That is the whole redesign — Vulnerable is the first
+/// debuff most Gadget decks see on turn one, which makes this the card that teaches the archetype
+/// rather than a spare Attack that happens to cost no ammunition.
+/// </summary>
 public sealed class PistolWhip() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(6m, ValueProp.Move), new PowerVar<VulnerablePower>(1m)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips => [Tip(GunslingerTips.Gadget)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        [HoverTipFactory.FromPower<VulnerablePower>(), Tip(GunslingerTips.Gadget)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay play)
     {
@@ -156,6 +165,7 @@ public sealed class PistolWhip() : GunslingerCard(1, CardType.Attack, CardRarity
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this).Targeting(play.Target)
             .WithHitFx("vfx/vfx_attack_blunt", null, "blunt_attack.mp3").Execute(ctx);
+        await GunslingerEffects.ApplyVulnerable(ctx, Gun, play.Target, DynamicVars["VulnerablePower"].BaseValue);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);

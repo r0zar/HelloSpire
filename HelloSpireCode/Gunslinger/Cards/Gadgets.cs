@@ -259,7 +259,7 @@ public sealed class TinkersKit() : GunslingerCard(1, CardType.Power, CardRarity.
 // ------------------------------------------------------------------ rares
 
 /// <summary>
-/// Whenever you play a Gadget, gain Armor.
+/// Whenever you play a Gadget, gain Armor -- and that Gadget's debuffs apply twice.
 ///
 /// The archetype's capstone, and the card that makes a Gadget count worth building towards. Every
 /// other Armor source in the set is a card that does nothing else; this one rides on cards you
@@ -268,6 +268,11 @@ public sealed class TinkersKit() : GunslingerCard(1, CardType.Power, CardRarity.
 /// Armor rather than Block because Armor is the layer that survives the turn. A deck that plays
 /// four Gadgets a turn under this is holding a wall by turn three, which is a real win condition
 /// for a character who otherwise only has one.
+///
+/// The debuff double is the other half of the same idea: a Gadget deck's Weak commons (Pistol
+/// Whip, Shoulder Shot, Warning Shot, Pocket Sand and the rest) stop being a side effect of
+/// playing Gadgets and become the reason to. See <see cref="Powers.GadgeteerPower"/> for how the
+/// double is implemented without adding a new debuff-application path.
 /// </summary>
 public sealed class Gadgeteer() : GunslingerCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {

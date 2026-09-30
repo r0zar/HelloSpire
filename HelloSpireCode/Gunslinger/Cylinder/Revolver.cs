@@ -143,23 +143,21 @@ public static class Revolver
     /// Loads <paramref name="count"/> Rounds from <paramref name="factory"/>, each into the first
     /// empty chamber clockwise from the hammer.
     ///
-    /// Loading into a full cylinder is deliberately still legal: it overwrites from the hammer
-    /// forwards and discards what was there. That keeps ammo cards from ever being dead draws while
-    /// still making over-loading a real cost. Loading never moves the hammer.
+    /// A full cylinder cannot be overloaded: once every chamber is occupied, the rest of this
+    /// Load's Rounds are not loaded at all -- nothing is discarded and nothing under the hammer is
+    /// silently replaced. Loading never moves the hammer.
     /// </summary>
     public static async Task Load(PlayerChoiceContext ctx, GunContext gun, Func<Round> factory, int count = 1)
     {
         var cylinder = await Get(ctx, gun);
         if (cylinder == null) return;
 
-        var overwriteOffset = 0;
         for (var i = 0; i < count; i++)
         {
-            var round = factory();
-            var (slot, overwrote) = await NextLoadSlot(cylinder, gun, overwriteOffset);
-            if (overwrote) overwriteOffset++;
+            var slot = await NextLoadSlot(cylinder, gun);
+            if (slot == null) break; // cylinder full: no more Rounds from this Load go in
 
-            await Chamber(ctx, gun, cylinder, slot, round);
+            await Chamber(ctx, gun, cylinder, slot.Value, factory());
         }
     }
 
@@ -201,8 +199,11 @@ public static class Revolver
     }
 
     /// <summary>
-    /// Where the next Round goes. Stacked Chamber redirects a single Load under the hammer; failing
-    /// that it is the first empty chamber clockwise, and failing that an overwrite from the hammer.
+    /// Where the next Round goes. Stacked Chamber redirects a single Load under the hammer,
+    /// overwriting whatever is there -- that redirect is a deliberate, player-chosen effect of the
+    /// card that granted it, not the ordinary Load path, so it is the one place a chamber can still
+    /// be overwritten. Failing that, the next Round goes into the first empty chamber clockwise of
+    /// the hammer; failing that, the cylinder is full and there is nowhere for it to go.
     ///
     /// The Stacked Chamber removal is awaited rather than fired and forgotten. It used to be the
     /// latter, which meant a multi-Round Load — Reload right after Stacked Chamber, say — still saw
@@ -211,27 +212,24 @@ public static class Revolver
     /// one Round, and the only way to guarantee that is for the power to be gone before the next
     /// slot is chosen.
     ///
-    /// Returns the chamber, and whether it was an overwrite — the caller walks the overwrite
-    /// forwards so a Load into a full cylinder replaces consecutive chambers rather than the same
-    /// one over and over.
+    /// Returns the chamber index, or null if the cylinder is full and this Round cannot be loaded.
     /// </summary>
-    private static async Task<(int Index, bool Overwrote)> NextLoadSlot(CylinderPower cylinder, GunContext gun,
-        int overwriteOffset)
+    private static async Task<int?> NextLoadSlot(CylinderPower cylinder, GunContext gun)
     {
         var stacked = gun.Player.Creature?.GetPower<StackedChamberPower>();
         if (stacked != null)
         {
             await stacked.Consume();
-            return (cylinder.Hammer, false);
+            return cylinder.Hammer;
         }
 
         for (var step = 0; step < CylinderPower.ChamberCount; step++)
         {
             var index = cylinder.Offset(step);
-            if (cylinder.Chambers[index] == null) return (index, false);
+            if (cylinder.Chambers[index] == null) return index;
         }
 
-        return (cylinder.Offset(overwriteOffset), true);
+        return null;
     }
 
     /// <summary>Fills every empty chamber. Speedloader, Perfect Reload, True Iron, Speedloader Flask.</summary>

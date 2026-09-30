@@ -229,7 +229,7 @@ public sealed class TinkersKitPower : GunslingerEnginePower
 }
 
 /// <summary>
-/// Whenever you play a Gadget, gain Armor.
+/// Whenever you play a Gadget, gain Armor — and every debuff that Gadget applies lands twice.
 ///
 /// Every Gadget, not the first each turn — that is the difference between the Rare and
 /// <see cref="TinkersKitPower"/>, and it is what a deck built on the archetype is drafting
@@ -239,8 +239,18 @@ public sealed class TinkersKitPower : GunslingerEnginePower
 /// The Armor goes through <see cref="GunslingerEffects.GainArmor"/> like every other source, so
 /// Untouchable and Iron Will see it. That is deliberate: this is the card that makes those two
 /// Rares worth holding.
+///
+/// The debuff double reuses <see cref="IWeakListener"/> and <see cref="IVulnerableListener"/>
+/// rather than reading a Gadget's own numbers: every debuff a Gadget card currently applies is
+/// either Weak (<see cref="GunslingerEffects.ApplyWeak"/>) or, since Pistol Whip, Vulnerable
+/// (<see cref="GunslingerEffects.ApplyVulnerable"/>), so this only has to react to those two hooks
+/// and check the source was a Gadget. Re-applying through <see cref="GunslingerEffects.ApplyWeak"/>
+/// / <see cref="GunslingerEffects.ApplyVulnerable"/> themselves, rather than a bare PowerCmd.Apply,
+/// keeps the second application visible to every other listener (TinBadge, Debilitate) exactly
+/// like the first — and <see cref="GunslingerHooks"/>' own re-entrancy guard is what stops that
+/// second call from triggering this listener a third time.
 /// </summary>
-public sealed class GadgeteerPower : GunslingerEnginePower
+public sealed class GadgeteerPower : GunslingerEnginePower, IWeakListener, IVulnerableListener
 {
     public override async Task AfterCardPlayed(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
@@ -252,6 +262,25 @@ public sealed class GadgeteerPower : GunslingerEnginePower
         Flash();
         await GunslingerEffects.GainArmor(ctx, gun, Amount);
     }
+
+    public async Task OnWeakApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount)
+    {
+        if (!AppliesTo(gun)) return;
+
+        Flash();
+        await GunslingerEffects.ApplyWeak(ctx, gun, target, amount);
+    }
+
+    public async Task OnVulnerableApplied(PlayerChoiceContext ctx, GunContext gun, Creature target, int amount)
+    {
+        if (!AppliesTo(gun)) return;
+
+        Flash();
+        await GunslingerEffects.ApplyVulnerable(ctx, gun, target, amount);
+    }
+
+    private bool AppliesTo(GunContext gun) =>
+        gun.Card is IGadget && gun.Player == GunslingerEffects.PlayerFor(Owner);
 }
 
 /// <summary>

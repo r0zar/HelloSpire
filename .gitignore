@@ -1,5 +1,6 @@
 .godot/
 bin/
+obj/
 /android/
 .git/
 .idea/
