@@ -231,7 +231,7 @@ Balance rule:
 - No card below Rare grants Intangible, and no engine, relic or Round ever does.
 - One stack at a time. A card that grants 2 is a card that skips a boss turn twice.
 
-Everything that used to hand out cheap Dodge — Duck and Weave, Never Still, Dead Man's Bluff, the
+Everything that used to hand out cheap Dodge — Pop-Up Shield, Grappling Hook, Dead Man's Bluff, the
 Smoke Round — now pays in Block and Armor instead, and most of them became **Gadgets** (§3.7).
 
 ---
@@ -267,7 +267,7 @@ Self-Fire damage:
 
 The last line is enforced by the damage patch, which now skips anything flagged `Unpowered` —
 the flag every self-inflicted cost in this character carries. Before that, a defensive power on
-the Gunslinger made Russian Roulette's Self-Fire, Grit Teeth's HP cost and the Black Powder
+the Gunslinger made Russian Roulette's Self-Fire, Adrenal Injector's HP cost and the Black Powder
 Round's recoil all free, which quietly removed the risk from every risk card in the set.
 
 This creates a clean Russian Roulette ruleset.
@@ -300,23 +300,23 @@ Rules:
 
 | Rarity | Card | Type | Cost | Effect |
 |---|---|---|---:|---|
-| Common | **Pistol Whip** | Attack | 1 | Deal 6 damage. Apply 1 Vulnerable. *(retagged; reworked from a flat 9 damage, issue #17)* |
-| Common | **Shoulder Shot** | Attack | 1 | Deal 7 damage. Gain 4 Block. *(retagged)* |
-| Common | **Gut Shot** | Attack | 1 | Deal 8 damage; 4 more if the enemy is Weak. *(retagged)* |
-| Common | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. *(retagged)* |
+| Common | **Brass Knuckles** | Attack | 1 | Deal 6 damage. Apply 1 Vulnerable. *(retagged; reworked from a flat 9 damage, issue #17)* |
+| Common | **Spiked Bracer** | Attack | 1 | Deal 7 damage. Gain 4 Block. *(retagged)* |
+| Common | **Spring Knife** | Attack | 1 | Deal 8 damage; 4 more if the enemy is Weak. *(retagged)* |
+| Common | **Firecracker** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. *(retagged)* |
 | Common | **Pocket Sand** | Skill | 1 | Apply 2 Weak. *(retagged)* |
 | Common | **Blinding Powder** | Skill | 1 | Apply 1 Weak to ALL enemies. Gain 3 Block. |
 | Common | **Bear Trap** | Attack | 1 | Deal 6 damage and apply 1 Weak. If you have Armor, deal 4 more. |
 | Common | **Tripwire** | Skill | 0 | Apply 1 Weak. Gain 1 Armor. Exhaust. |
-| Uncommon | **Cold Read** | Skill | 1 | Apply 1 Weak and 1 Debilitate. Exhaust. *(retagged)* |
-| Uncommon | **Under the Duster** | Skill | 1 | Gain 3 Armor. *(retagged)* |
-| Uncommon | **Grit Teeth** | Skill | 1 | Lose 2 HP. Gain 10 Block and 2 Armor. *(retagged)* |
-| Uncommon | **Duck and Weave** | Skill | 2 | Gain 3 Armor, then Block equal to twice your Armor. Exhaust. *(rebuilt)* |
+| Uncommon | **Spyglass** | Skill | 1 | Apply 1 Weak and 1 Debilitate. Exhaust. *(retagged)* |
+| Uncommon | **Boilerplate Vest** | Skill | 1 | Gain 3 Armor. *(retagged)* |
+| Uncommon | **Adrenal Injector** | Skill | 1 | Lose 2 HP. Gain 10 Block and 2 Armor. *(retagged)* |
+| Uncommon | **Pop-Up Shield** | Skill | 2 | Gain 3 Armor, then Block equal to twice your Armor. Exhaust. *(rebuilt)* |
 | Uncommon | **Smoke Bomb** | Skill | 1 | Gain 6 Block. Apply 1 Weak to ALL enemies. |
 | Uncommon | **Field Kit** | Skill | 1 | Gain 2 Armor. Draw 1 card. |
-| Uncommon | **Scattergun Shell** | Attack | 2 | Deal 8 damage to ALL enemies. Apply 1 Weak to ALL enemies. |
+| Uncommon | **Dynamite** | Attack | 2 | Deal 8 damage to ALL enemies. Apply 1 Weak to ALL enemies. |
 | Uncommon | **Tinker's Kit** | Power | 1 | The first Gadget you play each turn, draw 1 card. *(not itself a Gadget)* |
-| Rare | **Never Still** | Skill | 1 | Gain 8 Block. Next turn, gain 1 Energy and draw 1. Exhaust. *(rebuilt)* |
+| Rare | **Grappling Hook** | Skill | 1 | Gain 8 Block. Next turn, gain 1 Energy and draw 1. Exhaust. *(rebuilt)* |
 | Rare | **Gadgeteer** | Power | 2 | Whenever you play a Gadget, gain 1 Armor. Its debuffs apply twice. *(not itself a Gadget; debuff double added issue #18)* |
 
 Tinker's Kit and Gadgeteer are deliberately not Gadgets themselves: a Power that counted its own
@@ -325,10 +325,10 @@ play would make the very first trigger an ordering question nobody should have t
 ### Balance watchlist
 - Tripwire is free and Gadgeteer pays per Gadget, so a hand of zero-cost Gadgets is the loop to
   watch. Tripwire Exhausts for exactly that reason.
-- Duck and Weave reads Armor *after* its own Armor lands, so its floor is the printed value
+- Pop-Up Shield reads Armor *after* its own Armor lands, so its floor is the printed value
   doubled and its ceiling is whatever the deck has stacked. Watch it alongside Iron Will.
 - The archetype's damage ceiling is meant to be low. If a pure Gadget deck starts closing fights
-  faster than a gun deck, cut Scattergun Shell rather than the defensive cards.
+  faster than a gun deck, cut Dynamite rather than the defensive cards.
 
 ---
 
@@ -477,10 +477,10 @@ rarity, not these.
 | 4 | **Last Round** | Attack | 1 | Fire 1. If the Cylinder is empty afterward, return a Reload to your hand from anywhere. | Costs 0. | Empty-cylinder |
 | 5 | **Suppressing Fire** | Attack | 1 | Fire 1. If a Round hits, apply 1 Weak. | Apply 2 Weak instead. | Weak / Fire |
 | 6 | **Ricochet** | Attack | 1 | Fire 1. If a Round hits, deal 4 damage to ALL other enemies. | Splash damage becomes 6. | AoE / Fire |
-| 7 | **Pistol Whip** | Attack | 1 | Deal 6 damage. Apply 1 Vulnerable. | Deal 9 damage. | Non-Fire fallback |
-| 8 | **Shoulder Shot** | Attack | 1 | Deal 7 damage. Gain 4 Block. | Deal 9 damage. Gain 5 Block. | Hybrid |
-| 9 | **Gut Shot** | Attack | 1 | Deal 8 damage. If the enemy is Weak, deal 4 additional damage. | Deal 10 damage; bonus becomes 6. | Weak payoff |
-| 10 | **Warning Shot** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. | Deal 5 damage. | Cheap Weak |
+| 7 | **Brass Knuckles** | Attack | 1 | Deal 6 damage. Apply 1 Vulnerable. | Deal 9 damage. | Non-Fire fallback |
+| 8 | **Spiked Bracer** | Attack | 1 | Deal 7 damage. Gain 4 Block. | Deal 9 damage. Gain 5 Block. | Hybrid |
+| 9 | **Spring Knife** | Attack | 1 | Deal 8 damage. If the enemy is Weak, deal 4 additional damage. | Deal 10 damage; bonus becomes 6. | Weak payoff |
+| 10 | **Firecracker** | Attack | 0 | Deal 3 damage. Apply 1 Weak. Exhaust. | Deal 5 damage. | Cheap Weak |
 | 11 | **Point Blank** | Attack | 1 | Deal 10 damage. If all 6 chambers are loaded, deal 4 additional damage. | Deal 13 damage; bonus becomes 5. | Full-cylinder |
 | 12 | **Fresh Cartridges** | Skill | 1 | Load 2 Lead Rounds and 1 random Round. Gain 2 Block. | Load 2 random Rounds. | Ammo / wildcard |
 | 13 | **Quick Load** | Skill | 0 | Load 1-2 more of the last Round you Loaded. Gain 2 Block. Exhaust. | Load 2-3. Exhaust. | Ammo tempo |
@@ -522,13 +522,13 @@ rarity, not these.
 | 22 | **Re-Cock** | Skill | 0 | Cycle 1. Gain 2 Deadeye. | Gain 4 Deadeye. | Cycle |
 | 23 | **Check the Cylinder** | Skill | 0 | Cycle up to 2. If the current chamber is loaded, draw 1 card. Exhaust. | Cycle up to 3. | Selection |
 | 24 | **Stacked Chamber** | Skill | 1 | The next Round you Load is placed under the hammer. Gain 5 Deadeye. | Gain 8 Deadeye. | Setup |
-| 25 | **Under the Duster** | Skill | 1 | Gain 3 Armor. | Gain 4 Armor. | Armor |
+| 25 | **Boilerplate Vest** | Skill | 1 | Gain 3 Armor. | Gain 4 Armor. | Armor |
 | 26 | **Hunker Down** | Skill | 1 | Gain 8 Block. If you have not Fired this turn, gain 4 more Block and Load 1 Lead Round. | Gain 10 Block; conditional Block becomes 5. | Block |
-| 27 | **Duck and Weave** | Skill | 2 | Gain 3 Armor, then gain Block equal to twice your Armor. Exhaust. *Gadget.* | Gain 4 Armor. | Armor payoff |
+| 27 | **Pop-Up Shield** | Skill | 2 | Gain 3 Armor, then gain Block equal to twice your Armor. Exhaust. *Gadget.* | Gain 4 Armor. | Armor payoff |
 | 28 | **Dive for Cover** | Skill | 1 | If any enemy intends to Attack, gain 9 Block. If total incoming Attack damage is 20 or more, gain 1 Armor. If no enemy intends to Attack, Load 2 Lead Rounds instead. | Gain 12 Block; gain 2 Armor at the threshold. | Intent defense |
-| 29 | **Grit Teeth** | Skill | 1 | Lose 2 HP. Gain 10 Block and 2 Armor. | Gain 13 Block and 2 Armor. | Risk defense |
+| 29 | **Adrenal Injector** | Skill | 1 | Lose 2 HP. Gain 10 Block and 2 Armor. | Gain 13 Block and 2 Armor. | Risk defense |
 | 30 | **Dead Man's Bluff** | Skill | 1 | Spin. If the current chamber is empty, gain 2 Armor and Load 1 Lead Round; otherwise gain 9 Block. Exhaust. | Loaded result gives 12 Block. | Spin defense |
-| 31 | **Cold Read** | Skill | 1 | Apply 1 Weak and 1 Debilitate. Exhaust. | Apply 2 Weak and 1 Debilitate. | Debuff control |
+| 31 | **Spyglass** | Skill | 1 | Apply 1 Weak and 1 Debilitate. Exhaust. | Apply 2 Weak and 1 Debilitate. | Debuff control |
 | 32 | **Gunfighter's Rhythm** | Power | 1 | Every 6th Round you Fire, draw 1 card. | Draw 2 cards instead. | Cylinder cadence |
 | 33 | **Hard Leather** | Power | 1 | The first time each turn Armor prevents damage, gain 3 Block next turn. | Gain 5 Block next turn. | Armor engine |
 | 34 | **Smoke and Lead** | Power | 1 | The first time each turn you Fire a Round, gain 3 Block. | Gain 4 Block. | Fire defense |
@@ -553,7 +553,7 @@ rarity, not these.
 | 12 | **Perfect Reload** | Skill | 2 | Choose Lead, Heavy, Crippling, Guard, or Piercing. Fill all empty chambers with that Round. Gain 5 Block. Exhaust. | Costs 1. | Ammo capstone |
 | 13 | **Ghost Step** | Skill | 1 | Gain 1 Intangible. Exhaust. | Costs 0. | Defensive capstone |
 | 14 | **Armored Longcoat** | Skill | 2 | Gain 5 Armor. Exhaust. | Gain 7 Armor. | Armor capstone |
-| 15 | **Never Still** | Skill | 1 | Gain 8 Block. Next turn, gain 1 Energy and draw 1 card. Exhaust. *Gadget.* | Draw 2 cards next turn. | Tempo defense |
+| 15 | **Grappling Hook** | Skill | 1 | Gain 8 Block. Next turn, gain 1 Energy and draw 1 card. Exhaust. *Gadget.* | Draw 2 cards next turn. | Tempo defense |
 | 16 | **Deadeye Focus** | Skill | 1 | Gain 12 Deadeye. Exhaust. | Gain 16 Deadeye. | Shot capstone |
 | 17 | **Sixth Sense** | Skill | 1 | Choose a chamber. If loaded, move it under the hammer and draw 2 cards. If empty, gain 1 Armor. Exhaust. | Draw 3 if loaded; if empty, also gain 5 Block. | Precision defense |
 | 18 | **Rending Cartridge** | Skill | 1 | Load 2 Rending Rounds. Exhaust. | Load 3 Rending Rounds. | Debilitate ammo |
@@ -665,7 +665,7 @@ Key cards:
 - Crippling Cartridge
 - Pocket Sand
 - Pinning Shot
-- Cold Read
+- Spyglass
 - Rending Cartridge
 - Debilitating Presence
 - Executioner's Calm
@@ -685,8 +685,8 @@ Against enemies that do not attack often, the deck can lack raw damage if it ove
 Key cards:
 - Duster Up
 - Guard Cartridge
-- Under the Duster
-- Grit Teeth
+- Boilerplate Vest
+- Adrenal Injector
 - Hard Leather
 - Armored Longcoat
 - Iron Will
@@ -705,8 +705,8 @@ Fast multi-hit enemies erode Armor quickly.
 
 Key cards:
 - Pocket Sand, Blinding Powder, Tripwire, Bear Trap
-- Smoke Bomb, Field Kit, Scattergun Shell
-- Under the Duster, Grit Teeth, Duck and Weave
+- Smoke Bomb, Field Kit, Dynamite
+- Boilerplate Vest, Adrenal Injector, Pop-Up Shield
 - Tinker's Kit, Gadgeteer
 
 Play pattern:
@@ -714,7 +714,7 @@ Weak the room, stack Armor, and let Gadgeteer turn a hand of cheap debuffs into 
 a damage option, not a requirement — the deck functions on an empty cylinder.
 
 Failure mode:
-Low ceiling on damage. Without Scattergun Shell or a few Rounds to Fire, the deck out-defends
+Low ceiling on damage. Without Dynamite or a few Rounds to Fire, the deck out-defends
 every fight and then cannot close one.
 
 ---
@@ -833,7 +833,7 @@ means the Load can never overwrite ammunition the player was about to Fire. Dive
 clearest case: its Load lives in the branch where the card used to do nothing at all, so it raises
 the floor without touching the ceiling.
 
-Left alone deliberately: **Grit Teeth** (already the densest defensive uncommon, and paying for a
+Left alone deliberately: **Adrenal Injector** (already the densest defensive uncommon, and paying for a
 Round in HP changes what the card is), **Ghost Step** (Intangible is premium and should not
 accumulate riders), and **Rending Cartridge** / **Lucky Shot** (a Rare debuff engine and a 0-cost
 gamble, both already at their ceiling).
@@ -899,7 +899,7 @@ To feel like a native STS2 character, gate the more complex cards and relics beh
 
 ### Epoch I — First Blood (Beat Act 1)
 - Pinning Shot
-- Under the Duster
+- Boilerplate Vest
 - High Noon
 
 ### Epoch II — Old Tools (Beat Act 2)
@@ -1070,7 +1070,7 @@ Prototype these 24 cards to prove the character:
 - Snap Shot
 - Fan the Hammer
 - Suppressing Fire
-- Pistol Whip
+- Brass Knuckles
 - Fresh Cartridges
 - Heavy Cartridge
 - Crippling Cartridge
@@ -1084,9 +1084,9 @@ Prototype these 24 cards to prove the character:
 - Speedloader
 - Guard Cartridge
 - Smoke Cartridge
-- Under the Duster
-- Duck and Weave
-- Cold Read
+- Boilerplate Vest
+- Pop-Up Shield
+- Spyglass
 
 ### Rares
 - High Noon

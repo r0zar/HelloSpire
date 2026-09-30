@@ -242,7 +242,7 @@ public sealed class TinkersKitPower : GunslingerEnginePower
 ///
 /// The debuff double reuses <see cref="IWeakListener"/> and <see cref="IVulnerableListener"/>
 /// rather than reading a Gadget's own numbers: every debuff a Gadget card currently applies is
-/// either Weak (<see cref="GunslingerEffects.ApplyWeak"/>) or, since Pistol Whip, Vulnerable
+/// either Weak (<see cref="GunslingerEffects.ApplyWeak"/>) or, since Brass Knuckles, Vulnerable
 /// (<see cref="GunslingerEffects.ApplyVulnerable"/>), so this only has to react to those two hooks
 /// and check the source was a Gadget. Re-applying through <see cref="GunslingerEffects.ApplyWeak"/>
 /// / <see cref="GunslingerEffects.ApplyVulnerable"/> themselves, rather than a bare PowerCmd.Apply,

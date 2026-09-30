@@ -146,12 +146,12 @@ public sealed class Ricochet() : GunslingerCard(1, CardType.Attack, CardRarity.C
 /// <summary>
 /// Deal damage and apply Vulnerable. No ammunition involved — the answer to an empty gun.
 ///
-/// A pistol used as a club rather than fired: less damage than a shot would do, but it opens the
-/// target up the way a shot never could. That is the whole redesign — Vulnerable is the first
+/// A fist in brass rather than a shot: less damage than a Round would do, but it opens the target
+/// up the way a shot never could. That is the whole redesign — Vulnerable is the first
 /// debuff most Gadget decks see on turn one, which makes this the card that teaches the archetype
 /// rather than a spare Attack that happens to cost no ammunition.
 /// </summary>
-public sealed class PistolWhip() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
+public sealed class BrassKnuckles() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(6m, ValueProp.Move), new PowerVar<VulnerablePower>(1m)];
@@ -171,8 +171,11 @@ public sealed class PistolWhip() : GunslingerCard(1, CardType.Attack, CardRarity
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 }
 
-/// <summary>Deal damage and gain Block.</summary>
-public sealed class ShoulderShot() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
+/// <summary>
+/// Deal damage and gain Block: a studded iron forearm guard that turns a blow aside and punches back
+/// in the same motion. The gun stays holstered.
+/// </summary>
+public sealed class SpikedBracer() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     public override bool GainsBlock => true;
 
@@ -198,7 +201,7 @@ public sealed class ShoulderShot() : GunslingerCard(1, CardType.Attack, CardRari
 }
 
 /// <summary>Deal damage; more if the target is already Weak.</summary>
-public sealed class GutShot() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
+public sealed class SpringKnife() : GunslingerCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(8m, ValueProp.Move), new DamageVar("Bonus", 4m, ValueProp.Move)];
@@ -227,8 +230,12 @@ public sealed class GutShot() : GunslingerCard(1, CardType.Attack, CardRarity.Co
     }
 }
 
-/// <summary>Cheap Weak, and it leaves the deck behind it.</summary>
-public sealed class WarningShot() : GunslingerCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
+/// <summary>
+/// Cheap Weak, and it leaves the deck behind it: a braided string of small red paper firecrackers
+/// crackling and popping in the dust at an enemy's boots, bursts of sparks and paper confetti, all
+/// bang and no real bite. The picture is the firecracker string alone -- no firearm, no hand.
+/// </summary>
+public sealed class Firecracker() : GunslingerCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(3m, ValueProp.Move), new PowerVar<WeakPower>(1m)];

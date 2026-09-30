@@ -277,10 +277,17 @@ def glyph_loaded_dice():
     return die + group(pips, f"rotate(-14 {C} {C})")
 
 
-def glyph_never_still():
-    shank = rect(C - 14, C - 96, 28, 78, 12, LEAD, INK, 6)
-    rowel = star(C, C + 26, 8, 74, 34, BRASS, INK, 7)
-    return shank + rowel + circle(C, C + 26, 15, DISC_DARK, INK, 5)
+def glyph_grappling_hook():
+    # Two flukes drawn as thick strokes: an ink pass underneath gives them the same outline the
+    # filled shapes get from their stroke.
+    prongs = (f"M {C} {C + 40} Q {C - 70} {C + 40} {C - 70} {C - 20} "
+              f"M {C} {C + 40} Q {C + 70} {C + 40} {C + 70} {C - 20}")
+    barbs = (polygon([(C - 70, C - 44), (C - 88, C - 8), (C - 54, C - 12)], STEEL, INK, 6)
+             + polygon([(C + 70, C - 44), (C + 88, C - 8), (C + 54, C - 12)], STEEL, INK, 6))
+    shank = rect(C - 13, C - 70, 26, 116, 10, LEAD, INK, 6)
+    eye = circle(C, C - 84, 24, "none", INK, 22) + circle(C, C - 84, 24, "none", BRASS, 10)
+    return (eye + path(prongs, stroke=INK, sw=30) + path(prongs, stroke=STEEL, sw=18)
+            + barbs + shank)
 
 
 def glyph_quickdraw_legend():
@@ -459,7 +466,7 @@ ENGINE_POWERS = {
     "hard_leather": glyph_hard_leather,
     "iron_will": glyph_iron_will,
     "loaded_dice": glyph_loaded_dice,
-    "never_still": glyph_never_still,
+    "grappling_hook": glyph_grappling_hook,
     "quickdraw_legend": glyph_quickdraw_legend,
     "ride_together": glyph_ride_together,
     "sixth_shot": glyph_sixth_shot,

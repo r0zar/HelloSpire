@@ -152,7 +152,7 @@ public sealed class ArmoredLongcoat() : GunslingerCard(2, CardType.Power, CardRa
 /// Block does the same job here without pulling Intangible, which is Rare-and-scarce by design,
 /// into a card whose real payload is the Energy.
 /// </summary>
-public sealed class NeverStill() : GunslingerCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self), IGadget
+public sealed class GrapplingHook() : GunslingerCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self), IGadget
 {
     public override bool GainsBlock => true;
 
@@ -168,7 +168,7 @@ public sealed class NeverStill() : GunslingerCard(1, CardType.Skill, CardRarity.
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play);
 
-        var power = await PowerCmd.Apply<NeverStillPower>(ctx, Owner.Creature, DynamicVars.Energy.BaseValue, Owner.Creature, this);
+        var power = await PowerCmd.Apply<GrapplingHookPower>(ctx, Owner.Creature, DynamicVars.Energy.BaseValue, Owner.Creature, this);
 
         if (power != null) power.CardsToDraw = DynamicVars.Cards.IntValue;
     }

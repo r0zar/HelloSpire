@@ -136,9 +136,9 @@ public sealed class BlockNextTurnPower : HelloSpirePower
 }
 
 /// <summary>
-/// Never Still's delayed half: an Energy and a card or two at the start of your next turn.
+/// Grappling Hook's delayed half: an Energy and a card or two at the start of your next turn.
 /// </summary>
-public sealed class NeverStillPower : HelloSpirePower
+public sealed class GrapplingHookPower : HelloSpirePower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;

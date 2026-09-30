@@ -231,7 +231,7 @@ public sealed class StackedChamber() : GunslingerCard(1, CardType.Skill, CardRar
 }
 
 /// <summary>Gain Armor.</summary>
-public sealed class UnderTheDuster() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
+public sealed class BoilerplateVest() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<ArmorPower>(3m)];
 
@@ -283,7 +283,8 @@ public sealed class HunkerDown() : GunslingerCard(1, CardType.Skill, CardRarity.
 }
 
 /// <summary>
-/// Gain Armor, then turn the whole plate into Block. The Gadget that pays an Armor deck back.
+/// Gain Armor, then turn the whole plate into Block. The Gadget that pays an Armor deck back: a
+/// spring-loaded folding shield of riveted iron slats that snaps open from a forearm rig.
 ///
 /// This used to be the set's only unconditional Dodge below Rare, at 2 Energy and Exhausting for
 /// a single prevented hit. Dodge is gone — the character's premium defence is Intangible now, and
@@ -295,7 +296,7 @@ public sealed class HunkerDown() : GunslingerCard(1, CardType.Skill, CardRarity.
 /// point: Armor is a slow, flat mitigation that a long fight rewards, and this is the card that
 /// cashes a big pile of it in on the one turn a big pile is not enough.
 /// </summary>
-public sealed class DuckAndWeave() : GunslingerCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
+public sealed class PopUpShield() : GunslingerCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
 {
     public override bool GainsBlock => true;
 
@@ -372,7 +373,7 @@ public sealed class DiveForCover() : GunslingerCard(1, CardType.Skill, CardRarit
 }
 
 /// <summary>Pay a little HP for a lot of defence.</summary>
-public sealed class GritTeeth() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
+public sealed class AdrenalInjector() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self), IGadget
 {
     public override bool GainsBlock => true;
 
@@ -462,7 +463,7 @@ public sealed class PowderBurn() : GunslingerCard(1, CardType.Skill, CardRarity.
 }
 
 /// <summary>Weak and Debilitate together, which is where the Gunslinger's defence really comes from.</summary>
-public sealed class ColdRead() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy), IGadget
+public sealed class Spyglass() : GunslingerCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<WeakPower>(1m), new PowerVar<DebilitatePower>(1m)];

@@ -22,9 +22,9 @@ namespace HelloSpire.HelloSpireCode.Gunslinger.Cards;
 // no Load, no Fire, no Cycle, no Spin. Reading state the cylinder happens to own is fine; a
 // Gadget that touches a chamber is a cartridge card with the wrong word on it.
 //
-// The retagged half of the archetype lives with its rarity: Pistol Whip, Shoulder Shot, Gut Shot,
-// Warning Shot and Pocket Sand in Commons.cs; Cold Read, Under the Duster, Grit Teeth and Duck
-// and Weave in UncommonSkills.cs; Never Still in RareSkills.cs. New cards land here so the shape
+// The retagged half of the archetype lives with its rarity: Brass Knuckles, Spiked Bracer, Spring
+// Knife, Firecracker and Pocket Sand in Commons.cs; Spyglass, Boilerplate Vest, Adrenal Injector and
+// Pop-Up Shield in UncommonSkills.cs; Grappling Hook in RareSkills.cs. New cards land here so the shape
 // of the package can be read in one file.
 
 // ------------------------------------------------------------------ commons
@@ -69,7 +69,7 @@ public sealed class BlindingPowder() : GunslingerCard(1, CardType.Skill, CardRar
 ///
 /// The common that says out loud what the archetype is for. Armor is the Gunslinger's slow
 /// defensive layer and nothing in the set ever paid you for holding it -- it just sat there
-/// eroding. Here it is a damage stat, which turns Under the Duster and Grit Teeth from cards you
+/// eroding. Here it is a damage stat, which turns Boilerplate Vest and Adrenal Injector from cards you
 /// play when you are losing into cards you play on the way in.
 ///
 /// The bonus is a flat step rather than a per-point scale on purpose: Armor stacks are small
@@ -197,14 +197,15 @@ public sealed class FieldKit() : GunslingerCard(1, CardType.Skill, CardRarity.Un
 }
 
 /// <summary>
-/// Deal damage to ALL enemies and Weak them all.
+/// Deal damage to ALL enemies and Weak them all: a bundle of dynamite sticks, fuse hissing,
+/// thrown into the middle of the room. No gun in it anywhere.
 ///
 /// The gap this fills is the one that made a gun-less draft unplayable: the Gunslinger's only
 /// real room-clear is No Witnesses, which is Rare and needs a loaded chamber. A Gadget deck with
 /// no answer to three enemies is not a deck, so this is the archetype's Act 2 card -- expensive,
 /// unconditional, and worth the same on an empty cylinder as a full one.
 /// </summary>
-public sealed class ScattergunShell() : GunslingerCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies), IGadget
+public sealed class Dynamite() : GunslingerCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies), IGadget
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(8m, ValueProp.Move), new PowerVar<WeakPower>(1m)];
@@ -234,7 +235,7 @@ public sealed class ScattergunShell() : GunslingerCard(2, CardType.Attack, CardR
 ///
 /// The Uncommon engine, and the cheap one. It pays out once a turn rather than per Gadget, which
 /// keeps it honest next to a zero-cost Tripwire and makes it a card the gun deck can also want --
-/// Pistol Whip and Shoulder Shot are Gadgets, and both are in every deck.
+/// Brass Knuckles and Spiked Bracer are Gadgets, and both are in every deck.
 /// </summary>
 public sealed class TinkersKit() : GunslingerCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
@@ -269,8 +270,8 @@ public sealed class TinkersKit() : GunslingerCard(1, CardType.Power, CardRarity.
 /// four Gadgets a turn under this is holding a wall by turn three, which is a real win condition
 /// for a character who otherwise only has one.
 ///
-/// The debuff double is the other half of the same idea: a Gadget deck's Weak commons (Pistol
-/// Whip, Shoulder Shot, Warning Shot, Pocket Sand and the rest) stop being a side effect of
+/// The debuff double is the other half of the same idea: a Gadget deck's Weak commons (Brass
+/// Knuckles, Spiked Bracer, Firecracker, Pocket Sand and the rest) stop being a side effect of
 /// playing Gadgets and become the reason to. See <see cref="Powers.GadgeteerPower"/> for how the
 /// double is implemented without adding a new debuff-application path.
 /// </summary>

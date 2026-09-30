@@ -73,7 +73,7 @@ internal static class GunslingerDamagePatch
         // Unpowered damage says, in the game's own vocabulary, that powers do not apply to it --
         // and Armor is a power. Everything the Gunslinger does to itself is flagged this way
         // (GunslingerEffects.LoseHp), so without this the character's own costs would be free
-        // whenever it happened to be armoured: Russian Roulette's Self-Fire, Grit Teeth's HP cost
+        // whenever it happened to be armoured: Russian Roulette's Self-Fire, Adrenal Injector's HP cost
         // and the Black Powder Round's recoil all become pure upside. The design is explicit that
         // Self-Fire is "not reduced by Block or Armor"; this is the line that makes that true. It
         // also protects any future non-Attack HP loss the game sends through this hook.
