@@ -1,14 +1,14 @@
 {
  "generated_by": "sts2-reskin-pipeline/tools/package.py \u2014 do not hand-edit these files (JSON in a .txt so the game does not scan it as a mod manifest)",
- "variant": "dressed",
- "workbench_commit": "3454196",
+ "variant": "wire",
+ "workbench_commit": "c39e566",
  "character": "gunslinger",
- "donor": "silent",
- "edits_sha256": null,
+ "donor": "gunslinger",
+ "edits_sha256": "285d5eeed0de51aa9d7af60afd088aa92d0c4a4a8f4ac7a7f1b27899d5977258",
  "palettes_sha256": "d6f0c3e9c174154c5ee17c5a678333adac427300d0a3f242b067941efe56c421",
  "files": {
-  "silent.atlas": "44cb6ea6945c0ab6e846310c4dfbdae88be2e68bad8ede1af1b4ab835fd16da3",
-  "silent.skel": "17294850ae4e0b397b4dc2733af03d2b0d53d88fa504ad69a36d68bb2bbac6b0",
-  "silent.png": "691b1855d4bae18dda35ae67a74382ec77ce482e290cd056e27c89fed870b596"
+  "gunslinger.atlas": "6f15c2996e9f543e3c5409aed13fa56bf90ee80cf00886f119b5200d9f6d50e9",
+  "gunslinger.skel": "1d74f4fdefa13058135a7b031d5d5107c72414de3f64c6787fb9287728468f6c",
+  "gunslinger.png": "25254898ed1409e38df734f13da270e2134b71ec95fb32807e35a4be4ee70f6f"
  }
 }

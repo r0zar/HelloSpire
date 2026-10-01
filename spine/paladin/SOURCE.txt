@@ -1,17 +1,14 @@
 {
  "generated_by": "sts2-reskin-pipeline/tools/package.py \u2014 do not hand-edit these files (JSON in a .txt so the game does not scan it as a mod manifest)",
- "variant": "dressed",
- "workbench_commit": "3454196",
+ "variant": "wire",
+ "workbench_commit": "c39e566",
  "character": "paladin",
- "donor": "ironclad",
- "edits_sha256": null,
+ "donor": "paladin",
+ "edits_sha256": "8773266449c4775206bd3a4555830423e7afb9ffdcc4e0cb96a1ee543655904c",
  "palettes_sha256": "d6f0c3e9c174154c5ee17c5a678333adac427300d0a3f242b067941efe56c421",
  "files": {
-  "ironclad.atlas": "50c4cb3983435e085fdac6a5dbe73fb6c31e854cb1264f2191e08893b65a15e6",
-  "ironclad.skel": "f31952dff5790e358e1229b62dac0623db6947d7550db47df7905395c50782dd",
-  "ironclad.png": "c0e77c9b3e50041e04f051e94aa2f0bda945a47bc9adcd8aadd78259104f26c6",
-  "ironclad_2.png": "964798559aaf1492cfdd7d407763e34e473b706c1f7e094b4b2e757ae3952c21",
-  "ironclad_3.png": "3420ea5a6c45a91567a83f656f2f90c54c96871bcc2e80acea4fc88bb48bf6dc",
-  "ironclad_4.png": "2767fd84932ab88d56a528cbd048fb0f99f3812b95c180bace10e2951f8e9477"
+  "paladin.atlas": "138efe4fbce171f06b2c6aefa7c805389341968b9653be905ac5bb005ebb0aeb",
+  "paladin.skel": "70f62d5b27c0f1c7c51516fdd1ce16d1094210000d0895ba78b03ca4640ec6dc",
+  "paladin.png": "ef7e45a46a1e10625ca73ece802aac287938cac9bfc7820a812f0fdd085d5beb"
  }
 }
