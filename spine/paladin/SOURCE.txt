@@ -1,12 +1,12 @@
 {
  "generated_by": "sts2-reskin-pipeline/blender/paladin/scripts/spine_export.py \u2014 do not hand-edit these files (JSON in a .txt so the game does not scan it as a mod manifest)",
  "variant": "blender",
- "workbench_commit": "556fd25",
+ "workbench_commit": "fc9ca4b",
  "character": "paladin",
  "donor": "paladin",
  "files": {
-  "paladin.atlas": "c9e6b8ef418d542e3ec6a3d901daa8700c4e206b61159550bfe7d5739071ee5d",
-  "paladin.skel": "3ccafc167fbc558a463e9811ec9dc47949d02f0059233cc1e6d9d07dbd458551",
-  "paladin.png": "4d7e4b0c66bb9d1474a71f32ad8205d9c2060911848e2e0c3004ab22e6688a2c"
+  "paladin.atlas": "a227b9e2f51c3edbd7c31c93d2892e7d2f281ec7a2ff5e4342da53a75a8f15fe",
+  "paladin.skel": "4fba21a62076a02276aa752971671e22fd356a82e00873b7394bdbd7e7961d03",
+  "paladin.png": "8079c8fb33df6aff61fbf9194639a3ee6accc82983e60bbdcb09e4ae0b99ee2d"
  }
 }
