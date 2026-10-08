@@ -2,7 +2,7 @@
 
 A three-character pack for [Slay the Spire 2](https://store.steampowered.com/app/2868840/), built to be played together in co-op.
 
-Built against **game v0.107.0** (the manifest's declared floor) and **BaseLib 3.4.5**. Slay the Spire 2 is in Early Access, so expect this to need a rebuild after breaking updates.
+Built against **game v0.107.0** (the manifest's declared floor) and **BaseLib 3.4.7**. Slay the Spire 2 is in Early Access, so expect this to need a rebuild after breaking updates.
 
 ## The characters
 
@@ -101,7 +101,7 @@ A character mod is necessarily `true`. Shipping three separate character mods wo
 | Requirement | Notes |
 |---|---|
 | Slay the Spire 2 | v0.107.0 or newer — the floor `HelloSpire.json` declares |
-| [BaseLib](https://github.com/Alchyr/BaseLib-StS2/releases) | v3.4.5, in your `mods/` folder or via Steam Workshop |
+| [BaseLib](https://github.com/Alchyr/BaseLib-StS2/releases) | v3.4.7, in your `mods/` folder or via Steam Workshop |
 | .NET SDK | 9.0 or higher |
 | MegaDot, or Godot **4.5.1** .NET | Must be 4.5.1 — the game refuses `.pck` files exported by a newer Godot |
 

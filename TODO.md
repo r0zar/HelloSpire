@@ -6,7 +6,7 @@ A working checklist for taking a HelloSpire character from "a tile appears on ch
 
 Ordered by dependency, not by effort. Phases 0–3 are load-bearing: everything later assumes they are settled. Phases 4–7 are the bulk of the work. Phase 8 is the one people skip and should not. Phase 9 matters the moment anyone plays co-op.
 
-Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x86_64\sts2.xml` and `sts2.dll`) and **BaseLib 3.4.5**. Early Access moves; re-verify after breaking updates.
+Every API name here was verified against **game v0.107.1** (`data_sts2_windows_x86_64\sts2.xml` and `sts2.dll`) and **BaseLib 3.4.7**. Early Access moves; re-verify after breaking updates.
 
 ## Status (2026-09-28)
 
@@ -143,7 +143,7 @@ The single highest-leverage balance decision in the whole character. A player se
 
 ## Phase 3 — Custom mechanics (optional, but this is the interesting part)
 
-**Yes, you can add Stars/Orbs/Focus-style mechanics.** BaseLib 3.4.5 exposes a full custom-resource system. Verified types:
+**Yes, you can add Stars/Orbs/Focus-style mechanics.** BaseLib 3.4.7 exposes a full custom-resource system. Verified types:
 
 | Need | BaseLib type |
 |---|---|
@@ -157,7 +157,7 @@ The single highest-leverage balance decision in the whole character. A player se
 | New enum values (target types, reward types, keywords) | `CustomEnumAttribute`, `CustomEnums` |
 | New card keywords | `CustomKeywords` |
 | Summons / pets | `CustomPetModel` |
-| Resource UI | `CustomEnergyCounter`, `ICustomEnergyIconPool`, `ICustomResourceVisualsHandler` |
+| Resource UI | `CustomEnergyCounter`, `ICustomEnergyIconPool`, `ExtraCombatUi` (replaced `ICustomResourceVisualsHandler` in 3.4.6) |
 
 `ICustomResourceCost` alone covers scoping that most mods get wrong: `SetThisTurn`, `SetThisCombat`, `SetUntilPlayed`, `SetThisTurnOrUntilPlayed`, plus `UpgradeCostBy` / `ResetForDowngrade` and `ResolveXValue` for X-cost cards. Use these rather than hand-rolling cleanup.
 
@@ -466,7 +466,7 @@ None of the optional extras (unlocks, achievements, events, encounters, badges) 
 ## Phase 11 — Release and maintenance
 
 - [ ] ⚠️ Bump `version` in `HelloSpire.json` off `v0.0.0`
-- [x] ~~Pin `Alchyr.Sts2.BaseLib` to an explicit version in `HelloSpire.csproj`~~ — pinned to `[3.4.5]`
+- [x] ~~Pin `Alchyr.Sts2.BaseLib` to an explicit version in `HelloSpire.csproj`~~ — pinned to `[3.4.7]`
 - [ ] ⚠️ Verify `min_game_version` matches what you actually tested. *The manifest says 0.107.0; this file's APIs were checked against 0.107.1.*
 - [ ] ⚠️ Screenshots and a real description
 - [ ] ⚠️ Publish to Steam Workshop and/or Nexus
