@@ -2,7 +2,6 @@ using BaseLib.Patches.UI;
 using Godot;
 using HelloSpire.HelloSpireCode.Gunslinger.Powers;
 using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -25,9 +24,18 @@ namespace HelloSpire.HelloSpireCode.Gunslinger.Cylinder;
 /// custom Node subclass, no per-frame polling, and one Tween per change. That keeps the whole
 /// widget on Godot API this mod has already shipped working code against (see the Paladin's
 /// FaithDisplay), which matters for a piece of UI that cannot be unit tested.
+///
+/// It reaches the screen through BaseLib's <see cref="ExtraCombatUi"/>, which runs every
+/// registered callback when the combat UI activates. Before BaseLib 3.4.6 the only way in was a
+/// custom resource's visuals handler, so a stateless CylinderResource existed purely as a peg.
 /// </summary>
-public sealed class CylinderDisplay : ICustomResourceVisualsHandler
+public sealed class CylinderDisplay
 {
+    private static readonly CylinderDisplay Instance = new();
+
+    /// <summary>Hooks the widget into combat UI setup. Call once, from mod initialization.</summary>
+    public static void Register() => ExtraCombatUi.RegisterCombatUiElement(Instance.AddDisplay);
+
     private const float Size = 104f;
     private const float Centre = Size / 2f;
     private const float ChamberOrbit = 30f;
@@ -73,17 +81,15 @@ public sealed class CylinderDisplay : ICustomResourceVisualsHandler
     private int _lastSpin;
     private Tween? _tween;
 
-    public void AddDisplay(NCombatUi nCombatUi, PlayerCombatState playerCombatState)
+    /// <param name="me">The local player; BaseLib resolves it before invoking combat UI callbacks.</param>
+    private void AddDisplay(NCombatUi nCombatUi, Player me, CombatState combatState)
     {
-        // PlayerCombatState has no back-reference to its Player; resolve the local player the same
-        // way BaseLib does when it invokes this hook.
-        var me = CombatManager.Instance?.DebugOnlyGetState() is { } state ? LocalContext.GetMe(state) : null;
-        if (me == null || me.PlayerCombatState != playerCombatState || me.Creature == null) return;
+        if (me.Creature == null) return;
 
-        // BaseLib builds one visuals handler per registered resource and keeps it for the life of
-        // the process, calling this once per combat on the same instance. Nothing below may assume
-        // a fresh object: the rotation bookkeeping in particular has to start from the state a new
-        // CylinderPower starts in, or the first Spins of the second combat do not read as Spins.
+        // One instance lives for the whole process and this runs once per combat on it. Nothing
+        // below may assume a fresh object: the rotation bookkeeping in particular has to start
+        // from the state a new CylinderPower starts in, or the first Spins of the second combat
+        // do not read as Spins.
         Reset();
 
         _creature = me.Creature;

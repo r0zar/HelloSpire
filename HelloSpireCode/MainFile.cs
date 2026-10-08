@@ -25,6 +25,9 @@ public partial class MainFile : Node
         // Gold, Max HP and choice systems all no-op (see LabBridge).
         HelloSpireCode.Alchemist.LabBridge.Current = new HelloSpireCode.Alchemist.WiredLabBridge();
 
+        // The Gunslinger's on-screen cylinder joins the combat UI each time it activates.
+        HelloSpireCode.Gunslinger.Cylinder.CylinderDisplay.Register();
+
         Harmony harmony = new(ModId);
 
         harmony.PatchAll(assembly);
