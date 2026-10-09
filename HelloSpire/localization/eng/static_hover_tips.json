@@ -46,5 +46,18 @@
   "HELLOSPIRE-INFUSE.title": "Infuse",
   "HELLOSPIRE-INFUSE.description": "Add a stored Damage, Poison, Block or Energy value to your Unstable Concoction, if you're holding one. Does nothing if you aren't.",
   "HELLOSPIRE-UNLEASH.title": "Unleash",
-  "HELLOSPIRE-UNLEASH.description": "Use your Unstable Concoction. Everything Infused into it resolves at once, on whatever it's used on."
+  "HELLOSPIRE-UNLEASH.description": "Use your Unstable Concoction. Everything Infused into it resolves at once, on whatever it's used on.",
+  "HELLOSPIRE-CHAMBER.fires1": "Under the hammer — fires next.",
+  "HELLOSPIRE-CHAMBER.fires2": "Fires 2nd.",
+  "HELLOSPIRE-CHAMBER.fires3": "Fires 3rd.",
+  "HELLOSPIRE-CHAMBER.fires4": "Fires 4th.",
+  "HELLOSPIRE-CHAMBER.fires5": "Fires 5th.",
+  "HELLOSPIRE-CHAMBER.fires6": "Fires 6th.",
+  "HELLOSPIRE-CHAMBER.loaded": "{When} Deal {Damage} damage. {Effect}",
+  "HELLOSPIRE-CRIPPLING_ROUND.effect": "Applies 1 Weak.",
+  "HELLOSPIRE-PIERCING_ROUND.effect": "Ignores Block.",
+  "HELLOSPIRE-GUARD_ROUND.effect": "You gain 5 Block.",
+  "HELLOSPIRE-SMOKE_ROUND.effect": "You gain 4 Block and 1 Armor.",
+  "HELLOSPIRE-RENDING_ROUND.effect": "Applies 1 Debilitate.",
+  "HELLOSPIRE-BLACK_POWDER_ROUND.effect": "You then lose 3 HP."
 }

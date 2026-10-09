@@ -189,16 +189,14 @@ public sealed class CylinderDisplay
 
     // ------------------------------------------------------------------ hover tips
 
-    /// <summary>Effect line per Round kind, appended after the damage line. Blank = damage only.</summary>
-    private static readonly Dictionary<string, string> RoundEffects = new()
-    {
-        ["CRIPPLING_ROUND"]    = " Applies 1 Weak.",
-        ["PIERCING_ROUND"]     = " Ignores Block.",
-        ["GUARD_ROUND"]        = " You gain 5 Block.",
-        ["SMOKE_ROUND"]        = " You gain 4 Block and 1 Armor.",
-        ["RENDING_ROUND"]      = " Applies 1 Debilitate.",
-        ["BLACK_POWDER_ROUND"] = " You then lose 3 HP.",
-    };
+    /// <summary>
+    /// Round kinds with an effect beyond their damage. Each has a "HELLOSPIRE-{key}.effect" line in
+    /// static_hover_tips; the rest show the damage line alone.
+    /// </summary>
+    private static readonly HashSet<string> RoundsWithEffect =
+    [
+        "CRIPPLING_ROUND", "PIERCING_ROUND", "GUARD_ROUND", "SMOKE_ROUND", "RENDING_ROUND", "BLACK_POWDER_ROUND",
+    ];
 
     /// <summary>
     /// The standard STS2 hover panel, the way orbs do it: one tip for the mechanic, then one tip
@@ -226,15 +224,29 @@ public sealed class CylinderDisplay
         {
             var index = (cylinder.Hammer + i) % CylinderPower.ChamberCount;
             var round = cylinder.Chambers[index];
-            var when = i == 0 ? "Under the hammer — fires next." : $"Fires {Ordinal(i + 1)}.";
+            // Firing order is its own key per position ("fires1".."fires6") rather than a number
+            // in one template: ordinals don't compose the same way in every language.
+            var when = new LocString("static_hover_tips", $"HELLOSPIRE-CHAMBER.fires{i + 1}").GetFormattedText();
             var titleKey = "HELLOSPIRE-" + (round?.Key ?? "EMPTY_CHAMBER") + ".title";
             // The title label is a plain Label (no BBCode), so the colour match lives in the
             // body: a chip swatch in the chamber's exact cylinder colour opens each tip.
             var chip = $"[color=#{(round == null ? Empty : ColorFor(round)).ToHtml(false)}]●[/color] ";
-            var body = round == null
-                ? chip + when
-                : chip + $"{when} Deal {round.Damage} damage." +
-                  (RoundEffects.TryGetValue(round.Key, out var fx) ? fx : "");
+            string body;
+            if (round == null)
+            {
+                body = chip + when;
+            }
+            else
+            {
+                var loaded = new LocString("static_hover_tips", "HELLOSPIRE-CHAMBER.loaded");
+                loaded.Add("When", when);
+                loaded.Add("Damage", round.Damage);
+                loaded.Add("Effect", RoundsWithEffect.Contains(round.Key)
+                    ? new LocString("static_hover_tips", $"HELLOSPIRE-{round.Key}.effect").GetFormattedText()
+                    : "");
+                // The template leaves a trailing separator when there is no effect line.
+                body = chip + loaded.GetFormattedText().TrimEnd();
+            }
             tips.Add(new HoverTip(new LocString("static_hover_tips", titleKey), body)
             {
                 Id = $"HELLOSPIRE-CHAMBER-{i}",
@@ -243,13 +255,6 @@ public sealed class CylinderDisplay
 
         return tips;
     }
-
-    private static string Ordinal(int n) => n switch
-    {
-        2 => "2nd",
-        3 => "3rd",
-        _ => $"{n}th",
-    };
 
     // ------------------------------------------------------------------ nodes
 

@@ -151,7 +151,8 @@ HelloSpire/
     charui/paladin|alchemist|gunslinger/   per-character UI art
     card_portraits/ + big/                 shared;  <card_class>.png in snake_case
     relics/ (+ big/), potions/ (+ outline/), powers/ (+ big/)   shared trees
-  localization/eng/*.json                 all display text
+  localization/<lang>/*.json              all display text; eng is the source, plus
+                                          kor zhs jpn fra spa esp translations
 
 spine/paladin|gunslinger|alchemist/   plain Spine .atlas/.skel/.png; a folder here replaces that
                                  character's combat and shop rig, and its absence is not an error
@@ -199,6 +200,16 @@ Keys are **flat dotted strings**, namespaced by mod id, with the model slug in `
 ```
 
 Files must live at `res://HelloSpire/localization/<lang>/`. A file at `res://localization/...` — without the mod id segment — is silently ignored.
+
+English (`eng`) is the source of truth. Translations ship for Korean (`kor`), Simplified Chinese
+(`zhs`), Japanese (`jpn`), French (`fra`) and Spanish: `spa` is Latin American, and `esp` (Spain)
+is currently a copy of it. They use the game's own terms for base keywords (Block, Weak, Exhaust…)
+taken from its official translations. One collision to know about: the game's French calls Block
+*Armure*, so the Gunslinger's Armor is *Cuirasse* there.
+
+When you add or change an English key, update every language folder too.
+`tests/HelloSpire.Tests/TranslationParityTests.cs` fails if a language is missing a key, uses a
+different set of `{Variables}` than English, unbalances its markup, or drops a `[gold]` highlight.
 
 The game ships a Roslyn analyzer (`STS001`) that **fails the build** if a model references a key you haven't written, and lists exactly which ones are missing. Treat its errors as your checklist rather than an obstacle.
 
