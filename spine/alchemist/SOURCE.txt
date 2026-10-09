@@ -1,12 +1,12 @@
 {
  "generated_by": "sts2-reskin-pipeline/blender/alchemist/scripts/spine_export.py \u2014 do not hand-edit these files (JSON in a .txt so the game does not scan it as a mod manifest)",
  "variant": "blender",
- "workbench_commit": "15696ee",
+ "workbench_commit": "f4a2c84",
  "character": "alchemist",
  "donor": "alchemist",
  "files": {
-  "alchemist.atlas": "953b1d9ac5352c24819317cd4021986ab9a7aa0c2edb780f9d2144817b2095ae",
-  "alchemist.skel": "8687094e1058597d6c06810053c9c00aed9bc78443539db293e9968c21bb98b3",
-  "alchemist.png": "3bb8c4313affecd5e7bc00c88c428370b02e5032baa486bbd4ca35c452292643"
+  "alchemist.atlas": "fe884f9421b5053ef8aaa60314841be714fbd967f9b773777c40573114352191",
+  "alchemist.skel": "827cf933a7de0be52d3ce8f0df2cb99ca22710e0ec06658db7d144bf49bed38d",
+  "alchemist.png": "72f04449d6c4a6282e7f80024447c638828e1d5299e62169ffd4e804a5620181"
  }
 }
