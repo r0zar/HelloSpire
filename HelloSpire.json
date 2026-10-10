@@ -3,7 +3,7 @@
   "name": "Character Expansion Pack",
   "author": "Ross Ragsdale",
   "description": "Three new classes for co-op or solo: the Paladin, the Gunslinger and the Alchemist, shipped as one mod so a lobby only has to match a single gameplay-affecting dependency. Requires BaseLib 3.4.7 exactly.",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "min_game_version": "0.107.0",
   "has_pck": true,
   "has_dll": true,
